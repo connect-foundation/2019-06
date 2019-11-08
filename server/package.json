@@ -1,0 +1,67 @@
+{
+  "name": "daitnu",
+  "version": "1.0.0",
+  "description": "Boostcamp Group Project",
+  "main": "src/bin/www.js",
+  "scripts": {
+    "start": "nodemon --config nodemon.json",
+    "dev": "nodemon --config nodemon.json",
+    "production": "set NODE_ENV=production babel-node src/bin/www.js",
+    "scss": "sass ./src/public/scss:./src/public/css",
+    "test": "mocha --recursive ./test/*.spec.js"
+  },
+  "engines": {
+    "node": "10.16.0",
+    "npm": "6.9.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/connect-foundation/2019-06.git"
+  },
+  "keywords": [
+    "express es6+",
+    "express boilerplate"
+  ],
+  "author": "BuildTheTruth",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/connect-foundation/2019-06/issues"
+  },
+  "homepage": "https://github.com/connect-foundation/2019-06#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.6.2",
+    "@babel/core": "^7.6.2",
+    "@babel/node": "^7.6.2",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.2",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "babel-eslint": "^10.0.3",
+    "babel-loader": "^8.0.6",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "husky": "^3.0.7",
+    "lint-staged": "^10.0.0-0",
+    "mocha": "^6.2.1",
+    "nodemon": "^1.19.2",
+    "precise-commits": "^1.0.2",
+    "prettier": "1.18.2",
+    "pretty-quick": "^1.11.1",
+    "should": "^13.2.3"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.6.2",
+    "cookie-parser": "^1.4.4",
+    "core-js": "^3.2.1",
+    "dotenv": "^8.1.0",
+    "ejs": "^2.7.1",
+    "express": "^4.17.1",
+    "helmet": "^3.21.1",
+    "mysql2": "^1.7.0",
+    "node-sass": "^4.12.0",
+    "sequelize": "^5.19.6",
+    "serve-favicon": "^2.5.0"
+  }
+}

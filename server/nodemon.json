@@ -1,0 +1,6 @@
+{
+  "verbose": false,
+  "delay": 2000,
+  "exec": "npm run scss & babel-node src/bin/www.js",
+  "ignore": ["dist/*", "src/public/css/*"]
+}
