@@ -1,48 +1,43 @@
 const model = (sequelize, DataTypes) => {
-  const User = sequelize.define(
-    'User',
+  const Attachment = sequelize.define(
+    'Attachment',
     {
       no: {
         type: DataTypes.BIGINT.UNSIGNED,
         primaryKey: true,
         autoIncrement: true,
       },
-      domain_no: {
+      mail_id: {
         type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: false,
+      },
+      type: {
+        type: DataTypes.STRING(255),
         allowNull: false,
       },
       name: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      password: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      sub_email: {
+      content: {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
     },
     {
       freezeTableName: true,
-      tableName: 'tbl_user',
       timestamps: false,
       paranoid: false,
       underscored: true,
+      tableName: 'tbl_attachment',
     },
   );
 
-  User.associate = ({ Domain, Mail }) => {
-    User.belongsTo(Domain, { foreignKey: 'domain_no', targetKey: 'no' });
-    User.hasMany(Mail, { foreignKey: 'owner', sourceKey: 'no' });
+  Attachment.associate = ({ Mail }) => {
+    Attachment.belongsTo(Mail, { foreignKey: 'mail_id', targetKey: 'no' });
   };
 
-  return User;
+  return Attachment;
 };
 
 export default model;
