@@ -1,4 +1,4 @@
-# <img width="30" src="https://user-images.githubusercontent.com/33617083/67957580-2c6a2500-fc39-11e9-80ea-43237069b404.png" style="margin:-5px 0px"> Daitnu
+# <img width="30" src="https://user-images.githubusercontent.com/33617083/68571001-457a9d80-04a5-11ea-9a47-98c0fd36a1d9.png" style="margin:-5px 0px"> Daitnu
 
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
@@ -44,9 +44,13 @@ npm run test
 
 ## Author
 
-👤 **BuildTheTruth**
+👤 [@BuildTheTruth](https://github.com/BuildTheTruth)
 
-- Github: [@BuildTheTruth](https://github.com/BuildTheTruth)
+👤 [@ljh1324](https://github.com/ljh1324)
+
+👤 [@jonghwajoa](https://github.com/jonghwajoa)
+
+👤 [@sjh2428](https://github.com/sjh2428)
 
 ## 🤝 Contributing
 
