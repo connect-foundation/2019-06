@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import routes from './routes/index';
+
 dotenv.config();
 
 const app = express();
