@@ -6,7 +6,7 @@
     "node": true
   },
   "parser": "babel-eslint",
-  "extends": ["airbnb-base"],
+  "extends": ["airbnb-base", "react-app"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly"
