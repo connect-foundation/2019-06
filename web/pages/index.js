@@ -1,9 +1,10 @@
 import React from 'react';
 import * as S from '../components/index/styled';
+import Header from '../components/index/Header';
 
 const Home = () => (
   <S.FlexWrap>
-    <S.Header>Daitnu</S.Header>
+    <Header brand={'다잇누'} />
     <S.Content>
       <S.Aside>aside</S.Aside>
       <S.Section>

@@ -3,18 +3,11 @@ import styled from 'styled-components';
 const FlexWrap = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid red;
   overflow: hidden;
-`;
-
-const Header = styled.div`
-  flex: 0 0 50px;
-  border: 1px solid blue;
 `;
 
 const Content = styled.div`
   flex: 0 0 auto;
-  border: 1px solid yellow;
   display: flex;
   flex-direction: row;
   overflow: hidden;
@@ -43,4 +36,4 @@ const MailArea = styled.div`
   border: 10px solid pink;
 `;
 
-export { FlexWrap, Header, Content, Aside, Section, Tools, MailArea };
+export { FlexWrap, Content, Aside, Section, Tools, MailArea };
