@@ -6,59 +6,31 @@ const ListOfReceivers = () => {
   const receiverInput = useRef(null);
 
   const focusOn = () => receiverInput.current.focus();
-  const keyDownHandler = e => {};
+  const keyUpHandler = e => {
+    if (e.key === ',' && e.target.innerText !== '') {
+      setReceivers([...receivers, e.target.innerText.replace(',', '')]);
+      e.target.innerText = '';
+    }
+  };
 
   return (
     <>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverListUl>
-          {receivers}
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
-          <S.ReceiverListLi>
-            123123
-            <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
-          </S.ReceiverListLi>
+          {receivers.map((receiver, idx) => (
+            <S.ReceiverListLi>
+              {receiver}
+              <S.ReceiverLiDeleteBtn
+                key={idx}
+                onClick={() =>
+                  setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
+                }>
+                x
+              </S.ReceiverLiDeleteBtn>
+            </S.ReceiverListLi>
+          ))}
         </S.ReceiverListUl>
-        <S.ReceiverListInput
-          ref={receiverInput}
-          onKeyDown={keyDownHandler}
-          contentEditable={true}
-        />
+        <S.ReceiverListInput ref={receiverInput} onKeyUp={keyUpHandler} contentEditable={true} />
       </S.ReceiverListWrapper>
     </>
   );
