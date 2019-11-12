@@ -1,17 +1,9 @@
 import styled from 'styled-components';
 
-const Header = styled.div`
-  flex: 0 0 70px;
-  display: flex;
-  border-bottom: #eceff1;
-  flex-direction: row;
-  overflow: hidden;
-`;
-
 const Brand = styled.div`
   flex: 0 0 350px;
   font-size: 3rem;
-  font-weight: 900;
+  font-weight: bold;
   & > a {
     display: flex;
     align-items: center;
@@ -22,11 +14,11 @@ const Brand = styled.div`
 `;
 
 const Search = styled.div`
-  flex: 0 0 100%;
+  flex: 1 1;
   display: flex;
   align-items: center;
   & > * {
-    height: 55px;
+    height: 40px;
     box-sizing: border-box;
     border: none;
     background: #f1f3f4;
@@ -34,7 +26,7 @@ const Search = styled.div`
 `;
 
 const SearchInput = styled.input`
-  width: 550px;
+  width: 600px;
 `;
 
-export { Header, Brand, Search, SearchInput };
+export { Brand, Search, SearchInput };

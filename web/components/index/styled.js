@@ -1,39 +1,45 @@
 import styled from 'styled-components';
 
 const FlexWrap = styled.div`
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+`;
+
+const Header = styled.div`
+  flex: 0 0 50px;
+  display: flex;
+  border-bottom: 2px solid #eceff1;
+  flex-direction: row;
+  overflow: hidden;
+  padding: 5px 10px;
 `;
 
 const Content = styled.div`
-  flex: 0 0 auto;
+  flex: 1 1;
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  min-height: 300px;
 `;
 
 const Aside = styled.aside`
-  flex: 0 0 200px;
-  border: 1px solid violet;
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
 `;
 
 const Section = styled.section`
-  flex: 0 0 100%;
-  border: 1px solid violet;
+  flex: 1 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 `;
 
-const Tools = styled.div`
-  flex: 0 0 50px;
-  border: 1px solid yellowgreen;
+const Footer = styled.footer`
+  flex: 0 0 30px;
+  border-top: 2px solid #e9ecef;
+  text-align: center;
 `;
 
-const MailArea = styled.div`
-  flex: 1 1 100%;
-  border: 10px solid pink;
-`;
-
-export { FlexWrap, Content, Aside, Section, Tools, MailArea };
+export { FlexWrap, Header, Content, Aside, Section, Footer };

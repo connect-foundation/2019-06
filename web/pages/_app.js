@@ -20,6 +20,13 @@ export default class MyApp extends App {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <style>
+            {' '}
+            {`body {
+              margin: 0;
+              padding: 0;
+            }`}
+          </style>
         </Head>
         <ThemeProvider theme={theme}>
           <Component {...pageProps} />
