@@ -28,8 +28,13 @@ const checkPassword = password => {
   return true;
 };
 
+const checkUser = ({ name, password, email, subEmail }) => {
+  return checkName(name) && checkPassword(password) && checkMail(email) && checkMail(subEmail);
+};
+
 export default {
   checkMail,
   checkName,
   checkPassword,
+  checkUser,
 };

@@ -56,4 +56,55 @@ describe.only('validator 모듈의', () => {
       validator.checkPassword('BB1a!@bcd').should.be.equal(true);
     });
   });
+
+  describe('checkUser 호출시', () => {
+    it('형식에 맞지 않는 필드를 넘겨줄 경우 false를 반환한다.', () => {
+      validator
+        .checkUser({
+          name: 'jhl',
+          email: 'jhl@daitne.com',
+          subEmail: 'abc@daitne.com',
+          password: '1234',
+        })
+        .should.be.equal(false);
+
+      validator
+        .checkUser({
+          name: '이정환',
+          email: 'jhl@daitne.com',
+          subEmail: 'abc@daitne.com',
+          password: '1234',
+        })
+        .should.be.equal(false);
+
+      validator
+        .checkUser({
+          name: '이정환',
+          email: 'jhl@@daitne.com',
+          subEmail: 'abc@daitne.com',
+          password: 'aaaA111!',
+        })
+        .should.be.equal(false);
+    });
+
+    it('형식에 맞는 필드를 넘겨줄 경우 true를 반환한다.', () => {
+      validator
+        .checkUser({
+          name: '이정환',
+          email: 'jhl@daitne.com',
+          subEmail: 'abc@daitne.com',
+          password: 'aaaA111!',
+        })
+        .should.be.equal(true);
+
+      validator
+        .checkUser({
+          name: '이정환',
+          email: 'jhl@daitne.co.kr',
+          subEmail: 'abc@daitne.co.kr',
+          password: 'bbbB111!',
+        })
+        .should.be.equal(true);
+    });
+  });
 });
