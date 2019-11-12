@@ -6,11 +6,13 @@ const ListOfReceivers = () => {
   const receiverInput = useRef(null);
 
   const focusOn = () => receiverInput.current.focus();
+  const keyDownHandler = e => {};
 
   return (
     <>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverListUl>
+          {receivers}
           <S.ReceiverListLi>
             123123
             <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
@@ -52,7 +54,11 @@ const ListOfReceivers = () => {
             <S.ReceiverLiDeleteBtn>x</S.ReceiverLiDeleteBtn>
           </S.ReceiverListLi>
         </S.ReceiverListUl>
-        <S.ReceiverListInput ref={receiverInput} />
+        <S.ReceiverListInput
+          ref={receiverInput}
+          onKeyDown={keyDownHandler}
+          contentEditable={true}
+        />
       </S.ReceiverListWrapper>
     </>
   );
