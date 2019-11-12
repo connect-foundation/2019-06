@@ -1,40 +1,57 @@
-const checkMail = mail => {
-  const regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-  return regExp.test(mail);
+const joinRegex = {
+  id: [
+    {
+      // '아이디는 5~20자의 영문 소문자,숫자와 특수기호(_)(-)만 사용 가능합니다.',
+      regex: /^[a-zA-Z0-9-_]{5,20}$/,
+      range: [5, 20],
+    },
+  ],
+  email: [
+    {
+      // '이메일은 5~50자의 영문 소문자,숫자와 특수기호(_)(-)만 사용 가능합니다.',
+      regex: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
+      range: [5, 50],
+    },
+  ],
+  password: [
+    {
+      // '비밀번호는 8자 이상 20자 이하로 입력해주세요.'
+      range: [8, 20],
+    },
+  ],
+  name: [
+    {
+      // '이름을 정확하게 입력하세요.'
+      regex: /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/,
+      range: [1, 10],
+    },
+  ],
 };
 
-const checkName = name => {
-  if (name.length > 10) return false;
-
-  const regExp = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
-  return regExp.test(name);
+const between = (val, min, max) => {
+  return min <= val && val <= max;
 };
 
-const checkPassword = password => {
-  if (password.length < 8 || password.length > 16) return false;
+const validate = (type, str) => {
+  const list = joinRegex[type];
 
-  let reg = /[a-z]/;
-  if (!reg.test(password)) return false;
+  for (const { regex, range } of list) {
+    if (regex && !regex.test(str)) {
+      return false;
+    }
 
-  reg = /[A-Z]/;
-  if (!reg.test(password)) return false;
-
-  reg = /[0-9]/;
-  if (!reg.test(password)) return false;
-
-  reg = /[~!@#$%^&*()_+|<>?:{}]/;
-  if (!reg.test(password)) return false;
+    if (range && !between(str.length, range[0], range[1])) {
+      return false;
+    }
+  }
 
   return true;
 };
 
-const checkUser = ({ name, password, email, subEmail }) => {
-  return checkName(name) && checkPassword(password) && checkMail(email) && checkMail(subEmail);
-};
+// userInfo: {id, name, password, email}
+const checkUser = userInfo => Object.keys(userInfo).every(key => validate(key, userInfo[key]));
 
 export default {
-  checkMail,
-  checkName,
-  checkPassword,
+  validate,
   checkUser,
 };
