@@ -20,7 +20,7 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
       },
       body: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.TEXT,
         allowNull: false,
       },
       is_important: {
@@ -40,7 +40,7 @@ const model = (sequelize, DataTypes) => {
       },
       owner: {
         type: DataTypes.BIGINT.UNSIGNED,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
