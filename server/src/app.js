@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
-import routes from './routes/index';
+import v1 from './v1/index';
 
 dotenv.config();
 
@@ -14,8 +14,7 @@ app.use(helmet());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 app.set('trust proxy', 1);
-
-app.use('/', routes);
+app.use('/v1', v1);
 
 app.use((req, res, next) => {
   const error = new Error('404 PAGE NOT FOUND');
