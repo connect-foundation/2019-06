@@ -3,67 +3,55 @@ import validator from '../src/utils/validator';
 
 describe.only('validator 모듈의', () => {
   describe('validate(id) 호출시', () => {
-    it('abcde를 넘겨줄 경우 true를 반환한다.', () => {
+    it('아이디는 5~20자의 영문 소문자,숫자, 특수문자 (-) 및 (_) 만 있는 문자를 넘겨줄시 true를 반환한다.', () => {
       validator.validate('id', 'abcde').should.be.equal(true);
+      validator.validate('id', '123_-').should.be.equal(true);
+      validator.validate('id', 'abcdef').should.be.equal(true);
+      validator.validate('id', '_____').should.be.equal(true);
+      validator.validate('id', 'aaaa11').should.be.equal(true);
     });
 
-    it('abcde!@#를 넘겨줄 경우 false를 반환한다.', () => {
+    it('특수문자 (-) 및 (_)외의 특수문자를 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('id', 'abcde!@#').should.be.equal(false);
     });
 
     // 길이 20초과
-    it('abcdeabcdeabcdeabcde1를 넘겨줄 경우 false를 반환한다.', () => {
+    it('길이가 21이상인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('id', 'abcdeabcdeabcdeabcde1').should.be.equal(false);
     });
 
     // 길이 5미만
-    it('aaaa를 넘겨줄 경우 false를 반환한다.', () => {
+    it('길이가 5미만인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('id', 'aaaa').should.be.equal(false);
-    });
-
-    it('aaaa11를 넘겨줄 경우 true를 반환한다.', () => {
-      validator.validate('id', 'aaaa11').should.be.equal(true);
     });
   });
 
   describe('validate(email) 호출시', () => {
-    it('abcde를 넘겨줄 경우 false를 반환한다.', () => {
+    it('도메인 명이 없는 이메일을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('email', 'abcde').should.be.equal(false);
     });
 
-    it('abcde@daitne.com를 넘겨줄 경우 true를 반환한다.', () => {
+    it('올바른 이메일 형식을 넘겨줄 경우 true를 반환한다.', () => {
       validator.validate('email', 'abcde@daitne.com').should.be.equal(true);
-    });
-
-    it('abcde@daitne.co.kr를 넘겨줄 경우 true를 반환한다.', () => {
       validator.validate('email', 'abcde@daitne.co.kr').should.be.equal(true);
+      validator.validate('email', 'ab.cde@daitne.co.kr').should.be.equal(true);
     });
 
-    it('abcde@@daitne.com를 넘겨줄 경우 false를 반환한다.', () => {
+    it('도메인 형식이 잘못된 이메일을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('email', 'abcde@@daitne.com').should.be.equal(false);
-    });
-
-    it('abcde@daitne..com를 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('email', 'abcde@daitne..com').should.be.equal(false);
-    });
-
-    it('abcd333333333333333333333abcd33333333333333333@daitne.com를 넘겨줄 경우 false를 반환한다.', () => {
-      validator
-        .validate('email', 'abcd333333333333333333333abcd33333333333333333@daitne.com')
-        .should.be.equal(false);
-    });
-
-    it('a@a.m를 넘겨줄 경우 true를 반환한다.', () => {
       validator.validate('email', 'a@a.m').should.be.equal(false);
     });
   });
 
   describe('validate(name) 호출시', () => {
-    it('abcde를 넘겨줄 경우 false를 반환한다.', () => {
+    it('한글이 아닌 이름을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('name', 'abcde').should.be.equal(false);
     });
-    it('이정환을 넘겨줄 경우 true를 반환한다.', () => {
+    it('1~10글자 사이의 한글을 넘겨줄 경우 true를 반환한다.', () => {
       validator.validate('name', '이정환').should.be.equal(true);
+      validator.validate('name', '이정환환환').should.be.equal(true);
+      validator.validate('name', '이').should.be.equal(true);
     });
     it('길이가 11이상인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validator.validate('name', '김아무개아무개아무개아무개').should.be.equal(false);
