@@ -1,9 +1,26 @@
 import React from 'react';
-import styled from 'styled-components';
+import * as S from '../components/index/styled';
+import Aside from '../components/index/Aside';
+import Tools from '../components/index/Tools';
+import MailArea from '../components/index/MailArea';
+import Header from '../components/index/Header';
 
-const Title = styled.h1`
-  font-size: 50px;
-  color: ${({ theme }) => theme.colors.primary};
-`;
+const Home = () => (
+  <S.FlexWrap>
+    <S.Header>
+      <Header brand={'Daitnu'} />
+    </S.Header>
+    <S.Content>
+      <S.Aside>
+        <Aside />
+      </S.Aside>
+      <S.Section>
+        <Tools />
+        <MailArea />
+      </S.Section>
+    </S.Content>
+    <S.Footer>2019 Copyright Daitnu. All Rights Reserved</S.Footer>
+  </S.FlexWrap>
+);
 
-export default () => <Title>My page</Title>;
+export default Home;
