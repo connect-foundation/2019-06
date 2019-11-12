@@ -10,6 +10,11 @@ const ListOfReceivers = () => {
     if (e.key === ',' && e.target.innerText !== '') {
       setReceivers([...receivers, e.target.innerText.replace(',', '')]);
       e.target.innerText = '';
+    } else if (e.key === 'Backspace') {
+      if (e.target.innerText === '') {
+        e.target.innerText = receivers[receivers.length - 1];
+        setReceivers([...receivers.slice(0, -1)]);
+      }
     }
   };
 
