@@ -5,44 +5,49 @@ import V from '../../../utils/validator';
 const ListOfReceivers = () => {
   const [receivers, setReceivers] = useState([]);
   const receiverInput = useRef(null);
-  const rcvDiv = useRef(null);
+  const inputWidthGuide = useRef(null);
 
   const focusOn = () => receiverInput.current.focus();
   const resizeInput = target => {
-    rcvDiv.current.innerText = target.value;
-    target.style.width = `${rcvDiv.current.clientWidth + 35}px`;
+    inputWidthGuide.current.innerText = target.value;
+    target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
-  const deleteAllComma = val => val.replace(/,/gi, '');
-  const replaceAndSetReceiver = (f, target, cb) => {
+
+  const deleteWithRegex = regex => val => val.replace(new RegExp(regex, 'gi'), '');
+  const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
     if (replaced !== '') {
       setReceivers([...receivers, replaced]);
       target.value = '';
-      cb(target);
+      resizeInput(target);
     }
   };
 
   const keyDownHandler = e => {
-    if (e.key === 'Backspace' && e.target.value === '' && receivers.length > 0) {
-      e.target.value = receivers[receivers.length - 1];
+    const { key, target } = e;
+    if (key === 'Backspace' && e.target.value === '' && receivers.length > 0) {
+      target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
-    } else if (e.key === 'Enter' && e.target.value !== '') {
-      replaceAndSetReceiver(deleteAllComma, e.target, resizeInput);
+    } else if (key === 'Enter' && target.value !== '') {
+      replaceAndSetReceiver(deleteWithRegex(','), target);
     }
   };
 
   const changeHandler = e => {
-    rcvDiv.current.innerText = e.target.value;
-    e.target.style.width = `${rcvDiv.current.clientWidth + 35}px`;
-    if (e.target.value.includes(',') && e.target.value !== ',') {
-      replaceAndSetReceiver(deleteAllComma, e.target, resizeInput);
+    const { target } = e;
+    inputWidthGuide.current.innerText = target.value;
+    target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
+    if (target.value.includes(',') && target.value !== ',') {
+      replaceAndSetReceiver(deleteWithRegex(','), target);
+    } else if (target.value.includes(' ') && target.value !== ' ') {
+      replaceAndSetReceiver(deleteWithRegex(' '), target);
     }
   };
 
   return (
     <>
       <S.ReceiverListWrapper onClick={focusOn}>
-        <S.ReceiverDiv ref={rcvDiv} />
+        <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
         <S.ReceiverListUl>
           {receivers.map((receiver, idx) => (
             <S.ReceiverListLi
@@ -54,7 +59,6 @@ const ListOfReceivers = () => {
               key={idx}>
               {receiver}
               <S.ReceiverLiDeleteBtn
-                key={idx}
                 onClick={() =>
                   setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
                 }>

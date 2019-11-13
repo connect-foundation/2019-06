@@ -58,7 +58,7 @@ const ReceiverListInput = styled.input`
   padding-right: 10px;
 `;
 
-const ReceiverDiv = styled.div`
+const ReceiverInputWidthGuide = styled.div`
   display: inline-block;
   width: auto;
   height: auto;
@@ -75,5 +75,5 @@ export default {
   ReceiverListLi,
   ReceiverLiDeleteBtn,
   ReceiverListInput,
-  ReceiverDiv,
+  ReceiverInputWidthGuide,
 };
