@@ -1,0 +1,32 @@
+/* eslint-disable no-undef */
+import should from 'should';
+import service from '../../src/v1/mail/service';
+import DB from '../../src/database';
+import mock from '../../mock/create-dummy-data';
+
+const root2Email = 'root2@daitnu.com';
+describe('User DB query Test', () => {
+  before(async () => {
+    await DB.sequelize.sync({ force: true });
+    await mock();
+  });
+
+  it('rawMailList는 배열을 반환한다.', async () => {
+    const data = await service.rawMailList(1, root2Email);
+    data.should.an.instanceof(Array);
+  });
+
+  it('rawMailList는 배열을 반환한다.', async () => {
+    const data = await service.rawMailList(1, root2Email);
+    const plain = data[0].get({ plain: true });
+    plain.should.be.properties([
+      'no',
+      'owner',
+      'mail_template_id',
+      'is_important',
+      'is_read',
+      'is_removed',
+      'MailTemplate',
+    ]);
+  });
+});
