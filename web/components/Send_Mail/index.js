@@ -1,9 +1,9 @@
 import React from 'react';
-import ReceiverList from './Receiver_List';
+import InputReceiver from './Input_Receiver';
 
 const SendMail = () => (
   <>
-    <ReceiverList />
+    <InputReceiver />
   </>
 );
 
