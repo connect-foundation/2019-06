@@ -3,7 +3,7 @@ import S from './styled';
 import V from '../../../utils/validator';
 
 const ListOfReceivers = () => {
-  const [BLANK, SPACE] = ['', ' '];
+  const [BLANK, SPACE, BACKSPACE, ENTER, COMMA] = ['', ' ', 'Backspace', 'Enter', ','];
 
   const [receivers, setReceivers] = useState([]);
   const receiverInput = useRef(null);
@@ -27,20 +27,19 @@ const ListOfReceivers = () => {
 
   const keyDownHandler = e => {
     const { key, target } = e;
-    if (key === 'Backspace' && target.value === BLANK && receivers.length > 0) {
+    if (key === BACKSPACE && target.value === BLANK && receivers.length > 0) {
       target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
-    } else if (key === 'Enter' && target.value !== BLANK) {
-      replaceAndSetReceiver(deleteByRegExp(','), target);
+    } else if (key === ENTER && target.value !== BLANK) {
+      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
-    inputWidthGuide.current.innerText = target.value;
-    target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
-    if (target.value.includes(',') && target.value !== ',') {
-      replaceAndSetReceiver(deleteByRegExp(','), target);
+    resizeInput(target);
+    if (target.value.includes(COMMA) && target.value !== COMMA) {
+      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
     } else if (target.value.includes(SPACE) && target.value !== SPACE) {
       replaceAndSetReceiver(deleteByRegExp(SPACE), target);
     }
