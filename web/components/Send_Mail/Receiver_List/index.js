@@ -25,7 +25,7 @@ const ListOfReceivers = () => {
 
   const keyDownHandler = e => {
     const { key, target } = e;
-    if (key === 'Backspace' && e.target.value === '' && receivers.length > 0) {
+    if (key === 'Backspace' && target.value === '' && receivers.length > 0) {
       target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
     } else if (key === 'Enter' && target.value !== '') {
