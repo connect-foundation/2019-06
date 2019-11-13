@@ -1,4 +1,4 @@
-import db from '.';
+import db from '../src/database';
 
 const createDomainDummyData = async () => {
   const results = await db.Domain.bulkCreate([
