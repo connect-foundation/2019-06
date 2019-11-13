@@ -12,8 +12,16 @@ const validate = (type, value) => {
 };
 
 // userInfo: {id, name, password, email}
-const checkUser = userInfo => Object.keys(userInfo).every(key => validate(key, userInfo[key]));
+const checkUser = ({ id, name, password, email }) => {
+  const user = {
+    id,
+    name,
+    password,
+    email,
+  };
 
+  return Object.keys(user).every(key => validate(key, user[key]));
+};
 export default {
   validate,
   checkUser,
