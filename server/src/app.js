@@ -5,9 +5,7 @@ import cookieParser from 'cookie-parser';
 import v1 from './v1/index';
 
 dotenv.config();
-
 const app = express();
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
