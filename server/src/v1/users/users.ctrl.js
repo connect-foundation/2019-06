@@ -13,7 +13,7 @@ const registerUser = async (req, res, next) => {
   try {
     [newUser, isCreated] = await db.User.checkIdAndCreate({ id, name, password, email });
   } catch (error) {
-    return next(error);
+    return next(new ErrorResponse(ERROR_CODE.EMAIL_DUPLICATION));
   }
 
   if (!isCreated) {
