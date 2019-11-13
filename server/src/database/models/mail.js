@@ -7,20 +7,12 @@ const model = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      from: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
+      owner: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
       },
-      to: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      subject: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-      },
-      body: {
-        type: DataTypes.TEXT,
+      mail_template_id: {
+        type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
       },
       is_important: {
@@ -38,10 +30,6 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
-      owner: {
-        type: DataTypes.BIGINT.UNSIGNED,
-        allowNull: true,
-      },
     },
     {
       freezeTableName: true,
@@ -52,9 +40,9 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  Mail.associate = ({ User, Attachment }) => {
+  Mail.associate = ({ User, MailTemplate }) => {
     Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no' });
-    Mail.hasMany(Attachment, { foreignKey: 'mail_id', sourceKey: 'no' });
+    Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', sourceKey: 'no' });
   };
 
   return Mail;
