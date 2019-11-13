@@ -46,23 +46,24 @@ const ListOfReceivers = () => {
     }
   };
 
+  const getReceiverLis = () =>
+    receivers.map((receiver, idx) => (
+      <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
+        {receiver}
+        <S.ReceiverLiDeleteBtn
+          onClick={() =>
+            setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
+          }>
+          X
+        </S.ReceiverLiDeleteBtn>
+      </S.ReceiverListLi>
+    ));
+
   return (
     <>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
-        <S.ReceiverListUl>
-          {receivers.map((receiver, idx) => (
-            <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
-              {receiver}
-              <S.ReceiverLiDeleteBtn
-                onClick={() =>
-                  setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
-                }>
-                X
-              </S.ReceiverLiDeleteBtn>
-            </S.ReceiverListLi>
-          ))}
-        </S.ReceiverListUl>
+        <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>
         <S.ReceiverListInput
           ref={receiverInput}
           onKeyDown={keyDownHandler}
