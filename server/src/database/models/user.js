@@ -1,3 +1,9 @@
+const setUserIdByEmail = instance => {
+  const { email } = instance.dataValues;
+  const userId = email.split('@')[0];
+  instance.user_id = userId;
+};
+
 const model = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -9,7 +15,6 @@ const model = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.STRING(255),
-        allowNull: false,
         unique: true,
       },
       domain_no: {
@@ -43,6 +48,16 @@ const model = (sequelize, DataTypes) => {
       underscored: true,
     },
   );
+
+  User.beforeBulkCreate(instances => {
+    for (const instance of instances) {
+      getUserIdByEmail(instance);
+    }
+  });
+
+  User.beforeCreate(instance => {
+    getUserIdByEmail(instance);
+  });
 
   User.associate = ({ Domain, Mail }) => {
     User.belongsTo(Domain, { foreignKey: 'domain_no', targetKey: 'no' });

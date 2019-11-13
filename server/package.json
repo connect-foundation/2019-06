@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon --config nodemon.json",
     "dev": "nodemon --config nodemon.json",
+    "dev:force": "set force=true && npm run dev",
     "production": "set NODE_ENV=production babel-node src/bin/www.js",
     "scss": "sass ./src/public/scss:./src/public/css",
     "test": "mocha --recursive ./test/*.spec.js --require @babel/register"
