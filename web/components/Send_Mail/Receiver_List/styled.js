@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const ReceiverListWrapper = styled.div`
-  width: 500px;
+  width: 1000px;
   min-height: 29px;
   padding: 5px 5px;
   border: 1px solid black;
@@ -44,16 +44,26 @@ const ReceiverLiDeleteBtn = styled.div`
 `;
 
 const ReceiverListInput = styled.input`
-  width: auto;
+  width: 30px;
   margin-top: 3px;
   float: left;
   min-height: 16px;
   border: none;
   padding: 5px 5px 2px 5px;
   font-size: 14px;
-  min-width: 30px;
   max-width: 485px;
   padding-right: 10px;
+`;
+
+const ReceiverDiv = styled.div`
+  display: inline-block;
+  width: auto;
+  height: auto;
+  font-size: 14px;
+  white-space: nowrap;
+  position: absolute;
+  left: -1000px;
+  top: -1000px;
 `;
 
 export default {
@@ -62,4 +72,5 @@ export default {
   ReceiverListLi,
   ReceiverLiDeleteBtn,
   ReceiverListInput,
+  ReceiverDiv,
 };
