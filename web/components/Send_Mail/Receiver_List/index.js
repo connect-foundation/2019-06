@@ -7,12 +7,17 @@ const ListOfReceivers = () => {
   const rcvDiv = useRef(null);
 
   const focusOn = () => receiverInput.current.focus();
+  const resizeInput = target => {
+    rcvDiv.current.innerText = target.value;
+    target.style.width = `${rcvDiv.current.clientWidth + 35}px`;
+  };
   const deleteAllComma = val => val.replace(/,/gi, '');
-  const replaceAndSetReceiver = (f, target) => {
+  const replaceAndSetReceiver = (f, target, cb) => {
     const replaced = f(target.value);
     if (replaced !== '') {
       setReceivers([...receivers, replaced]);
       target.value = '';
+      cb(target);
     }
   };
 
@@ -21,7 +26,7 @@ const ListOfReceivers = () => {
       e.target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
     } else if (e.key === 'Enter' && e.target.value !== '') {
-      replaceAndSetReceiver(deleteAllComma, e.target);
+      replaceAndSetReceiver(deleteAllComma, e.target, resizeInput);
     }
   };
 
@@ -29,7 +34,7 @@ const ListOfReceivers = () => {
     rcvDiv.current.innerText = e.target.value;
     e.target.style.width = `${rcvDiv.current.clientWidth + 35}px`;
     if (e.target.value.includes(',') && e.target.value !== ',') {
-      replaceAndSetReceiver(deleteAllComma, e.target);
+      replaceAndSetReceiver(deleteAllComma, e.target, resizeInput);
     }
   };
 

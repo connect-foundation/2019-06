@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const ReceiverListWrapper = styled.div`
-  width: 1000px;
+  width: 500px;
   min-height: 29px;
   padding: 5px 5px;
   border: 1px solid black;
@@ -47,7 +47,7 @@ const ReceiverLiDeleteBtn = styled.div`
 `;
 
 const ReceiverListInput = styled.input`
-  width: 30px;
+  width: 20px;
   margin-top: 3px;
   float: left;
   min-height: 16px;
