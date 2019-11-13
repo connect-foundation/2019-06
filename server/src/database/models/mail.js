@@ -42,7 +42,7 @@ const model = (sequelize, DataTypes) => {
 
   Mail.associate = ({ User, MailTemplate }) => {
     Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no' });
-    Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', sourceKey: 'no' });
+    Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
   };
 
   return Mail;

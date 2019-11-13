@@ -34,7 +34,7 @@ const model = (sequelize, DataTypes) => {
   );
 
   MailTemplate.associate = ({ Mail, Attachment }) => {
-    MailTemplate.hasMany(Mail, { foreignKey: 'mail_template_id', targetKey: 'no' });
+    MailTemplate.hasMany(Mail, { foreignKey: 'mail_template_id', sourceKey: 'no' });
     MailTemplate.hasMany(Attachment, { foreignKey: 'mail_template_id', sourceKey: 'no' });
   };
 
