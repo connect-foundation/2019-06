@@ -41,6 +41,9 @@ const ReceiverLiDeleteBtn = styled.div`
   text-align: center;
   font-weight: bold;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const ReceiverListInput = styled.input`

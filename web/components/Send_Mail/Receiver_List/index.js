@@ -46,7 +46,7 @@ const ListOfReceivers = () => {
                 onClick={() =>
                   setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
                 }>
-                x
+                X
               </S.ReceiverLiDeleteBtn>
             </S.ReceiverListLi>
           ))}
