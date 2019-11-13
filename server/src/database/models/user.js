@@ -51,12 +51,12 @@ const model = (sequelize, DataTypes) => {
 
   User.beforeBulkCreate(instances => {
     for (const instance of instances) {
-      getUserIdByEmail(instance);
+      setUserIdByEmail(instance);
     }
   });
 
   User.beforeCreate(instance => {
-    getUserIdByEmail(instance);
+    setUserIdByEmail(instance);
   });
 
   User.associate = ({ Domain, Mail }) => {
