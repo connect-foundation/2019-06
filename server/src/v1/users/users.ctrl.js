@@ -1,26 +1,20 @@
 import db from '../../database';
 import validator from '../../utils/validator';
+import ERROR_CODE from '../../libraries/error-code';
+import ErrorResponse from '../../libraries/error-response';
 
 const registerUser = async (req, res, next) => {
   try {
     const { name, id, password, email } = req.body;
 
     if (!validator.checkUser({ name, email, password, id })) {
-      return res.status(422).end(); // 요청은 잘 만들어졌지만, 문법 오류로 인하여 따를 수 없습니다.
+      return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
     }
 
-    const [newUser, isCreated] = await db.User.findOrCreate({
-      where: { user_id: id },
-      defaults: {
-        user_id: id,
-        name,
-        password,
-        sub_email: email,
-      },
-    });
+    const [newUser, isCreated] = await db.User.checkIdAndCreate({ id, name, password, email });
 
     if (!isCreated) {
-      return res.status(409).end();
+      return next(new ErrorResponse(ERROR_CODE.ID_DUPLICATION));
     }
 
     const user = newUser.get({ plain: true });

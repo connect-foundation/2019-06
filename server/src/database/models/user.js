@@ -58,6 +58,18 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
+  User.checkIdAndCreate = ({ id, name, password, email }) => {
+    return User.findOrCreate({
+      where: { user_id: id },
+      defaults: {
+        user_id: id,
+        name,
+        password,
+        sub_email: email,
+      },
+    });
+  };
+
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
       await setUserIdByEmail(instance);

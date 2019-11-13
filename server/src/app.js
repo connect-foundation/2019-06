@@ -2,7 +2,10 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+
 import v1 from './v1/index';
+import ERROR_CODE from './libraries/error-code';
+import ErrorResponse from './libraries/error-response';
 
 dotenv.config();
 const app = express();
@@ -20,10 +23,13 @@ app.use((req, res, next) => {
   return next(error);
 });
 
-app.use((err, req, res) => {
-  const status = err.status || 500;
-  const message = err.message || 'Internal Server Error';
-  return res.status(status).json({ message });
+app.use((err, req, res, next) => {
+  if (err.errorCode) {
+    const status = Number(err.errorCode.status);
+    return res.status(status).json(err);
+  }
+
+  return res.status(500).json(new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR));
 });
 
 export default app;

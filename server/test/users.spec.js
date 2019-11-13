@@ -2,7 +2,7 @@ import request from 'supertest';
 import app from '../src/app';
 import dbSync from '../src/bin/dbSync';
 
-describe.only('POST /users가', () => {
+describe('회원등록시 POST /users가', () => {
   before(() => dbSync({ force: true }));
 
   it('성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
@@ -39,6 +39,6 @@ describe.only('POST /users가', () => {
         email: 'ljhw3377@gmail.com',
         password: 'test',
       })
-      .expect(422, done);
+      .expect(400, done);
   });
 });
