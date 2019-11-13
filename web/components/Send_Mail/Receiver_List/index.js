@@ -3,6 +3,8 @@ import S from './styled';
 import V from '../../../utils/validator';
 
 const ListOfReceivers = () => {
+  const [BLANK, SPACE] = ['', ' '];
+
   const [receivers, setReceivers] = useState([]);
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
@@ -13,22 +15,22 @@ const ListOfReceivers = () => {
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
 
-  const deleteWithRegex = regex => val => val.replace(new RegExp(regex, 'gi'), '');
+  const deleteWithRegex = regex => val => val.replace(new RegExp(regex, 'gi'), BLANK);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
-    if (replaced !== '') {
+    if (replaced !== BLANK) {
       setReceivers([...receivers, replaced]);
-      target.value = '';
+      target.value = BLANK;
       resizeInput(target);
     }
   };
 
   const keyDownHandler = e => {
     const { key, target } = e;
-    if (key === 'Backspace' && target.value === '' && receivers.length > 0) {
+    if (key === 'Backspace' && target.value === BLANK && receivers.length > 0) {
       target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
-    } else if (key === 'Enter' && target.value !== '') {
+    } else if (key === 'Enter' && target.value !== BLANK) {
       replaceAndSetReceiver(deleteWithRegex(','), target);
     }
   };
@@ -39,8 +41,8 @@ const ListOfReceivers = () => {
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
     if (target.value.includes(',') && target.value !== ',') {
       replaceAndSetReceiver(deleteWithRegex(','), target);
-    } else if (target.value.includes(' ') && target.value !== ' ') {
-      replaceAndSetReceiver(deleteWithRegex(' '), target);
+    } else if (target.value.includes(SPACE) && target.value !== SPACE) {
+      replaceAndSetReceiver(deleteWithRegex(SPACE), target);
     }
   };
 
