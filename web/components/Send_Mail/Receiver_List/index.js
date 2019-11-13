@@ -15,7 +15,7 @@ const ListOfReceivers = () => {
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
 
-  const deleteWithRegex = regex => val => val.replace(new RegExp(regex, 'gi'), BLANK);
+  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), BLANK);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
     if (replaced !== BLANK) {
@@ -31,7 +31,7 @@ const ListOfReceivers = () => {
       target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
     } else if (key === 'Enter' && target.value !== BLANK) {
-      replaceAndSetReceiver(deleteWithRegex(','), target);
+      replaceAndSetReceiver(deleteByRegExp(','), target);
     }
   };
 
@@ -40,9 +40,9 @@ const ListOfReceivers = () => {
     inputWidthGuide.current.innerText = target.value;
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
     if (target.value.includes(',') && target.value !== ',') {
-      replaceAndSetReceiver(deleteWithRegex(','), target);
+      replaceAndSetReceiver(deleteByRegExp(','), target);
     } else if (target.value.includes(SPACE) && target.value !== SPACE) {
-      replaceAndSetReceiver(deleteWithRegex(SPACE), target);
+      replaceAndSetReceiver(deleteByRegExp(SPACE), target);
     }
   };
 
