@@ -1,24 +1,31 @@
 import styled from 'styled-components';
 
-const Header = styled.div`
+const Brand = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f5f6fa;
-  height: 100%;
+  width: 200px;
+  margin: 20px;
 `;
 
 const Title = styled.span`
-  font-size: 15px;
+  font-size: 2.2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: black;
+  text-decoration: none;
 `;
 
 const Logo = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
 `;
 
 export default {
-  Header,
+  Brand,
   Title,
   Logo,
 };

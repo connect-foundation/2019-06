@@ -5,10 +5,10 @@ import logo from '../../../assets/imgs/logo.png';
 
 const Header = () => {
   return (
-    <S.Header>
+    <S.Brand>
       <S.Logo src={logo} />
       <S.Title>Daitne</S.Title>
-    </S.Header>
+    </S.Brand>
   );
 };
 export default Header;

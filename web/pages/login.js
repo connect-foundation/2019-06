@@ -1,7 +1,18 @@
 import React from 'react';
 
-import Form from '../components/Login/Form';
+import Form from '../components/login/Form';
+import Header from '../components/login/Header';
+import Footer from '../components/login/Footer';
 
-const Login = () => <Form />;
+import * as S from '../components/login/styled';
 
-export default Login;
+const LoginPage = () => (
+  <S.FlexWrap>
+    <Header />
+    <Form />
+    <S.HR />
+    <Footer />
+  </S.FlexWrap>
+);
+
+export default LoginPage;
