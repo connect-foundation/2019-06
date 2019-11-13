@@ -1,4 +1,4 @@
-const getUserIdByEmail = instance => {
+const setUserIdByEmail = instance => {
   const { email } = instance.dataValues;
   const userId = email.split('@')[0];
   instance.user_id = userId;
