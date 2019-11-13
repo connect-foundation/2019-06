@@ -52,13 +52,7 @@ const ListOfReceivers = () => {
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
         <S.ReceiverListUl>
           {receivers.map((receiver, idx) => (
-            <S.ReceiverListLi
-              style={
-                V.validate('email', receiver)
-                  ? {}
-                  : { backgroundColor: '#D93024', color: '#FDEFEF' }
-              }
-              key={idx}>
+            <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
               {receiver}
               <S.ReceiverLiDeleteBtn
                 onClick={() =>

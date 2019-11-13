@@ -30,6 +30,8 @@ const ReceiverListLi = styled.li`
   width: auto;
   min-height: 20px;
   font-size: 14px;
+  background-color: ${props => (props.validation ? 'white' : '#D93024')};
+  color: ${props => (props.validation ? 'black' : '#FDEFEF')};
 `;
 
 const ReceiverLiDeleteBtn = styled.div`
