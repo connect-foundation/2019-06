@@ -1,5 +1,5 @@
 import db from '../database';
-import makeData from '../database/makeData';
+import makeBulkData from '../database/makeData';
 
 const dbSync = async ({ force } = { force: false }) => {
   await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -7,7 +7,7 @@ const dbSync = async ({ force } = { force: false }) => {
   await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
 
   if (force) {
-    await makeData();
+    await makeBulkData();
   }
 };
 
