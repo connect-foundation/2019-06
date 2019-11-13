@@ -70,6 +70,15 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  User.findOneById = id => {
+    return User.findOne({
+      where: {
+        user_id: id,
+      },
+      raw: true,
+    });
+  };
+
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
       await setUserIdByEmail(instance);
