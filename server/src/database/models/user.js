@@ -20,11 +20,6 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      user_id: {
-        type: DataTypes.STRING(255),
-        allowNull: false,
-        unique: true,
-      },
       password: {
         type: DataTypes.STRING(255),
         allowNull: false,
