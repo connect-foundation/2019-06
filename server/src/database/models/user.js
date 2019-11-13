@@ -7,6 +7,11 @@ const model = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
+      user_id: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: true,
+      },
       domain_no: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
@@ -22,10 +27,12 @@ const model = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        unique: true,
       },
       sub_email: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        unique: true,
       },
     },
     {
