@@ -108,6 +108,13 @@ describe.only('validator 모듈의', () => {
           password: 'aaaA111!',
         })
         .should.be.equal(false);
+
+      validator
+        .checkUser({
+          id: 'jhl123',
+          password: 'aaaA111!',
+        })
+        .should.be.equal(false);
     });
 
     it('형식에 맞는 필드를 넘겨줄 경우 true를 반환한다.', () => {
