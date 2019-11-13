@@ -6,14 +6,19 @@ const ListOfReceivers = () => {
   const receiverInput = useRef(null);
 
   const focusOn = () => receiverInput.current.focus();
-  const keyUpHandler = e => {
-    if (e.key === ',' && e.target.innerText !== '') {
-      setReceivers([...receivers, e.target.innerText.replace(',', '')]);
-      e.target.innerText = '';
-    } else if (e.key === 'Backspace') {
-      if (e.target.innerText === '') {
-        e.target.innerText = receivers[receivers.length - 1];
-        setReceivers([...receivers.slice(0, -1)]);
+  const keyDownHandler = e => {
+    if (e.key === 'Backspace' && e.target.value === '') {
+      e.target.value = receivers[receivers.length - 1];
+      setReceivers([...receivers.slice(0, -1)]);
+    }
+  };
+
+  const changeHandler = e => {
+    if (e.target.value.includes(',') && e.target.value !== ',') {
+      const replaced = e.target.value.replace(/,/gi, '');
+      if (replaced !== '') {
+        setReceivers([...receivers, e.target.value.replace(/,/gi, '')]);
+        e.target.value = '';
       }
     }
   };
@@ -23,7 +28,7 @@ const ListOfReceivers = () => {
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverListUl>
           {receivers.map((receiver, idx) => (
-            <S.ReceiverListLi>
+            <S.ReceiverListLi key={idx}>
               {receiver}
               <S.ReceiverLiDeleteBtn
                 key={idx}
@@ -35,7 +40,12 @@ const ListOfReceivers = () => {
             </S.ReceiverListLi>
           ))}
         </S.ReceiverListUl>
-        <S.ReceiverListInput ref={receiverInput} onKeyUp={keyUpHandler} contentEditable={true} />
+        <S.ReceiverListInput
+          ref={receiverInput}
+          onKeyDown={keyDownHandler}
+          onChange={changeHandler}
+          contentEditable={true}
+        />
       </S.ReceiverListWrapper>
     </>
   );

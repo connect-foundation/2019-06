@@ -42,7 +42,7 @@ const ReceiverLiDeleteBtn = styled.div`
   cursor: pointer;
 `;
 
-const ReceiverListInput = styled.div`
+const ReceiverListInput = styled.input`
   width: auto;
   margin-top: 3px;
   float: left;
