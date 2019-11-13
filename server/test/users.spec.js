@@ -30,7 +30,7 @@ describe('회원등록시 POST /users가', () => {
       .expect(409, done);
   });
 
-  it('올바르지 않은 필드를 줄 경우 상태코드는 422이다.', done => {
+  it('올바르지 않은 필드를 줄 경우 상태코드는 400이다.', done => {
     request(app)
       .post('/v1/users')
       .send({
