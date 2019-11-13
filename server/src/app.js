@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import v1 from './v1/index';
+import ErrorResponse from './libraries/error-response';
+import ERROR_CODE from './libraries/error-code';
 
 dotenv.config();
 const app = express();
@@ -14,16 +16,14 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 app.set('trust proxy', 1);
 app.use('/v1', v1);
 
-app.use((req, res, next) => {
-  const error = new Error('404 PAGE NOT FOUND');
-  error.status = 404;
-  return next(error);
-});
-
+app.use((req, res, next) => next(new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND)));
 app.use((err, req, res) => {
-  const status = err.status || 500;
-  const message = err.message || 'Internal Server Error';
-  return res.status(status).json({ message });
+  if (err.errorCode) {
+    const status = Number(err.errorCode.status);
+    return res.status(status).json(err);
+  }
+
+  return res.status(500).json(new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR));
 });
 
 export default app;
