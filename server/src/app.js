@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
 
 import v1 from './v1/index';
 import ERROR_CODE from './libraries/error-code';
@@ -13,6 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(helmet());
 app.use(cookieParser(process.env.COOKIE_SECRET));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('trust proxy', 1);
 app.use('/v1', v1);
