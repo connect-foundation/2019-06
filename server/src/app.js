@@ -41,9 +41,9 @@ app.set('trust proxy', 1);
 app.use('/v1', v1);
 
 app.use((req, res, next) => next(new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND)));
+
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err.errorCode) {
     const status = Number(err.errorCode.status);
     return res.status(status).json(err);
