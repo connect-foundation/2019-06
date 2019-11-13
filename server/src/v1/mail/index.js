@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import mail from './mail/index';
+import controller from './controller';
 
 const router = Router();
 
-router.use('/mail', mail);
+router.get('/', controller.list);
 
 export default router;
