@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import S from './styled';
+import V from '../../../utils/validator';
 
 const ListOfReceivers = () => {
   const [receivers, setReceivers] = useState([]);
@@ -44,7 +45,13 @@ const ListOfReceivers = () => {
         <S.ReceiverDiv ref={rcvDiv} />
         <S.ReceiverListUl>
           {receivers.map((receiver, idx) => (
-            <S.ReceiverListLi key={idx}>
+            <S.ReceiverListLi
+              style={
+                V.validate('email', receiver)
+                  ? {}
+                  : { backgroundColor: '#D93024', color: '#FDEFEF' }
+              }
+              key={idx}>
               {receiver}
               <S.ReceiverLiDeleteBtn
                 key={idx}
