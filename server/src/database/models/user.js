@@ -1,3 +1,7 @@
+import bcrypt from 'bcrypt';
+
+const { DEFAULT_DOMAIN_NAME, SALT_ROUND } = process.env;
+
 const model = (sequelize, DataTypes) => {
   const User = sequelize.define(
     'User',
@@ -15,6 +19,7 @@ const model = (sequelize, DataTypes) => {
       domain_no: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
+        defaultValue: 1,
       },
       name: {
         type: DataTypes.STRING(255),
@@ -26,7 +31,7 @@ const model = (sequelize, DataTypes) => {
       },
       email: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
         unique: true,
       },
       sub_email: {
@@ -43,6 +48,16 @@ const model = (sequelize, DataTypes) => {
       underscored: true,
     },
   );
+
+  User.beforeCreate(async instance => {
+    const { user_id, password } = instance.dataValues;
+    const round = parseInt(SALT_ROUND, 10);
+    const salt = await bcrypt.genSalt(round);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    instance.email = `${user_id}@${DEFAULT_DOMAIN_NAME}`;
+    instance.password = hashedPassword;
+  });
 
   User.associate = ({ Domain, Mail }) => {
     User.belongsTo(Domain, { foreignKey: 'domain_no', targetKey: 'no' });
