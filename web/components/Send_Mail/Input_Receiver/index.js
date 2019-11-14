@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import S from './styled';
+import GS from '../styled';
 import V from '../../../utils/validator';
 
 const ListOfReceivers = () => {
@@ -59,8 +60,8 @@ const ListOfReceivers = () => {
     ));
 
   return (
-    <>
-      <S.Label>받는 사람</S.Label>
+    <GS.RowWrapper>
+      <GS.Label>받는 사람</GS.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
         <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>
@@ -71,7 +72,7 @@ const ListOfReceivers = () => {
           contentEditable={true}
         />
       </S.ReceiverListWrapper>
-    </>
+    </GS.RowWrapper>
   );
 };
 

@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 const ReceiverListWrapper = styled.div`
-  width: 500px;
   min-height: 29px;
   padding: 5px 5px;
   border: 1px solid black;
@@ -71,11 +70,6 @@ const ReceiverInputWidthGuide = styled.div`
   top: -1000px;
 `;
 
-const Label = styled.div`
-  font-size: 15px;
-  font-weight: 700;
-`;
-
 export default {
   ReceiverListWrapper,
   ReceiverListUl,
@@ -83,5 +77,4 @@ export default {
   ReceiverLiDeleteBtn,
   ReceiverListInput,
   ReceiverInputWidthGuide,
-  Label,
 };
