@@ -21,7 +21,7 @@ const model = (sequelize, DataTypes) => {
       timestamps: true,
       paranoid: false,
       underscored: true,
-      tableName: 'tbl_Address',
+      tableName: 'tbl_address',
     },
   );
 
