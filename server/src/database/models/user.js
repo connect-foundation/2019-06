@@ -1,5 +1,7 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable camelcase */
+/* eslint-disable no-await-in-loop */
 import bcrypt from 'bcrypt';
-import { log } from 'util';
 
 const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
 
@@ -58,8 +60,8 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  User.checkIdAndCreate = ({ id, name, password, email }) => {
-    return User.findOrCreate({
+  User.checkIdAndCreate = ({ id, name, password, email }) =>
+    User.findOrCreate({
       where: { user_id: id },
       defaults: {
         user_id: id,
@@ -68,7 +70,6 @@ const model = (sequelize, DataTypes) => {
         sub_email: email,
       },
     });
-  };
 
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {

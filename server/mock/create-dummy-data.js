@@ -1,4 +1,4 @@
-import db from '.';
+import db from '../src/database';
 
 const createDomainDummyData = async () => {
   const results = await db.Domain.bulkCreate([
@@ -17,6 +17,12 @@ const createMailTemplateDummyData = async () => {
       to: 'daitnu@daitnu.com,daitne@daitnu.com',
       subject: '제목입니다.ㅎㅎ',
       body: '바디입니다.ㅎㅎㅎ',
+    },
+    {
+      from: 'root@daitnu.com',
+      to: 'daitnu@daitnu.com,daitne@daitnu.com',
+      subject: '제목입니다.ㅎㅎ2',
+      body: '바디입니다.ㅎㅎㅎ2',
     },
   ];
 
@@ -56,6 +62,9 @@ const createMailDummyData = async () => {
     { owner: 1, mail_template_id: 1 },
     { owner: 2, mail_template_id: 1 },
     { owner: 3, mail_template_id: 1 },
+    { owner: 1, mail_template_id: 2 },
+    { owner: 2, mail_template_id: 2 },
+    { owner: 3, mail_template_id: 2 },
   ];
 
   await db.Mail.bulkCreate(mails);

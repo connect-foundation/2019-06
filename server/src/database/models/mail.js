@@ -1,3 +1,5 @@
+import { Op } from 'Sequelize';
+
 const model = (sequelize, DataTypes) => {
   const Mail = sequelize.define(
     'Mail',
@@ -44,6 +46,23 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no' });
     Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
   };
+
+  Mail.findAllReceivedMail = (userNo, userEmail, options = { raw: true }) =>
+    Mail.findAll({
+      where: {
+        owner: userNo,
+      },
+      include: [
+        {
+          model: sequelize.models.MailTemplate,
+          where: {
+            from: {
+              [Op.not]: userEmail,
+            },
+          },
+        },
+      ],
+    });
 
   return Mail;
 };
