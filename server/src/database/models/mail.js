@@ -47,7 +47,7 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
   };
 
-  Mail.findAllReceiveMail = (userNo, userEmail, options = { raw: true }) =>
+  Mail.findAllReceivedMail = (userNo, userEmail, options = { raw: true }) =>
     Mail.findAll({
       where: {
         owner: userNo,
