@@ -1,13 +1,16 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from 'react';
+import Link from 'next/link';
 import * as S from './styled';
 
 const Header = ({ brand }) => (
   <>
     <S.Brand>
-      <a href="/">
-        <img src="https://avatars2.githubusercontent.com/u/57168983?s=70&v=4" alt="logo" />
-        {brand}
-      </a>
+      <S.Center>
+        <Link href="/">
+          <S.Atag>{brand}</S.Atag>
+        </Link>
+      </S.Center>
     </S.Brand>
     <S.Search>
       <button>검색</button>
