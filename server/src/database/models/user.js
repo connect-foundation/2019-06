@@ -60,15 +60,16 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  User.checkIdAndCreate = ({ id, name, password, email }) => User.findOrCreate({
-    where: { user_id: id },
-    defaults: {
-      user_id: id,
-      name,
-      password,
-      sub_email: email,
-    },
-  });
+  User.checkIdAndCreate = ({ id, name, password, email }) =>
+    User.findOrCreate({
+      where: { user_id: id },
+      defaults: {
+        user_id: id,
+        name,
+        password,
+        sub_email: email,
+      },
+    });
 
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
@@ -84,6 +85,7 @@ const model = (sequelize, DataTypes) => {
     User.belongsTo(Domain, { foreignKey: 'domain_no', targetKey: 'no' });
     User.hasMany(Mail, { foreignKey: 'owner', sourceKey: 'no' });
     User.hasMany(Address, { foreignKey: 'user_no', sourceKey: 'no' });
+    User.hasMany(Category, { foreignKey: 'user_no', sourceKey: 'no' });
   };
 
   return User;

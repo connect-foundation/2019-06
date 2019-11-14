@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import/no-unresolved */
 import { Op } from 'Sequelize';
 
 const model = (sequelize, DataTypes) => {
@@ -10,6 +12,10 @@ const model = (sequelize, DataTypes) => {
         autoIncrement: true,
       },
       owner: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
+      },
+      category_no: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: true,
       },
@@ -42,12 +48,13 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  Mail.associate = ({ User, MailTemplate }) => {
+  Mail.associate = ({ User, MailTemplate, Category }) => {
     Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no' });
     Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
+    Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail, options = { raw: true }) =>
+  Mail.findAllReceivedMail = (userNo, userEmail) =>
     Mail.findAll({
       where: {
         owner: userNo,
