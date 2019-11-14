@@ -12,13 +12,13 @@ const connection = mysql.createConnection({
 
 const parseMailContent = async (content) => {
   try {
-    const parsed = await simpleParser(content);
+    const { from, to, subject, text, attachments } = await simpleParser(content);
     return {
-      from: clearFrom(parsed.from.text),
-      to: parsed.to.text,
-      subject: parsed.subject,
-      body: parsed.text,
-      attachments: parsed.attachments
+      from: from.text,
+      to: to.text,
+      subject,
+      body: text,
+      attachments
     };
   } catch (error) {
     console.log(error);
@@ -26,18 +26,18 @@ const parseMailContent = async (content) => {
   }
 }
 
-const clearFrom = (from) => {
-  return from.split('<')[1].slice(0, -1);
-}
-
 const insertMailToDB = async (content) => {
   const { from, to, subject, body } = await parseMailContent(content);
-  connection.connect();
-  connection.execute('INSERT INTO tbl_mail_template (`from`, `to`, `subject`, `body`) VALUES (?, ?, ?, ?)',
-    [from, to, subject, body],
-    (error, result) => console.log({ error, result })
-  );
-  connection.end();
+  const INSERT_QUERY = 'INSERT INTO tbl_mail_template (`from`, `to`, `subject`, `body`) VALUES (?, ?, ?, ?)';
+  let result;
+  try {
+    result = await connection.execute(INSERT_QUERY, [from, to, subject, body]);
+  } catch (error) {
+    result = error;
+  } finally {
+    console.log(result);
+    connection.end();
+  }
 }
 
 insertMailToDB(MAIL_CONTENT);
