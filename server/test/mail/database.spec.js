@@ -10,7 +10,7 @@ describe('User DB query Test', () => {
     await mock();
   });
 
-  describe('findAllReceiveMail는...', () => {
+  describe('findAllReceivedMail는...', () => {
     it('배열을 반환한다..', async () => {
       const data = await DB.Mail.findAllReceivedMail(1, rootEmail);
       data.should.an.instanceof(Array);
