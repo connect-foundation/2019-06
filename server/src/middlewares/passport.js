@@ -1,15 +1,23 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 
+passport.serializeUser((user, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser((user, done) => {
+  done(null, user);
+});
+
 passport.use(
   new Strategy(
     {
       usernameField: 'id',
-      passwordField: 'pw',
+      passwordField: 'password',
       session: true,
       passReqToCallback: false,
     },
-    async (id, pw, done) => {
+    async (id, password, done) => {
       let user;
       try {
         // user = await loginService.localLogin({ id, pw });

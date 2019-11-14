@@ -28,13 +28,8 @@ app.use(
   }),
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user);
-});
-
-passport.deserializeUser((user, done) => {
-  done(null, user);
-});
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(helmet());
 app.set('trust proxy', 1);
