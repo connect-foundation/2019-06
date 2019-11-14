@@ -24,6 +24,7 @@ const registerUser = async (req, res, next) => {
     }
 
     const user = newUser.get({ plain: true });
+    delete user.password;
 
     res.status(201).json({ user });
   } catch (error) {
