@@ -24,16 +24,9 @@ const checkUser = ({ id, name, password, email }) => {
 };
 
 const checkLoginForm = ({ id, password }) => {
-  const user = {
-    id,
-    password,
-  };
+  const user = { id, password };
 
   return Object.keys(user).every(key => validate(key, user[key]));
 };
 
-export default {
-  validate,
-  checkUser,
-  checkLoginForm,
-};
+export { validate, checkUser, checkLoginForm };
