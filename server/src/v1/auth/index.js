@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 import { Strategy as LocalStrategy } from 'passport-local';
 
 import DB from '../../database';
-import ctrl from './auth.ctrl';
+import ctrl from './controller';
 
 const router = express.Router();
 
