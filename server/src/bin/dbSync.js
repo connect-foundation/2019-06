@@ -1,5 +1,5 @@
 import db from '../database';
-import createDummyData from '../database/create-dummy-data';
+import createDummyData from '../../mock/create-dummy-data';
 
 const dbSync = async ({ force }) => {
   await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');

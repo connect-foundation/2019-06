@@ -1,3 +1,9 @@
-const mailList = (req, res) => res.json({ msg: '하하' });
+/* eslint-disable import/prefer-default-export */
+import DB from '../../database/index';
 
-export { mailList };
+const getRawMails = async (userNo, userEmail) => {
+  const mails = await DB.Mail.findAllReceivedMail(userNo, userEmail);
+  return mails;
+};
+
+export default { getRawMails };

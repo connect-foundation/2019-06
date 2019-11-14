@@ -1,9 +1,13 @@
 import request from 'supertest';
 import app from '../src/app';
-import dbSync from '../src/bin/dbSync';
+import DB from '../src/database';
+import mock from '../mock/create-dummy-data';
 
 describe('회원등록시 POST /users가', () => {
-  before(() => dbSync({ force: true }));
+  before(async () => {
+    await DB.sequelize.sync({ force: true });
+    await mock();
+  });
 
   it('성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
     request(app)
