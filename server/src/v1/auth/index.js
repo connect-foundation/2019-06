@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 
 import { Strategy as LocalStrategy } from 'passport-local';
 
-import db from '../../database';
+import DB from '../../database';
 import ctrl from './auth.ctrl';
 
 const router = express.Router();
@@ -24,7 +24,7 @@ passport.use(
       passwordField: 'password',
     },
     async (id, password, done) => {
-      const user = await db.User.findOneById(id);
+      const user = await DB.User.findOneById(id);
 
       if (!user) {
         return done(null, false);
