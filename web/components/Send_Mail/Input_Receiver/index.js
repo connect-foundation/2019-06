@@ -60,6 +60,7 @@ const ListOfReceivers = () => {
 
   return (
     <>
+      <S.Label>받는 사람</S.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
         <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>

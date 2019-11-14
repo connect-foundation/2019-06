@@ -71,6 +71,11 @@ const ReceiverInputWidthGuide = styled.div`
   top: -1000px;
 `;
 
+const Label = styled.div`
+  font-size: 15px;
+  font-weight: 700;
+`;
+
 export default {
   ReceiverListWrapper,
   ReceiverListUl,
@@ -78,4 +83,5 @@ export default {
   ReceiverLiDeleteBtn,
   ReceiverListInput,
   ReceiverInputWidthGuide,
+  Label,
 };
