@@ -1,8 +1,6 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import bcrypt from 'bcrypt';
-
-import DB from '../database';
+import authService from '../v1/auth/service';
 
 passport.serializeUser((user, done) => {
   done(null, user);
@@ -19,20 +17,14 @@ passport.use(
       passwordField: 'password',
     },
     async (id, password, done) => {
-      const user = await DB.User.findOneById(id);
-
-      if (!user) {
-        return done(null, false);
+      let user;
+      try {
+        user = await authService.localLogin({ id, password });
+        delete user.password;
+      } catch (err) {
+        return done(err);
       }
-
-      const match = await bcrypt.compare(password, user.password);
-
-      if (!match) {
-        return done(null, false);
-      }
-
-      const { user_id, email, name, no } = user;
-      return done(null, { id: user_id, email, name, no });
+      return done(null, user);
     },
   ),
 );
