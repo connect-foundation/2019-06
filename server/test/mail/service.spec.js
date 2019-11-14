@@ -12,12 +12,12 @@ describe('User DB query Test', () => {
   });
 
   it('rawMailList는 배열을 반환한다.', async () => {
-    const data = await service.rawMailList(1, root2Email);
+    const data = await service.getRawMails(1, root2Email);
     data.should.an.instanceof(Array);
   });
 
   it('rawMailList는 배열을 반환한다.', async () => {
-    const data = await service.rawMailList(1, root2Email);
+    const data = await service.getRawMails(1, root2Email);
     const plain = data[0].get({ plain: true });
     plain.should.be.properties([
       'no',

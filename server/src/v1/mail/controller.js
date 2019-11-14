@@ -5,7 +5,7 @@ const list = async (req, res, next) => {
 
   let mail;
   try {
-    mail = await service.rawMailList(no, email);
+    mail = await service.getRawMails(no, email);
   } catch (error) {
     return next(error);
   }
