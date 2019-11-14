@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -9,18 +9,27 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import SendIcon from '@material-ui/icons/Send';
+import { sendMailContext } from '../context';
 import GS from '../styled';
 
 const SubmitButton = () => {
+  const { receivers } = useContext(sendMailContext).receiver;
+  const { subjectComponent, bodyComponent } = useContext(sendMailContext);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 
   const handleClick = () => {
     console.info('보내기 클릭');
+    console.log(receivers);
+    console.log(subjectComponent.current.value);
+    console.log(bodyComponent.current.innerText);
   };
 
   const handleMenuItemClick = event => {
     console.log('보내기 예약 클릭');
+    console.log(receivers);
+    console.log(subjectComponent.current.value);
+    console.log(bodyComponent.current.innerText);
     setOpen(false);
   };
 
@@ -32,7 +41,6 @@ const SubmitButton = () => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
 
