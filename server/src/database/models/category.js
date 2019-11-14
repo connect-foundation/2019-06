@@ -9,10 +9,10 @@ const model = (sequelize, DataTypes) => {
       },
       user_no: {
         type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: false,
       },
       name: {
         type: DataTypes.STRING(255),
-        allowNull: true,
         unique: true,
       },
     },
