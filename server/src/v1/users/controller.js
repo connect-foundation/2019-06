@@ -20,6 +20,7 @@ const registerUser = async (req, res, next) => {
     return next(new ErrorResponse(ERROR_CODE.ID_DUPLICATION));
   }
   const user = newUser.get({ plain: true });
+  delete user.password;
   res.status(201).json({ user });
 };
 

@@ -5,7 +5,9 @@ import mock from '../mock/create-dummy-data';
 
 describe('회원등록시 POST /users가', () => {
   before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
     await mock();
   });
 
