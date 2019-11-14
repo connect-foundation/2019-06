@@ -1,7 +1,6 @@
 import React from 'react';
 import * as S from '../components/index/styled';
 import Aside from '../components/index/Aside';
-import Tools from '../components/index/Tools';
 import MailArea from '../components/index/MailArea';
 import Header from '../components/index/Header';
 
@@ -15,7 +14,6 @@ const Home = () => (
         <Aside />
       </S.Aside>
       <S.Section>
-        <Tools />
         <MailArea />
       </S.Section>
     </S.Content>
