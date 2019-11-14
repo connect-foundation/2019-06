@@ -22,7 +22,18 @@ const checkUser = ({ id, name, password, email }) => {
 
   return Object.keys(user).every(key => validate(key, user[key]));
 };
+
+const checkLoginForm = ({ id, password }) => {
+  const user = {
+    id,
+    password,
+  };
+
+  return Object.keys(user).every(key => validate(key, user[key]));
+};
+
 export default {
   validate,
   checkUser,
+  checkLoginForm,
 };

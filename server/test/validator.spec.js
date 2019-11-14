@@ -1,5 +1,5 @@
 import should from 'should';
-import validator from '../src/utils/validator';
+import validator from '../src/libraries/validator';
 
 describe('validator 모듈의', () => {
   describe('validate(id) 호출시', () => {

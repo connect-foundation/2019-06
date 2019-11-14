@@ -1,5 +1,5 @@
 import db from '../../database';
-import validator from '../../utils/validator';
+import validator from '../../libraries/validator';
 import ERROR_CODE from '../../libraries/error-code';
 import ErrorResponse from '../../libraries/error-response';
 
