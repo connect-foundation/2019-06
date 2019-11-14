@@ -4,13 +4,23 @@ const Brand = styled.div`
   flex: 0 0 350px;
   font-size: 3rem;
   font-weight: bold;
-  & > a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: black;
-    text-decoration: none;
-  }
+`;
+
+const Center = styled.div`
+  text-align: center;
+`;
+
+const Atag = styled.a`
+  display: flex;
+  width: 300px;
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+  background: url('https://avatars2.githubusercontent.com/u/57168983?s=70&v=4') no-repeat;
+  background-size: 17%;
+  justify-content: center;
+  align-items: center;
+  background-position: 15px 0px;
 `;
 
 const Search = styled.div`
@@ -29,4 +39,4 @@ const SearchInput = styled.input`
   width: 600px;
 `;
 
-export { Brand, Search, SearchInput };
+export { Brand, Center, Search, SearchInput, Atag };
