@@ -1,13 +1,10 @@
 import db from '../../database';
-import validator from '../../libraries/validator';
+import { checkUser } from '../../libraries/validator';
 import ERROR_CODE from '../../libraries/error-code';
 import ErrorResponse from '../../libraries/error-response';
 
 const registerUser = async (req, res, next) => {
-  const { name, id, password, email } = req.body;
-  if (!validator.checkUser({ name, email, password, id })) {
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
-  }
+  const { id, name, password, email } = req.body;
 
   let newUser, isCreated;
   try {
