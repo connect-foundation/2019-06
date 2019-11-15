@@ -30,10 +30,7 @@ const ERROR_CODE = {
   USER_NOT_FOUND: $(404, '없는 아이디 입니다.', 'LOGIN001'),
   INVALID_LOGIN_PASSWORD: $(400, '비밀번호가 일치하지 않습니다.', 'LOGIN002'),
   ALREADY_LOGGED_IN: $(409, '이미 로그인되어 있습니다.', 'LOGIN003'),
-
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
-
-  IS_NOT_ALLOW_EXTENSION: $(400, '허용하지 않는 확장자입니다.', 'UPLOAD001'),
 };
 
 export default ERROR_CODE;
