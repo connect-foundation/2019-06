@@ -33,6 +33,5 @@
 👤 [@sjh2428](https://github.com/sjh2428)
 
 
-<br>
-### :postbox:[Daitnu Blog](https://velog.io/@daitnu)
+### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
 
