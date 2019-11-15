@@ -1,7 +1,7 @@
 {
   "name": "daitnu",
   "version": "1.0.0",
-  "description": "Boostcamp Group Project",
+  "description": "email service",
   "main": "src/bin/www.js",
   "scripts": {
     "start": "nodemon --config nodemon.json",
@@ -21,10 +21,32 @@
     "url": "git+https://github.com/connect-foundation/2019-06.git"
   },
   "keywords": [
-    "express es6+",
-    "express boilerplate"
+    "daitnu",
+    "mail service"
   ],
-  "author": "BuildTheTruth",
+  "author": "Daitnu team",
+  "contributors": [
+    {
+      "name": "BuildTheTruth",
+      "email": "corrhd123@gmail.com",
+      "url": "https://github.com/BuildTheTruth>"
+    },
+    {
+      "name": "sjh2428",
+      "email": "tjdwogh45@gmail.com",
+      "url": "https://github.com/sjh2428"
+    },
+    {
+      "name": "ljh1324",
+      "email": "ljhw3377@gmail.com",
+      "url": "https://github.com/ljh1324"
+    },
+    {
+      "name": "jonghwajoa",
+      "email": "jonghwa0710@gmail.com",
+      "url": "https://github.com/jonghwajoa"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/connect-foundation/2019-06/issues"
