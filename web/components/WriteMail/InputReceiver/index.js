@@ -1,11 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import S from './styled';
+import GS from '../styled';
 import V from '../../../utils/validator';
+import { WriteMailContext } from '../ContextProvider';
 
 const ListOfReceivers = () => {
   const [BLANK, SPACE, BACKSPACE, ENTER, COMMA] = ['', ' ', 'Backspace', 'Enter', ','];
 
-  const [receivers, setReceivers] = useState([]);
+  const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
 
@@ -59,7 +61,8 @@ const ListOfReceivers = () => {
     ));
 
   return (
-    <>
+    <GS.RowWrapper>
+      <GS.Label>받는 사람</GS.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
         <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>
@@ -70,7 +73,7 @@ const ListOfReceivers = () => {
           contentEditable={true}
         />
       </S.ReceiverListWrapper>
-    </>
+    </GS.RowWrapper>
   );
 };
 
