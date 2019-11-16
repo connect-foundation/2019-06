@@ -3,18 +3,27 @@ import ERROR_CODE from './error-code';
 const parseValidationError = error => {
   const { name, errors } = error;
 
+  let returnValue;
   switch (name) {
     case 'SequelizeValidationError':
-      return ERROR_CODE.INVALID_INPUT_VALUE;
+      returnValue = ERROR_CODE.INVALID_INPUT_VALUE;
+      break;
     case 'SequelizeUniqueConstraintError': {
       const { path } = errors[0];
-      if (path === 'user_id') return ERROR_CODE.ID_DUPLICATION;
-      if (path === 'sub_email') return ERROR_CODE.SUBEMAIL_DUPLICATION;
+      if (path === 'user_id') {
+        returnValue = ERROR_CODE.ID_DUPLICATION;
+      }
+
+      if (path === 'sub_email') {
+        returnValue = ERROR_CODE.EMAIL_DUPLICATION;
+      }
+
       break;
     }
     default:
-      return ERROR_CODE.INTERNAL_SERVER_ERROR;
+      returnValue = ERROR_CODE.INTERNAL_SERVER_ERROR;
   }
+  return returnValue;
 };
 
 export { parseValidationError };
