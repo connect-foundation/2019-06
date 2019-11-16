@@ -25,4 +25,14 @@ describe('User DB query Test', () => {
       }
     });
   });
+
+  describe('create는...', () => {
+    it('test', async () => {
+      const result = await DB.Mail.create({
+        owner: 1,
+        mail_template_id: 1,
+      });
+      const data = result.get({ plain: true });
+    });
+  });
 });

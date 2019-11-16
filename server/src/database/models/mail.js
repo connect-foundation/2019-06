@@ -54,8 +54,8 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail) =>
-    Mail.findAll({
+  Mail.findAllReceivedMail = (userNo, userEmail) => {
+    return Mail.findAll({
       where: {
         owner: userNo,
       },
@@ -70,6 +70,7 @@ const model = (sequelize, DataTypes) => {
         },
       ],
     });
+  };
 
   return Mail;
 };
