@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "pre-commit": "pretty-quick --staged && npm run test",
+    "pre-commit": "pretty-quick --staged && npm test",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
   }
 }
