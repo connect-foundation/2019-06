@@ -57,6 +57,8 @@ const model = (sequelize, DataTypes) => {
       timestamps: false,
       paranoid: false,
       underscored: true,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
