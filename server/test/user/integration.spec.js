@@ -8,7 +8,16 @@ describe('회원등록시 POST /users가', () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-    await mock();
+
+    await DB.Domain.create({ name: 'daitnu.com' });
+
+    const body = {
+      name: '이정환',
+      user_id: 'jhl12',
+      sub_email: 'ljhw3377@gmail.com',
+      password: 'test1234',
+    };
+    await DB.User.create({ ...body });
   });
 
   it('성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
@@ -16,8 +25,8 @@ describe('회원등록시 POST /users가', () => {
       .post('/v1/users')
       .send({
         name: '이정환',
-        id: 'jhl12',
-        email: 'ljhw3377@gmail.com',
+        id: 'abc777',
+        email: 'abc777@gmail.com',
         password: 'test1234',
       })
       .expect('Content-Type', /json/)
@@ -30,7 +39,7 @@ describe('회원등록시 POST /users가', () => {
       .send({
         name: '이정환',
         id: 'jhl12',
-        email: 'ljhw3377@gmail.com',
+        email: 'zzz111@gmail.com',
         password: 'test1234',
       })
       .expect(409, done);
@@ -41,15 +50,15 @@ describe('회원등록시 POST /users가', () => {
       .post('/v1/users')
       .send({
         name: '이정환',
-        id: 'jhl123',
+        id: 'kkkk123',
         email: 'ljhw3377@gmail.com',
         password: 'test1234',
       })
       .expect(409, done);
   });
 
-  it('올바르지 않은 필드를 줄 경우 상태코드는 400이다.', done => {
-    request(app)
+  it('올바르지 않은 필드를 줄 경우 상태코드는 400이다.', async () => {
+    await request(app)
       .post('/v1/users')
       .send({
         name: '이정환',
@@ -57,6 +66,26 @@ describe('회원등록시 POST /users가', () => {
         email: 'ljhw3377@gmail.com',
         password: 'test',
       })
-      .expect(400, done);
+      .expect(400);
+
+    await request(app)
+      .post('/v1/users')
+      .send({
+        name: '이정환',
+        id: 'jh',
+        email: 'ljhw3377@gmail.com',
+        password: 'testtest12',
+      })
+      .expect(400);
+
+    await request(app)
+      .post('/v1/users')
+      .send({
+        name: '이정환',
+        id: 'jh1234',
+        email: 'ljhw3377@gmai',
+        password: 'testtest12',
+      })
+      .expect(400);
   });
 });
