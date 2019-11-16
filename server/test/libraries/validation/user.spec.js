@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import * as validate from '../../../src/libraries/validation/user';
+import validate from '../../../src/libraries/validation/user';
 import ErrorResponse from '../../../src/libraries/error-response';
 import ERROR_CODE from '../../../src/libraries/error-code';
 
