@@ -1,7 +1,7 @@
 import should from 'should';
 import { validate, checkUser } from '../src/libraries/validator';
 
-describe.only('validator 모듈의', () => {
+describe('validator 모듈의', () => {
   describe('validate(id) 호출시', () => {
     it('아이디는 5~20자의 영문 소문자,숫자, 특수문자 (-) 및 (_) 만 있는 문자를 넘겨줄시 true를 반환한다.', () => {
       validate('id', 'abcde').should.be.equal(true);
