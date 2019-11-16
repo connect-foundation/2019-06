@@ -11,7 +11,10 @@
     "scss": "sass ./src/public/scss:./src/public/css",
     "test": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register",
     "test:all": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
-    "test:watch": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register -w"
+    "test:commit": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register  --forbid-only",
+    "test:push": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
+    "test:watch": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register -w",
+    "test:only": "set NODE_ENV=test&&mocha --recursive ./test/Address/*.spec.js --require @babel/register -w"
   },
   "engines": {
     "node": "10.16.0",
