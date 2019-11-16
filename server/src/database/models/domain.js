@@ -17,6 +17,8 @@ const model = (sequelize, DataTypes) => {
       tableName: 'tbl_domain',
       timestamps: false,
       paranoid: false,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
