@@ -1,7 +1,6 @@
 import request from 'supertest';
 import app from '../../src/app';
 import DB from '../../src/database';
-import mock from '../../mock/create-dummy-data';
 
 describe('회원등록시 POST /users가', () => {
   before(async () => {
