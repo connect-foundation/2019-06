@@ -1,9 +1,9 @@
 import React from 'react';
-import * as S from '../components/index/styled';
-import Aside from '../components/index/Aside';
-import Tools from '../components/index/Tools';
-import MailArea from '../components/index/MailArea';
-import Header from '../components/index/Header';
+
+import * as S from '../components/GlobalStyle';
+import Aside from '../components/Aside';
+import MailArea from '../components/MailArea';
+import Header from '../components/Header';
 
 const Home = () => (
   <S.FlexWrap>
@@ -15,7 +15,6 @@ const Home = () => (
         <Aside />
       </S.Aside>
       <S.Section>
-        <Tools />
         <MailArea />
       </S.Section>
     </S.Content>
