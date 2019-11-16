@@ -1,7 +1,7 @@
 const getMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
   attachments = attachments.map(attachment => ({
-    filename: attachment.originalname,
+    name: attachment.originalname,
     content: attachment.buffer,
     contentType: attachment.mimetype,
   }));
@@ -18,7 +18,7 @@ const getMailData = ({ from, to, subject, text, attachments = [] }) => {
 const getTransport = () => {
   const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
   return {
-    host: DEFAULT_DOMAIN_NAME,
+    host: `mail.${DEFAULT_DOMAIN_NAME}`,
     port: 465,
     secure: true,
     auth: {
