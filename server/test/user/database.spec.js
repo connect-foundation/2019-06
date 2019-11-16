@@ -11,7 +11,7 @@ const user = {
 
 describe('User DB Test..', () => {
   before(async () => {
-    await DB.sequelize.sync();
+    await DB.sequelize.sync({ force: true });
   });
   describe('Validate Test...', () => {
     describe('userid validate는..', () => {
