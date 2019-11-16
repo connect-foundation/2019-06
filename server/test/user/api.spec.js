@@ -1,7 +1,15 @@
+/* eslint-disable no-undef */
 import request from 'supertest';
 import app from '../../src/app';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
+
+const user = {
+  name: '이정환',
+  user_id: 'jhl12',
+  sub_email: 'ljhw3377@gmail.com',
+  password: 'test1234',
+};
 
 describe('회원등록시 POST /users가', () => {
   before(async () => {
@@ -14,12 +22,7 @@ describe('회원등록시 POST /users가', () => {
   it('성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
     request(app)
       .post('/v1/users')
-      .send({
-        name: '이정환',
-        id: 'jhl12',
-        email: 'ljhw3377@gmail.com',
-        password: 'test1234',
-      })
+      .send(user)
       .expect('Content-Type', /json/)
       .expect(201, done);
   });
@@ -27,24 +30,8 @@ describe('회원등록시 POST /users가', () => {
   it('중복된 id가 있을 경우 상태코드는 409이다.', done => {
     request(app)
       .post('/v1/users')
-      .send({
-        name: '이정환',
-        id: 'jhl12',
-        email: 'ljhw3377@gmail.com',
-        password: 'test1234',
-      })
-      .expect(409, done);
-  });
-
-  it('중복된 메일로 가입할 경우 상태코드는 409이다.', done => {
-    request(app)
-      .post('/v1/users')
-      .send({
-        name: '이정환',
-        id: 'jhl123',
-        email: 'ljhw3377@gmail.com',
-        password: 'test1234',
-      })
+      .send(user)
+      .expect('Content-Type', /json/)
       .expect(409, done);
   });
 
@@ -52,9 +39,7 @@ describe('회원등록시 POST /users가', () => {
     request(app)
       .post('/v1/users')
       .send({
-        name: '이정환',
-        id: 'jhl12',
-        email: 'ljhw3377@gmail.com',
+        ...user,
         password: 'test',
       })
       .expect(400, done);
