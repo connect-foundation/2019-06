@@ -48,8 +48,14 @@ describe('attachment DB test..', () => {
     ];
 
     const attachments = await DB.Attachment.bulkCreate(dummy);
-    for (const attachment of attachments) {
-      console.log(attachment.get({ plain: true }));
+    for (const [index, attachment] of attachments.entries()) {
+      attachment.get({ plain: true }).should.be.properties({
+        no: index + 1,
+        mail_template_id: 1,
+        type: 'image',
+        name: `tile_name${index + 1}`,
+        content: 'file content',
+      });
     }
   });
 });
