@@ -1,6 +1,6 @@
 import React from 'react';
-import SendMail from '../../components/SendMail';
+import WriteMail from '../../components/WriteMail';
 
-const SendEmail = () => <SendMail />;
+const SendEmail = () => <WriteMail />;
 
 export default SendEmail;

@@ -2,12 +2,12 @@ import React, { useState, useRef, useContext } from 'react';
 import S from './styled';
 import GS from '../styled';
 import V from '../../../utils/validator';
-import { sendMailContext } from '../context';
+import { WriteMailContext } from '../ContextProvider';
 
 const ListOfReceivers = () => {
   const [BLANK, SPACE, BACKSPACE, ENTER, COMMA] = ['', ' ', 'Backspace', 'Enter', ','];
 
-  const { receivers, setReceivers } = useContext(sendMailContext).receiver;
+  const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
 
