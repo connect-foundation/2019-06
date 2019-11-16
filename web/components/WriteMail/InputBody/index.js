@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import S from './styled';
 import GS from '../styled';
-import { sendMailContext } from '../context';
+import { WriteMailContext } from '../ContextProvider';
 
 const InputBody = () => {
-  const { bodyComponent } = useContext(sendMailContext);
+  const { bodyComponent } = useContext(WriteMailContext);
 
   return (
     <GS.RowWrapper>

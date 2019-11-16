@@ -1,8 +1,8 @@
 import React, { useState, useRef } from 'react';
 
-export const sendMailContext = React.createContext();
+export const WriteMailContext = React.createContext();
 
-const SendMailContextProvider = ({ children }) => {
+const WriteMailContextProvider = ({ children }) => {
   const [receivers, setReceivers] = useState([]);
   const subjectComponent = useRef(null);
   const bodyComponent = useRef(null);
@@ -15,7 +15,7 @@ const SendMailContextProvider = ({ children }) => {
     },
   };
 
-  return <sendMailContext.Provider {...props}>{children}</sendMailContext.Provider>;
+  return <WriteMailContext.Provider {...props}>{children}</WriteMailContext.Provider>;
 };
 
-export default SendMailContextProvider;
+export default WriteMailContextProvider;

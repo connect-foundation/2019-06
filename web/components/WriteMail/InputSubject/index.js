@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import S from './styled';
 import GS from '../styled';
-import { sendMailContext } from '../context';
+import { WriteMailContext } from '../ContextProvider';
 
 const InputSubject = () => {
-  const { subjectComponent } = useContext(sendMailContext);
+  const { subjectComponent } = useContext(WriteMailContext);
   return (
     <GS.RowWrapper>
       <GS.Label>제목</GS.Label>

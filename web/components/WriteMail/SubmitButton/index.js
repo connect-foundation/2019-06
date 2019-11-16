@@ -9,12 +9,12 @@ import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import SendIcon from '@material-ui/icons/Send';
-import { sendMailContext } from '../context';
+import { WriteMailContext } from '../ContextProvider';
 import GS from '../styled';
 
 const SubmitButton = () => {
-  const { receivers } = useContext(sendMailContext).receiver;
-  const { subjectComponent, bodyComponent } = useContext(sendMailContext);
+  const { receivers } = useContext(WriteMailContext).receiver;
+  const { subjectComponent, bodyComponent } = useContext(WriteMailContext);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
 

@@ -13,9 +13,9 @@ const RowWrapper = styled.div`
   grid-template-columns: 75px 500px;
 `;
 
-const DivWrite = styled.div`
+const WriteArea = styled.div`
   display: grid;
   grid-row-gap: 8px;
 `;
 
-export default { Label, RowWrapper, DivWrite };
+export default { Label, RowWrapper, WriteArea };
