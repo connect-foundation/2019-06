@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
 
-const setUserIdByEmail = async instance => {
+const convertToUserModel = async instance => {
   const { user_id, password } = instance.dataValues;
   const round = parseInt(SALT_ROUND, 10);
   const salt = await bcrypt.genSalt(round);
@@ -89,13 +89,12 @@ const model = (sequelize, DataTypes) => {
 
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
-      await setUserIdByEmail(instance);
+      await convertToUserModel(instance);
     }
   });
 
   User.beforeCreate(async instance => {
-    console.log('abc');
-    await setUserIdByEmail(instance);
+    await convertToUserModel(instance);
   });
 
   User.associate = ({ Domain, Mail, Address, Category }) => {
