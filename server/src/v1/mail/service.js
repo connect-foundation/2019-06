@@ -7,7 +7,7 @@ const getRawMails = async (userNo, userEmail) => {
   return mails;
 };
 
-const sendMail = async ({ from, to, subject, text, attachments = [] }) => {
+const sendMail = async mailContents => {
   const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
   const transporter = nodemailer.createTransport({
     host: DEFAULT_DOMAIN_NAME,
@@ -18,21 +18,6 @@ const sendMail = async ({ from, to, subject, text, attachments = [] }) => {
       pass: MAIL_AUTH_PASS,
     },
   });
-
-  attachments = attachments.map(attachment => ({
-    // filename, buffer -> content, mimetype -> contentType
-    filename: attachment.originalname,
-    content: attachment.buffer,
-    contentType: attachment.mimetype,
-  }));
-
-  const mailContents = {
-    from,
-    to,
-    subject,
-    text,
-    attachments,
-  };
 
   await transporter.sendMail(mailContents);
   return mailContents;

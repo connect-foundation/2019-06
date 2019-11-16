@@ -1,4 +1,5 @@
 import service from './service';
+import U from './util';
 import ERROR_CODE from '../../libraries/error-code';
 import ErrorResponse from '../../libraries/error-response';
 
@@ -18,10 +19,11 @@ const list = async (req, res, next) => {
 const write = async (req, res, next) => {
   const attachments = req.files;
   const { from, to, subject, text } = req.body;
+  const mailContents = U.getMailData({ from, to, subject, text, attachments });
 
   let mail;
   try {
-    mail = await service.sendMail({ from, to, subject, text, attachments });
+    mail = await service.sendMail(mailContents);
   } catch (error) {
     return next(new ErrorResponse(ERROR_CODE.FAIL_TO_SEND_MAIL));
   }
