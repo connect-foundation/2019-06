@@ -27,6 +27,10 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: true,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/,
+          len: [5, 20],
+        },
       },
       domain_no: {
         type: DataTypes.BIGINT.UNSIGNED,
@@ -36,20 +40,33 @@ const model = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        validate: {
+          is: /[가-힣]/,
+          len: [1, 10],
+        },
       },
       password: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        validate: {
+          len: [8, 20],
+        },
       },
       email: {
         type: DataTypes.STRING(255),
         allowNull: true,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+        },
       },
       sub_email: {
         type: DataTypes.STRING(255),
         allowNull: false,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+        },
       },
     },
     {
@@ -60,17 +77,6 @@ const model = (sequelize, DataTypes) => {
       underscored: true,
     },
   );
-
-  User.checkIdAndCreate = ({ id, name, password, email }) =>
-    User.findOrCreate({
-      where: { user_id: id },
-      defaults: {
-        user_id: id,
-        name,
-        password,
-        sub_email: email,
-      },
-    });
 
   User.findOneById = id => {
     return User.findOne({
@@ -88,6 +94,7 @@ const model = (sequelize, DataTypes) => {
   });
 
   User.beforeCreate(async instance => {
+    console.log('abc');
     await setUserIdByEmail(instance);
   });
 
