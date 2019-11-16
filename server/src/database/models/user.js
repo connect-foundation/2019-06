@@ -25,6 +25,7 @@ const model = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.STRING(255),
+        allowNull: true,
         unique: true,
       },
       domain_no: {

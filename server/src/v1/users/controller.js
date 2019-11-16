@@ -6,7 +6,9 @@ import ErrorResponse from '../../libraries/error-response';
 const registerUser = async (req, res, next) => {
   const { id, name, password, email } = req.body;
 
-  let newUser, isCreated;
+  let newUser;
+  let isCreated = false;
+
   try {
     [newUser, isCreated] = await db.User.checkIdAndCreate({ id, name, password, email });
   } catch (error) {
