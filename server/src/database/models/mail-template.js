@@ -19,7 +19,7 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: true,
       },
-      body: {
+      text: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
