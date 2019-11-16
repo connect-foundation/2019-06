@@ -1,13 +1,16 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import app from '../../src/app';
 import DB from '../../src/database';
 
 describe('Address Query test....', () => {
+  before(async () => {
+    await DB.sequelize.sync({ force: true });
+  });
+
   describe('findAllByUserId는...', () => {
     it('...', async () => {
       try {
-        await DB.Address.findAllByUserId();
+        await DB.Address.findAllByUserNo(1);
       } catch (error) {
         console.log(error);
       }
