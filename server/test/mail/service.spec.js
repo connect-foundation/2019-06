@@ -5,7 +5,7 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 
 const root2Email = 'root2@daitnu.com';
-describe('Mail DB query Test', () => {
+describe('Mail Service Test', () => {
   before(async () => {
     await DB.sequelize.sync({ force: true });
     await mock();
