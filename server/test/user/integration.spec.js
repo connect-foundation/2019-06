@@ -1,9 +1,15 @@
 import request from 'supertest';
-import app from '../src/app';
-import dbSync from '../src/bin/dbSync';
+import app from '../../src/app';
+import DB from '../../src/database';
+import mock from '../../mock/create-dummy-data';
 
 describe('회원등록시 POST /users가', () => {
-  before(() => dbSync({ force: true }));
+  before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
+  });
 
   it('성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
     request(app)
@@ -24,6 +30,18 @@ describe('회원등록시 POST /users가', () => {
       .send({
         name: '이정환',
         id: 'jhl12',
+        email: 'ljhw3377@gmail.com',
+        password: 'test1234',
+      })
+      .expect(409, done);
+  });
+
+  it('중복된 메일로 가입할 경우 상태코드는 409이다.', done => {
+    request(app)
+      .post('/v1/users')
+      .send({
+        name: '이정환',
+        id: 'jhl123',
         email: 'ljhw3377@gmail.com',
         password: 'test1234',
       })

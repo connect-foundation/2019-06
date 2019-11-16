@@ -32,7 +32,7 @@ const ERROR_CODE = {
   ALREADY_LOGGED_IN: $(409, '이미 로그인되어 있습니다.', 'LOGIN003'),
 
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
-
+  EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
   IS_NOT_ALLOW_EXTENSION: $(400, '허용하지 않는 확장자입니다.', 'UPLOAD001'),
 };
 
