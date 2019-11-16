@@ -1,7 +1,7 @@
 {
   "name": "daitnu",
   "version": "1.0.0",
-  "description": "Boostcamp Group Project",
+  "description": "email service",
   "main": "src/bin/www.js",
   "scripts": {
     "start": "nodemon --config nodemon.json",
@@ -9,8 +9,12 @@
     "dev:force": "set force=true && npm run dev",
     "production": "set NODE_ENV=production babel-node src/bin/www.js",
     "scss": "sass ./src/public/scss:./src/public/css",
-    "test": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
-    "test:watch": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register -w"
+    "test": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register",
+    "test:all": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
+    "test:commit": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register  --forbid-only",
+    "test:push": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
+    "test:watch": "set NODE_ENV=test&&mocha --recursive ./test/**/*.spec.js --require @babel/register -w",
+    "test:only": "set NODE_ENV=test&&mocha --recursive ./test/Address/*.spec.js --require @babel/register -w"
   },
   "engines": {
     "node": "10.16.0",
@@ -21,10 +25,32 @@
     "url": "git+https://github.com/connect-foundation/2019-06.git"
   },
   "keywords": [
-    "express es6+",
-    "express boilerplate"
+    "daitnu",
+    "mail service"
   ],
-  "author": "BuildTheTruth",
+  "author": "Daitnu team",
+  "contributors": [
+    {
+      "name": "BuildTheTruth",
+      "email": "corrhd123@gmail.com",
+      "url": "https://github.com/BuildTheTruth"
+    },
+    {
+      "name": "sjh2428",
+      "email": "tjdwogh45@gmail.com",
+      "url": "https://github.com/sjh2428"
+    },
+    {
+      "name": "ljh1324",
+      "email": "ljhw3377@gmail.com",
+      "url": "https://github.com/ljh1324"
+    },
+    {
+      "name": "jonghwajoa",
+      "email": "jonghwa0710@gmail.com",
+      "url": "https://github.com/jonghwajoa"
+    }
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/connect-foundation/2019-06/issues"
@@ -56,7 +82,8 @@
     "precise-commits": "^1.0.2",
     "prettier": "1.18.2",
     "pretty-quick": "^1.11.1",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "@babel/runtime": "^7.6.2",
@@ -65,7 +92,6 @@
     "cookie-parser": "^1.4.4",
     "core-js": "^3.2.1",
     "dotenv": "^8.1.0",
-    "ejs": "^2.7.1",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
     "helmet": "^3.21.1",
@@ -74,8 +100,6 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^5.19.6",
-    "serve-favicon": "^2.5.0",
-    "supertest": "^4.0.2"
+    "sequelize": "^5.19.6"
   }
 }

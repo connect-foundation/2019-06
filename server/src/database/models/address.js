@@ -31,6 +31,14 @@ const model = (sequelize, DataTypes) => {
     Address.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });
   };
 
+  Address.findAllByUserNo = userNo => {
+    return Address.findAll({
+      where: {
+        user_no: userNo,
+      },
+    });
+  };
+
   return Address;
 };
 

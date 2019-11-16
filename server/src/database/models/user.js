@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 
 const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
 
-const setUserIdByEmail = async instance => {
+const convertToUserModel = async instance => {
   const { user_id, password } = instance.dataValues;
   const round = parseInt(SALT_ROUND, 10);
   const salt = await bcrypt.genSalt(round);
@@ -25,7 +25,12 @@ const model = (sequelize, DataTypes) => {
       },
       user_id: {
         type: DataTypes.STRING(255),
+        allowNull: true,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/,
+          len: [5, 20],
+        },
       },
       domain_no: {
         type: DataTypes.BIGINT.UNSIGNED,
@@ -35,20 +40,33 @@ const model = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        validate: {
+          is: /[가-힣]/,
+          len: [1, 10],
+        },
       },
       password: {
         type: DataTypes.STRING(255),
         allowNull: false,
+        validate: {
+          len: [8, 20],
+        },
       },
       email: {
         type: DataTypes.STRING(255),
         allowNull: true,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+        },
       },
       sub_email: {
         type: DataTypes.STRING(255),
         allowNull: false,
         unique: true,
+        validate: {
+          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+        },
       },
     },
     {
@@ -62,25 +80,23 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  User.checkIdAndCreate = ({ id, name, password, email }) =>
-    User.findOrCreate({
-      where: { user_id: id },
-      defaults: {
+  User.findOneById = id => {
+    return User.findOne({
+      where: {
         user_id: id,
-        name,
-        password,
-        sub_email: email,
       },
+      raw: true,
     });
+  };
 
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
-      await setUserIdByEmail(instance);
+      await convertToUserModel(instance);
     }
   });
 
   User.beforeCreate(async instance => {
-    await setUserIdByEmail(instance);
+    await convertToUserModel(instance);
   });
 
   User.associate = ({ Domain, Mail, Address, Category }) => {

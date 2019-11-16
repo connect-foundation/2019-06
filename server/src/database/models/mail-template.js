@@ -17,7 +17,7 @@ const model = (sequelize, DataTypes) => {
       },
       subject: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
       },
       body: {
         type: DataTypes.TEXT,
@@ -26,7 +26,7 @@ const model = (sequelize, DataTypes) => {
     },
     {
       freezeTableName: true,
-      timestamps: false,
+      timestamps: true,
       paranoid: false,
       underscored: true,
       tableName: 'tbl_mail_template',
