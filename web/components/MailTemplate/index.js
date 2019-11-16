@@ -2,10 +2,10 @@ import React from 'react';
 import moment from 'moment';
 import * as S from './styled';
 
-const MailTemplate = ({ mail, setSelected }) => {
+const MailTemplate = ({ mail, setSelected, no }) => {
   const { to, from, subject, date } = mail;
   const startdate = moment(date).format('YYYY-MM-DD');
-  const handleClickSubject = e => setSelected(mail);
+  const handleClickSubject = e => setSelected({ mail, no });
 
   return (
     <S.MailTemplateWrap>
