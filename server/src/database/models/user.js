@@ -127,6 +127,18 @@ const model = (sequelize, DataTypes) => {
     User.hasMany(Category, { foreignKey: 'user_no', sourceKey: 'no' });
   };
 
+  User.findOrCreateById = ({ user_id, name, password, sub_email }) => {
+    return User.findOrCreate({
+      where: { user_id },
+      defaults: {
+        user_id,
+        name,
+        password,
+        sub_email,
+      },
+    });
+  };
+
   return User;
 };
 
