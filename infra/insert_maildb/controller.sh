@@ -22,7 +22,7 @@ cat >in.$$ || {
     echo Cannot save mail to file; exit $EX_TEMPFAIL; }
 
 # Specify your content filter here.
-$INSPECT_DIR/inserter.sh <in.$$ || {
+$INSPECT_DIR/node-runner.sh <in.$$ || {
    echo Message content rejected; exit $EX_UNAVAILABLE; }
 
 $SENDMAIL "$@" <in.$$ || {
