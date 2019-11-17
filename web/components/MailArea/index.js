@@ -44,6 +44,16 @@ const MailArea = () => {
   const mailTemplates = mails.map((mail, i) => (
     <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
   ));
+  const paging = selected ? (
+    <PrevNextMail
+      prev={selected.no > 0 ? mails[selected.no - 1] : false}
+      next={selected.no < mails.length - 1 ? mails[selected.no + 1] : false}
+      setSelected={setSelected}
+      no={selected.no}
+    />
+  ) : (
+    '1 2 3 4 5'
+  );
 
   return (
     <S.MailArea>
@@ -51,18 +61,7 @@ const MailArea = () => {
       <S.MailListArea>
         {selected ? <ReadMail mail={selected.mail} /> : mailTemplates}
       </S.MailListArea>
-      <S.MailPagingArea>
-        {selected ? (
-          <PrevNextMail
-            prev={selected.no > 0 ? mails[selected.no - 1] : false}
-            next={selected.no < mails.length - 1 ? mails[selected.no + 1] : false}
-            setSelected={setSelected}
-            no={selected.no}
-          />
-        ) : (
-          '1 2 3 4 5'
-        )}
-      </S.MailPagingArea>
+      <S.MailPagingArea>{paging}</S.MailPagingArea>
     </S.MailArea>
   );
 };
