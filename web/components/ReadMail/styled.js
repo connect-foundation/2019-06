@@ -1,4 +1,6 @@
+/* eslint-disable no-undef */
 import styled from 'styled-components';
+import { SUBJECT } from './constant';
 
 const ReadArea = styled.div`
   display: flex;
@@ -14,23 +16,17 @@ const TitleView = styled.div`
   margin-bottom: 16px;
 `;
 
-const Subject = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Address = styled.div`
+const Column = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: ${({ role }) => (role === SUBJECT ? 'space-between' : 'flex-start')};
   span {
-    margin: 8px 8px 8px 0;
-    font-weight: 700;
+    margin: ${({ role }) => (role === SUBJECT ? 'none' : '8px 8px 8px 0')};
+    font-weight: ${({ role }) => (role === SUBJECT ? 'normal' : '700')};
   }
 `;
 
 const ReadFrame = styled.div``;
 
-export { ReadArea, TitleView, Subject, Address, ReadFrame };
+export { ReadArea, TitleView, Column, ReadFrame };
