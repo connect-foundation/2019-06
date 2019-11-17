@@ -67,7 +67,7 @@ describe('회원등록 POST /users는...', () => {
       .expect(400, done);
   });
 
-  it('올바르지 않은 필드를 줄 경우 filedErrors에 존재한다.', done => {
+  it('올바르지 않은 필드를 줄 경우 fieldErrors배열의 길이는 0이 아니다.', done => {
     request(app)
       .post('/v1/users')
       .send({

@@ -54,7 +54,7 @@ describe('user service는...', () => {
       }
     });
 
-    it('# 중복된 아이디인 경우 ErrorFields는 length는 0이다.', async () => {
+    it('# 중복된 아이디인 경우 ErrorFields의 length는 0이다.', async () => {
       try {
         newUser = await service.register(user2);
       } catch (error) {

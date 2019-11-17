@@ -18,7 +18,7 @@ describe('', () => {
       data.should.be.true();
     });
 
-    it('# 실패시 rejected가 반환된다.', async () => {
+    it('# 아이디가 5글자 미만일 시에 rejected가 반환된다', async () => {
       await validate.join({ ...user, user_id: 'asd' }).should.be.rejected();
     });
 
@@ -31,7 +31,7 @@ describe('', () => {
       }
     });
 
-    it('# 실패시 filedErrors에 상세한 내용을 알린다. ', async () => {
+    it('# 실패시 fieldErrors 상세한 내용을 알린다. ', async () => {
       const userId = 'asd';
       try {
         await validate.join({ ...user, user_id: userId });
@@ -53,7 +53,7 @@ describe('', () => {
       }
     });
 
-    it('# 실패시 ERROR_CODE는 INVALIDE_INPUT_VALUE이다.', async () => {
+    it('# 실패시 ERROR_CODE는 INVALID_INPUT_VALUE이다.', async () => {
       const userId = 'asd';
       const password = 'asd';
       try {
