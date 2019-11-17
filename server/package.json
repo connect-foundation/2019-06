@@ -9,10 +9,10 @@
     "dev:force": "export force=true || SET \"force=true\"&& npm run dev",
     "production": "export NODE_ENV=production || set \"NODE_ENV=production\" && babel-node src/bin/www.js",
     "scss": "sass ./src/public/scss:./src/public/css",
-    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register",
-    "test:all": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
-    "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register  --forbid-only",
-    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --require @babel/register",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register --timeout 10000",
+    "test:all": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --require @babel/register ",
+    "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --exclude ./test/**/database.spec.js --require @babel/register  --forbid-only --timeout 10000",
+    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --require @babel/register --timeout 10000",
     "test:watch": "export NODE_ENV=test || SET \"NODE_ENV=test\"&&mocha --recursive ./test/**/*.spec.js --require @babel/register -w"
   },
   "engines": {
