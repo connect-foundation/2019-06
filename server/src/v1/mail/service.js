@@ -10,8 +10,8 @@ const getRawMails = async (userNo, userEmail) => {
 
 const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   const processedAttachments = attachments.map(attachment => {
-    const { type, name, content } = attachment;
-    return { contentType: type, name, content, mail_template_id: mailTemplateNo };
+    const { contentType, name, content } = attachment;
+    return { type: contentType, name, content, mail_template_id: mailTemplateNo };
   });
 
   try {
@@ -46,11 +46,10 @@ const sendMail = async mailContents => {
 
   try {
     await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
+    await transporter.sendMail(mailContents);
   } catch (error) {
     throw new Error(error);
   }
-
-  await transporter.sendMail(mailContents);
   return mailContents;
 };
 
