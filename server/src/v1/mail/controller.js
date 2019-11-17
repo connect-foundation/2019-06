@@ -1,3 +1,4 @@
+import STATUS from 'http-status';
 import service from './service';
 import U from '../../libraries/mail-util';
 import ERROR_CODE from '../../libraries/error-code';
@@ -28,7 +29,7 @@ const write = async (req, res, next) => {
     return next(new ErrorResponse(ERROR_CODE.FAIL_TO_SEND_MAIL));
   }
 
-  return res.status(201).json({ mail });
+  return res.status(STATUS.CREATED).json({ mail });
 };
 
 export default {
