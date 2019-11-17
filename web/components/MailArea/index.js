@@ -40,7 +40,7 @@ const MailArea = () => {
     { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
   ];
 
-  const [selected, setSelected] = useState(false);
+  const [selected, setSelected] = useState(null);
   const mailTemplates = mails.map((mail, i) => (
     <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
   ));
