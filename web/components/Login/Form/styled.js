@@ -25,6 +25,7 @@ const Button = styled.button`
   padding: 10px;
   margin: 5px;
   border: 0;
+  cursor: pointer;
 `;
 
 const ErrorText = styled.span`
