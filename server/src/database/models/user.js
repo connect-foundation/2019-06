@@ -28,8 +28,14 @@ const model = (sequelize, DataTypes) => {
         allowNull: true,
         unique: true,
         validate: {
-          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/,
-          len: [5, 20],
+          is: {
+            args: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/,
+            msg: '아이디의 형식이 올바르지 않습니다.',
+          },
+          len: {
+            args: [5, 20],
+            msg: '아이디의 길이는 5이상 20이하 이어야 합니다.',
+          },
         },
       },
       domain_no: {
@@ -41,15 +47,24 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
-          is: /[가-힣]/,
-          len: [1, 10],
+          is: {
+            args: /[가-힣]/,
+            msg: '이름의 형식이 올바르지 않습니다.',
+          },
+          len: {
+            args: [1, 10],
+            msg: '이름의 길이는 1이상 10이하 이어야 합니다.',
+          },
         },
       },
       password: {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
-          len: [8, 20],
+          len: {
+            args: [8, 20],
+            msg: 'password의 길이는 8이상 20이하 이어야 합니다.',
+          },
         },
       },
       email: {
@@ -57,7 +72,10 @@ const model = (sequelize, DataTypes) => {
         allowNull: true,
         unique: true,
         validate: {
-          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+          is: {
+            args: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+            msg: '이메일 형식이 올바르지 않습니다.',
+          },
         },
       },
       sub_email: {
@@ -65,7 +83,10 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         unique: true,
         validate: {
-          is: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+          is: {
+            args: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/,
+            msg: 'sub email의 형식이 올바르지 않습니다.',
+          },
         },
       },
     },
@@ -104,6 +125,18 @@ const model = (sequelize, DataTypes) => {
     User.hasMany(Mail, { foreignKey: 'owner', sourceKey: 'no' });
     User.hasMany(Address, { foreignKey: 'user_no', sourceKey: 'no' });
     User.hasMany(Category, { foreignKey: 'user_no', sourceKey: 'no' });
+  };
+
+  User.findOrCreateById = ({ user_id, name, password, sub_email }) => {
+    return User.findOrCreate({
+      where: { user_id },
+      defaults: {
+        user_id,
+        name,
+        password,
+        sub_email,
+      },
+    });
   };
 
   return User;

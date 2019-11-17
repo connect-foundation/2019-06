@@ -1,24 +1,18 @@
-import db from '../../database';
-import ErrorResponse from '../../libraries/error-response';
-import { parseValidationError } from '../../libraries/parse-sequelize-error';
+import status from 'http-status';
+import validation from '../../libraries/validation/user';
+import service from './service';
 
 const registerUser = async (req, res, next) => {
-  const { id, name, password, email } = req.body;
-
   let newUser;
 
   try {
-    newUser = await db.User.build({ user_id: id, name, password, sub_email: email });
-    await newUser.validate();
-    await newUser.save();
+    await validation.join(req.body);
+    newUser = await service.register(req.body);
   } catch (error) {
-    const parsedError = parseValidationError(error);
-    return next(new ErrorResponse(parsedError));
+    return next(error);
   }
 
-  const user = newUser.get({ plain: true });
-  delete user.password;
-  res.status(201).json({ user });
+  return res.status(status.CREATED).json({ newUser });
 };
 
 export default { registerUser };
