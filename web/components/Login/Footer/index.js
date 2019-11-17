@@ -6,13 +6,13 @@ import S from './styled';
 const Footer = () => (
   <S.Footer>
     <Link href="help/id">
-      <S.A>아이디 찾기</S.A>
+      <S.TextLink>아이디 찾기</S.TextLink>
     </Link>
     <Link href="held/password">
-      <S.A>비밀번호 찾기</S.A>
+      <S.TextLink>비밀번호 찾기</S.TextLink>
     </Link>
     <Link href="register">
-      <S.A>회원가입</S.A>
+      <S.TextLink>회원가입</S.TextLink>
     </Link>
   </S.Footer>
 );
