@@ -2,10 +2,10 @@ const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS, SMTP_PORT } = proce
 
 const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
-  attachments = attachments.map(attachment => ({
-    name: attachment.originalname,
-    content: attachment.buffer,
-    contentType: attachment.mimetype,
+  attachments = attachments.map(({ originalname, buffer, mimetype }) => ({
+    name: originalname,
+    content: buffer,
+    contentType: mimetype,
   }));
 
   return {
