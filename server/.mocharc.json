@@ -9,6 +9,7 @@
   "timeout": false,
   "ui": "bdd",
   "watch-files": ["test/**/*.js"],
-  "watch-ignore": [],
-  "require": ["@babel/register"]
+  "watch-ignore": ["test/**/database.bulk.spec.js"],
+  "require": ["@babel/register"],
+  "exclude": ["test/**/database.bulk.spec.js"]
 }
