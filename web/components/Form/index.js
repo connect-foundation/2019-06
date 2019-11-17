@@ -12,6 +12,7 @@ import {
 import { initialState, errorReducer } from './reducers';
 import { RESET, SET_ID_ERROR_MSG, SET_PASSWORD_ERROR_MSG, SET_LOGIN_ERROR_MSG } from './actions';
 import validator from '../../utils/validator';
+import { getErrorMessage } from '../../utils/error-parser';
 import S from './styled';
 
 const Form = () => {
@@ -26,16 +27,9 @@ const Form = () => {
       const body = { id, password };
       const { data } = await axios.post('/auth/login', body);
       setUser(data);
-
       Router.push('/');
     } catch (err) {
-      const {
-        response: {
-          data: {
-            errorCode: { message },
-          },
-        },
-      } = err;
+      const message = getErrorMessage(err);
       dispatchErrorMsg({ type: SET_LOGIN_ERROR_MSG, payload: message });
     }
   };
