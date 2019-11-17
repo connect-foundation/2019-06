@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import chai from 'chai';
 
 import service from '../../src/v1/auth/service';
 import DB from '../../src/database';
