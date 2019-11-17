@@ -2,9 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 
-import { UserContext } from '../../UserContext';
+import { UserContext } from '../UserContext';
 
-import validator from '../../../utils/validator';
+import validator from '../../utils/validator';
 import S from './styled';
 
 const Form = () => {

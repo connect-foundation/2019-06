@@ -1,18 +1,18 @@
 import React from 'react';
 
-import Form from '../components/login/Form';
-import Header from '../components/login/Header';
-import Footer from '../components/login/Footer';
+import Form from '../components/Form';
+import SmallHeader from '../components/SmallHeader';
+import LinkArea from '../components/LinkArea';
 
-import * as S from '../components/login/styled';
+import * as S from '../components/GlobalStyle';
 
 const LoginPage = () => (
-  <S.FlexWrap>
-    <Header />
+  <S.FlexCenterWrap>
+    <SmallHeader />
     <Form />
-    <S.HR />
-    <Footer />
-  </S.FlexWrap>
+    <S.HorizontalLine />
+    <LinkArea />
+  </S.FlexCenterWrap>
 );
 
 export default LoginPage;

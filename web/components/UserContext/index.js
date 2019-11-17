@@ -18,10 +18,6 @@ class UserProvider extends Component {
     Router.push('/login');
   };
 
-  setFail = fail => {
-    this.setState({ fail });
-  };
-
   setUser = user => {
     this.setState({ user });
   };

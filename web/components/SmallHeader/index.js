@@ -1,9 +1,9 @@
 import React from 'react';
 
 import S from './styled';
-import logo from '../../../assets/imgs/logo.png';
+import logo from '../../assets/imgs/logo.png';
 
-const Header = () => {
+const SmallHeader = () => {
   return (
     <S.Brand>
       <S.Logo src={logo} />
@@ -11,4 +11,4 @@ const Header = () => {
     </S.Brand>
   );
 };
-export default Header;
+export default SmallHeader;
