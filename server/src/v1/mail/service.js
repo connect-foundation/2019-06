@@ -11,16 +11,13 @@ const getRawMails = async (userNo, userEmail) => {
 };
 
 const saveAttachments = async (attachments, mailTemplateNo) => {
+  const processedAttachments = attachments.map(attachment => {
+    const { type, name, content } = attachment;
+    return { contentType: type, name, content, mail_template_id: mailTemplateNo };
+  });
+
   try {
-    await attachments.forEach(async attachment => {
-      const { contentType: type, name, content } = attachment;
-      await DB.Attachment.create({
-        mail_template_id: mailTemplateNo,
-        type,
-        name,
-        content,
-      });
-    });
+    await DB.Attachment.bulkCreate(processedAttachments);
   } catch (error) {
     throw new ErrorResponse(ERROR_CODE.FAIL_TO_SAVE_ATTACHMENT);
   }
