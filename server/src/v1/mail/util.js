@@ -16,10 +16,10 @@ const getMailData = ({ from, to, subject, text, attachments = [] }) => {
 };
 
 const getTransport = () => {
-  const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
+  const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS, SMTP_PORT } = process.env;
   return {
     host: `mail.${DEFAULT_DOMAIN_NAME}`,
-    port: 465,
+    port: SMTP_PORT,
     secure: true,
     auth: {
       user: MAIL_AUTH_USER,
