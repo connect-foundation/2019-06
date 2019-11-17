@@ -1,7 +1,12 @@
 import App from 'next/app';
 import React from 'react';
 import Head from 'next/head';
+import axios from 'axios';
 import { ThemeProvider } from 'styled-components';
+import { UserProvider } from '../components/UserContext';
+import { BASE_URL } from '../config/axios-config';
+
+axios.defaults.baseURL = BASE_URL;
 
 const theme = {
   colors: {
@@ -29,7 +34,9 @@ export default class MyApp extends App {
           </style>
         </Head>
         <ThemeProvider theme={theme}>
-          <Component {...pageProps} />
+          <UserProvider>
+            <Component {...pageProps} />
+          </UserProvider>
         </ThemeProvider>
       </>
     );

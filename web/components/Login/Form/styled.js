@@ -32,7 +32,7 @@ const ErrorText = styled.span`
   color: red;
   margin: 0;
   padding: 0;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
 `;
 
 export default {

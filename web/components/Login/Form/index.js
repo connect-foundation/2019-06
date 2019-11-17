@@ -1,19 +1,38 @@
-import React, { useState } from 'react';
-import { useRouter } from 'next/router';
-import validator from './validator';
+import React, { useState, useContext, useEffect } from 'react';
+import Router from 'next/router';
+import axios from 'axios';
 
+import { UserContext } from '../../UserContext';
+
+import validator from '../../../utils/validator';
 import S from './styled';
 
 const Form = () => {
+  const { setUser } = useContext(UserContext);
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [msg, setMsg] = useState('');
 
-  const router = useRouter();
+  const signIn = (id, password) => {
+    return axios
+      .post('/auth/login', {
+        id,
+        password,
+      })
+      .then(({ data }) => {
+        setUser({ user: data });
+        Router.push('/');
+      })
+      .catch(err => {
+        setMsg('가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.');
+      });
+  };
 
-  const onSubmitHandler = e => {
+  const onSubmitHandler = async e => {
     e.preventDefault();
-    if (validateForm(userId, userPassword)) router.push('/');
+    if (validateForm(userId, userPassword)) {
+      signIn(userId, userPassword);
+    }
   };
 
   const validateForm = (id, password) => {
@@ -36,8 +55,6 @@ const Form = () => {
       setMsg('잘못된 비밀번호입니다.');
       return false;
     }
-
-    setMsg('');
     return true;
   };
 
