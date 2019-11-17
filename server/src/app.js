@@ -4,11 +4,13 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
+import cors from 'cors';
 
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
 import ErrorResponse from './libraries/error-response';
 import ERROR_CODE from './libraries/error-code';
+import corsOptions from './config/cors-options';
 
 dotenv.config();
 
@@ -16,13 +18,8 @@ const app = express();
 const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
-app.all('/*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', FRONTEND_SERVER_ADDRESS);
-  res.header('Access-Control-Allow-Headers', '*');
-  res.header('Access-Control-Allow-Method', '*');
-  next();
-});
 
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(COOKIE_SECRET));
