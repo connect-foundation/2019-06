@@ -1,4 +1,4 @@
-import React, { Component, createContext } from 'react';
+import React, { useState, createContext } from 'react';
 import axios from 'axios';
 import Router from 'next/router';
 
@@ -6,32 +6,16 @@ const UserContext = createContext();
 
 const { Provider } = UserContext;
 
-class UserProvider extends Component {
-  state = {
-    user: null,
-  };
+const UserProvider = props => {
+  const [user, setUser] = useState(null);
 
-  signOut = () => {
-    this.setState({
-      user: null,
-    });
+  const signOut = () => {
+    setUser(user);
     Router.push('/login');
   };
 
-  setUser = user => {
-    this.setState({ user });
-  };
-
-  render() {
-    const {
-      state: { user },
-      signOut,
-      setUser,
-    } = this;
-
-    const value = { user, signOut, setUser };
-    return <Provider value={value}>{this.props.children}</Provider>;
-  }
-}
+  const value = { user, signOut, setUser };
+  return <Provider value={value}>{props.children}</Provider>;
+};
 
 export { UserProvider, UserContext };

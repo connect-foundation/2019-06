@@ -10,7 +10,7 @@ const Input = styled.input`
 `;
 
 const Form = styled.form`
-  width: 300px;
+  width: 350px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -34,6 +34,8 @@ const ErrorText = styled.span`
   margin: 0;
   padding: 0;
   font-size: 0.6rem;
+  height: 0.6rem;
+  margin-bottom: 5px;
 `;
 
 export default {
