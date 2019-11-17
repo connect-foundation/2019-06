@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import should from 'should';
 import { validate, checkUser } from '../src/libraries/validator';
 
@@ -15,12 +16,10 @@ describe('validator 모듈의', () => {
       validate('id', 'abcde!@#').should.be.equal(false);
     });
 
-    // 길이 20초과
     it('길이가 21이상인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validate('id', 'abcdeabcdeabcdeabcde1').should.be.equal(false);
     });
 
-    // 길이 5미만
     it('길이가 5미만인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validate('id', 'aaaa').should.be.equal(false);
     });
