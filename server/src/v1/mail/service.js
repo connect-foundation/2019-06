@@ -40,8 +40,8 @@ const saveMail = async mailContents => {
 
 const sendMail = async mailContents => {
   const transporter = nodemailer.createTransport(U.getTransport());
-  await transporter.sendMail(mailContents);
   await saveMail(mailContents);
+  await transporter.sendMail(mailContents);
   return mailContents;
 };
 
