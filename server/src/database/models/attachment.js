@@ -30,6 +30,8 @@ const model = (sequelize, DataTypes) => {
       paranoid: false,
       underscored: true,
       tableName: 'tbl_attachment',
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 

@@ -21,6 +21,8 @@ const model = (sequelize, DataTypes) => {
       tableName: 'tbl_classification_pattern',
       timestamps: false,
       paranoid: false,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
