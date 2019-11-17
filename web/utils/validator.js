@@ -9,7 +9,9 @@ const validate = (type, value) => {
   const regexs = regexsOfType[type];
 
   for (const regex of regexs) {
-    if (!regex.test(value)) return false;
+    if (!regex.test(value)) {
+      return false;
+    }
   }
   return true;
 };
