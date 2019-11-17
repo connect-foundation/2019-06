@@ -13,9 +13,15 @@ import ERROR_CODE from './libraries/error-code';
 dotenv.config();
 
 const app = express();
-const { SESSION_SECRET, COOKIE_SECRET } = process.env;
+const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
+app.all('/*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', FRONTEND_SERVER_ADDRESS);
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Method', '*');
+  next();
+});
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -35,6 +41,7 @@ app.use(passport.session());
 
 app.use(helmet());
 app.set('trust proxy', 1);
+
 app.use('/v1', v1);
 
 app.use((req, res, next) => next(PAGE_NOT_FOUND_EXCEPTION));
