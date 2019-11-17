@@ -1,5 +1,5 @@
 import service from './service';
-import U from './util';
+import U from '../../libraries/mail-util';
 import ERROR_CODE from '../../libraries/error-code';
 import ErrorResponse from '../../libraries/error-response';
 
@@ -19,7 +19,7 @@ const list = async (req, res, next) => {
 const write = async (req, res, next) => {
   const attachments = req.files;
   const { from, to, subject, text } = req.body;
-  const mailContents = U.getMailData({ from, to, subject, text, attachments });
+  const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
 
   let mail;
   try {

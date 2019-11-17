@@ -1,4 +1,4 @@
-const getMailData = ({ from, to, subject, text, attachments = [] }) => {
+const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
   attachments = attachments.map(attachment => ({
     name: attachment.originalname,
@@ -29,6 +29,6 @@ const getTransport = () => {
 };
 
 export default {
-  getMailData,
+  getSingleMailData,
   getTransport,
 };

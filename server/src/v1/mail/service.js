@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
 import DB from '../../database/index';
-import U from './util';
+import U from '../../libraries/mail-util';
 import ERROR_CODE from '../../libraries/error-code';
 import ErrorResponse from '../../libraries/error-response';
 
