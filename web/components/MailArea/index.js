@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import * as S from './styled';
+import S from './styled';
 import MailTemplate from '../MailTemplate';
 import ReadMail from '../ReadMail';
 import PrevNextMail from '../PrevNextMail';

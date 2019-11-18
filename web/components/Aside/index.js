@@ -1,5 +1,5 @@
 import React from 'react';
-import * as S from './styled';
+import S from './styled';
 import CategoryCard from './CategoryCard';
 
 const Aside = () => {
@@ -13,14 +13,14 @@ const Aside = () => {
   ));
 
   return (
-    <>
+    <S.Aside>
       <S.WriteArea>
         <S.WrtieButton onClick={e => console.log('히히')}>편지쓰기</S.WrtieButton>
         <S.WrtieButton>내게쓰기</S.WrtieButton>
       </S.WriteArea>
       <S.DefaultReadArea>{defaultCard}</S.DefaultReadArea>
       <S.OptionReadArea>{userCategoryCard}</S.OptionReadArea>
-    </>
+    </S.Aside>
   );
 };
 
