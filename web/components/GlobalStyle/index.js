@@ -7,6 +7,18 @@ const FlexWrap = styled.div`
   overflow: hidden;
 `;
 
+const FlexCenterWrap = styled(FlexWrap)`
+  justify-content: center;
+  align-items: center;
+  background-color: #f5f6fa;
+`;
+
+const HorizontalLine = styled.hr`
+  margin-top: 35px;
+  width: 300px;
+  color: #bdc3c7;
+`;
+
 const Header = styled.div`
   flex: 0 0 50px;
   display: flex;
@@ -42,4 +54,4 @@ const Footer = styled.footer`
   text-align: center;
 `;
 
-export { FlexWrap, Header, Content, Aside, Section, Footer };
+export { FlexWrap, FlexCenterWrap, Header, Content, Aside, Section, Footer, HorizontalLine };

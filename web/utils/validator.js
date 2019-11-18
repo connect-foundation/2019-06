@@ -1,13 +1,18 @@
-const regexOfType = {
-  id: /^[a-z0-9-_]{5,20}$/,
-  email: /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-  password: /^.{8,20}$/,
-  name: /^[가-힣]{1,10}$/,
+const regexsOfType = {
+  id: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/, /^.{5,20}$/],
+  email: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/],
+  password: [/^.{8,20}$/],
+  name: [/^[가-힣]{1,10}$/],
 };
 
 const validate = (type, value) => {
-  const regex = regexOfType[type];
-  if (!regex.test(value)) return false;
+  const regexs = regexsOfType[type];
+
+  for (const regex of regexs) {
+    if (!regex.test(value)) {
+      return false;
+    }
+  }
   return true;
 };
 
