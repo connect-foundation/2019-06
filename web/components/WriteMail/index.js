@@ -5,6 +5,7 @@ import InputSubject from './InputSubject';
 import InputBody from './InputBody';
 import SubmitButton from './SubmitButton';
 import WriteMailContextProvider from './ContextProvider';
+import DropZone from './DropZone';
 
 const WriteMail = () => (
   <WriteMailContextProvider>
@@ -13,6 +14,7 @@ const WriteMail = () => (
       <InputSubject />
       <InputBody />
       <SubmitButton />
+      <DropZone />
     </S.WriteArea>
   </WriteMailContextProvider>
 );
