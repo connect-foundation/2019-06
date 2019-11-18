@@ -4,7 +4,7 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 
 const rootEmail = 'root@daitnu.com';
-describe('User DB query Test', () => {
+describe('Mail DB query Test', () => {
   before(async () => {
     await DB.sequelize.sync({ force: true });
     await mock();
@@ -33,6 +33,13 @@ describe('User DB query Test', () => {
         mail_template_id: 1,
       });
       const data = result.get({ plain: true });
+      data.should.be.properties({
+        owner: 1,
+        mail_template_id: 1,
+        is_important: false,
+        is_read: false,
+        is_removed: false,
+      });
     });
   });
 });

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import should from 'should';
 import { validate, checkUser } from '../src/libraries/validator';
 
@@ -15,12 +16,10 @@ describe('validator 모듈의', () => {
       validate('id', 'abcde!@#').should.be.equal(false);
     });
 
-    // 길이 20초과
     it('길이가 21이상인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validate('id', 'abcdeabcdeabcdeabcde1').should.be.equal(false);
     });
 
-    // 길이 5미만
     it('길이가 5미만인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validate('id', 'aaaa').should.be.equal(false);
     });
@@ -46,14 +45,18 @@ describe('validator 모듈의', () => {
   });
 
   describe('validate(name) 호출시', () => {
-    it('한글이 아닌 이름을 넘겨줄 경우 false를 반환한다.', () => {
-      validate('name', 'abcde').should.be.equal(false);
+    it('1~10글자 사이의 영어를 넘겨줄 경우 true를 반환한다.', () => {
+      validate('name', 'abc abc').should.be.equal(true);
+      validate('name', 'abcd abcd').should.be.equal(true);
+      validate('name', 'abcA AA').should.be.equal(true);
     });
+
     it('1~10글자 사이의 한글을 넘겨줄 경우 true를 반환한다.', () => {
       validate('name', '이정환').should.be.equal(true);
       validate('name', '이정환환환').should.be.equal(true);
       validate('name', '이').should.be.equal(true);
     });
+
     it('길이가 11이상인 문자열을 넘겨줄 경우 false를 반환한다.', () => {
       validate('name', '김아무개아무개아무개아무개').should.be.equal(false);
     });
