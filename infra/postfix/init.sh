@@ -6,8 +6,8 @@ POSTFIX_MASTER=/etc/postfix/master.cf
 read -p "도메인 이름을 입력하세요: " DOMAIN_NAME
 
 # install postfix
-# apt-get install postfix
-# dpkg-reconfigure postfix
+apt-get install postfix
+dpkg-reconfigure postfix
 
 # set SASL of SMTP
 postconf -e 'smtpd_sasl_type = dovecot'
@@ -19,8 +19,8 @@ postconf -e 'smtpd_sasl_auth_enable = yes'
 postconf -e 'smtpd_recipient_restrictions = permit_sasl_authenticated permit_mynetworks reject_unauth_destination'
 
 # install letsencrypt for TLS/SSL
-# apt install letsencrypt
-# letsencrypt certonly --standalone -d mail.$DOMAIN_NAME
+apt install letsencrypt
+letsencrypt certonly --standalone -d mail.$DOMAIN_NAME
 
 # set TLS
 postconf -e 'smtp_tls_security_level = may'
@@ -30,7 +30,7 @@ postconf -e 'smtpd_tls_key_file=/etc/letsencrypt/live/mail.'$DOMAIN_NAME'/privke
 postconf -e 'smtpd_tls_cert_file=/etc/letsencrypt/live/mail.'$DOMAIN_NAME'/fullchain.pem'
 postconf -e 'smtpd_tls_loglevel = 1'
 postconf -e 'smtpd_tls_received_header = yes'
-postconf -e 'myhostname = mail.'$DOMAIN_NAME
+postconf -e 'myhostname = '$DOMAIN_NAME
 
 # set smtps, submission
 sed -i '12c\\smtp      inet  n       -       y       -       -       smtpd' $POSTFIX_MASTER
