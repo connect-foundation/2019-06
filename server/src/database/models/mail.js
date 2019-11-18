@@ -56,10 +56,11 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail) => {
+  Mail.findAllReceivedMail = (userNo, userEmail, filter = {}) => {
     return Mail.findAll({
       where: {
         owner: userNo,
+        ...filter,
       },
       include: [
         {
@@ -71,6 +72,30 @@ const model = (sequelize, DataTypes) => {
           },
         },
       ],
+    });
+  };
+
+  Mail.findAllFilteredMail = (userNo, mailFilter = {}, mailTemplateFilter = {}, options = {}) => {
+    return Mail.findAll({
+      where: {
+        owner: userNo,
+        ...mailFilter,
+      },
+      include: [
+        {
+          model: sequelize.models.MailTemplate,
+          where: {
+            ...mailTemplateFilter,
+          },
+          include: [
+            {
+              model: sequelize.models.Attachment,
+            },
+          ],
+        },
+      ],
+      raw: true,
+      ...options,
     });
   };
 
