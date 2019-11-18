@@ -1,13 +1,16 @@
-const getErrorMessage = err => {
-  const {
-    response: {
-      data: {
-        errorCode: { message },
-      },
-    },
-  } = err;
+const errorParser = error => {
+  const { errorCode, fieldErrors } = error.response.data;
+  let errorMessage = errorCode.message;
+  if (!fieldErrors) {
+    return errorMessage;
+  }
 
-  return message;
+  errorMessage = fieldErrors.reduce(
+    (prev, next) => (prev += `\n${error.field} : ${error.reason}`),
+    errorMessage,
+  );
+
+  return errorMessage;
 };
 
-export { getErrorMessage };
+export { errorParser };

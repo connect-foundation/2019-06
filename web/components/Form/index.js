@@ -12,7 +12,7 @@ import {
 import { initialState, errorReducer } from './reducers';
 import { RESET, SET_ID_ERROR_MSG, SET_PASSWORD_ERROR_MSG, SET_LOGIN_ERROR_MSG } from './actions';
 import validator from '../../utils/validator';
-import { getErrorMessage } from '../../utils/error-parser';
+import { errorParser } from '../../utils/error-parser';
 import S from './styled';
 
 const Form = () => {
@@ -29,7 +29,7 @@ const Form = () => {
       setUser(data);
       Router.push('/');
     } catch (err) {
-      const message = getErrorMessage(err);
+      const message = errorParser(err);
       dispatchErrorMsg({ type: SET_LOGIN_ERROR_MSG, payload: message });
     }
   };
