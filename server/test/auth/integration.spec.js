@@ -21,6 +21,26 @@ describe('로그인 API POST /v1/auth/login으로 요청시', () => {
       .expect(200, done);
   });
 
+  it('형식에 맞지 않는 아이디일 경우 상태코드는 401이다.', done => {
+    request(app)
+      .post('/v1/auth/login')
+      .send({
+        id: 'ro',
+        password: '123456789',
+      })
+      .expect(401, done);
+  });
+
+  it('형식에 맞지 않은 비밀번호일 경우 상태코드는 401이다.', done => {
+    request(app)
+      .post('/v1/auth/login')
+      .send({
+        id: 'rooot123',
+        password: '11',
+      })
+      .expect(401, done);
+  });
+
   it('가입하지 않은 아이디일 경우 상태코드는 401이다.', done => {
     request(app)
       .post('/v1/auth/login')
