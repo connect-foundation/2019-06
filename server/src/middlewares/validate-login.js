@@ -4,7 +4,7 @@ import { checkLoginForm } from '../libraries/validator';
 
 const validateLogin = (req, res, next) => {
   if (!checkLoginForm(req.body)) {
-    return next(new ErrorResponse(ErrorCode.INVALID_INPUT_VALUE));
+    return next(new ErrorResponse(ErrorCode.INVALID_LOGIN_ID_OR_PASSWORD));
   }
   return next();
 };

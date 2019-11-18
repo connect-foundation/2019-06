@@ -26,11 +26,11 @@ const ERROR_CODE = {
   PRIVATE_PATH: $(404, 'PAGE NOT FOUND', 'COMMON006'), // 403대신 404로 응답함으로써 PRIVATE을 보장한다.
   FORBIDDEN: $(403, '권한이 없습니다.', 'COMMON007'),
   UNAUTHORIZED: $(401, '로그인 후 이용해 주세요.', 'COMMON008'),
-
-  USER_NOT_FOUND: $(404, '없는 아이디 입니다.', 'LOGIN001'),
-  INVALID_LOGIN_PASSWORD: $(400, '비밀번호가 일치하지 않습니다.', 'LOGIN002'),
-  ALREADY_LOGGED_IN: $(409, '이미 로그인되어 있습니다.', 'LOGIN003'),
-
+  INVALID_LOGIN_ID_OR_PASSWORD: $(
+    401,
+    '가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.',
+    'LOGIN001',
+  ),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
 

@@ -48,7 +48,7 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           is: {
-            args: /[가-힣]/,
+            args: /[a-zA-Z가-힣 ]/,
             msg: '이름의 형식이 올바르지 않습니다.',
           },
           len: {

@@ -8,13 +8,13 @@ const localLogin = async ({ id, password }) => {
   const user = await DB.User.findOneById(id);
 
   if (!user) {
-    throw new ErrorResponse(ERROR_CODE.USER_NOT_FOUND);
+    throw new ErrorResponse(ERROR_CODE.INVALID_LOGIN_ID_OR_PASSWORD);
   }
 
   const match = await bcrypt.compare(password, user.password);
 
   if (!match) {
-    throw new ErrorResponse(ERROR_CODE.INVALID_LOGIN_PASSWORD);
+    throw new ErrorResponse(ERROR_CODE.INVALID_LOGIN_ID_OR_PASSWORD);
   }
 
   return user;
