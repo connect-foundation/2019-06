@@ -16,9 +16,7 @@ describe('Mail bulk query test', () => {
     const email = 'root@daitnu.com';
     const userNo = 1;
 
-    const mailFilter = {
-      owner: userNo,
-    };
+    const mailFilter = {};
     const mailTemplateFilter = {
       from: {
         [DB.Sequelize.Op.not]: email,
@@ -66,7 +64,7 @@ describe('Mail bulk query test', () => {
     filteredMails.should.have.length(0);
   });
 
-  it('메일에 attachment가 있다면 모두 포함되어 반환된다.. ', async () => {
+  it('카테고리 메일함에는 지정된 카테고리No mail만 존재한다.', async () => {
     const email = 'root@daitnu.com';
     const userNo = 1;
     const categoryNo = 1;
@@ -85,12 +83,10 @@ describe('Mail bulk query test', () => {
     filteredMails.should.have.length(0);
   });
 
-  it('query test...', async () => {
+  it('메일에 attachment가 있다면 모두 포함되어 반환된다..', async () => {
     const userNo = 1;
 
-    const mailFilter = {
-      owner: userNo,
-    };
+    const mailFilter = {};
     const mailTemplateFilter = {
       no: 1,
     };
