@@ -11,8 +11,9 @@
     "scss": "sass ./src/public/scss:./src/public/css",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json",
     "test:watch": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json -w",
-    "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exclude ./test/**/database.spec.js --forbid-only",
-    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --forbid-only"
+    "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exclude ./test/**/!\"(\"database\")\".spec.js --forbid-only",
+    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --forbid-only",
+    "test:bulk": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --require @babel/register ./test/**/database.bulk.spec.js"
   },
   "engines": {
     "node": "10.16.0",
