@@ -19,7 +19,7 @@ describe('Mail api test...', () => {
         .post('/v1/mail')
         .send({
           from: FROM_EMAIL,
-          to: 'rooot@daitnu.com',
+          to: ['rooot@daitnu.com'],
           subject: 'title이다',
           text: 'body이다',
           attachments: [],
@@ -44,7 +44,7 @@ describe('Mail api test...', () => {
         .post('/v1/mail')
         .send({
           from: FROM_EMAIL,
-          to: 'yyyy@da.c',
+          to: ['yyyy@da.c'],
           subject: 'title이sdadweq다',
           text: 'body이czxczx다',
           attachments: [],
@@ -56,7 +56,7 @@ describe('Mail api test...', () => {
         .post('/v1/mail')
         .send({
           from: FROM_EMAIL,
-          to: 'qwewywq@dassass',
+          to: ['qwewywq@dassass'],
           subject: 'titeqweqqele이다',
           text: 'body이sdasdqw다',
           attachments: [],
