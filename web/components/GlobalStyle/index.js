@@ -19,15 +19,6 @@ const HorizontalLine = styled.hr`
   color: #bdc3c7;
 `;
 
-const Header = styled.div`
-  flex: 0 0 50px;
-  display: flex;
-  border-bottom: 2px solid #eceff1;
-  flex-direction: row;
-  overflow: hidden;
-  padding: 5px 10px;
-`;
-
 const Content = styled.div`
   flex: 1 1;
   display: flex;
@@ -54,4 +45,4 @@ const Footer = styled.footer`
   text-align: center;
 `;
 
-export { FlexWrap, FlexCenterWrap, Header, Content, Aside, Section, Footer, HorizontalLine };
+export { FlexWrap, FlexCenterWrap, Content, Aside, Section, Footer, HorizontalLine };

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import * as S from './styled';
 
 const Header = ({ brand }) => (
-  <>
+  <S.Header>
     <S.Brand>
       <S.Center>
         <Link href="/">
@@ -17,7 +17,7 @@ const Header = ({ brand }) => (
       <S.SearchInput placeholder="메일 검색" type="text" />
       <button>필터</button>
     </S.Search>
-  </>
+  </S.Header>
 );
 
 export default Header;
