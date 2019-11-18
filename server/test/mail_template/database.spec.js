@@ -14,7 +14,7 @@ describe('MailTemplate DB test...', () => {
       title: 'db test',
       subject: 'subject',
       tmp: '그냥 만들어봄 ㅎ.ㅎ',
-      body: '바디입니다.',
+      text: '바디입니다.',
     };
 
     const result = await DB.MailTemplate.create({ ...body });
@@ -23,12 +23,31 @@ describe('MailTemplate DB test...', () => {
       from: 'daitnu@daitnu.com',
       to: 'daitne@daitnu.com',
       subject: 'subject',
-      body: '바디입니다.',
+      text: '바디입니다.',
+    });
+  });
+
+  it('제목과 내용이 없어도 create 가능..!', async () => {
+    const body = {
+      from: 'daitnu@daitnu.com',
+      to: 'daitne@daitnu.com',
+      title: 'db test',
+      subject: '',
+      text: '',
+    };
+
+    const result = await DB.MailTemplate.create({ ...body });
+    const data = result.get({ plain: true });
+    data.should.be.properties({
+      from: 'daitnu@daitnu.com',
+      to: 'daitne@daitnu.com',
+      subject: '',
+      text: '',
     });
   });
 
   it('select test', async () => {
     const result = await DB.MailTemplate.findByPk(1, { raw: true });
-    result.should.have.keys('from', 'to', 'subject', 'body');
+    result.should.have.keys('from', 'to', 'subject', 'text');
   });
 });
