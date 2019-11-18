@@ -33,7 +33,16 @@ const ERROR_CODE = {
 
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
+
+  FAIL_TO_SEND_MAIL: $(500, '메일 전송에 실패하였습니다.', 'MAIL001'),
+  FAIL_TO_SAVE_MAIL: $(500, '메일을 데이터베이스에 저장하는데 실패하였습니다.', 'MAIL002'),
+
   IS_NOT_ALLOW_EXTENSION: $(400, '허용하지 않는 확장자입니다.', 'UPLOAD001'),
+  FAIL_TO_SAVE_ATTACHMENT: $(
+    500,
+    '첨부파일을 데이터베이스에 저장하는데 실패하였습니다.',
+    'UPLOAD002',
+  ),
 };
 
 export default ERROR_CODE;
