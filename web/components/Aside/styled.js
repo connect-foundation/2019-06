@@ -1,5 +1,11 @@
 import styled from 'styled-components';
 
+const Aside = styled.aside`
+  display: flex;
+  flex-direction: column;
+  padding-right: 1rem;
+`;
+
 const WriteArea = styled.div`
   flex: 0 0 80px;
   display: flex;
@@ -45,4 +51,4 @@ const OptionReadArea = styled.div`
   }
 `;
 
-export { WriteArea, DefaultReadArea, OptionReadArea, WrtieButton };
+export default { WriteArea, DefaultReadArea, OptionReadArea, WrtieButton, Aside };
