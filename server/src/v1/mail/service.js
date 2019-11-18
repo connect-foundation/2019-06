@@ -18,7 +18,10 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
 };
 
 const saveMail = async (mailContents, transaction) => {
-  const mailTemplateResult = await DB.MailTemplate.create(mailContents, { transaction });
+  const mailTemplateResult = await DB.MailTemplate.create(
+    { ...mailContents, to: mailContents.to.join(',') },
+    { transaction },
+  );
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await DB.Mail.create(
