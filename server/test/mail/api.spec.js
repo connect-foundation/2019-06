@@ -4,8 +4,6 @@ import app from '../../src/app';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 
-const FROM_EMAIL = 'joajoa@daitnu.com';
-
 describe('Mail api test...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -18,7 +16,6 @@ describe('Mail api test...', () => {
       request(app)
         .post('/v1/mail')
         .send({
-          from: FROM_EMAIL,
           to: ['rooot@daitnu.com'],
           subject: 'title이다',
           text: 'body이다',
@@ -43,7 +40,6 @@ describe('Mail api test...', () => {
       authenticatedUser
         .post('/v1/mail')
         .send({
-          from: FROM_EMAIL,
           to: ['yyyy@da.c'],
           subject: 'title이sdadweq다',
           text: 'body이czxczx다',
@@ -55,7 +51,6 @@ describe('Mail api test...', () => {
       authenticatedUser
         .post('/v1/mail')
         .send({
-          from: FROM_EMAIL,
           to: ['qwewywq@dassass'],
           subject: 'titeqweqqele이다',
           text: 'body이sdasdqw다',
