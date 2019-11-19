@@ -22,18 +22,26 @@ const regexsOfType = {
   ],
 };
 
-const validate = (type, value, showMsg = false) => {
+const validate = (type, value) => {
+  const regexs = regexsOfType[type];
+
+  for (const { regex } of regexs) {
+    if (!regex.test(value)) {
+      return false;
+    }
+  }
+  return true;
+};
+
+const validateAndGetMsg = (type, value) => {
   const regexs = regexsOfType[type];
 
   for (const { regex, msg } of regexs) {
     if (!regex.test(value)) {
-      if (showMsg) return msg;
-      return false;
+      return msg;
     }
   }
-
-  if (showMsg) return '';
-  return true;
+  return '';
 };
 
 // userInfo: {id, name, password, email}
@@ -49,5 +57,6 @@ const checkUser = ({ id, name, password, email }) => {
 };
 export default {
   validate,
+  validateAndGetMsg,
   checkUser,
 };

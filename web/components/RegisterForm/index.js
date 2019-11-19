@@ -82,7 +82,7 @@ const RegisterForm = () => {
   const validateForm = () => {
     const errMsgs = { id: '', password: '', name: '', email: '' };
     Object.keys(errMsgs).forEach(key => {
-      errMsgs[key] = validator.validate(key, values[key], true);
+      errMsgs[key] = validator.validateAndGetMsg(key, values[key], true);
     });
     errMsgs.rePassword = '';
     if (values.password !== values.rePassword) {
