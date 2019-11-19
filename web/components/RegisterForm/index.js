@@ -46,7 +46,7 @@ const RegisterForm = () => {
   const [values, setValues] = React.useState(initialInputState);
   const [errors, setErrorMsg] = React.useState(initialErrorState);
 
-  const handleChange = prop => event => {
+  const handleInputChange = prop => event => {
     setValues({ ...values, [prop]: event.target.value });
   };
 
@@ -103,7 +103,7 @@ const RegisterForm = () => {
           label="이름"
           type="search"
           value={values.name}
-          onChange={handleChange('name')}
+          onChange={handleInputChange('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
@@ -118,7 +118,7 @@ const RegisterForm = () => {
           id="outlined-adornment-weight"
           label="아이디"
           value={values.id}
-          onChange={handleChange('id')}
+          onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           endAdornment={<InputAdornment position="end">@daitnu.com</InputAdornment>}
@@ -136,7 +136,7 @@ const RegisterForm = () => {
           id="outlined-password-input"
           label="비밀번호"
           value={values.password}
-          onChange={handleChange('password')}
+          onChange={handleInputChange('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -148,7 +148,7 @@ const RegisterForm = () => {
           id="outlined-password-input"
           label="확인"
           value={values.rePassword}
-          onChange={handleChange('rePassword')}
+          onChange={handleInputChange('rePassword')}
           className={classes.textField}
           error={errors.rePassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -169,7 +169,7 @@ const RegisterForm = () => {
           label="이메일"
           type="search"
           value={values.email}
-          onChange={handleChange('email')}
+          onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"

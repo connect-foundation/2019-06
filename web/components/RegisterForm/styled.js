@@ -1,14 +1,5 @@
 import styled from 'styled-components';
 
-const Input = styled.input`
-  width: 100%;
-  border: 2px solid #f5f6f8;
-  box-sizing: border-box;
-  padding: 10px;
-  margin: 5px;
-  background-color: white;
-`;
-
 const InputForm = styled.form`
   width: 400px;
   display: flex;
@@ -59,7 +50,6 @@ const Title = styled.span`
 `;
 
 export default {
-  Input,
   InputForm,
   Button,
   ErrorText,
