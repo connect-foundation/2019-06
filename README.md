@@ -13,7 +13,8 @@
 
 </p>
 
-> Mail service
+> 우리들만의 이메일 서비스, 다잇누!  
+> Linux 환경에서 SMTP, POP3, IMAP 프로토콜을 이용하여 이메일 서버 구축
 
 ### 🏠 [Homepage](https://github.com/connect-foundation/2019-06)
 
@@ -22,6 +23,29 @@
 - node 10.16.0
 - npm 6.9.0
 
+## Install & Usage
+- Front-End
+```sh
+cd web
+npm install
+npm start
+```
+- Back-End
+```sh
+cd server
+npm install
+npm start
+```
+- Infra
+```sh
+cd infra
+./init.sh
+```
+
+## Run tests
+```sh
+npm run test
+```
 
 ## Team
 👤 [@BuildTheTruth](https://github.com/BuildTheTruth)
