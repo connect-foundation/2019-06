@@ -6,6 +6,7 @@
   "scripts": {
     "start": "nodemon --config nodemon.json",
     "dev": "nodemon --config nodemon.json",
+    "prettier": "prettier --write src/**/*.js",
     "dev:force": "export force=true || SET \"force=true\"&& npm run dev",
     "production": "export NODE_ENV=production || set \"NODE_ENV=production\" && babel-node src/bin/www.js",
     "scss": "sass ./src/public/scss:./src/public/css",

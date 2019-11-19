@@ -24,8 +24,8 @@ describe('회원등록 POST /users는...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
-    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
     await mock();
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
   });
 
   it('# 성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
