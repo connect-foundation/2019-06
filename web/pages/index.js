@@ -1,35 +1,39 @@
-import React, { useContext, useEffect } from 'react';
-import { useRouter } from 'next/router';
-
+import React, { useContext, useEffect, useState } from 'react';
+import Router from 'next/router';
 import * as GS from '../components/GlobalStyle';
 import Aside from '../components/Aside';
 import MailArea from '../components/MailArea';
 import Header from '../components/Header';
-import { UserContext } from '../components/UserContext';
+import { AppContext } from '../contexts';
 import Footer from '../components/Footer';
+import WriteMail from '../components/WriteMail';
+import Loading from '../components/Loading';
 
 const Home = () => {
-  const { user } = useContext(UserContext);
-  const router = useRouter();
+  const { user } = useContext(AppContext).userContext;
+  const [readMode, setReadMode] = useState(true);
 
+  console.log(user);
   useEffect(() => {
-    if (!user) router.push('/login');
-  }, [router, user]);
+    if (!user) {
+      Router.push('/login');
+    }
+  }, [user]);
 
-  if (!user) {
-    return <></>;
-  }
+  const section = readMode ? <MailArea /> : <WriteMail />;
 
-  return (
+  const indexPage = (
     <GS.FlexWrap>
       <Header brand={'Daitnu'} />
       <GS.Content>
-        <Aside />
-        <MailArea />
+        <Aside setReadMode={setReadMode} />
+        {section}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>
   );
+
+  return user ? indexPage : <Loading />;
 };
 
 export default Home;

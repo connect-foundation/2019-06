@@ -2,7 +2,7 @@ import React, { useState, useContext, useReducer } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 
-import { UserContext } from '../UserContext';
+import { AppContext } from '../../contexts';
 import {
   ERROR_ID_EMPTY,
   ERROR_PASSWORD_EMPTY,
@@ -16,7 +16,9 @@ import { errorParser } from '../../utils/error-parser';
 import S from './styled';
 
 const Form = () => {
-  const { setUser } = useContext(UserContext);
+  const {
+    userContext: { setUser },
+  } = useContext(AppContext);
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
 

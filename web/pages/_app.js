@@ -3,7 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import axios from 'axios';
 import { ThemeProvider } from 'styled-components';
-import { UserProvider } from '../components/UserContext';
+import { AppProvider } from '../contexts';
 import { BASE_URL } from '../config/axios-config';
 
 axios.defaults.baseURL = BASE_URL;
@@ -17,6 +17,7 @@ const theme = {
 export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
+
     return (
       <>
         <Head>
@@ -34,9 +35,9 @@ export default class MyApp extends App {
           </style>
         </Head>
         <ThemeProvider theme={theme}>
-          <UserProvider>
+          <AppProvider>
             <Component {...pageProps} />
-          </UserProvider>
+          </AppProvider>
         </ThemeProvider>
       </>
     );
