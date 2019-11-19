@@ -2,9 +2,9 @@ import STATUS from 'http-status';
 import service from './service';
 import U from '../../libraries/mail-util';
 import { validate } from '../../libraries/validator';
-import ERROR_CODE from '../../libraries/error-code';
-import ErrorResponse from '../../libraries/error-response';
-import ErrorField from '../../libraries/error-field';
+import ERROR_CODE from '../../libraries/exception/error-code';
+import ErrorResponse from '../../libraries/exception/error-response';
+import ErrorField from '../../libraries/exception/error-field';
 
 const list = async (req, res, next) => {
   const { no: userNo } = req.user;

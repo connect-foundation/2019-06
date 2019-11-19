@@ -3,8 +3,8 @@ import should from 'should';
 import DB from '../../src/database';
 import service from '../../src/v1/users/service';
 import mock from '../../mock/create-dummy-data';
-import ErrorResponse from '../../src/libraries/error-response';
-import ERROR_CODE from '../../src/libraries/error-code';
+import ErrorResponse from '../../src/libraries/exception/error-response';
+import ERROR_CODE from '../../src/libraries/exception/error-code';
 
 const user = {
   user_id: 'userid',
