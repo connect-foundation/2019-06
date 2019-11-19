@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const WriteBody = styled.div`
+export const WriteBody = styled.div`
   outline: none;
   border: 1px solid black;
   border-radius: 5px;
@@ -9,5 +9,3 @@ const WriteBody = styled.div`
   font-size: 14px;
   overflow-y: scroll;
 `;
-
-export default { WriteBody };

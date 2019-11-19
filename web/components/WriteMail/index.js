@@ -1,5 +1,5 @@
 import React from 'react';
-import S from './styled';
+import * as S from './styled';
 import InputReceiver from './InputReceiver';
 import InputSubject from './InputSubject';
 import InputBody from './InputBody';

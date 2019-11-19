@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const ReceiverListWrapper = styled.div`
+export const ReceiverListWrapper = styled.div`
   min-height: 29px;
   padding: 5px 5px;
   border: 1px solid black;
@@ -9,13 +9,13 @@ const ReceiverListWrapper = styled.div`
   cursor: text;
 `;
 
-const ReceiverListUl = styled.ul`
+export const ReceiverListUl = styled.ul`
   margin: 0;
   padding: 0;
   list-style-type: none;
 `;
 
-const ReceiverListLi = styled.li`
+export const ReceiverListLi = styled.li`
   margin-right: 3px;
   float: left;
   padding: 5px 5px 2px 5px;
@@ -33,7 +33,7 @@ const ReceiverListLi = styled.li`
   color: ${props => (props.validation ? 'black' : '#FDEFEF')};
 `;
 
-const ReceiverLiDeleteBtn = styled.div`
+export const ReceiverLiDeleteBtn = styled.div`
   margin-left: 5px;
   width: 20px;
   height: 20px;
@@ -47,7 +47,7 @@ const ReceiverLiDeleteBtn = styled.div`
   justify-content: center;
 `;
 
-const ReceiverListInput = styled.input`
+export const ReceiverListInput = styled.input`
   width: 20px;
   margin-top: 3px;
   float: left;
@@ -59,7 +59,7 @@ const ReceiverListInput = styled.input`
   padding-right: 10px;
 `;
 
-const ReceiverInputWidthGuide = styled.div`
+export const ReceiverInputWidthGuide = styled.div`
   display: inline-block;
   width: auto;
   height: auto;
@@ -69,12 +69,3 @@ const ReceiverInputWidthGuide = styled.div`
   left: -1000px;
   top: -1000px;
 `;
-
-export default {
-  ReceiverListWrapper,
-  ReceiverListUl,
-  ReceiverListLi,
-  ReceiverLiDeleteBtn,
-  ReceiverListInput,
-  ReceiverInputWidthGuide,
-};

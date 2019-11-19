@@ -10,7 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
-import GS from '../styled';
+import * as WM_S from '../styled';
 
 const DropZone = () => {
   const maxSize = 1048576;
@@ -29,7 +29,7 @@ const DropZone = () => {
 
   return (
     <>
-      <GS.RowWrapper>
+      <WM_S.RowWrapper>
         <div></div>
         <div>
           <div {...getRootProps()}>
@@ -38,8 +38,8 @@ const DropZone = () => {
             {isDragActive && 'Drop it!'}
           </div>
         </div>
-      </GS.RowWrapper>
-      <GS.RowWrapper>
+      </WM_S.RowWrapper>
+      <WM_S.RowWrapper>
         <div></div>
         <div>
           <Grid item xs={12} md={6}>
@@ -71,7 +71,7 @@ const DropZone = () => {
             </div>
           </Grid>
         </div>
-      </GS.RowWrapper>
+      </WM_S.RowWrapper>
     </>
   );
 };

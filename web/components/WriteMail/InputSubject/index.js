@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
-import S from './styled';
-import GS from '../styled';
+import * as S from './styled';
+import * as WM_S from '../styled';
 import { WriteMailContext } from '../ContextProvider';
 
 const InputSubject = () => {
   const { subjectComponent } = useContext(WriteMailContext);
   return (
-    <GS.RowWrapper>
-      <GS.Label>제목</GS.Label>
+    <WM_S.RowWrapper>
+      <WM_S.Label>제목</WM_S.Label>
       <S.InputSubject ref={subjectComponent} maxLength={50} />
-    </GS.RowWrapper>
+    </WM_S.RowWrapper>
   );
 };
 

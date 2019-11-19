@@ -1,12 +1,11 @@
-import React, { useState, useRef, useContext } from 'react';
-import S from './styled';
-import GS from '../styled';
+import React, { useRef, useContext } from 'react';
+import * as S from './styled';
+import * as WM_S from '../styled';
 import V from '../../../utils/validator';
 import { WriteMailContext } from '../ContextProvider';
+import SC from '../../../utils/special-characters';
 
 const ListOfReceivers = () => {
-  const [BLANK, SPACE, BACKSPACE, ENTER, COMMA] = ['', ' ', 'Backspace', 'Enter', ','];
-
   const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
@@ -17,55 +16,55 @@ const ListOfReceivers = () => {
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
 
-  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), BLANK);
+  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
-    if (replaced !== BLANK) {
+    if (replaced !== SC.BLANK) {
       setReceivers([...receivers, replaced]);
-      target.value = BLANK;
+      target.value = SC.BLANK;
       resizeInput(target);
     }
   };
 
   const keyDownHandler = e => {
     const { key, target } = e;
-    if (key === BACKSPACE && target.value === BLANK && receivers.length > 0) {
+    if (key === SC.BACKSPACE && target.value === SC.BLANK && receivers.length > 0) {
       target.value = receivers[receivers.length - 1];
       setReceivers([...receivers.slice(0, -1)]);
-    } else if (key === ENTER && target.value !== BLANK) {
-      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
+    } else if (key === SC.ENTER && target.value !== SC.BLANK) {
+      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
     resizeInput(target);
-    if (target.value.includes(COMMA) && target.value !== COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
-    } else if (target.value.includes(SPACE) && target.value !== SPACE) {
-      replaceAndSetReceiver(deleteByRegExp(SPACE), target);
+    if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
+      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+    } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
+      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
     }
   };
 
-  const getReceiverLis = () =>
-    receivers.map((receiver, idx) => (
-      <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
-        {receiver}
-        <S.ReceiverLiDeleteBtn
-          onClick={() =>
-            setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
-          }>
-          X
-        </S.ReceiverLiDeleteBtn>
-      </S.ReceiverListLi>
-    ));
+  // 문자가 같으면 오류 발생
+  const receiverDeleteBtn = idx =>
+    setReceivers([...receivers.filter(receiver => receivers.indexOf(receiver) !== idx)]);
 
   return (
-    <GS.RowWrapper>
-      <GS.Label>받는 사람</GS.Label>
+    <WM_S.RowWrapper>
+      <WM_S.Label>받는 사람</WM_S.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
-        <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>
+        <S.ReceiverListUl>
+          {receivers.map((receiver, idx) => (
+            <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
+              {receiver}
+              <S.ReceiverLiDeleteBtn onClick={() => receiverDeleteBtn(idx)}>
+                X
+              </S.ReceiverLiDeleteBtn>
+            </S.ReceiverListLi>
+          ))}
+        </S.ReceiverListUl>
         <S.ReceiverListInput
           ref={receiverInput}
           onKeyDown={keyDownHandler}
@@ -73,7 +72,7 @@ const ListOfReceivers = () => {
           contentEditable={true}
         />
       </S.ReceiverListWrapper>
-    </GS.RowWrapper>
+    </WM_S.RowWrapper>
   );
 };
 

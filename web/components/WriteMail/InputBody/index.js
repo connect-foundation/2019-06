@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
-import S from './styled';
-import GS from '../styled';
+import * as S from './styled';
+import * as WM_S from '../styled';
 import { WriteMailContext } from '../ContextProvider';
 
 const InputBody = () => {
   const { bodyComponent } = useContext(WriteMailContext);
 
   return (
-    <GS.RowWrapper>
-      <GS.Label>내용</GS.Label>
+    <WM_S.RowWrapper>
+      <WM_S.Label>내용</WM_S.Label>
       <S.WriteBody ref={bodyComponent} contentEditable={true} />
-    </GS.RowWrapper>
+    </WM_S.RowWrapper>
   );
 };
 
