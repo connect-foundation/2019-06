@@ -26,8 +26,7 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  ClassificationPattern.associate = ({ Category, ClassificationPatternType }) => {
-    Category.belongsTo(ClassificationPatternType, { foreignKey: 'category_no', targetKey: 'no' });
+  ClassificationPattern.associate = ({ Category }) => {
     ClassificationPattern.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 

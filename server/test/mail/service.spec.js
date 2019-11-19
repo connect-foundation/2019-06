@@ -25,7 +25,6 @@ describe('Mail Service Test', () => {
       'mail_template_id',
       'is_important',
       'is_read',
-      'is_removed',
       'MailTemplate',
     ]);
   });

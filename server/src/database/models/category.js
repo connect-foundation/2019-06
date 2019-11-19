@@ -15,6 +15,11 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         unique: true,
       },
+      is_default: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
     },
     {
       freezeTableName: true,

@@ -15,13 +15,30 @@ describe('Mail DB query Test', () => {
       owner: 1,
       mail_template_id: 1,
     });
-    const data = result.get({ plain: true });
-    data.should.be.properties({
-      owner: 1,
-      mail_template_id: 1,
-      is_important: false,
-      is_read: false,
-      is_removed: false,
+
+    it('MailTemplate From에 자기자신이 없다.', async () => {
+      const mails = await DB.Mail.findAllReceivedMail(1, rootEmail);
+
+      for (const mail of mails) {
+        const { MailTemplate } = mail.get({ plain: true });
+        MailTemplate.from.not.euqals(rootEmail);
+      }
+    });
+  });
+
+  describe('create는...', () => {
+    it('test', async () => {
+      const result = await DB.Mail.create({
+        owner: 1,
+        mail_template_id: 1,
+      });
+      const data = result.get({ plain: true });
+      data.should.be.properties({
+        owner: 1,
+        mail_template_id: 1,
+        is_important: false,
+        is_read: false,
+      });
     });
   });
 });
