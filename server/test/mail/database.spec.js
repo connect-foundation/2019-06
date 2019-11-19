@@ -38,7 +38,6 @@ describe('Mail DB query Test', () => {
         mail_template_id: 1,
         is_important: false,
         is_read: false,
-        is_removed: false,
       });
     });
   });

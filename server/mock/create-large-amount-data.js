@@ -23,7 +23,6 @@ const bulkCreateMail = async () => {
       mail_template_id: (i % 10) + 1,
       is_read: i % 2 === 0,
       is_important: i % 3 === 0,
-      is_removed: i % 5 === 0,
     };
     mails.push(mail);
   }

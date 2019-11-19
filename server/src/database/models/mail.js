@@ -33,11 +33,6 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
-      is_removed: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
     },
     {
       freezeTableName: true,
