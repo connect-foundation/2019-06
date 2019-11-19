@@ -7,11 +7,11 @@ import ErrorResponse from '../../libraries/error-response';
 import ErrorField from '../../libraries/error-field';
 
 const list = async (req, res, next) => {
-  const { no, email } = req.user;
+  const { no: userNo } = req.user;
 
   let mails;
   try {
-    mails = await service.getRawMails(no, email);
+    mails = await service.getMailsByOptions(userNo, req.query);
   } catch (error) {
     return next(error);
   }

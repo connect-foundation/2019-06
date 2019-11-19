@@ -3,8 +3,24 @@ import nodemailer from 'nodemailer';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 
-const getRawMails = async (userNo, userEmail) => {
-  const mails = await DB.Mail.findAllReceivedMail(userNo, userEmail);
+const getMailsByOptions = async (userNo, options) => {
+  let { category = 0, page = 1, pageNum = 100 } = options;
+  category = Number(category);
+  page = Number(page);
+  pageNum = Number(pageNum);
+
+  const query = {
+    userNo,
+    category_no: category,
+    options: {
+      raw: false,
+    },
+    paging: {
+      limit: Number(pageNum),
+      offset: (page - 1) * pageNum,
+    },
+  };
+  const mails = await DB.Mail.findAllFilteredMail(query);
   return mails;
 };
 
@@ -39,4 +55,4 @@ const sendMail = async mailContents => {
   return mailContents;
 };
 
-export default { getRawMails, sendMail };
+export default { getMailsByOptions, sendMail };

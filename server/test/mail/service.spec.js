@@ -11,13 +11,13 @@ describe('Mail Service Test', () => {
     await mock();
   });
 
-  it('getRawMails는 배열을 반환한다.', async () => {
-    const data = await service.getRawMails(1, root2Email);
+  it('getRagetMailsByOptions는 배열을 반환한다.', async () => {
+    const data = await service.getMailsByOptions(1, root2Email);
     data.should.an.instanceof(Array);
   });
 
-  it('getRawMails는 배열을 반환한다.', async () => {
-    const data = await service.getRawMails(1, root2Email);
+  it('getMailsByOptions는 배열을 반환한다.', async () => {
+    const data = await service.getMailsByOptions(1, root2Email);
     const plain = data[0].get({ plain: true });
     plain.should.be.properties([
       'no',
