@@ -40,6 +40,15 @@ const initialErrorState = {
   register: '',
 };
 
+const toUserForm = ({ id, password, name, email }) => {
+  return {
+    id,
+    password,
+    name: name.trim(),
+    email,
+  };
+};
+
 const RegisterForm = () => {
   const classes = useStyles();
 
@@ -60,7 +69,7 @@ const RegisterForm = () => {
 
   const signUp = async () => {
     try {
-      const { id, password, name, email } = values;
+      const { id, password, name, email } = toUserForm(values);
       const body = { user_id: id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
       Router.push('/login');
@@ -73,16 +82,16 @@ const RegisterForm = () => {
   const onSubmitHandler = e => {
     e.preventDefault();
 
-    const successValidate = validateForm();
-    if (successValidate) {
+    if (validateForm()) {
       signUp();
     }
   };
 
   const validateForm = () => {
     const errMsgs = { id: '', password: '', name: '', email: '' };
+    const userForm = toUserForm(values);
     Object.keys(errMsgs).forEach(key => {
-      errMsgs[key] = validator.validateAndGetMsg(key, values[key], true);
+      errMsgs[key] = validator.validateAndGetMsg(key, userForm[key], true);
     });
     errMsgs.checkPassword = '';
     if (values.password !== values.checkPassword) {
