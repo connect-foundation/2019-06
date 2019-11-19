@@ -56,27 +56,15 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail, filter = {}) => {
+  Mail.findAllFilteredMail = ({
+    userNo,
+    mailFilter = {},
+    mailTemplateFilter = {},
+    options = {},
+    paging = { offset: 0, limit: 100 },
+  }) => {
     return Mail.findAll({
-      where: {
-        owner: userNo,
-        ...filter,
-      },
-      include: [
-        {
-          model: sequelize.models.MailTemplate,
-          where: {
-            from: {
-              [Op.not]: userEmail,
-            },
-          },
-        },
-      ],
-    });
-  };
-
-  Mail.findAllFilteredMail = (userNo, mailFilter = {}, mailTemplateFilter = {}, options = {}) => {
-    return Mail.findAll({
+      ...paging,
       where: {
         owner: userNo,
         ...mailFilter,
