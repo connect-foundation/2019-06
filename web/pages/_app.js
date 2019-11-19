@@ -7,6 +7,7 @@ import { AppProvider } from '../contexts';
 import { BASE_URL } from '../config/axios-config';
 
 axios.defaults.baseURL = BASE_URL;
+axios.defaults.withCredentials = true;
 
 const theme = {
   colors: {

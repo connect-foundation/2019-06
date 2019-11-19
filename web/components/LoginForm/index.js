@@ -15,13 +15,13 @@ import validator from '../../utils/validator';
 import { errorParser } from '../../utils/error-parser';
 import S from './styled';
 
-const Form = () => {
+const LoignForm = () => {
   const {
     userContext: { setUser },
   } = useContext(AppContext);
+
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
-
   const [errorMsg, dispatchErrorMsg] = useReducer(errorReducer, initialState);
 
   const signIn = async (id, password) => {
@@ -72,7 +72,7 @@ const Form = () => {
   const { idErrorMsg, passwordErrorMsg, loginErrorMsg } = errorMsg;
 
   return (
-    <S.Form>
+    <S.InputForm>
       <S.Input
         type="text"
         className="form-control"
@@ -96,7 +96,8 @@ const Form = () => {
       <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
         로그인
       </S.Button>
-    </S.Form>
+    </S.InputForm>
   );
 };
-export default Form;
+
+export default LoignForm;
