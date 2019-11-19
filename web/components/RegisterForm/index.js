@@ -40,15 +40,6 @@ const initialErrorState = {
   register: '',
 };
 
-const toUserForm = ({ id, password, name, email }) => {
-  return {
-    id,
-    password,
-    name: name.trim(),
-    email,
-  };
-};
-
 const RegisterForm = () => {
   const classes = useStyles();
 
@@ -69,8 +60,8 @@ const RegisterForm = () => {
 
   const signUp = async () => {
     try {
-      const { id, password, name, email } = toUserForm(values);
-      const body = { user_id: id, password, sub_email: email, name };
+      const { id, password, name, email } = values;
+      const body = { user_id: id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
       Router.push('/login');
     } catch (err) {
@@ -89,7 +80,7 @@ const RegisterForm = () => {
 
   const validateForm = () => {
     const errMsgs = { id: '', password: '', name: '', email: '' };
-    const userForm = toUserForm(values);
+    const userForm = { ...values, name: values.name.trim() };
     Object.keys(errMsgs).forEach(key => {
       errMsgs[key] = validator.validateAndGetMsg(key, userForm[key], true);
     });
