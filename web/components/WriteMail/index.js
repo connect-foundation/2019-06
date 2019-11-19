@@ -4,7 +4,6 @@ import InputReceiver from './InputReceiver';
 import InputSubject from './InputSubject';
 import InputBody from './InputBody';
 import SubmitButton from './SubmitButton';
-// import WriteMailContextProvider from './ContextProvider';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
 
