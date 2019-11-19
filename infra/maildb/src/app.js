@@ -12,12 +12,12 @@ const connection = mysql.createConnection({
 
 const parseMailContent = async (content) => {
   try {
-    const { from, to, subject, text, attachments } = await simpleParser(content);
+    const { from, to, subject, html, attachments } = await simpleParser(content);
     return {
       from: from.text,
       to: to.text,
-      subject,
-      body: text,
+      subject: subject || 'untitle',
+      text: html,
       attachments
     };
   } catch (error) {
@@ -27,11 +27,18 @@ const parseMailContent = async (content) => {
 }
 
 const insertMailToDB = async (content) => {
-  const { from, to, subject, body } = await parseMailContent(content);
-  const INSERT_QUERY = 'INSERT INTO tbl_mail_template (`from`, `to`, `subject`, `body`) VALUES (?, ?, ?, ?)';
+  const { from, to, subject, text, attachments } = await parseMailContent(content);
+  const insertQuery = 'INSERT INTO ?? SET ?';
+  const tableName = 'tbl_mail_template';
+  const now = mysql.raw('now()');
+  const mailTemplate = { from, to, subject, text, created_at: now, updated_at: now };
+  const queryFormat = mysql.format(insertQuery, [tableName, mailTemplate]);
   let result;
+
   try {
-    result = await connection.execute(INSERT_QUERY, [from, to, subject, body]);
+    connection.connect();
+    const executed = await connection.execute(queryFormat);
+    result = executed.sql;
   } catch (error) {
     result = error;
   } finally {
