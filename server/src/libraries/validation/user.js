@@ -3,6 +3,9 @@ import getErrorResponseBySequelizeValidationError from '../exception/sequelize-e
 
 const join = async body => {
   try {
+    if (body.name) {
+      body.name = body.name.trim();
+    }
     await DB.User.build(body).validate();
   } catch (error) {
     throw getErrorResponseBySequelizeValidationError(error);
