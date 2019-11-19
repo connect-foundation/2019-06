@@ -70,7 +70,7 @@ const RegisterForm = () => {
   const signUp = async () => {
     try {
       const { id, password, name, email } = toUserForm(values);
-      const body = { user_id: id, password, sub_email: email, name: name.trim() };
+      const body = { user_id: id, password, sub_email: email, name };
       await axios.post('/users', body);
       Router.push('/login');
     } catch (err) {
