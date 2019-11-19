@@ -9,7 +9,7 @@ const Input = styled.input`
   background-color: white;
 `;
 
-const Form = styled.form`
+const InputForm = styled.form`
   width: 350px;
   display: flex;
   flex-direction: column;
@@ -40,7 +40,7 @@ const ErrorText = styled.span`
 
 export default {
   Input,
-  Form,
+  InputForm,
   Button,
   ErrorText,
 };

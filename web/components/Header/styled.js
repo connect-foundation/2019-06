@@ -39,4 +39,13 @@ const SearchInput = styled.input`
   width: 600px;
 `;
 
-export { Brand, Center, Search, SearchInput, Atag };
+const Header = styled.div`
+  flex: 0 0 50px;
+  display: flex;
+  border-bottom: 2px solid #eceff1;
+  flex-direction: row;
+  overflow: hidden;
+  padding: 5px 10px;
+`;
+
+export { Brand, Center, Search, SearchInput, Atag, Header };

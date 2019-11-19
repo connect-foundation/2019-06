@@ -1,5 +1,4 @@
 import React, { useState, createContext } from 'react';
-import axios from 'axios';
 import Router from 'next/router';
 
 const UserContext = createContext();
