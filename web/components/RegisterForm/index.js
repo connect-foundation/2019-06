@@ -1,11 +1,10 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import { UserContext } from '../UserContext';
 import validator from '../../utils/validator';
 import { errorParser } from '../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../utils/error-message';
@@ -38,11 +37,11 @@ const initialErrorState = {
   password: '',
   email: '',
   rePassword: '',
+  register: '',
 };
 
 const RegisterForm = () => {
   const classes = useStyles();
-  const { setUser } = useContext(UserContext);
 
   const [values, setValues] = React.useState(initialInputState);
   const [errors, setErrorMsg] = React.useState(initialErrorState);
@@ -55,15 +54,19 @@ const RegisterForm = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
+  const handleRegisterErrMsg = msg => {
+    setErrorMsg({ ...errors, register: msg });
+  };
+
   const signUp = async () => {
     try {
       const { id, password, name, email } = values;
       const body = { user_id: id, password, sub_email: email, name };
-      const { data } = await axios.post('/users', body);
-      setUser(data);
-      Router.push('/');
+      await axios.post('/users', body);
+      Router.push('/login');
     } catch (err) {
       const message = errorParser(err);
+      handleRegisterErrMsg(message);
     }
   };
 
@@ -86,12 +89,11 @@ const RegisterForm = () => {
       errMsgs.rePassword = ERROR_DIFFERENT_PASSWORD;
     }
     setErrorMsg(errMsgs);
-
-    return Object.keys(errMsgs).every(msg => '');
+    return Object.keys(errMsgs).every(key => errMsgs[key] === '');
   };
 
   return (
-    <S.Form>
+    <S.InputForm>
       <S.InputContainer>
         <S.Title>Daitnu 계정 만들기</S.Title>
       </S.InputContainer>
@@ -175,12 +177,12 @@ const RegisterForm = () => {
         />
       </S.InputContainer>
       <S.InputContainer>
-        <S.ErrorText>{errors.email}</S.ErrorText>
+        <S.ErrorText>{errors.register || errors.email}</S.ErrorText>
       </S.InputContainer>
       <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
         가입하기
       </S.Button>
-    </S.Form>
+    </S.InputForm>
   );
 };
 export default RegisterForm;

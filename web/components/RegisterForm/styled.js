@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { TextField, OutlinedInput } from '@material-ui/core';
 
 const Input = styled.input`
   width: 100%;
@@ -10,25 +9,7 @@ const Input = styled.input`
   background-color: white;
 `;
 
-/*
-const StyledTextField = styled(TextField)`
-  .MuiOutlinedInput-root {
-    fieldset {
-      border-color: ${props => (props.error ? 'red' : 'gray')};
-    }
-  }
-`;
-
-const StyledOutlinedInput = styled(OutlinedInput)`
-  .MuiInputBase-input {
-    background-color: white !important;
-  }
-  .Mui-focused {
-  }
-`;
-*/
-
-const Form = styled.form`
+const InputForm = styled.form`
   width: 400px;
   display: flex;
   flex-direction: column;
@@ -79,7 +60,7 @@ const Title = styled.span`
 
 export default {
   Input,
-  Form,
+  InputForm,
   Button,
   ErrorText,
   InputContainer,
