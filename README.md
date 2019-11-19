@@ -17,10 +17,10 @@
 > Linux 환경에서 SMTP, POP3, IMAP 프로토콜을 이용하여 이메일 서버 구축
 
 ### 🏠 [Homepage](https://github.com/connect-foundation/2019-06)
+### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
 
 ## Concept
-![Concept](https://user-images.githubusercontent.com/33617083/69130262-89981e80-0af3-11ea-9b48-8cc61afd84af.png)
-
+![메일전송과정](https://user-images.githubusercontent.com/33617083/69132049-ae41c580-0af6-11ea-85e6-46f569b39360.png)
 
 ## Prerequisites
 
@@ -60,6 +60,4 @@ npm run test
 
 👤 [@sjh2428](https://github.com/sjh2428)
 
-
-### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
 
