@@ -1,12 +1,13 @@
-import React, { useRef, useContext } from 'react';
+import React, { useRef } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import V from '../../../utils/validator';
-import { WriteMailContext } from '../ContextProvider';
+import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import * as SC from '../../../utils/special-characters';
 
 const ListOfReceivers = () => {
-  const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
+  const { receivers } = useStateForWM();
+  const dispatch = useDispatchForWM();
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
 
@@ -24,7 +25,7 @@ const ListOfReceivers = () => {
       return;
     }
     if (replaced !== SC.BLANK) {
-      setReceivers([...receivers, replaced]);
+      dispatch({ type: 'updateReceivers', receivers: [...receivers, replaced] });
     }
     target.value = SC.BLANK;
     resizeInput(target);
@@ -34,7 +35,7 @@ const ListOfReceivers = () => {
     const { key, target } = e;
     if (key === SC.BACKSPACE && target.value === SC.BLANK && receivers.length > 0) {
       target.value = receivers[receivers.length - 1];
-      setReceivers([...receivers.slice(0, -1)]);
+      dispatch({ type: 'updateReceivers', receivers: [...receivers.slice(0, -1)] });
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
       replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
     }
@@ -53,7 +54,10 @@ const ListOfReceivers = () => {
   };
 
   const receiverDeleteBtn = idx =>
-    setReceivers([...receivers.filter(receiver => receivers.indexOf(receiver) !== idx)]);
+    dispatch({
+      type: 'updateReceivers',
+      receivers: [...receivers.filter(receiver => receivers.indexOf(receiver) !== idx)],
+    });
 
   return (
     <WM_S.RowWrapper>

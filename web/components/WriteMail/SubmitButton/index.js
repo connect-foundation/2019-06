@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -10,13 +10,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
 import SendIcon from '@material-ui/icons/Send';
 import axios from 'axios';
-import { WriteMailContext } from '../ContextProvider';
 import * as WM_S from '../styled';
 import { BASE_URL } from '../../../config/axios-config';
+import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 
 const SubmitButton = () => {
-  const { receivers } = useContext(WriteMailContext).receiver;
-  const { subjectComponent, bodyComponent } = useContext(WriteMailContext);
+  const { receivers, files, subject, text } = useStateForWM();
+  const dispatch = useDispatchForWM();
+
   const [sendMessage, setSendMessage] = useState(null);
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -34,8 +35,8 @@ const SubmitButton = () => {
         `${BASE_URL}/mail`,
         {
           to: receivers,
-          subject: subjectComponent.current.value,
-          text: bodyComponent.current.innerText,
+          subject,
+          text,
         },
         { withCredentials: true },
       )
@@ -57,15 +58,17 @@ const SubmitButton = () => {
         );
       });
     console.log(receivers);
-    console.log(subjectComponent.current.value);
-    console.log(bodyComponent.current.innerText);
+    console.log(subject);
+    console.log(text);
+    console.log(files);
   };
 
   const handleMenuItemClick = () => {
     console.log('보내기 예약 클릭');
     console.log(receivers);
-    console.log(subjectComponent.current.value);
-    console.log(bodyComponent.current.innerText);
+    console.log(subject);
+    console.log(text);
+    console.log(files);
     setOpen(false);
   };
 

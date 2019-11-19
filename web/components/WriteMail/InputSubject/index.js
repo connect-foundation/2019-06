@@ -1,14 +1,31 @@
-import React, { useContext } from 'react';
+import React, { useState } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
-import { WriteMailContext } from '../ContextProvider';
+import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 
 const InputSubject = () => {
-  const { subjectComponent } = useContext(WriteMailContext);
+  const { subject } = useStateForWM();
+  const dispatch = useDispatchForWM();
+
+  const [flag, setFlag] = useState(true);
+
+  const blurHandler = e => {
+    dispatch({ type: 'updateSubject', subject: e.target.value });
+    setFlag(!flag);
+  };
+
+  const focusHandler = _ => {
+    setFlag(!flag);
+  };
+
   return (
     <WM_S.RowWrapper>
       <WM_S.Label>제목</WM_S.Label>
-      <S.InputSubject ref={subjectComponent} maxLength={50} />
+      {flag ? (
+        <S.InputSubject maxLength={50} onFocus={focusHandler} value={subject} />
+      ) : (
+        <S.InputSubject maxLength={50} onBlur={blurHandler} defaultValue={subject} />
+      )}
     </WM_S.RowWrapper>
   );
 };

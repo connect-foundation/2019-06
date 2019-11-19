@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,15 +11,19 @@ import Grid from '@material-ui/core/Grid';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
-import { WriteMailContext } from '../ContextProvider';
+import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 
 const DropZone = () => {
   const maxSize = 1048576;
-  const { files, setFiles } = useContext(WriteMailContext).file;
+  const { files } = useStateForWM();
+  const dispatch = useDispatchForWM();
 
-  const onDrop = useCallback(acceptedFiles => {
-    setFiles([...acceptedFiles]);
-  }, []);
+  const onDrop = useCallback(
+    acceptedFiles => {
+      dispatch({ type: 'updateFiles', files: acceptedFiles });
+    },
+    [dispatch],
+  );
 
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -27,6 +31,13 @@ const DropZone = () => {
     maxSize,
     multiple: true,
   });
+
+  const delBtnHandler = file => {
+    dispatch({
+      type: 'updateFiles',
+      files: files.filter(f => f.lastModified !== file.lastModified),
+    });
+  };
 
   return (
     <>
@@ -59,10 +70,7 @@ const DropZone = () => {
                         <IconButton
                           edge="end"
                           aria-label="delete"
-                          onClick={() => {
-                            console.log(files);
-                            setFiles([...files.filter(f => f.lastModified !== file.lastModified)]);
-                          }}>
+                          onClick={() => delBtnHandler(file)}>
                           <DeleteIcon />
                         </IconButton>
                       </ListItemSecondaryAction>
