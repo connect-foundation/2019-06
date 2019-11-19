@@ -26,7 +26,7 @@ const initialInputState = {
   name: '',
   id: '',
   password: '',
-  rePassword: '',
+  checkPassword: '',
   email: '',
   showPassword: false,
 };
@@ -36,7 +36,7 @@ const initialErrorState = {
   id: '',
   password: '',
   email: '',
-  rePassword: '',
+  checkPassword: '',
   register: '',
 };
 
@@ -84,9 +84,9 @@ const RegisterForm = () => {
     Object.keys(errMsgs).forEach(key => {
       errMsgs[key] = validator.validateAndGetMsg(key, values[key], true);
     });
-    errMsgs.rePassword = '';
-    if (values.password !== values.rePassword) {
-      errMsgs.rePassword = ERROR_DIFFERENT_PASSWORD;
+    errMsgs.checkPassword = '';
+    if (values.password !== values.checkPassword) {
+      errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
     }
     setErrorMsg(errMsgs);
     return Object.keys(errMsgs).every(key => errMsgs[key] === '');
@@ -147,10 +147,10 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="확인"
-          value={values.rePassword}
-          onChange={handleInputChange('rePassword')}
+          value={values.checkPassword}
+          onChange={handleInputChange('checkPassword')}
           className={classes.textField}
-          error={errors.rePassword !== ''}
+          error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
           autoComplete="current-password"
           margin="normal"
@@ -161,7 +161,7 @@ const RegisterForm = () => {
         </IconButton>
       </S.InputContainer>
       <S.InputContainer>
-        <S.ErrorText>{errors.password || errors.rePassword}</S.ErrorText>
+        <S.ErrorText>{errors.password || errors.checkPassword}</S.ErrorText>
       </S.InputContainer>
       <S.InputContainer>
         <TextField
