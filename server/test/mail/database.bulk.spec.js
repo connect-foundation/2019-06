@@ -45,56 +45,37 @@ describe('Mail bulk query test', () => {
     const filteredMails = unreadMails.filter(mail => mail.is_read);
     filteredMails.should.have.length(0);
   });
+});
 
-  it('휴지통에는 is_removed가 true인 메일만 존재한다.', async () => {
-    const email = 'root@daitnu.com';
-    const userNo = 1;
+it('카테고리 메일함에는 지정된 카테고리No mail만 존재한다.', async () => {
+  const email = 'root@daitnu.com';
+  const userNo = 1;
+  const categoryNo = 1;
 
-    const mailFilter = {
-      is_removed: true,
-    };
-    const mailTemplateFilter = {
-      from: {
-        [DB.Sequelize.Op.not]: email,
-      },
-    };
+  const mailFilter = {
+    category_no: categoryNo,
+  };
+  const mailTemplateFilter = {
+    from: {
+      [DB.Sequelize.Op.not]: email,
+    },
+  };
 
-    const trashCan = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter);
-    const filteredMails = trashCan.filter(mail => !mail.is_removed);
-    filteredMails.should.have.length(0);
-  });
+  const categoryMails = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter);
+  const filteredMails = categoryMails.filter(mail => mail.category_no !== categoryNo);
+  filteredMails.should.have.length(0);
+});
 
-  it('카테고리 메일함에는 지정된 카테고리No mail만 존재한다.', async () => {
-    const email = 'root@daitnu.com';
-    const userNo = 1;
-    const categoryNo = 1;
+it('메일에 attachment가 있다면 모두 포함되어 반환된다..', async () => {
+  const userNo = 1;
 
-    const mailFilter = {
-      category_no: categoryNo,
-    };
-    const mailTemplateFilter = {
-      from: {
-        [DB.Sequelize.Op.not]: email,
-      },
-    };
+  const mailFilter = {};
+  const mailTemplateFilter = {
+    no: 1,
+  };
 
-    const categoryMails = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter);
-    const filteredMails = categoryMails.filter(mail => mail.category_no !== categoryNo);
-    filteredMails.should.have.length(0);
-  });
-
-  it('메일에 attachment가 있다면 모두 포함되어 반환된다..', async () => {
-    const userNo = 1;
-
-    const mailFilter = {};
-    const mailTemplateFilter = {
-      no: 1,
-    };
-
-    const mail = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter, {
-      limit: 1,
-      raw: false,
-    });
-    mail[0].dataValues.MailTemplate.Attachments.should.have.length(5);
+  const mail = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter, {
+    limit: 1,
+    raw: false,
   });
 });
