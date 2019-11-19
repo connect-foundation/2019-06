@@ -18,6 +18,10 @@
 
 ### 🏠 [Homepage](https://github.com/connect-foundation/2019-06)
 
+## Concept
+![Concept](https://user-images.githubusercontent.com/33617083/69130262-89981e80-0af3-11ea-9b48-8cc61afd84af.png)
+
+
 ## Prerequisites
 
 - node 10.16.0
