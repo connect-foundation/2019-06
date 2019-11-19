@@ -55,13 +55,13 @@ const RegisterForm = () => {
   };
 
   const handleRegisterErrMsg = msg => {
-    setErrorMsg({ ...errors, register: msg });
+    setErrorMsg({ ...initialErrorState, register: msg });
   };
 
   const signUp = async () => {
     try {
       const { id, password, name, email } = values;
-      const body = { user_id: id, password, sub_email: email, name };
+      const body = { user_id: id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
       Router.push('/login');
     } catch (err) {
@@ -70,12 +70,12 @@ const RegisterForm = () => {
     }
   };
 
-  const onSubmitHandler = async e => {
+  const onSubmitHandler = e => {
     e.preventDefault();
 
-    if (validateForm()) {
-      const id = values.id.trim();
-      signUp(id, values.password);
+    const successValidate = validateForm();
+    if (successValidate) {
+      signUp();
     }
   };
 
