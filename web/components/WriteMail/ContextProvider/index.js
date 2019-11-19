@@ -4,6 +4,7 @@ export const WriteMailContext = React.createContext();
 
 const WriteMailContextProvider = ({ children }) => {
   const [receivers, setReceivers] = useState([]);
+  const [files, setFiles] = useState([]);
   const subjectComponent = useRef(null);
   const bodyComponent = useRef(null);
 
@@ -12,6 +13,7 @@ const WriteMailContextProvider = ({ children }) => {
       receiver: { receivers, setReceivers },
       subjectComponent,
       bodyComponent,
+      file: { files, setFiles },
     },
   };
 

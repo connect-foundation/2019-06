@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,10 +11,11 @@ import Grid from '@material-ui/core/Grid';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
+import { WriteMailContext } from '../ContextProvider';
 
 const DropZone = () => {
   const maxSize = 1048576;
-  const [files, setFiles] = useState([]);
+  const { files, setFiles } = useContext(WriteMailContext).file;
 
   const onDrop = useCallback(acceptedFiles => {
     setFiles([...acceptedFiles]);
