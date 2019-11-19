@@ -30,16 +30,23 @@ const SubmitButton = () => {
       </WM_S.RowWrapper>,
     );
 
+    const formData = new FormData();
+    receivers.forEach(r => {
+      formData.append('to', r);
+    });
+    formData.append('subject', subject);
+    formData.append('text', text);
+    formData.append('attachments', files);
+    files.forEach(f => {
+      formData.append('attachments', f);
+    });
+
     axios
-      .post(
-        `${BASE_URL}/mail`,
-        {
-          to: receivers,
-          subject,
-          text,
+      .post(`${BASE_URL}/mail`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
         },
-        { withCredentials: true },
-      )
+      })
       .then(() => {
         setSendMessage(
           <WM_S.RowWrapper>
@@ -47,6 +54,7 @@ const SubmitButton = () => {
             <div>메일 전송 완료</div>
           </WM_S.RowWrapper>,
         );
+        dispatch({ type: 'init' });
       })
       .catch(err => {
         console.log(err);
@@ -57,10 +65,6 @@ const SubmitButton = () => {
           </WM_S.RowWrapper>,
         );
       });
-    console.log(receivers);
-    console.log(subject);
-    console.log(text);
-    console.log(files);
   };
 
   const handleMenuItemClick = () => {
