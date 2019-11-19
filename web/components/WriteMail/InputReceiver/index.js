@@ -3,7 +3,7 @@ import * as S from './styled';
 import * as WM_S from '../styled';
 import V from '../../../utils/validator';
 import { WriteMailContext } from '../ContextProvider';
-import SC from '../../../utils/special-characters';
+import * as SC from '../../../utils/special-characters';
 
 const ListOfReceivers = () => {
   const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
@@ -19,11 +19,15 @@ const ListOfReceivers = () => {
   const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
+    if (receivers.includes(replaced)) {
+      target.value = SC.BLANK;
+      return;
+    }
     if (replaced !== SC.BLANK) {
       setReceivers([...receivers, replaced]);
-      target.value = SC.BLANK;
-      resizeInput(target);
     }
+    target.value = SC.BLANK;
+    resizeInput(target);
   };
 
   const keyDownHandler = e => {
@@ -38,12 +42,14 @@ const ListOfReceivers = () => {
 
   const changeHandler = e => {
     const { target } = e;
-    resizeInput(target);
     if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
       replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
     } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
       replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+    } else if (target.value === SC.SPACE || target.value === SC.COMMA) {
+      target.value = SC.BLANK;
     }
+    resizeInput(target);
   };
 
   // 문자가 같으면 오류 발생

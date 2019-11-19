@@ -1,7 +1,5 @@
-export default {
-  BLANK: '',
-  SPACE: ' ',
-  BACKSPACE: 'Backspace',
-  ENTER: 'Enter',
-  COMMA: ',',
-};
+export const BLANK = '';
+export const SPACE = ' ';
+export const BACKSPACE = 'Backspace';
+export const ENTER = 'Enter';
+export const COMMA = ',';
