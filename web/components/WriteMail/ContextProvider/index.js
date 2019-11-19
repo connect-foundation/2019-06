@@ -1,6 +1,6 @@
 import React, { useReducer, useContext } from 'react';
 import { wmReducer } from './reducer';
-import { initialState } from './initial-state';
+import { initialState } from './reducer/initial-state';
 
 const WMstateContext = React.createContext();
 const WMdispatchContext = React.createContext();
