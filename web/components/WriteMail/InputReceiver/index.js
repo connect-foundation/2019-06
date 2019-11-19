@@ -52,7 +52,6 @@ const ListOfReceivers = () => {
     resizeInput(target);
   };
 
-  // 문자가 같으면 오류 발생
   const receiverDeleteBtn = idx =>
     setReceivers([...receivers.filter(receiver => receivers.indexOf(receiver) !== idx)]);
 
