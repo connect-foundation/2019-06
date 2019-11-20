@@ -57,6 +57,13 @@ const ListOfReceivers = () => {
     resizeInput(target);
   };
 
+  const blurHandler = e => {
+    const { target } = e;
+    if (target.value !== SC.SPACE && target.value !== SC.COMMA) {
+      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+    }
+  };
+
   const receiverDeleteBtn = target =>
     dispatch({
       type: UPDATE_RECEIVERS,
@@ -82,6 +89,7 @@ const ListOfReceivers = () => {
           ref={receiverInput}
           onKeyDown={keyDownHandler}
           onChange={changeHandler}
+          onBlur={blurHandler}
         />
       </S.ReceiverListWrapper>
     </WM_S.RowWrapper>
