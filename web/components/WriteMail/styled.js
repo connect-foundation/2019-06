@@ -13,3 +13,7 @@ export const RowWrapper = styled.div`
   grid-template-columns: 75px 1fr;
   margin: 15px;
 `;
+
+export const WriteArea = styled.div`
+  overflow: scroll;
+`;

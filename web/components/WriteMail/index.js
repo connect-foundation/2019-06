@@ -9,13 +9,13 @@ import DropZone from './DropZone';
 
 const WriteMail = () => (
   <WriteMailContextProvider>
-    <div>
+    <S.WriteArea>
       <InputReceiver />
       <InputSubject />
       <InputBody />
       <SubmitButton />
       <DropZone />
-    </div>
+    </S.WriteArea>
   </WriteMailContextProvider>
 );
 
