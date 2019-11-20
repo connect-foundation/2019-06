@@ -7,7 +7,9 @@ import bulkMock from '../../mock/create-large-amount-data';
 
 describe('Mail Service Test', () => {
   before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
     await mock();
     await bulkMock();
   });

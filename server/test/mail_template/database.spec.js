@@ -4,7 +4,9 @@ import DB from '../../src/database';
 
 describe('MailTemplate DB test...', () => {
   before(async () => {
-    DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
   });
 
   it('create test', async () => {
