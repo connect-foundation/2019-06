@@ -13,7 +13,7 @@ const model = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING(255),
-        unique: true,
+        allowNull: false,
       },
       is_default: {
         type: DataTypes.BOOLEAN,
@@ -32,9 +32,9 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
-  Category.findOneByName = name => {
+  Category.findOneByUserNoAndName = (user_no, name) => {
     return Category.findOne({
-      where: { name },
+      where: { user_no, name },
       raw: true,
     });
   };
