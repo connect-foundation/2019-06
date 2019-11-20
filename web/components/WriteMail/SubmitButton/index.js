@@ -57,11 +57,6 @@ const SubmitButton = () => {
   };
 
   const handleMenuItemClick = () => {
-    console.log('보내기 예약 클릭');
-    console.log(receivers);
-    console.log(subject);
-    console.log(text);
-    console.log(files);
     setOpen(false);
   };
 
