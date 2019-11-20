@@ -13,6 +13,7 @@ import axios from 'axios';
 import * as WM_S from '../styled';
 import { BASE_URL } from '../../../config/axios-config';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
 
 const SubmitButton = () => {
   const { receivers, files, subject, text } = useStateForWM();
@@ -54,7 +55,7 @@ const SubmitButton = () => {
             <div>메일 전송 완료</div>
           </WM_S.RowWrapper>,
         );
-        dispatch({ type: 'init' });
+        dispatch({ type: UPDATE_INIT });
       })
       .catch(err => {
         console.log(err);

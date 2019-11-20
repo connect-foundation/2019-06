@@ -4,6 +4,7 @@ import * as WM_S from '../styled';
 import V from '../../../utils/validator';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import * as SC from '../../../utils/special-characters';
+import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
 const ListOfReceivers = () => {
   const { receivers } = useStateForWM();
@@ -25,7 +26,7 @@ const ListOfReceivers = () => {
       return;
     }
     if (replaced !== SC.BLANK) {
-      dispatch({ type: 'updateReceivers', receivers: [...receivers, replaced] });
+      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: [...receivers, replaced] } });
     }
     target.value = SC.BLANK;
     resizeInput(target);
@@ -37,7 +38,7 @@ const ListOfReceivers = () => {
       e.preventDefault();
       e.stopPropagation();
       target.value = receivers[receivers.length - 1];
-      dispatch({ type: 'updateReceivers', receivers: [...receivers.slice(0, -1)] });
+      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: receivers.slice(0, -1) } });
       resizeInput(target);
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
       replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
@@ -58,8 +59,8 @@ const ListOfReceivers = () => {
 
   const receiverDeleteBtn = target =>
     dispatch({
-      type: 'updateReceivers',
-      receivers: [...receivers.filter(receiver => receiver !== target)],
+      type: UPDATE_RECEIVERS,
+      payload: { receivers: receivers.filter(receiver => receiver !== target) },
     });
 
   return (

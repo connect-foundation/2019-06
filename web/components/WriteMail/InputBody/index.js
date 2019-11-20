@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import { UPDATE_TEXT } from '../ContextProvider/reducer/action-type';
 
 const InputBody = () => {
   const { text } = useStateForWM();
@@ -9,7 +10,7 @@ const InputBody = () => {
   const [flag, setFlag] = useState(true);
 
   const blurHandler = e => {
-    dispatch({ type: 'updateText', text: e.target.value });
+    dispatch({ type: UPDATE_TEXT, payload: { text: e.target.value } });
     setFlag(!flag);
   };
 

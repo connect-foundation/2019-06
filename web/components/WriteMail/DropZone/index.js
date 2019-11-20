@@ -12,6 +12,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 
 const DropZone = () => {
   const maxSize = 1048576;
@@ -20,7 +21,7 @@ const DropZone = () => {
 
   const onDrop = useCallback(
     acceptedFiles => {
-      dispatch({ type: 'updateFiles', files: acceptedFiles });
+      dispatch({ type: UPDATE_FILES, payload: { files: acceptedFiles } });
     },
     [dispatch],
   );
@@ -34,8 +35,8 @@ const DropZone = () => {
 
   const delBtnHandler = file => {
     dispatch({
-      type: 'updateFiles',
-      files: files.filter(f => f.lastModified !== file.lastModified),
+      type: UPDATE_FILES,
+      payload: { files: files.filter(f => f.lastModified !== file.lastModified) },
     });
   };
 

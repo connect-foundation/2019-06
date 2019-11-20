@@ -1,24 +1,22 @@
 import { initialState } from './initial-state';
+import * as ACTYPE from './action-type';
 
 export const wmReducer = (state, action) => {
-  switch (action.type) {
-    case 'updateReceivers': {
-      const { receivers } = action;
-      return { ...state, receivers };
+  const { type, payload } = action;
+  switch (type) {
+    case ACTYPE.UPDATE_RECEIVERS: {
+      return { ...state, ...payload };
     }
-    case 'updateSubject': {
-      const { subject } = action;
-      return { ...state, subject };
+    case ACTYPE.UPDATE_SUBJECT: {
+      return { ...state, ...payload };
     }
-    case 'updateText': {
-      const { text } = action;
-      return { ...state, text };
+    case ACTYPE.UPDATE_TEXT: {
+      return { ...state, ...payload };
     }
-    case 'updateFiles': {
-      const { files } = action;
-      return { ...state, files };
+    case ACTYPE.UPDATE_FILES: {
+      return { ...state, ...payload };
     }
-    case 'init': {
+    case ACTYPE.UPDATE_INIT: {
       return { ...initialState };
     }
     default: {

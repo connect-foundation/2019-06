@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import { UPDATE_SUBJECT } from '../ContextProvider/reducer/action-type';
 
 const InputSubject = () => {
   const { subject } = useStateForWM();
@@ -10,7 +11,7 @@ const InputSubject = () => {
   const [flag, setFlag] = useState(true);
 
   const blurHandler = e => {
-    dispatch({ type: 'updateSubject', subject: e.target.value });
+    dispatch({ type: UPDATE_SUBJECT, payload: { subject: e.target.value } });
     setFlag(!flag);
   };
 
