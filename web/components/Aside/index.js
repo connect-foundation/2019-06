@@ -39,14 +39,14 @@ const Aside = ({ setView }) => {
     { name: '흑우', icon: <StarBorder />, view: <></> },
   ];
 
-  const defaultCard = defaultCategory.map(category => (
-    <ListItem button onClick={() => setView(category.view)}>
+  const defaultCard = defaultCategory.map((category, idx) => (
+    <ListItem button key={idx} onClick={() => setView(category.view)}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
   ));
-  const userCategoryCard = userCategory.map(category => (
-    <ListItem button className={classes.nested}>
+  const userCategoryCard = userCategory.map((category, idx) => (
+    <ListItem button key={idx} className={classes.nested}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
