@@ -6,11 +6,11 @@ import bcrypt from 'bcrypt';
 const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
-  const { user_id, password } = instance.dataValues;
+  const { id, password } = instance.dataValues;
   const round = parseInt(SALT_ROUND, 10);
   const salt = await bcrypt.genSalt(round);
   const hashedPassword = await bcrypt.hash(password, salt);
-  instance.email = `${user_id}@${DEFAULT_DOMAIN_NAME}`;
+  instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
 };
 
@@ -23,7 +23,7 @@ const model = (sequelize, DataTypes) => {
         primaryKey: true,
         autoIncrement: true,
       },
-      user_id: {
+      id: {
         type: DataTypes.STRING(255),
         allowNull: true,
         unique: true,
@@ -103,9 +103,7 @@ const model = (sequelize, DataTypes) => {
 
   User.findOneById = id => {
     return User.findOne({
-      where: {
-        user_id: id,
-      },
+      where: { id },
       raw: true,
     });
   };
@@ -127,11 +125,11 @@ const model = (sequelize, DataTypes) => {
     User.hasMany(Category, { foreignKey: 'user_no', sourceKey: 'no' });
   };
 
-  User.findOrCreateById = ({ user_id, name, password, sub_email }) => {
+  User.findOrCreateById = ({ id, name, password, sub_email }) => {
     return User.findOrCreate({
-      where: { user_id },
+      where: { id },
       defaults: {
-        user_id,
+        id,
         name,
         password,
         sub_email,
