@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import * as WM_S from '../styled';
-import { BASE_URL } from '../../../config/axios-config';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
 
@@ -45,7 +44,7 @@ const SubmitButton = () => {
     });
 
     axios
-      .post(`${BASE_URL}/mail`, formData, {
+      .post('/mail', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
