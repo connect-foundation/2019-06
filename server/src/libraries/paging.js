@@ -12,9 +12,7 @@ function paging(totalCount, options = {}) {
   const pageNum = options.pageNum || 100;
   let page = options.page || 1;
 
-  let totalPage = Math.floor(totalCount / pageNum);
-  totalPage = totalCount % pageNum ? totalPage + 1 : totalPage;
-  totalPage = totalPage === 0 ? 1 : totalPage;
+  const totalPage = Math.ceil(totalCount / pageNum) || 1;
 
   if (totalPage < page) {
     page = totalPage;

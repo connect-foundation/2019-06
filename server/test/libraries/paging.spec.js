@@ -2,7 +2,7 @@
 import should from 'should';
 import paging from '../../src/libraries/paging';
 
-describe('Paging Test...', () => {
+describe.only('Paging Test...', () => {
   it('# 페이징결과를 객체로 반환한다.', () => {
     const totalCount = 10000;
     const options = {
@@ -67,5 +67,27 @@ describe('Paging Test...', () => {
     const { page, endPage } = result;
     page.should.be.equals(1);
     endPage.should.be.equals(2);
+  });
+
+  it('# totalCount가0이면 totalPage는 1이다.', () => {
+    const totalCount = 0;
+    const options = {
+      pageNum: 100,
+      page: 1,
+    };
+    const result = paging(totalCount, options);
+    const { totalPage } = result;
+    totalPage.should.be.equal(1);
+  });
+
+  it('# totalCount는 음수면 totalpage는 1이다.', () => {
+    const totalCount = -1;
+    const options = {
+      pageNum: 100,
+      page: 1,
+    };
+    const result = paging(totalCount, options);
+    const { totalPage } = result;
+    totalPage.should.be.equal(1);
   });
 });
