@@ -7,7 +7,9 @@ import mock from '../../mock/create-dummy-data';
 const root2Email = 'root2@daitnu.com';
 describe('Mail Service Test', () => {
   before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
     await mock();
   });
 
@@ -25,7 +27,6 @@ describe('Mail Service Test', () => {
       'mail_template_id',
       'is_important',
       'is_read',
-      'is_removed',
       'MailTemplate',
     ]);
   });

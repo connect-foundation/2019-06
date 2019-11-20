@@ -24,8 +24,8 @@ describe('user service는...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
-    await mock();
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
   });
 
   describe('register 함수는...', () => {
