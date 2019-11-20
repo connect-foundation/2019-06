@@ -36,7 +36,6 @@ const SubmitButton = () => {
     });
     formData.append('subject', subject);
     formData.append('text', text);
-    formData.append('attachments', files);
     files.forEach(f => {
       formData.append('attachments', f);
     });
