@@ -5,13 +5,18 @@ import { validate } from '../../libraries/validator';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
+import checkQuery from '../../libraries/validation/mail';
 
 const list = async (req, res, next) => {
   const { no: userNo } = req.user;
+  const { query } = req;
+  query.category = query.category || '1';
+  query.page = query.page || '1';
 
   let mails;
   try {
-    mails = await service.getMailsByOptions(userNo, req.query);
+    await checkQuery(query);
+    mails = await service.getMailsByOptions(userNo, query);
   } catch (error) {
     return next(error);
   }

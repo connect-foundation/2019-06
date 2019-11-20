@@ -8,7 +8,7 @@ const data = {
   page: '1',
 };
 
-describe.only('checkQuery....', () => {
+describe('checkQuery....', () => {
   it('# category가 정수가 아니면 ErrorResponse를 던진다.', () => {
     try {
       checkQuery({ ...data, category: 'das' });
