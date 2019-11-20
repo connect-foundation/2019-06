@@ -2,6 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import * as S from './styled';
+import LogoutButton from '../LogoutButton';
 
 const Header = ({ brand }) => (
   <S.Header>
@@ -17,6 +18,7 @@ const Header = ({ brand }) => (
       <S.SearchInput placeholder="메일 검색" type="text" />
       <button>필터</button>
     </S.Search>
+    <LogoutButton />
   </S.Header>
 );
 
