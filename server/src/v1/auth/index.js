@@ -7,5 +7,6 @@ import { validateLogin } from '../../middlewares/validate-login';
 const router = express.Router();
 
 router.post('/login', validateLogin, passport.authenticate('local'), ctrl.login);
+router.post('/logout', ctrl.logout);
 
 module.exports = router;
