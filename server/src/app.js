@@ -8,8 +8,8 @@ import cors from 'cors';
 
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
-import ErrorResponse from './libraries/error-response';
-import ERROR_CODE from './libraries/error-code';
+import ErrorResponse from './libraries/exception/error-response';
+import ERROR_CODE from './libraries/exception/error-code';
 import corsOptions from './config/cors-options';
 
 dotenv.config();

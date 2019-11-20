@@ -3,8 +3,6 @@ import request from 'supertest';
 import app from '../../src/app';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
-import user from '../../src/libraries/validation/user';
-import ERROR_CODE from '../../src/libraries/error-code';
 
 const user1 = {
   id: 'userid',
@@ -24,8 +22,8 @@ describe('회원등록 POST /users는...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
-    await mock();
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
   });
 
   it('# 성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
@@ -63,6 +61,16 @@ describe('회원등록 POST /users는...', () => {
       .send({
         ...user1,
         password: 'test',
+      })
+      .expect(400, done);
+  });
+
+  it('이름을 공백으로 줄 경우 상태코드는 400이다.', done => {
+    request(app)
+      .post('/v1/users')
+      .send({
+        ...user1,
+        name: '  ',
       })
       .expect(400, done);
   });

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import ErrorResponse from '../error-response';
-import ERROR_CODE from '../error-code';
-import ErrorField from '../error-field';
+import ErrorResponse from './error-response';
+import ERROR_CODE from './error-code';
+import ErrorField from './error-field';
 
 const getErrorResponseBySequelizeValidationError = ({ errors }) => {
   const errorFields = errors.map(

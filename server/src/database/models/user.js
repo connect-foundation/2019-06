@@ -121,8 +121,8 @@ const model = (sequelize, DataTypes) => {
   User.associate = ({ Domain, Mail, Address, Category }) => {
     User.belongsTo(Domain, { foreignKey: 'domain_no', targetKey: 'no' });
     User.hasMany(Mail, { foreignKey: 'owner', sourceKey: 'no' });
-    User.hasMany(Address, { foreignKey: 'user_no', sourceKey: 'no' });
     User.hasMany(Category, { foreignKey: 'user_no', sourceKey: 'no' });
+    User.hasMany(Address, { foreignKey: 'user_no', sourceKey: 'no' });
   };
 
   User.findOrCreateById = ({ id, name, password, sub_email }) => {

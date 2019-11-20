@@ -1,8 +1,8 @@
 /* eslint-disable no-undef */
 import should from 'should';
 import validate from '../../../src/libraries/validation/user';
-import ErrorResponse from '../../../src/libraries/error-response';
-import ERROR_CODE from '../../../src/libraries/error-code';
+import ErrorResponse from '../../../src/libraries/exception/error-response';
+import ERROR_CODE from '../../../src/libraries/exception/error-code';
 
 const user = {
   id: 'userid',

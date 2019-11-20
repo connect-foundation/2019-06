@@ -1,6 +1,6 @@
 import DB from '../../database';
-import ErrorResponse from '../../libraries/error-response';
-import ERROR_CODE from '../../libraries/error-code';
+import ErrorResponse from '../../libraries/exception/error-response';
+import ERROR_CODE from '../../libraries/exception/error-code';
 
 const DEFAULT_CATEGORIES = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 
