@@ -15,6 +15,9 @@ import axios from 'axios';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
+import { Message } from './Message';
+
+const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
 const SubmitButton = () => {
   const { receivers, files, subject, text } = useStateForWM();
@@ -25,12 +28,7 @@ const SubmitButton = () => {
   const anchorRef = React.useRef(null);
 
   const handleClick = () => {
-    setSendMessage(
-      <WM_S.RowWrapper>
-        <div></div>
-        <div>보내는 중...</div>
-      </WM_S.RowWrapper>,
-    );
+    setSendMessage(<Message icon={LOADING} msg="메세지 보내는 중..." />);
 
     const formData = new FormData();
     receivers.forEach(r => {
@@ -50,22 +48,12 @@ const SubmitButton = () => {
         },
       })
       .then(() => {
-        setSendMessage(
-          <WM_S.RowWrapper>
-            <div></div>
-            <div>메일 전송 완료</div>
-          </WM_S.RowWrapper>,
-        );
+        setSendMessage(<Message icon={SUCCESS} msg="메일 전송 완료" />);
         dispatch({ type: UPDATE_INIT });
       })
       .catch(err => {
         console.log(err);
-        setSendMessage(
-          <WM_S.RowWrapper>
-            <div></div>
-            <div>메일 전송 실패</div>
-          </WM_S.RowWrapper>,
-        );
+        setSendMessage(<Message icon={FAIL} msg="메세지 전송 실패" />);
       });
   };
 
