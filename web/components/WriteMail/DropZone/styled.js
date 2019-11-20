@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const UploadArea = styled.div`
-  height: 80px;
+  height: 120px;
   display: flex;
   justify-content: center;
   align-items: center;
