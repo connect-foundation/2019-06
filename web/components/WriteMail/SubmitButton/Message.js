@@ -3,6 +3,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import ErrorOutlineIcon from '@material-ui/icons/ErrorOutline';
 import { CircularProgress } from '@material-ui/core';
 import * as WM_S from '../styled';
+import * as S from './styled';
 
 export const Message = ({ icon, msg }) => {
   const iconMapping = {
@@ -14,10 +15,10 @@ export const Message = ({ icon, msg }) => {
   return (
     <WM_S.RowWrapper>
       <div></div>
-      <div>
+      <S.VerticalAlign>
         {iconMapping[icon]}
         {msg}
-      </div>
+      </S.VerticalAlign>
     </WM_S.RowWrapper>
   );
 };
