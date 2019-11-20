@@ -1,23 +1,26 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import * as GS from '../components/GlobalStyle';
 import Aside from '../components/Aside';
 import MailArea from '../components/MailArea';
 import Header from '../components/Header';
-import { UserContext } from '../components/UserContext';
 import Footer from '../components/Footer';
 
 const Home = () => {
-  const { user } = useContext(UserContext);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) router.push('/login');
-  }, [router, user]);
+    if (!window.sessionStorage.getItem('user')) {
+      router.push('/login');
+    } else {
+      setLoading(true);
+    }
+  }, []);
 
-  if (!user) {
-    return <></>;
+  if (!loading) {
+    return <div></div>;
   }
 
   return (
