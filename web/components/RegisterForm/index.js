@@ -55,13 +55,13 @@ const RegisterForm = () => {
   };
 
   const handleRegisterErrMsg = msg => {
-    setErrorMsg({ ...errors, register: msg });
+    setErrorMsg({ ...initialErrorState, register: msg });
   };
 
   const signUp = async () => {
     try {
       const { id, password, name, email } = values;
-      const body = { user_id: id, password, sub_email: email, name };
+      const body = { user_id: id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
       Router.push('/login');
     } catch (err) {
@@ -70,19 +70,19 @@ const RegisterForm = () => {
     }
   };
 
-  const onSubmitHandler = async e => {
+  const onSubmitHandler = e => {
     e.preventDefault();
 
     if (validateForm()) {
-      const id = values.id.trim();
-      signUp(id, values.password);
+      signUp();
     }
   };
 
   const validateForm = () => {
     const errMsgs = { id: '', password: '', name: '', email: '' };
+    const userForm = { ...values, name: values.name.trim() };
     Object.keys(errMsgs).forEach(key => {
-      errMsgs[key] = validator.validateAndGetMsg(key, values[key], true);
+      errMsgs[key] = validator.validateAndGetMsg(key, userForm[key], true);
     });
     errMsgs.checkPassword = '';
     if (values.password !== values.checkPassword) {
