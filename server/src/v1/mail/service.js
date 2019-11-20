@@ -1,10 +1,13 @@
+/* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
+import { CLIENT_RENEG_LIMIT } from 'tls';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
+import getPaging from '../../libraries/paging';
 
-const getMailsByOptions = async (userNo, options) => {
-  let { category = 0, page = 1, pageNum = 100 } = options;
+const getMailsByOptions = async (userNo, options = {}) => {
+  let { category = 1, page = 1, pageNum = 100 } = options;
   category = Number(category);
   page = Number(page);
   pageNum = Number(pageNum);
@@ -16,12 +19,22 @@ const getMailsByOptions = async (userNo, options) => {
       raw: false,
     },
     paging: {
-      limit: Number(pageNum),
+      limit: pageNum,
       offset: (page - 1) * pageNum,
     },
   };
-  const mails = await DB.Mail.findAllFilteredMail(query);
-  return mails;
+  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
+
+  const pagingOptions = {
+    page,
+    pageNum,
+  };
+  const pagingResult = getPaging(totalCount, pagingOptions);
+
+  return {
+    ...pagingResult,
+    mails,
+  };
 };
 
 const saveAttachments = async (attachments, mailTemplateNo, transaction) => {

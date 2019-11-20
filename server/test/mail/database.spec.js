@@ -17,7 +17,7 @@ describe('Mail DB query Test', () => {
     });
 
     it('MailTemplate From에 자기자신이 없다.', async () => {
-      const mails = await DB.Mail.findAllReceivedMail(1, rootEmail);
+      const mails = await DB.Mail.findAndCountAllFilteredMail(1);
 
       for (const mail of mails) {
         const { MailTemplate } = mail.get({ plain: true });

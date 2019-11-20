@@ -23,7 +23,11 @@ describe('Mail bulk query test', () => {
       },
     };
 
-    const myMails = await DB.Mail.findAllFilteredMail({ userNo, mailFilter, mailTemplateFilter });
+    const myMails = await DB.Mail.findAndCountAllFilteredMail({
+      userNo,
+      mailFilter,
+      mailTemplateFilter,
+    });
     const filteredMails = myMails.filter(mail => mail.owner !== userNo);
     filteredMails.should.have.length(0);
   });
@@ -41,7 +45,7 @@ describe('Mail bulk query test', () => {
       },
     };
 
-    const unreadMails = await DB.Mail.findAllFilteredMail({
+    const unreadMails = await DB.Mail.findAndCountAllFilteredMail({
       userNo,
       mailFilter,
       mailTemplateFilter,
@@ -65,7 +69,11 @@ it('카테고리 메일함에는 지정된 카테고리No mail만 존재한다.'
     },
   };
 
-  const categoryMails = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter);
+  const categoryMails = await DB.Mail.findAndCountAllFilteredMail(
+    userNo,
+    mailFilter,
+    mailTemplateFilter,
+  );
   const filteredMails = categoryMails.filter(mail => mail.category_no !== categoryNo);
   filteredMails.should.have.length(0);
 });
@@ -78,7 +86,7 @@ it('메일에 attachment가 있다면 모두 포함되어 반환된다..', async
     no: 1,
   };
 
-  const mail = await DB.Mail.findAllFilteredMail(userNo, mailFilter, mailTemplateFilter, {
+  const mail = await DB.Mail.findAndCountAllFilteredMail(userNo, mailFilter, mailTemplateFilter, {
     limit: 1,
     raw: false,
   });
