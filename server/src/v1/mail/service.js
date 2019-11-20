@@ -5,8 +5,16 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 
+const DEFAULT_MAIL_QUERY_OPTIONS = {
+  category: 1,
+  page: 1,
+  perPageNum: 100,
+};
+
 const getMailsByOptions = async (userNo, options = {}) => {
-  let { category = 1, page = 1, perPageNum = 100 } = options;
+  const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  let { category, page, perPageNum } = queryOptions;
+
   category = Number(category);
   page = Number(page);
   perPageNum = Number(perPageNum);
