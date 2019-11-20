@@ -1,8 +1,7 @@
-import React, { useState, useContext, useReducer } from 'react';
+import React, { useState, useReducer } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 
-import { UserContext } from '../UserContext';
 import {
   ERROR_ID_EMPTY,
   ERROR_PASSWORD_EMPTY,
@@ -16,7 +15,6 @@ import { errorParser } from '../../utils/error-parser';
 import S from './styled';
 
 const LoignForm = () => {
-  const { setUser } = useContext(UserContext);
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
 
@@ -26,7 +24,13 @@ const LoignForm = () => {
     try {
       const body = { id, password };
       const { data } = await axios.post('/auth/login', body);
-      setUser(data);
+
+      const { user_id, name, sub_email } = data;
+
+      window.sessionStorage.setItem('id', user_id);
+      window.sessionStorage.setItem('name', name);
+      window.sessionStorage.setItem('sub_email', sub_email);
+
       Router.push('/');
     } catch (err) {
       const message = errorParser(err);
