@@ -7,36 +7,36 @@ describe('Paging Test...', () => {
     const totalCount = 10000;
     const options = {
       page: 1,
-      pageNum: 100,
+      perPageNum: 100,
     };
     const result = paging(totalCount, options);
-    result.should.be.properties('startPage', 'endPage', 'page', 'pageNum', 'totalPage');
+    result.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
   });
 
   it('# page의 default는 1로 계산된다.', () => {
     const totalCount = 10000;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
     };
     const result = paging(totalCount, options);
     result.page.should.be.equal(1);
   });
 
-  it('# page와 pageNum은 입력된 값대로 반환된다.', () => {
+  it('# page와 perPageNum은 입력된 값대로 반환된다.', () => {
     const totalCount = 10000;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 5,
     };
     const result = paging(totalCount, options);
     result.page.should.be.equal(5);
-    result.pageNum.should.be.equal(100);
+    result.perPageNum.should.be.equal(100);
   });
 
   it('# page는 startPage와 endPage 사이의 값이다.', () => {
     const totalCount = 10000;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 10,
     };
     const result = paging(totalCount, options);
@@ -47,7 +47,7 @@ describe('Paging Test...', () => {
   it('# totalCount가 0이면 page, startpage, endpage가 1이다.', () => {
     const totalCount = 0;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 1,
     };
     const result = paging(totalCount, options);
@@ -57,10 +57,10 @@ describe('Paging Test...', () => {
     endPage.should.be.equals(1);
   });
 
-  it('# totalCount가 101이고 pageNum이 100이면 endPage는 2이다.', () => {
+  it('# totalCount가 101이고 perPageNum이 100이면 endPage는 2이다.', () => {
     const totalCount = 101;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 1,
     };
     const result = paging(totalCount, options);
@@ -72,7 +72,7 @@ describe('Paging Test...', () => {
   it('# totalCount가0이면 totalPage는 1이다.', () => {
     const totalCount = 0;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 1,
     };
     const result = paging(totalCount, options);
@@ -83,7 +83,7 @@ describe('Paging Test...', () => {
   it('# totalCount는 음수면 totalpage는 1이다.', () => {
     const totalCount = -1;
     const options = {
-      pageNum: 100,
+      perPageNum: 100,
       page: 1,
     };
     const result = paging(totalCount, options);

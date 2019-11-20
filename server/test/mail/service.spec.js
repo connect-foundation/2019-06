@@ -16,7 +16,7 @@ describe('Mail Service Test', () => {
 
   it('getMailsByOptions 페이징 정보를 포함한다.', async () => {
     const data = await service.getMailsByOptions(1, {});
-    data.should.be.properties('startPage', 'endPage', 'page', 'pageNum', 'totalPage');
+    data.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
   });
 
   it('getMailsByOptions 메일리스트 정보를 배열로 포함한다.', async () => {
@@ -24,9 +24,9 @@ describe('Mail Service Test', () => {
     data.mails.should.an.instanceof(Array);
   });
 
-  it('getMailsByOptions pageNum만큼 mail을 반환한다.', async () => {
+  it('getMailsByOptions perPageNum만큼 mail을 반환한다.', async () => {
     const options = {
-      pageNum: 2,
+      perPageNum: 2,
     };
     const data = await service.getMailsByOptions(1, options);
     data.mails.should.have.length(2);

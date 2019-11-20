@@ -8,14 +8,14 @@ import ErrorField from '../../libraries/exception/error-field';
 import checkQuery from '../../libraries/validation/mail';
 
 const list = async (req, res, next) => {
-  const { no: userNo } = req.user;
+  const userNo = req.user.no;
   const { query } = req;
   query.category = query.category || '1';
   query.page = query.page || '1';
 
   let mails;
   try {
-    await checkQuery(query);
+    checkQuery(query);
     mails = await service.getMailsByOptions(userNo, query);
   } catch (error) {
     return next(error);
