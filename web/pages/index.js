@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 
 import * as GS from '../components/GlobalStyle';
@@ -9,12 +9,19 @@ import Footer from '../components/Footer';
 
 const Home = () => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!window.sessionStorage.getItem('id')) {
       router.push('/login');
+    } else {
+      setLoading(true);
     }
   }, []);
+
+  if (!loading) {
+    return <div></div>;
+  }
 
   return (
     <GS.FlexWrap>
