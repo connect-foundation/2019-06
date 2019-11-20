@@ -2,16 +2,21 @@ import STATUS from 'http-status';
 import service from './service';
 import U from '../../libraries/mail-util';
 import { validate } from '../../libraries/validator';
-import ERROR_CODE from '../../libraries/error-code';
-import ErrorResponse from '../../libraries/error-response';
-import ErrorField from '../../libraries/error-field';
+import ERROR_CODE from '../../libraries/exception/error-code';
+import ErrorResponse from '../../libraries/exception/error-response';
+import ErrorField from '../../libraries/exception/error-field';
+import checkQuery from '../../libraries/validation/mail';
 
 const list = async (req, res, next) => {
-  const { no, email } = req.user;
+  const userNo = req.user.no;
+  const { query } = req;
+  query.category = query.category || '1';
+  query.page = query.page || '1';
 
   let mails;
   try {
-    mails = await service.getRawMails(no, email);
+    checkQuery(query);
+    mails = await service.getMailsByOptions(userNo, query);
   } catch (error) {
     return next(error);
   }

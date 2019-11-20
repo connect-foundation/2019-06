@@ -1,6 +1,6 @@
 import DB from '../../database';
-import ErrorResponse from '../../libraries/error-response';
-import ERROR_CODE from '../../libraries/error-code';
+import ErrorResponse from '../../libraries/exception/error-response';
+import ERROR_CODE from '../../libraries/exception/error-code';
 
 // eslint-disable-next-line camelcase
 const register = async ({ user_id, password, name, sub_email }) => {
