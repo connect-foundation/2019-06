@@ -17,7 +17,7 @@ import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 
 const MB = 1024 * 1024;
-const maxSize = 20 * MB;
+const FILE_MAX_SIZE = 20 * MB;
 
 const DropZone = () => {
   const { files } = useStateForWM();
@@ -33,7 +33,7 @@ const DropZone = () => {
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
     minSize: 0,
-    maxSize,
+    maxSize: FILE_MAX_SIZE,
     multiple: true,
   });
 
