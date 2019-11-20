@@ -12,7 +12,9 @@ const user = {
 
 describe('User DB Test..', () => {
   before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
   });
   describe('Validate Test...', () => {
     describe('userid validate는..', () => {
