@@ -1,21 +1,31 @@
-import React, { useState, useRef } from 'react';
+import React, { useReducer, useContext } from 'react';
+import { wmReducer } from './reducer';
+import { initialState } from './reducer/initial-state';
 
-export const WriteMailContext = React.createContext();
+const WMstateContext = React.createContext();
+const WMdispatchContext = React.createContext();
 
-const WriteMailContextProvider = ({ children }) => {
-  const [receivers, setReceivers] = useState([]);
-  const subjectComponent = useRef(null);
-  const bodyComponent = useRef(null);
-
-  const props = {
-    value: {
-      receiver: { receivers, setReceivers },
-      subjectComponent,
-      bodyComponent,
-    },
-  };
-
-  return <WriteMailContext.Provider {...props}>{children}</WriteMailContext.Provider>;
+export const WriteMailContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(wmReducer, initialState);
+  return (
+    <WMstateContext.Provider value={state}>
+      <WMdispatchContext.Provider value={dispatch}>{children}</WMdispatchContext.Provider>
+    </WMstateContext.Provider>
+  );
 };
 
-export default WriteMailContextProvider;
+export const useStateForWM = () => {
+  const ctx = useContext(WMstateContext);
+  if (ctx === undefined) {
+    throw new Error('useStateForWM은 WriteMailContextProvider 내에서 사용할 수 있습니다');
+  }
+  return ctx;
+};
+
+export const useDispatchForWM = () => {
+  const ctx = useContext(WMdispatchContext);
+  if (ctx === undefined) {
+    throw new Error('useDispatchForWM은 WriteMailContextProvider 내에서 사용할 수 있습니다');
+  }
+  return ctx;
+};
