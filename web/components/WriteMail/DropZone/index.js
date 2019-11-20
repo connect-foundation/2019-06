@@ -61,25 +61,24 @@ const DropZone = () => {
           <Grid item xs={12} md={6}>
             <div>
               <List>
-                {files.length > 0 &&
-                  files.map((file, idx) => (
-                    <ListItem key={idx}>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <AttachmentIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText primary={file.name} />
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={() => delBtnHandler(file)}>
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
+                {files.map((file, idx) => (
+                  <ListItem key={idx}>
+                    <ListItemAvatar>
+                      <Avatar>
+                        <AttachmentIcon />
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText primary={file.name} />
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => delBtnHandler(file)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                ))}
               </List>
             </div>
           </Grid>
