@@ -2,7 +2,7 @@
 import should from 'should';
 import paging from '../../src/libraries/paging';
 
-describe.only('Paging Test...', () => {
+describe('Paging Test...', () => {
   it('# 페이징결과를 객체로 반환한다.', () => {
     const totalCount = 10000;
     const options = {
@@ -33,7 +33,7 @@ describe.only('Paging Test...', () => {
     result.pageNum.should.be.equal(100);
   });
 
-  it('# pagesms startPage와 endPage 사이의 값이다.', () => {
+  it('# page는 startPage와 endPage 사이의 값이다.', () => {
     const totalCount = 10000;
     const options = {
       pageNum: 100,

@@ -14,17 +14,17 @@ describe('Mail Service Test', () => {
     await bulkMock();
   });
 
-  it('getRagetMailsByOptions는 페이징 정보를 포함한다.', async () => {
+  it('getMailsByOptions 페이징 정보를 포함한다.', async () => {
     const data = await service.getMailsByOptions(1, {});
     data.should.be.properties('startPage', 'endPage', 'page', 'pageNum', 'totalPage');
   });
 
-  it('getRagetMailsByOptions는 메일리스트 정보를 배열로 포함한다.', async () => {
+  it('getMailsByOptions 메일리스트 정보를 배열로 포함한다.', async () => {
     const data = await service.getMailsByOptions(1, {});
     data.mails.should.an.instanceof(Array);
   });
 
-  it('getMailsByOptions는 pageNum만큼 mail을 반환한다.', async () => {
+  it('getMailsByOptions pageNum만큼 mail을 반환한다.', async () => {
     const options = {
       pageNum: 2,
     };
