@@ -49,8 +49,7 @@ const DropZone = () => {
         <div>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
-            {!isDragActive && 'Click here or drop a file to upload!'}
-            {isDragActive && 'Drop it!'}
+            {isDragActive ? 'Drop it!' : 'Click here or drop a file to upload!'}
           </div>
         </div>
       </WM_S.RowWrapper>

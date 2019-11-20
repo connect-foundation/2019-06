@@ -20,7 +20,7 @@ export const wmReducer = (state, action) => {
       return { ...initialState };
     }
     default: {
-      throw new Error(`Unhandled action type: ${action.type}`);
+      throw new Error(`Unhandled action type: ${type}`);
     }
   }
 };
