@@ -2,10 +2,11 @@ import DB from '../../database';
 import getErrorResponseBySequelizeValidationError from '../exception/sequelize-error-parser';
 
 const join = async body => {
+  if (body.name) {
+    body.name = body.name.trim();
+  }
+
   try {
-    if (body.name) {
-      body.name = body.name.trim();
-    }
     await DB.User.build(body).validate();
   } catch (error) {
     throw getErrorResponseBySequelizeValidationError(error);
