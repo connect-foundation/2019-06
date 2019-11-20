@@ -1,4 +1,6 @@
-const PAGE_LIST_NUM = 10;
+const DEFAULT_PAGE_LIST_NUM = 10;
+const DEFAULT_PER_PAGE_NUM = 100;
+const DEFAULT_PAGE_NUM = 1;
 
 /**
  * @param {Number} totalCount 메일함에있는 메일
@@ -9,8 +11,8 @@ const PAGE_LIST_NUM = 10;
  */
 
 function paging(totalCount, options = {}) {
-  const perPageNum = options.perPageNum || 100;
-  let page = options.page || 1;
+  const perPageNum = options.perPageNum || DEFAULT_PER_PAGE_NUM;
+  let page = options.page || DEFAULT_PAGE_NUM;
 
   const totalPage = Math.ceil(totalCount / perPageNum) || 1;
 
@@ -18,8 +20,8 @@ function paging(totalCount, options = {}) {
     page = totalPage;
   }
 
-  const startPage = Math.floor((page - 1) / PAGE_LIST_NUM) * PAGE_LIST_NUM + 1;
-  let endPage = startPage + PAGE_LIST_NUM - 1;
+  const startPage = Math.floor((page - 1) / DEFAULT_PAGE_LIST_NUM) * DEFAULT_PAGE_LIST_NUM + 1;
+  let endPage = startPage + DEFAULT_PAGE_LIST_NUM - 1;
   endPage = endPage > totalPage ? totalPage : endPage;
   return { startPage, endPage, page, perPageNum, totalPage };
 }
