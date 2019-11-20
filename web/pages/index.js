@@ -12,7 +12,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!window.sessionStorage.getItem('id')) {
+    if (!window.sessionStorage.getItem('user')) {
       router.push('/login');
     } else {
       setLoading(true);

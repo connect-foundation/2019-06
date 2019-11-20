@@ -25,11 +25,7 @@ const LoignForm = () => {
       const body = { id, password };
       const { data } = await axios.post('/auth/login', body);
 
-      const { user_id, name, sub_email } = data;
-
-      window.sessionStorage.setItem('id', user_id);
-      window.sessionStorage.setItem('name', name);
-      window.sessionStorage.setItem('sub_email', sub_email);
+      window.sessionStorage.setItem('user', JSON.stringify(data));
 
       Router.push('/');
     } catch (err) {
