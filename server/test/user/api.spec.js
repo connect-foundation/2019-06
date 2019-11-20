@@ -3,8 +3,6 @@ import request from 'supertest';
 import app from '../../src/app';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
-import user from '../../src/libraries/validation/user';
-import ERROR_CODE from '../../src/libraries/error-code';
 
 const user1 = {
   user_id: 'userid',

@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
-import { Op } from 'Sequelize';
+const defaultPaging = { offset: 0, limit: 100 };
 
 const model = (sequelize, DataTypes) => {
   const Mail = sequelize.define(
@@ -51,27 +51,16 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail, filter = {}) => {
-    return Mail.findAll({
-      where: {
-        owner: userNo,
-        ...filter,
-      },
-      include: [
-        {
-          model: sequelize.models.MailTemplate,
-          where: {
-            from: {
-              [Op.not]: userEmail,
-            },
-          },
-        },
-      ],
-    });
-  };
-
-  Mail.findAllFilteredMail = (userNo, mailFilter = {}, mailTemplateFilter = {}, options = {}) => {
-    return Mail.findAll({
+  Mail.findAndCountAllFilteredMail = ({
+    userNo,
+    mailFilter = {},
+    mailTemplateFilter = {},
+    options = {},
+    paging = defaultPaging,
+  }) => {
+    return Mail.findAndCountAll({
+      distinct: true,
+      ...paging,
       where: {
         owner: userNo,
         ...mailFilter,
