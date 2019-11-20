@@ -34,8 +34,11 @@ const ListOfReceivers = () => {
   const keyDownHandler = e => {
     const { key, target } = e;
     if (key === SC.BACKSPACE && target.value === SC.BLANK && receivers.length > 0) {
+      e.preventDefault();
+      e.stopPropagation();
       target.value = receivers[receivers.length - 1];
       dispatch({ type: 'updateReceivers', receivers: [...receivers.slice(0, -1)] });
+      resizeInput(target);
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
       replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
     }
@@ -53,10 +56,10 @@ const ListOfReceivers = () => {
     resizeInput(target);
   };
 
-  const receiverDeleteBtn = idx =>
+  const receiverDeleteBtn = target =>
     dispatch({
       type: 'updateReceivers',
-      receivers: [...receivers.filter(receiver => receivers.indexOf(receiver) !== idx)],
+      receivers: [...receivers.filter(receiver => receiver !== target)],
     });
 
   return (
@@ -68,7 +71,7 @@ const ListOfReceivers = () => {
           {receivers.map((receiver, idx) => (
             <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
               {receiver}
-              <S.ReceiverLiDeleteBtn onClick={() => receiverDeleteBtn(idx)}>
+              <S.ReceiverLiDeleteBtn onClick={() => receiverDeleteBtn(receiver)}>
                 X
               </S.ReceiverLiDeleteBtn>
             </S.ReceiverListLi>
@@ -78,7 +81,6 @@ const ListOfReceivers = () => {
           ref={receiverInput}
           onKeyDown={keyDownHandler}
           onChange={changeHandler}
-          contentEditable={true}
         />
       </S.ReceiverListWrapper>
     </WM_S.RowWrapper>
