@@ -34,7 +34,7 @@ const Home = () => {
       <Header brand={'Daitnu'} />
       <GS.Content>
         <Aside setView={setView} />
-        {state.selected ? <ReadMail mail={state.selected.mail} /> : view}
+        {state.selected.mail ? <ReadMail mail={state.selected.mail} /> : view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>

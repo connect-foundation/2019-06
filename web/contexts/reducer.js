@@ -4,7 +4,7 @@ export const initialState = {
   category: 0,
   page: 1,
   mails: null,
-  selected: null,
+  selected: { mail: null, no: 0 },
 };
 
 const CATEGORY_CLICK = 'CATEGORY_CLICK';
