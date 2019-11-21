@@ -4,13 +4,13 @@ export const initialState = {
   category: 0,
   page: 1,
   mails: null,
-  mail: null,
-  no: 0,
+  selected: null,
 };
 
 const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
-const MAIL_TEMPLATE_CLICK = 'MAIL_TEMPLATE_CLICK';
+const SET_CURRENT_MAIL = 'SET_CURRENT_MAIL';
+const SET_MAILS = 'SET_MAILS';
 
 export const handleCategoryClick = async category => {
   const URL = `/v1/mail?category=${category}`;
@@ -35,12 +35,20 @@ export const handlePageNumberClick = page => {
   };
 };
 
-export const handleMailTemplateClick = (mail, no) => {
+export const setSelected = (mail, no) => {
   return {
-    type: MAIL_TEMPLATE_CLICK,
+    type: SET_CURRENT_MAIL,
     payload: {
-      mail,
-      no,
+      selected: { mail, no },
+    },
+  };
+};
+
+export const setMails = mails => {
+  return {
+    type: SET_MAILS,
+    payload: {
+      mails,
     },
   };
 };
@@ -52,7 +60,9 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
-    case MAIL_TEMPLATE_CLICK:
+    case SET_CURRENT_MAIL:
+      return { ...state, ...payload };
+    case SET_MAILS:
       return { ...state, ...payload };
     default:
       return { ...state };

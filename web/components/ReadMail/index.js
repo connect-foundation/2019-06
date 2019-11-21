@@ -28,6 +28,7 @@ const ReadMail = ({ mail }) => {
         </S.Column>
       </S.TitleView>
       <S.ReadFrame>{text}</S.ReadFrame>
+      <PageMoveButtonArea />
     </S.ReadArea>
   );
 };

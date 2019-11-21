@@ -1,25 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { AppContext } from '../../contexts';
-
-// prev={selected.no > 0 ? mails[selected.no - 1] : false}
-// next={selected.no < mails.length - 1 ? mails[selected.no + 1] : false}
-// setSelected={setSelected}
-// no={selected.no}
+import { setSelected } from '../../contexts/reducer';
 
 const PageMoveButtonArea = () => {
   const { state, dispatch } = useContext(AppContext);
-  const handlePrevClick = e => setSelected({ mail: prev, no: no - 1 });
-  const handleNextClick = e => setSelected({ mail: next, no: no + 1 });
+  const { mails, selected } = state;
+  const handlePrevClick = () =>
+    dispatch(setSelected(mails[selected.no - 1].MailTemplate, selected.no - 1));
+  const handleNextClick = () =>
+    dispatch(setSelected(mails[selected.no + 1].MailTemplate, selected.no + 1));
 
   return (
     <div>
-      <IconButton disabled={!prev} onClick={handlePrevClick}>
+      <IconButton disabled={selected.no < 1} onClick={handlePrevClick}>
         <ArrowBackIosIcon />
       </IconButton>
-      <IconButton disabled={!next} onClick={handleNextClick}>
+      <IconButton disabled={selected.no === mails.length - 1} onClick={handleNextClick}>
         <ArrowForwardIosIcon />
       </IconButton>
     </div>

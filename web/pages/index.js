@@ -9,6 +9,7 @@ import Footer from '../components/Footer';
 import Loading from '../components/Loading';
 import ReadMail from '../components/ReadMail';
 import { AppContext } from '../contexts';
+import { setMails } from '../contexts/reducer';
 
 const Home = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -23,6 +24,7 @@ const Home = () => {
       setUser(JSON.parse(userData));
       axios.get('/mail').then(({ data }) => {
         setView(<MailArea mailList={data.mails} />);
+        dispatch(setMails(data.mails.mails));
       });
     }
   }, []);
@@ -32,7 +34,7 @@ const Home = () => {
       <Header brand={'Daitnu'} />
       <GS.Content>
         <Aside setView={setView} />
-        {state.mail ? <ReadMail mail={state.mail} /> : view}
+        {state.selected ? <ReadMail mail={state.selected.mail} /> : view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>
