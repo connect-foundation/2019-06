@@ -1,8 +1,6 @@
-/* eslint-disable no-undef */
 import styled from 'styled-components';
-import { SUBJECT } from './constant';
 
-const ReadArea = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -16,6 +14,13 @@ const Tools = styled.div`
   align-items: center;
 `;
 
+const ReadArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1;
+  padding: 0 24px;
+`;
+
 const TitleView = styled.div`
   display: flex;
   flex-direction: column;
@@ -24,17 +29,30 @@ const TitleView = styled.div`
   margin-bottom: 16px;
 `;
 
-const Column = styled.div`
+const Subject = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: ${({ role }) => (role === SUBJECT ? 'space-between' : 'flex-start')};
-  span {
-    margin: ${({ role }) => (role === SUBJECT ? 'none' : '8px 8px 8px 0')};
-    font-weight: ${({ role }) => (role === SUBJECT ? 'normal' : '700')};
+
+  h3 {
+    margin-left: 10px;
+    flex: 1 1;
   }
 `;
 
-const ReadFrame = styled.div``;
+const Address = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  span {
+    margin: 8px 8px 8px 0;
+    font-weight: 700;
+  }
+`;
 
-export { ReadArea, Tools, TitleView, Column, ReadFrame };
+const ReadFrame = styled.div`
+  flex: 1 1;
+`;
+
+export { Container, ReadArea, Tools, TitleView, Subject, Address, ReadFrame };

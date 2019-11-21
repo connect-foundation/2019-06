@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import * as S from './styled';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
@@ -14,14 +15,14 @@ const PageMoveButtonArea = () => {
     dispatch(setSelected(mails[selected.no + 1].MailTemplate, selected.no + 1));
 
   return (
-    <div>
+    <S.Container>
       <IconButton disabled={selected.no < 1} onClick={handlePrevClick}>
         <ArrowBackIosIcon />
       </IconButton>
       <IconButton disabled={selected.no === mails.length - 1} onClick={handleNextClick}>
         <ArrowForwardIosIcon />
       </IconButton>
-    </div>
+    </S.Container>
   );
 };
 
