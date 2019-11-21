@@ -214,3 +214,62 @@ describe('회원등록 POST /users는...', () => {
       });
   });
 });
+
+describe('POST /users/search는...', () => {
+  before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
+    await DB.User.create(user1);
+  });
+
+  it('# 잘못된 id, pw외의 다른 type을 query로 줄 경우 상태코드는 400이다', done => {
+    request(app)
+      .post('/v1/users/search?type=test')
+      .expect(400, done);
+  });
+
+  it('# 잘못된 id, pw외의 다른 type을 query로 줄 경우 실패한다', done => {
+    request(app)
+      .post('/v1/users/search?type=test')
+      .send(user1)
+      .end((err, { body }) => {
+        const { fieldErrors } = body;
+        fieldErrors[0].should.be.properties({ field: 'type' });
+        done();
+      });
+  });
+
+  it('# type이 id이고 body로 email을 주지 않을 경우 상태코드는 400이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=id')
+      .send()
+      .expect(400, done);
+  });
+
+  it('# type이 id이고 body로 email을 주지 않을 경우 실패한다.', done => {
+    request(app)
+      .post('/v1/users/search?type=id')
+      .send()
+      .end((err, { body }) => {
+        const { fieldErrors } = body;
+        fieldErrors[0].should.be.properties({ field: 'email' });
+        done();
+      });
+  });
+
+  it('# 아이디를 찾을 때 존재하는 메일을 넘겨줄 경우 상태코드는 204이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=id')
+      .send({ email: 'daitnu@daitnu.com' })
+      .expect(204, done);
+  });
+
+  it('# 아이디를 찾을 때 가입에 사용하지 않은 메일을 넘겨줄 경우 상태코드는 404이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=id')
+      .send({ email: 'daitnu@daitnu22.com' })
+      .expect(404, done);
+  });
+});
