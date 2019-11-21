@@ -10,6 +10,7 @@ import Footer from '../components/Footer';
 const Home = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState(<MailArea />);
 
   useEffect(() => {
     if (!window.sessionStorage.getItem('user')) {
@@ -27,8 +28,8 @@ const Home = () => {
     <GS.FlexWrap>
       <Header brand={'Daitnu'} />
       <GS.Content>
-        <Aside />
-        <MailArea />
+        <Aside setView={setView} />
+        {view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>

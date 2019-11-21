@@ -10,10 +10,10 @@ export const Label = styled.div`
 
 export const RowWrapper = styled.div`
   display: grid;
-  grid-template-columns: 75px 500px;
+  grid-template-columns: 75px 1fr;
+  margin: 15px;
 `;
 
 export const WriteArea = styled.div`
-  display: grid;
-  grid-row-gap: 8px;
+  overflow: scroll;
 `;
