@@ -61,7 +61,7 @@ const RegisterForm = () => {
   const signUp = async () => {
     try {
       const { id, password, name, email } = values;
-      const body = { user_id: id, password, sub_email: email, name: name.trim() };
+      const body = { id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
       Router.push('/login');
     } catch (err) {
