@@ -5,7 +5,7 @@ import ErrorResponse from '../../../src/libraries/exception/error-response';
 import ERROR_CODE from '../../../src/libraries/exception/error-code';
 
 const user = {
-  user_id: 'userid',
+  id: 'userid',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu@daitnu.com',
@@ -19,13 +19,13 @@ describe('', () => {
     });
 
     it('# 아이디가 5글자 미만일 시에 rejected가 반환된다', async () => {
-      await validate.join({ ...user, user_id: 'asd' }).should.be.rejected();
+      await validate.join({ ...user, id: 'asd' }).should.be.rejected();
     });
 
     it('# 실패시 error는 ErrorResponse의 인스턴스이다.', async () => {
       const userId = 'asd';
       try {
-        await validate.join({ ...user, user_id: userId });
+        await validate.join({ ...user, id: userId });
       } catch (error) {
         error.should.be.instanceOf(ErrorResponse);
       }
@@ -34,10 +34,10 @@ describe('', () => {
     it('# 실패시 fieldErrors 상세한 내용을 알린다. ', async () => {
       const userId = 'asd';
       try {
-        await validate.join({ ...user, user_id: userId });
+        await validate.join({ ...user, id: userId });
       } catch (error) {
         const { fieldErrors } = error;
-        fieldErrors[0].field.should.be.eql('user_id');
+        fieldErrors[0].field.should.be.eql('id');
         fieldErrors[0].value.should.be.eql(userId);
         fieldErrors[0].reason.should.be.eql('아이디의 길이는 5이상 20이하 이어야 합니다.');
       }
@@ -47,7 +47,7 @@ describe('', () => {
       const userId = 'asd';
       const password = 'asd';
       try {
-        await validate.join({ ...user, user_id: userId, password });
+        await validate.join({ ...user, id: userId, password });
       } catch (error) {
         error.fieldErrors.length.should.be.eql(2);
       }
@@ -57,7 +57,7 @@ describe('', () => {
       const userId = 'asd';
       const password = 'asd';
       try {
-        await validate.join({ ...user, user_id: userId, password });
+        await validate.join({ ...user, id: userId, password });
       } catch (error) {
         error.errorCode.should.be.equals(ERROR_CODE.INVALID_INPUT_VALUE);
       }

@@ -7,18 +7,28 @@ import ErrorResponse from '../../src/libraries/exception/error-response';
 import ERROR_CODE from '../../src/libraries/exception/error-code';
 
 const user = {
-  user_id: 'userid',
+  id: 'userid',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu@daitnu.com',
 };
 
 const user2 = {
-  user_id: 'userid2',
+  id: 'userid2',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu2@daitnu.com',
 };
+
+const rooot = {
+  no: 1,
+  id: 'rooot',
+  name: '다잇누',
+  password: '12345678',
+  sub_email: 'root@asd.bcd',
+};
+
+const names = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 
 describe('user service는...', () => {
   before(async () => {
@@ -31,7 +41,7 @@ describe('user service는...', () => {
   describe('register 함수는...', () => {
     it('# 성공시 newUser를 반환한다.', async () => {
       const newUser = await service.register(user);
-      newUser.should.be.properties('domain_no', 'no', 'user_id', 'name', 'sub_email', 'email');
+      newUser.should.be.properties('domain_no', 'no', 'id', 'name', 'sub_email', 'email');
     });
 
     it('# 성공시 password는 반환하지 않는다.', async () => {
@@ -64,5 +74,20 @@ describe('user service는...', () => {
         fieldErrors.should.have.length(0);
       }
     });
+  });
+
+  describe('createDefaultCategories 함수는...', () => {
+    before(async () => {
+      await service.createDefaultCategories(rooot.no);
+    });
+
+    for (let i = 0; i < names.length; i++) {
+      it(`# rooot에 "${names[i]}" 카테고리가 존재합니다.`, async () => {
+        const category = await DB.Category.findOneByUserNoAndName(rooot.no, names[i]);
+        category.should.be.have
+          .properties({ user_no: rooot.no })
+          .and.have.properties({ is_default: 1 });
+      });
+    }
   });
 });

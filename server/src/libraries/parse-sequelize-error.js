@@ -10,7 +10,7 @@ const parseValidationError = error => {
       break;
     case 'SequelizeUniqueConstraintError': {
       const { path } = errors[0];
-      if (path === 'user_id') {
+      if (path === 'id') {
         returnValue = ERROR_CODE.ID_DUPLICATION;
       }
 
