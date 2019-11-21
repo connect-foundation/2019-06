@@ -6,15 +6,15 @@ export const initialState = {
   mails: null,
 };
 
-const CLICK_CATEGORY = 'CLICK_CATEGORY';
-const CLICK_PAGE = 'CLICK_PAGE';
+const CATEGORY_CLICK = 'CATEGORY_CLICK';
+const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 
-export const handleClickCategory = async category => {
+export const handleCategoryClick = async category => {
   const URL = `/v1/mail?category=${category}`;
   const mails = await axios.get(URL);
 
   return {
-    type: CLICK_CATEGORY,
+    type: CATEGORY_CLICK,
     payload: {
       category,
       mails,
@@ -23,9 +23,9 @@ export const handleClickCategory = async category => {
   };
 };
 
-export const handleClickPage = page => {
+export const handlePageNumberClick = page => {
   return {
-    type: CLICK_PAGE,
+    type: PAGE_NUMBER_CLICK,
     payload: {
       page,
     },
@@ -35,9 +35,9 @@ export const handleClickPage = page => {
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case CLICK_CATEGORY:
+    case CATEGORY_CLICK:
       return { ...state, ...payload };
-    case CLICK_PAGE:
+    case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
     default:
       return { ...state };
