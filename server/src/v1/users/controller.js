@@ -1,8 +1,6 @@
 import status from 'http-status';
 import validation from '../../libraries/validation/user';
 import service from './service';
-import DB from '../../database';
-import mailUtil from '../../libraries/mail-util';
 
 const registerUser = async (req, res, next) => {
   let newUser;
@@ -23,10 +21,8 @@ const search = async (req, res, next) => {
 
     switch (req.query.type) {
       case 'id': {
-        const user = await DB.User.findOneByEmail(req.body.email);
-        if (user) {
-          mailUtil.sendFindIdMail({ id: user.user_id, email: user.sub_email });
-        }
+        validation.checkBodyForIdSearch(req.body);
+        await service.sendUserIdToEmail(req.body.email);
         break;
       }
       case 'pw':
