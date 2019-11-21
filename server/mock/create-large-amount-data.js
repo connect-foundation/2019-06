@@ -8,7 +8,7 @@ const bulkCreateMailTemplate = async () => {
       from: `root${i}@daitnu.com`,
       to: 'daitnu@daitnu.com,daitne@daitnu.com',
       subject: `제목입니다${i}.ㅎㅎ`,
-      body: `바디입니다${i}.ㅎㅎㅎ`,
+      text: `바디입니다${i}.ㅎㅎㅎ`,
     };
     mailTemplates.push(mailTemplate);
   }

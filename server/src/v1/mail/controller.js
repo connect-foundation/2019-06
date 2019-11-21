@@ -10,7 +10,7 @@ import checkQuery from '../../libraries/validation/mail';
 const list = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
-  query.category = query.category || '1';
+  query.category = query.category || '0';
   query.page = query.page || '1';
 
   let mails;
@@ -26,7 +26,11 @@ const list = async (req, res, next) => {
 
 const write = async (req, res, next) => {
   const attachments = req.files;
-  const { to, subject, text } = req.body;
+  const { subject, text } = req.body;
+  let { to } = req.body;
+  if (!Array.isArray(to)) {
+    to = [to];
+  }
   const from = req.user.email;
   if (!to.every(val => validate('email', val))) {
     const errorField = new ErrorField('email', to, '이메일이 올바르지 않습니다');

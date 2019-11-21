@@ -35,15 +35,6 @@ describe('checkQuery....', () => {
     }
   });
 
-  it("# category가 0이면 errorField reason은 '유효하지 않은 값입니다.' 이다.", () => {
-    try {
-      checkQuery({ ...data, category: '0' });
-    } catch (err) {
-      const { fieldErrors } = err;
-      fieldErrors[0].reason.should.be.equals('유효하지 않은 값입니다.');
-    }
-  });
-
   it("# category가 음수이면 errorField reason은 '유효하지 않은 값입니다.' 이다.", () => {
     try {
       checkQuery({ ...data, category: '-1' });

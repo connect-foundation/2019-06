@@ -16,13 +16,13 @@ const createMailTemplateDummyData = async () => {
       from: 'root@daitnu.com',
       to: 'daitnu@daitnu.com,daitne@daitnu.com',
       subject: '제목입니다.ㅎㅎ',
-      body: '바디입니다.ㅎㅎㅎ',
+      text: '바디입니다.ㅎㅎㅎ',
     },
     {
       from: 'root@daitnu.com',
       to: 'daitnu@daitnu.com,daitne@daitnu.com',
       subject: '제목입니다.ㅎㅎ2',
-      body: '바디입니다.ㅎㅎㅎ2',
+      text: '바디입니다.ㅎㅎㅎ2',
     },
   ];
 
