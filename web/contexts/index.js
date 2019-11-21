@@ -1,24 +1,12 @@
-import React, { useState, createContext } from 'react';
+import React, { useReducer, createContext } from 'react';
+import { reducer, initialState } from './reducer';
 
 const AppContext = createContext();
 
-const { Provider } = AppContext;
-
 const AppProvider = props => {
-  const [user, setUser] = useState(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  // const logout = () => {
-  //   setUser(null);
-  //   Router.push('/login');
-  // };
-
-  const userContext = {
-    user,
-    setUser,
-  };
-
-  const value = { userContext };
-  return <Provider value={value}>{props.children}</Provider>;
+  return <AppContext.Provider value={{ state, dispatch }}>{props.children}</AppContext.Provider>;
 };
 
 export { AppProvider, AppContext };
