@@ -54,9 +54,12 @@ const MailArea = () => {
     };
   });
 
-  const mailTemplates = processedMails.map((mail, i) => (
+  let mailTemplates = processedMails.map((mail, i) => (
     <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={mail.no} />
   ));
+  if (mailTemplates.length === 0) {
+    mailTemplates = '메일이 없습니다.';
+  }
 
   return (
     <S.MailArea>
