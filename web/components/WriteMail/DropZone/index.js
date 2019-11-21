@@ -13,6 +13,7 @@ import {
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
+import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 
@@ -49,16 +50,18 @@ const DropZone = () => {
       <WM_S.RowWrapper>
         <div></div>
         <div>
-          <div {...getRootProps()}>
+          <S.UploadArea {...getRootProps()}>
             <input {...getInputProps()} />
-            {isDragActive ? 'Drop it!' : 'Click here or drop a file to upload!'}
-          </div>
+            {isDragActive
+              ? '마우스 버튼을 놓으세요!'
+              : '여기를 클릭하시거나 파일을 드래그해서 업로드 하세요!'}
+          </S.UploadArea>
         </div>
       </WM_S.RowWrapper>
       <WM_S.RowWrapper>
         <div></div>
         <div>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={12}>
             <div>
               <List>
                 {files.map((file, idx) => (
