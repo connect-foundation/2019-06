@@ -5,14 +5,14 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 
 const user1 = {
-  user_id: 'userid',
+  id: 'userid',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu@daitnu.com',
 };
 
 const user2 = {
-  user_id: 'userid2',
+  id: 'userid2',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu2@daitnu.com',
@@ -47,7 +47,7 @@ describe('회원등록 POST /users는...', () => {
       .send(user2)
       .end((err, { body: { newUser } }) => {
         newUser.should.be.have
-          .properties({ user_id: user2.user_id })
+          .properties({ id: user2.id })
           .and.have.properties({ name: user2.name })
           .and.have.properties({ sub_email: user2.sub_email })
           .and.not.have.property('password');
@@ -109,17 +109,17 @@ describe('회원등록 POST /users는...', () => {
   });
 
   it('# id 필드의 길이가 5이하인 경우 실패한다.', done => {
-    const user_id = 'test';
+    const id = 'test';
     request(app)
       .post('/v1/users')
       .send({
         ...user1,
-        user_id,
+        id,
       })
       .end((err, { body }) => {
         const { fieldErrors } = body;
-        fieldErrors[0].should.be.properties({ field: 'user_id' });
-        fieldErrors[0].should.be.properties({ value: user_id });
+        fieldErrors[0].should.be.properties({ field: 'id' });
+        fieldErrors[0].should.be.properties({ value: id });
         fieldErrors[0].should.be.properties({
           reason: '아이디의 길이는 5이상 20이하 이어야 합니다.',
         });
@@ -128,17 +128,17 @@ describe('회원등록 POST /users는...', () => {
   });
 
   it('# id 필드의 길이가 20초과 경우 실패한다. ', done => {
-    const user_id = 'a'.repeat(21);
+    const id = 'a'.repeat(21);
     request(app)
       .post('/v1/users')
       .send({
         ...user1,
-        user_id,
+        id,
       })
       .end((err, { body }) => {
         const { fieldErrors } = body;
-        fieldErrors[0].should.be.properties({ field: 'user_id' });
-        fieldErrors[0].should.be.properties({ value: user_id });
+        fieldErrors[0].should.be.properties({ field: 'id' });
+        fieldErrors[0].should.be.properties({ value: id });
         fieldErrors[0].should.be.properties({
           reason: '아이디의 길이는 5이상 20이하 이어야 합니다.',
         });
@@ -147,17 +147,17 @@ describe('회원등록 POST /users는...', () => {
   });
 
   it('# id 필드에 특수문자가 있는경우 실패한다.', done => {
-    const user_id = 'ㄴㅁㅇㄴㅁ@ㄴㅇㅁㄴ';
+    const id = 'ㄴㅁㅇㄴㅁ@ㄴㅇㅁㄴ';
     request(app)
       .post('/v1/users')
       .send({
         ...user1,
-        user_id,
+        id,
       })
       .end((err, { body }) => {
         const { fieldErrors } = body;
-        fieldErrors[0].should.be.properties({ field: 'user_id' });
-        fieldErrors[0].should.be.properties({ value: user_id });
+        fieldErrors[0].should.be.properties({ field: 'id' });
+        fieldErrors[0].should.be.properties({ value: id });
         fieldErrors[0].should.be.properties({ reason: '아이디의 형식이 올바르지 않습니다.' });
         done();
       });
