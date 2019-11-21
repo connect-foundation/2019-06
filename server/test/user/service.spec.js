@@ -84,7 +84,7 @@ describe('user service는...', () => {
     for (let i = 0; i < names.length; i++) {
       it(`# rooot에 "${names[i]}" 카테고리가 존재합니다.`, async () => {
         const category = await DB.Category.findOneByUserNoAndName(rooot.no, names[i]);
-        category.should.be.have.and.have
+        category.should.be.have
           .properties({ user_no: rooot.no })
           .and.have.properties({ is_default: 1 });
       });
