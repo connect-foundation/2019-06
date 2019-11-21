@@ -5,7 +5,15 @@ import { SUBJECT } from './constant';
 const ReadArea = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 12px 24px;
+`;
+
+const Tools = styled.div`
+  flex: 0 0 50px;
+  border-bottom: 2px solid #e9ecef;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 `;
 
 const TitleView = styled.div`
@@ -29,4 +37,4 @@ const Column = styled.div`
 
 const ReadFrame = styled.div``;
 
-export { ReadArea, TitleView, Column, ReadFrame };
+export { ReadArea, Tools, TitleView, Column, ReadFrame };

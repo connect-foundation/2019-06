@@ -11,7 +11,7 @@ import ReadMail from '../components/ReadMail';
 import { AppContext } from '../contexts';
 
 const Home = () => {
-  const { state, dispatch, selected } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [view, setView] = useState(null);
 
@@ -32,7 +32,7 @@ const Home = () => {
       <Header brand={'Daitnu'} />
       <GS.Content>
         <Aside setView={setView} />
-        {selected ? <ReadMail mail={selected.mail} /> : view}
+        {state.mail ? <ReadMail mail={state.mail} /> : view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>

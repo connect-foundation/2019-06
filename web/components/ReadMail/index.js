@@ -1,6 +1,7 @@
 import React from 'react';
 import * as S from './styled';
 import { SUBJECT, ADDRESS } from './constant';
+import PageMoveButtonArea from '../PageMoveButtonArea';
 
 const ReadMail = ({ mail }) => {
   const { to, from, subject, date, text } = mail;
@@ -11,6 +12,7 @@ const ReadMail = ({ mail }) => {
 
   return (
     <S.ReadArea>
+      <S.Tools>Tools</S.Tools>
       <S.TitleView>
         <S.Column role={SUBJECT}>
           <h4>{subject}</h4>
