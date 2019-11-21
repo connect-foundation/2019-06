@@ -2,9 +2,8 @@
 import should from 'should';
 import DB from '../../src/database';
 
-const userEmail = 'rooot@daitnu.com';
 const user = {
-  user_id: 'userid',
+  id: 'userid',
   name: '이름이뭐니',
   password: 'pasword12',
   sub_email: 'daitnu@daitnu.com',
@@ -22,13 +21,13 @@ describe('User DB Test..', () => {
         const userId = 'user@id';
         const data = await DB.User.build({
           ...user,
-          user_id: userId,
+          id: userId,
         })
           .validate()
           .should.be.rejected();
         const error = data.errors[0];
         error.message.should.be.equals('아이디의 형식이 올바르지 않습니다.');
-        error.path.should.be.equals('user_id');
+        error.path.should.be.equals('id');
         error.value.should.be.equals(userId);
       });
 
@@ -36,13 +35,13 @@ describe('User DB Test..', () => {
         const userId = 'user';
         const data = await DB.User.build({
           ...user,
-          user_id: userId,
+          id: userId,
         })
           .validate()
           .should.be.rejected();
         const error = data.errors[0];
         error.message.should.be.equals('아이디의 길이는 5이상 20이하 이어야 합니다.');
-        error.path.should.be.equals('user_id');
+        error.path.should.be.equals('id');
         error.value.should.be.equals(userId);
       });
 
@@ -50,13 +49,13 @@ describe('User DB Test..', () => {
         const userId = 'a'.repeat(21);
         const data = await DB.User.build({
           ...user,
-          user_id: userId,
+          id: userId,
         })
           .validate()
           .should.be.rejected();
         const error = data.errors[0];
         error.message.should.be.equals('아이디의 길이는 5이상 20이하 이어야 합니다.');
-        error.path.should.be.equals('user_id');
+        error.path.should.be.equals('id');
         error.value.should.be.equals(userId);
       });
 
@@ -64,19 +63,19 @@ describe('User DB Test..', () => {
         const userId = 'a'.repeat(5);
         const result = await DB.User.build({
           ...user,
-          user_id: userId,
+          id: userId,
         })
           .validate()
           .should.be.resolved();
         const data = result.get({ plain: true });
-        data.user_id.should.be.equals(userId);
+        data.id.should.be.equals(userId);
         data.password.should.be.equals(user.password);
         data.name.should.be.equals(user.name);
         data.sub_email.should.be.equals(user.sub_email);
 
         await DB.User.build({
           ...user,
-          user_id: 'a'.repeat(20),
+          id: 'a'.repeat(20),
         })
           .validate()
           .should.be.resolved();
@@ -137,7 +136,7 @@ describe('User DB Test..', () => {
           .validate()
           .should.be.resolved();
         const data = result.get({ plain: true });
-        data.user_id.should.be.equals(user.user_id);
+        data.id.should.be.equals(user.id);
         data.password.should.be.equals(password);
         data.name.should.be.equals(user.name);
         data.sub_email.should.be.equals(user.sub_email);
