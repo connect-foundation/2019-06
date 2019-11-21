@@ -21,11 +21,12 @@ const model = (sequelize, DataTypes) => {
       tableName: 'tbl_classification_pattern',
       timestamps: false,
       paranoid: false,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
-  ClassificationPattern.associate = ({ Category, ClassificationPatternType }) => {
-    Category.belongsTo(ClassificationPatternType, { foreignKey: 'category_no', targetKey: 'no' });
+  ClassificationPattern.associate = ({ Category }) => {
     ClassificationPattern.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 

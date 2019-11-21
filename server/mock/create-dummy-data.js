@@ -34,22 +34,22 @@ const createUserDummyData = async () => {
     {
       domain_no: 1,
       name: '다잇누',
-      password: 'dqwdq',
-      user_id: 'root',
+      password: '12345678',
+      id: 'rooot',
       sub_email: 'root@asd.bcd',
     },
     {
       domain_no: 1,
       name: '다없누',
-      password: 'dqwdq',
-      user_id: 'root2',
+      password: '12345678',
+      id: 'root2',
       sub_email: 'root2@asd.bcd',
     },
     {
       domain_no: 1,
       name: '다했누',
-      password: 'dqwdq',
-      user_id: 'root3',
+      password: '12345678',
+      id: 'root3',
       sub_email: 'root3@asd.bcd',
     },
   ];
@@ -69,7 +69,6 @@ const createMailDummyData = async () => {
 
   await db.Mail.bulkCreate(mails);
 };
-
 const createDummyData = async () => {
   await createDomainDummyData();
   await createUserDummyData();

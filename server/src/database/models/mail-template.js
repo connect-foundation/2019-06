@@ -17,19 +17,21 @@ const model = (sequelize, DataTypes) => {
       },
       subject: {
         type: DataTypes.STRING(255),
-        allowNull: false,
+        allowNull: true,
       },
-      body: {
+      text: {
         type: DataTypes.TEXT,
         allowNull: true,
       },
     },
     {
       freezeTableName: true,
-      timestamps: false,
+      timestamps: true,
       paranoid: false,
       underscored: true,
       tableName: 'tbl_mail_template',
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 

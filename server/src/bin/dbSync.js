@@ -1,5 +1,6 @@
 import db from '../database';
 import createDummyData from '../../mock/create-dummy-data';
+import createBulkDummyData from '../../mock/create-large-amount-data';
 
 const dbSync = async ({ force }) => {
   await db.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -8,6 +9,7 @@ const dbSync = async ({ force }) => {
 
   if (force) {
     await createDummyData();
+    await createBulkDummyData();
   }
 };
 

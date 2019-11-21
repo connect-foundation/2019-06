@@ -13,7 +13,12 @@ const model = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING(255),
-        unique: true,
+        allowNull: false,
+      },
+      is_default: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
     },
     {
@@ -22,8 +27,17 @@ const model = (sequelize, DataTypes) => {
       timestamps: false,
       paranoid: false,
       underscored: true,
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
+
+  Category.findOneByUserNoAndName = (user_no, name) => {
+    return Category.findOne({
+      where: { user_no, name },
+      raw: true,
+    });
+  };
 
   Category.associate = ({ User, Mail, ClassificationPattern }) => {
     Category.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });

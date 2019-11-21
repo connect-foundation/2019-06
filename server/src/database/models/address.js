@@ -22,11 +22,21 @@ const model = (sequelize, DataTypes) => {
       paranoid: false,
       underscored: true,
       tableName: 'tbl_address',
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
   Address.associate = ({ User }) => {
     Address.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });
+  };
+
+  Address.findAllByUserNo = userNo => {
+    return Address.findAll({
+      where: {
+        user_no: userNo,
+      },
+    });
   };
 
   return Address;

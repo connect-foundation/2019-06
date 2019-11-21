@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
-import { Op } from 'Sequelize';
+const defaultPaging = { offset: 0, limit: 100 };
 
 const model = (sequelize, DataTypes) => {
   const Mail = sequelize.define(
@@ -33,11 +33,6 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
-      is_removed: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-      },
     },
     {
       freezeTableName: true,
@@ -45,6 +40,8 @@ const model = (sequelize, DataTypes) => {
       paranoid: false,
       underscored: true,
       tableName: 'tbl_mail',
+      charset: 'utf8',
+      collate: 'utf8_general_ci',
     },
   );
 
@@ -54,22 +51,37 @@ const model = (sequelize, DataTypes) => {
     Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
   };
 
-  Mail.findAllReceivedMail = (userNo, userEmail) =>
-    Mail.findAll({
+  Mail.findAndCountAllFilteredMail = ({
+    userNo,
+    mailFilter = {},
+    mailTemplateFilter = {},
+    options = {},
+    paging = defaultPaging,
+  }) => {
+    return Mail.findAndCountAll({
+      distinct: true,
+      ...paging,
       where: {
         owner: userNo,
+        ...mailFilter,
       },
       include: [
         {
           model: sequelize.models.MailTemplate,
           where: {
-            from: {
-              [Op.not]: userEmail,
-            },
+            ...mailTemplateFilter,
           },
+          include: [
+            {
+              model: sequelize.models.Attachment,
+            },
+          ],
         },
       ],
+      raw: true,
+      ...options,
     });
+  };
 
   return Mail;
 };

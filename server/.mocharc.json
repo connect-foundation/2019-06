@@ -1,0 +1,15 @@
+{
+  "diff": true,
+  "extension": ["js"],
+  "recursive": true,
+  "opts": false,
+  "package": "./package.json",
+  "reporter": "spec",
+  "slow": 75,
+  "timeout": false,
+  "ui": "bdd",
+  "watch-files": ["test/**/*.js"],
+  "watch-ignore": ["test/**/database.bulk.spec.js"],
+  "require": ["@babel/register"],
+  "ignore": ["test/**/database.bulk.spec.js"]
+}

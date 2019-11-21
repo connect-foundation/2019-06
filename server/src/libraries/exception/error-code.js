@@ -26,14 +26,23 @@ const ERROR_CODE = {
   PRIVATE_PATH: $(404, 'PAGE NOT FOUND', 'COMMON006'), // 403대신 404로 응답함으로써 PRIVATE을 보장한다.
   FORBIDDEN: $(403, '권한이 없습니다.', 'COMMON007'),
   UNAUTHORIZED: $(401, '로그인 후 이용해 주세요.', 'COMMON008'),
-
-  USER_NOT_FOUND: $(404, '없는 아이디 입니다.', 'LOGIN001'),
-  INVALID_LOGIN_PASSWORD: $(400, '비밀번호가 일치하지 않습니다.', 'LOGIN002'),
-  ALREADY_LOGGED_IN: $(409, '이미 로그인되어 있습니다.', 'LOGIN003'),
-
+  INVALID_LOGIN_ID_OR_PASSWORD: $(
+    401,
+    '가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.',
+    'LOGIN001',
+  ),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
+  EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
+
+  FAIL_TO_SEND_MAIL: $(500, '메일 전송에 실패하였습니다.', 'MAIL001'),
+  FAIL_TO_SAVE_MAIL: $(500, '메일을 데이터베이스에 저장하는데 실패하였습니다.', 'MAIL002'),
 
   IS_NOT_ALLOW_EXTENSION: $(400, '허용하지 않는 확장자입니다.', 'UPLOAD001'),
+  FAIL_TO_SAVE_ATTACHMENT: $(
+    500,
+    '첨부파일을 데이터베이스에 저장하는데 실패하였습니다.',
+    'UPLOAD002',
+  ),
 };
 
 export default ERROR_CODE;
