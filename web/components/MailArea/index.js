@@ -1,59 +1,31 @@
+/* eslint-disable camelcase */
 import React, { useState } from 'react';
-import S from './styled';
-import MailTemplate from '../MailTemplate';
 import ReadMail from '../ReadMail';
-import PrevNextMail from '../PrevNextMail';
+import MailTemplate from '../MailTemplate';
+import S from './styled';
+import Paging from '../Paging';
 
-const MailArea = () => {
-  const mails = [
-    {
-      to: '나에게',
-      from: '내가 <daintnu@daitnu.com>',
-      subject: '제목이지제목이지제목이지제목이지제목이지제목이지',
-      date: Date.now(),
-      body: '본문이지',
-    },
-    {
-      to: '나에게',
-      from: '내가 <daintnu@daitnu.com>',
-      subject: '제목이지',
-      date: Date.now(),
-      body: '본문',
-    },
-    {
-      to: '나에게',
-      from: '내가 <daintnu@daitnu.com>',
-      subject: '제목이지',
-      date: Date.now(),
-      body: '굿',
-    },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-    { to: '나에게', from: '내가 <daintnu@daitnu.com>', subject: '제목이지', date: Date.now() },
-  ];
+const MailArea = ({ mailList }) => {
+  const { paging, mails } = mailList;
+
+  const processedMails = mails.map(mail => {
+    const { is_important, is_read, MailTemplate, no } = mail;
+    const { from, subject, text, createdAt } = MailTemplate;
+    return {
+      from,
+      subject,
+      text,
+      createdAt,
+      is_important,
+      is_read,
+      no,
+    };
+  });
 
   const [selected, setSelected] = useState(null);
-  const mailTemplates = mails.map((mail, i) => (
+  const mailTemplates = processedMails.map((mail, i) => (
     <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
   ));
-  const paging = selected ? (
-    <PrevNextMail
-      prev={selected.no > 0 ? mails[selected.no - 1] : false}
-      next={selected.no < mails.length - 1 ? mails[selected.no + 1] : false}
-      setSelected={setSelected}
-      no={selected.no}
-    />
-  ) : (
-    '1 2 3 4 5'
-  );
 
   return (
     <S.MailArea>
@@ -61,7 +33,9 @@ const MailArea = () => {
       <S.MailListArea>
         {selected ? <ReadMail mail={selected.mail} /> : mailTemplates}
       </S.MailListArea>
-      <S.MailPagingArea>{paging}</S.MailPagingArea>
+      <S.MailPagingArea>
+        <Paging paging={paging} />
+      </S.MailPagingArea>
     </S.MailArea>
   );
 };

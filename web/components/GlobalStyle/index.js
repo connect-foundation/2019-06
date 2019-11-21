@@ -7,6 +7,15 @@ const FlexWrap = styled.div`
   overflow: hidden;
 `;
 
+const FlexRowWrap = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`;
+
 const FlexCenterWrap = styled(FlexWrap)`
   justify-content: center;
   align-items: center;
@@ -50,6 +59,7 @@ const Content = styled.div`
 
 export {
   FlexWrap,
+  FlexRowWrap,
   FlexCenterWrap,
   FlexRowCenterWrap,
   FlexItem,

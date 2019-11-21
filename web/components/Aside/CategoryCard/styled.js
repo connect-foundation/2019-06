@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const Category = styled.div`
+  cursor: pointer;
   &:hover {
     background: #e9ecef;
   }
@@ -9,10 +10,4 @@ const Category = styled.div`
   }
 `;
 
-const CategoryLink = styled.a`
-  color: black;
-  text-decoration: none;
-  font-size: 1rem;
-`;
-
-export { Category, CategoryLink };
+export { Category };

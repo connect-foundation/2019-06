@@ -17,7 +17,6 @@ import S from './styled';
 const LoignForm = () => {
   const [userId, setUserId] = useState('');
   const [userPassword, setUserPassword] = useState('');
-
   const [errorMsg, dispatchErrorMsg] = useReducer(errorReducer, initialState);
 
   const signIn = async (id, password) => {
