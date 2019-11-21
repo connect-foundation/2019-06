@@ -84,4 +84,4 @@ const sendMail = async mailContents => {
   return mailContents;
 };
 
-export default { getMailsByOptions, sendMail };
+export default { getMailsByOptions, sendMail, getQueryByOptions };
