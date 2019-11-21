@@ -10,14 +10,10 @@ const useStyles = makeStyles(theme => ({
 
 export const PageNumber = ({ id, onActive }) => {
   const classes = useStyles();
-  const color = onActive ? 'secondary' : '';
+  const color = onActive ? 'secondary' : 'default';
 
   return (
-    <IconButton
-      aria-label="delete"
-      className={classes.margin}
-      color={color}
-      onclick={() => console.log('하이')}>
+    <IconButton aria-label="delete" className={classes.margin} color={color}>
       {id}
     </IconButton>
   );

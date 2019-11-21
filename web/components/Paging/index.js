@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import PropTypes from 'prop-types';
 
 import * as GS from '../GlobalStyle';
 import { PageNumber } from './PageNumber';
@@ -85,6 +87,16 @@ const Paging = ({ paging }) => {
       </Fab>
     </GS.FlexRowWrap>
   );
+};
+
+const pagingShape = {
+  page: PropTypes.number,
+  startPage: PropTypes.number,
+  totalPage: PropTypes.number,
+};
+
+Paging.propTypes = {
+  paging: PropTypes.shape(pagingShape),
 };
 
 export default Paging;
