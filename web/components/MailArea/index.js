@@ -1,11 +1,13 @@
 /* eslint-disable camelcase */
 import React, { useState } from 'react';
-import S from './styled';
-import MailTemplate from '../MailTemplate';
 import ReadMail from '../ReadMail';
-import PrevNextMail from '../PrevNextMail';
+import MailTemplate from '../MailTemplate';
+import S from './styled';
+import Paging from '../Paging';
 
-const MailArea = ({ mails }) => {
+const MailArea = ({ mailList }) => {
+  const { paging, mails } = mailList;
+
   const processedMails = mails.map(mail => {
     const { is_important, is_read, MailTemplate, no } = mail;
     const { from, subject, text, createdAt } = MailTemplate;
@@ -25,24 +27,15 @@ const MailArea = ({ mails }) => {
     <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
   ));
 
-  const paging = selected ? (
-    <PrevNextMail
-      prev={selected.no > 0 ? mails[selected.no - 1] : false}
-      next={selected.no < mails.length - 1 ? mails[selected.no + 1] : false}
-      setSelected={setSelected}
-      no={selected.no}
-    />
-  ) : (
-    '1 2 3 4 5'
-  );
-
   return (
     <S.MailArea>
       <S.Tools>{selected ? 'mail' : 'maillist'}</S.Tools>
       <S.MailListArea>
         {selected ? <ReadMail mail={selected.mail} /> : mailTemplates}
       </S.MailListArea>
-      <S.MailPagingArea>{paging}</S.MailPagingArea>
+      <S.MailPagingArea>
+        <Paging paging={paging} />
+      </S.MailPagingArea>
     </S.MailArea>
   );
 };

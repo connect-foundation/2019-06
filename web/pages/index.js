@@ -1,37 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import Router from 'next/router';
 import axios from 'axios';
 import * as GS from '../components/GlobalStyle';
 import Aside from '../components/Aside';
 import MailArea from '../components/MailArea';
 import Header from '../components/Header';
-import { AppContext } from '../contexts';
 import Footer from '../components/Footer';
 import WriteMail from '../components/WriteMail';
 import Loading from '../components/Loading';
 
-const Home = () => {
-  const { user } = useContext(AppContext).userContext;
-  const [readMode, setReadMode] = useState(true);
-  const [mails, setMails] = useState(null);
-
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-
+const useUser = setUser => {
   useEffect(() => {
     if (!window.sessionStorage.getItem('user')) {
-      router.push('/login');
+      Router.push('/login');
     } else {
-      setLoading(true);
+      const data = window.sessionStorage.getItem('user');
+      setUser(JSON.parse(data));
     }
-  }, [router]);
+  }, [setUser]);
+};
+
+const Home = () => {
+  const [readMode, setReadMode] = useState(true);
+  const [mailList, setMailList] = useState(null);
+  const [user, setUser] = useState(null);
 
   const handleReadMode = (e, value) => {
     e.preventDefault();
     setReadMode(value);
   };
 
-  const section = readMode ? <MailArea mails={mails} /> : <WriteMail />;
+  axios.get('/mail').then(({ data }) => {
+    setMailList(data.mails);
+  });
+
+  const section = readMode ? <MailArea mailList={mailList} /> : <WriteMail />;
   const indexPage = (
     <GS.FlexWrap>
       <Header brand={'Daitnu'} />
@@ -42,7 +45,7 @@ const Home = () => {
       <Footer />
     </GS.FlexWrap>
   );
-  return user && mails ? indexPage : <Loading />;
+  return user && mailList ? indexPage : <Loading />;
 };
 
 export default Home;
