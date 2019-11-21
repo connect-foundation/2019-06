@@ -14,31 +14,52 @@ describe('Mail Service Test', () => {
     await bulkMock();
   });
 
-  it('getMailsByOptions 페이징 정보를 포함한다.', async () => {
-    const data = await service.getMailsByOptions(1, {});
-    data.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
+  describe('getMailsByOptions...', () => {
+    it('# 페이징 정보를 포함한다.', async () => {
+      const data = await service.getMailsByOptions(1, {});
+      data.paging.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
+    });
+
+    it('# 메일리스트 정보를 배열로 포함한다.', async () => {
+      const data = await service.getMailsByOptions(1, {});
+      data.mails.should.an.instanceof(Array);
+    });
+
+    it('# perPageNum만큼 mail을 반환한다.', async () => {
+      const options = {
+        perPageNum: 2,
+      };
+      const data = await service.getMailsByOptions(1, options);
+      data.mails.should.have.length(2);
+    });
+
+    it('# category에 해당하는 메일들을 반환한다.', async () => {
+      const category = 10;
+      const options = {
+        category,
+      };
+      const { mails } = await service.getMailsByOptions(1, options);
+      const length = mails.filter(mail => mail.category_no === category);
+      length.should.have.length(0);
+    });
   });
 
-  it('getMailsByOptions 메일리스트 정보를 배열로 포함한다.', async () => {
-    const data = await service.getMailsByOptions(1, {});
-    data.mails.should.an.instanceof(Array);
-  });
+  describe('getQueryByOptions...', () => {
+    const data = { userNo: 1, category: 0, perPageNum: 10, page: 1 };
 
-  it('getMailsByOptions perPageNum만큼 mail을 반환한다.', async () => {
-    const options = {
-      perPageNum: 2,
-    };
-    const data = await service.getMailsByOptions(1, options);
-    data.mails.should.have.length(2);
-  });
+    it('# category가 0이면 category가 포함되지 않는다.', () => {
+      const query = service.getQueryByOptions(data);
+      query.should.not.have.property('category_no');
+    });
 
-  it('getMailsByOptions는 category에 해당하는 메일들을 반환한다.', async () => {
-    const category = 10;
-    const options = {
-      category,
-    };
-    const { mails } = await service.getMailsByOptions(1, options);
-    const length = mails.filter(mail => mail.category_no === category);
-    length.should.have.length(0);
+    it('# category가 음수이면 category가 포함되지 않는다.', () => {
+      const query = service.getQueryByOptions(data);
+      query.should.not.have.property('category_no');
+    });
+
+    it('# category가 양수이면 category가 포함된다.', () => {
+      const query = service.getQueryByOptions({ ...data, category: 1 });
+      query.should.have.property('category_no');
+    });
   });
 });

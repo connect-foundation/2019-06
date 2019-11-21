@@ -10,7 +10,7 @@ import checkQuery from '../../libraries/validation/mail';
 const list = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
-  query.category = query.category || '1';
+  query.category = query.category || '0';
   query.page = query.page || '1';
 
   let mails;

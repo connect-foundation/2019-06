@@ -6,9 +6,28 @@ import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
-  category: 1,
+  category: 0,
   page: 1,
   perPageNum: 100,
+};
+
+const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
+  const query = {
+    userNo,
+    options: {
+      raw: false,
+    },
+    paging: {
+      limit: perPageNum,
+      offset: (page - 1) * perPageNum,
+    },
+  };
+
+  if (category > 0) {
+    query.category_no = category;
+  }
+
+  return query;
 };
 
 const getMailsByOptions = async (userNo, options = {}) => {
@@ -19,17 +38,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
   page = Number(page);
   perPageNum = Number(perPageNum);
 
-  const query = {
-    userNo,
-    category_no: category,
-    options: {
-      raw: false,
-    },
-    paging: {
-      limit: perPageNum,
-      offset: (page - 1) * perPageNum,
-    },
-  };
+  const query = getQueryByOptions({ userNo, category, perPageNum, page });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
   const pagingOptions = {
@@ -39,7 +48,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
   const pagingResult = getPaging(totalCount, pagingOptions);
 
   return {
-    ...pagingResult,
+    paging: { ...pagingResult },
     mails,
   };
 };
@@ -75,4 +84,4 @@ const sendMail = async mailContents => {
   return mailContents;
 };
 
-export default { getMailsByOptions, sendMail };
+export default { getMailsByOptions, sendMail, getQueryByOptions };
