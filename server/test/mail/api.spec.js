@@ -89,16 +89,16 @@ describe('Mail api test...', () => {
           .expect(200, done);
       });
 
+      it('# category를 0으로 요청시 status는 200이다', done => {
+        authenticatedUser.get('/v1/mail?category=0').expect(200, done);
+      });
+
       it('# 메일리스트 요청시 status코드는 200이다', done => {
         authenticatedUser.get('/v1/mail').expect(200, done);
       });
 
       it('# category를 음수로 요청시 status는 400이다', done => {
         authenticatedUser.get('/v1/mail?category=-1').expect(400, done);
-      });
-
-      it('# category를 0으로 요청시 status는 400이다', done => {
-        authenticatedUser.get('/v1/mail?category=0').expect(400, done);
       });
 
       it('# page를 0으로 요청시 status는 400이다', done => {
