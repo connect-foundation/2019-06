@@ -55,15 +55,18 @@ const getMailsByOptions = async (userNo, options = {}) => {
 
 const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   const processedAttachments = attachments.map(attachment => {
-    const { contentType, name, content } = attachment;
-    return { type: contentType, name, content, mail_template_id: mailTemplateNo };
+    const { contentType, filename, content } = attachment;
+    return { type: contentType, name: filename, content, mail_template_id: mailTemplateNo };
   });
 
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });
 };
 
 const saveMail = async (mailContents, transaction) => {
-  const mailTemplateResult = await DB.MailTemplate.create(mailContents, { transaction });
+  const mailTemplateResult = await DB.MailTemplate.create(
+    { ...mailContents, to: mailContents.to.join(',') },
+    { transaction },
+  );
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await DB.Mail.create(
