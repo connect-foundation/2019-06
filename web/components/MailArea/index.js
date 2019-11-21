@@ -24,7 +24,7 @@ const useFetch = ({ category, page }, dispatch) => {
     const callback = mails => dispatch(handleMailsChange({ category, ...mails, page }));
     fetchInitData(callback, URL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [page]);
+  }, [page, category]);
 
   return isLoading;
 };
@@ -55,7 +55,7 @@ const MailArea = () => {
   });
 
   const mailTemplates = processedMails.map((mail, i) => (
-    <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
+    <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={mail.no} />
   ));
 
   return (

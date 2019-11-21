@@ -9,14 +9,12 @@ const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 
-export const handleCategoryClick = ({ category, mails, paging, page }) => {
+export const handleCategoryClick = category => {
   return {
     type: CATEGORY_CLICK,
     payload: {
       category,
-      mails,
       page: 1,
-      paging,
     },
   };
 };
