@@ -1,12 +1,37 @@
 {
   "name": "web",
+  "description": "email service",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prettier": "prettier --write ./**/*.js"
   },
+  "author": "Daitnu team",
+  "contributors": [
+    {
+      "name": "BuildTheTruth",
+      "email": "corrhd123@gmail.com",
+      "url": "https://github.com/BuildTheTruth"
+    },
+    {
+      "name": "sjh2428",
+      "email": "tjdwogh45@gmail.com",
+      "url": "https://github.com/sjh2428"
+    },
+    {
+      "name": "ljh1324",
+      "email": "ljhw3377@gmail.com",
+      "url": "https://github.com/ljh1324"
+    },
+    {
+      "name": "jonghwajoa",
+      "email": "jonghwa0710@gmail.com",
+      "url": "https://github.com/jonghwajoa"
+    }
+  ],
   "devDependencies": {
     "@commitlint/cli": "^8.2.0",
     "@commitlint/config-conventional": "^8.2.0",
@@ -35,10 +60,13 @@
   "dependencies": {
     "@material-ui/core": "^4.6.0",
     "@material-ui/icons": "^4.5.1",
+    "axios": "^0.19.0",
     "moment": "^2.24.0",
     "next": "9.1.3",
+    "next-images": "^1.2.0",
     "react": "16.11.0",
     "react-dom": "16.11.0",
+    "react-dropzone": "^10.2.0",
     "styled-components": "^4.4.1"
   }
 }
