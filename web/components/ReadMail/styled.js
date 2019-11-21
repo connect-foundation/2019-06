@@ -5,7 +5,7 @@ import { SUBJECT } from './constant';
 const ReadArea = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 8px;
+  padding: 12px 24px;
 `;
 
 const TitleView = styled.div`
