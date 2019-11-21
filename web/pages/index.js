@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import axios from 'axios';
 import * as GS from '../components/GlobalStyle';
 import Aside from '../components/Aside';
@@ -15,22 +15,16 @@ const Home = () => {
   const [readMode, setReadMode] = useState(true);
   const [mails, setMails] = useState(null);
 
-  useEffect(() => {
-    if (!user) {
-      Router.push('/login');
-    }
-  }, [user]);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    axios
-      .get('/mail')
-      .then(response => {
-        setMails(response.data.mails);
-      })
-      .catch(err => {
-        console.error(err);
-      });
-  }, []);
+    if (!window.sessionStorage.getItem('user')) {
+      router.push('/login');
+    } else {
+      setLoading(true);
+    }
+  }, [router]);
 
   const handleReadMode = (e, value) => {
     e.preventDefault();

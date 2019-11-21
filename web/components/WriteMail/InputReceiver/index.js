@@ -1,13 +1,14 @@
-import React, { useState, useRef, useContext } from 'react';
-import S from './styled';
-import GS from '../styled';
+import React, { useRef } from 'react';
+import * as S from './styled';
+import * as WM_S from '../styled';
 import V from '../../../utils/validator';
-import { WriteMailContext } from '../ContextProvider';
+import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import * as SC from '../../../utils/special-characters';
+import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
 const ListOfReceivers = () => {
-  const [BLANK, SPACE, BACKSPACE, ENTER, COMMA] = ['', ' ', 'Backspace', 'Enter', ','];
-
-  const { receivers, setReceivers } = useContext(WriteMailContext).receiver;
+  const { receivers } = useStateForWM();
+  const dispatch = useDispatchForWM();
   const receiverInput = useRef(null);
   const inputWidthGuide = useRef(null);
 
@@ -17,63 +18,81 @@ const ListOfReceivers = () => {
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
 
-  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), BLANK);
+  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
-    if (replaced !== BLANK) {
-      setReceivers([...receivers, replaced]);
-      target.value = BLANK;
-      resizeInput(target);
+    if (receivers.includes(replaced)) {
+      target.value = SC.BLANK;
+      return;
     }
+    if (replaced !== SC.BLANK) {
+      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: [...receivers, replaced] } });
+    }
+    target.value = SC.BLANK;
+    resizeInput(target);
   };
 
   const keyDownHandler = e => {
     const { key, target } = e;
-    if (key === BACKSPACE && target.value === BLANK && receivers.length > 0) {
+    if (key === SC.BACKSPACE && target.value === SC.BLANK && receivers.length > 0) {
+      e.preventDefault();
+      e.stopPropagation();
       target.value = receivers[receivers.length - 1];
-      setReceivers([...receivers.slice(0, -1)]);
-    } else if (key === ENTER && target.value !== BLANK) {
-      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
+      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: receivers.slice(0, -1) } });
+      resizeInput(target);
+    } else if (key === SC.ENTER && target.value !== SC.BLANK) {
+      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
+    if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
+      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+    } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
+      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+    } else if (target.value === SC.SPACE || target.value === SC.COMMA) {
+      target.value = SC.BLANK;
+    }
     resizeInput(target);
-    if (target.value.includes(COMMA) && target.value !== COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(COMMA), target);
-    } else if (target.value.includes(SPACE) && target.value !== SPACE) {
-      replaceAndSetReceiver(deleteByRegExp(SPACE), target);
+  };
+
+  const blurHandler = e => {
+    const { target } = e;
+    if (target.value !== SC.SPACE && target.value !== SC.COMMA) {
+      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
     }
   };
 
-  const getReceiverLis = () =>
-    receivers.map((receiver, idx) => (
-      <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
-        {receiver}
-        <S.ReceiverLiDeleteBtn
-          onClick={() =>
-            setReceivers([...receivers.filter(receivr => receivers.indexOf(receivr) !== idx)])
-          }>
-          X
-        </S.ReceiverLiDeleteBtn>
-      </S.ReceiverListLi>
-    ));
+  const receiverDeleteBtn = target =>
+    dispatch({
+      type: UPDATE_RECEIVERS,
+      payload: { receivers: receivers.filter(receiver => receiver !== target) },
+    });
 
   return (
-    <GS.RowWrapper>
-      <GS.Label>받는 사람</GS.Label>
+    <WM_S.RowWrapper>
+      <WM_S.Label>받는 사람</WM_S.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />
-        <S.ReceiverListUl>{getReceiverLis()}</S.ReceiverListUl>
+        <S.ReceiverListUl>
+          {receivers.map((receiver, idx) => (
+            <S.ReceiverListLi validation={V.validate('email', receiver)} key={idx}>
+              {receiver}
+              <S.ReceiverLiDeleteBtn onClick={() => receiverDeleteBtn(receiver)}>
+                X
+              </S.ReceiverLiDeleteBtn>
+            </S.ReceiverListLi>
+          ))}
+        </S.ReceiverListUl>
         <S.ReceiverListInput
           ref={receiverInput}
           onKeyDown={keyDownHandler}
           onChange={changeHandler}
-          contentEditable={true}
+          onBlur={blurHandler}
         />
       </S.ReceiverListWrapper>
-    </GS.RowWrapper>
+    </WM_S.RowWrapper>
   );
 };
 

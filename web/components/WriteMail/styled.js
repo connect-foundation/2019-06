@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Label = styled.div`
+export const Label = styled.div`
   font-size: 15px;
   font-weight: 700;
   display: flex;
@@ -8,14 +8,12 @@ const Label = styled.div`
   justify-content: center;
 `;
 
-const RowWrapper = styled.div`
+export const RowWrapper = styled.div`
   display: grid;
   grid-template-columns: 75px 500px;
 `;
 
-const WriteArea = styled.div`
+export const WriteArea = styled.div`
   display: grid;
   grid-row-gap: 8px;
 `;
-
-export default { Label, RowWrapper, WriteArea };

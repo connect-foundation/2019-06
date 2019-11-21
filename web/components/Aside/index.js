@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import S from './styled';
 import CategoryCard from './CategoryCard';
 
@@ -17,7 +18,9 @@ const Aside = ({ setReadMode }) => {
   return (
     <S.Aside>
       <S.WriteArea>
-        <S.WrtieButton onClick={e => setReadMode(e, false)}>편지쓰기</S.WrtieButton>
+        <Link href="/mail/send">
+          <S.WrtieButton onClick={e => setReadMode(e, false)}>편지쓰기</S.WrtieButton>
+        </Link>
         <S.WrtieButton>내게쓰기</S.WrtieButton>
       </S.WriteArea>
       <S.DefaultReadArea>{defaultCard}</S.DefaultReadArea>
