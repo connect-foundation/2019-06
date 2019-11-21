@@ -13,7 +13,11 @@ export const PageNumber = ({ id, onActive }) => {
   const color = onActive ? 'secondary' : '';
 
   return (
-    <IconButton aria-label="delete" className={classes.margin} color={color}>
+    <IconButton
+      aria-label="delete"
+      className={classes.margin}
+      color={color}
+      onclick={() => console.log('하이')}>
       {id}
     </IconButton>
   );

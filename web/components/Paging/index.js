@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -6,6 +6,8 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 import * as GS from '../GlobalStyle';
 import { PageNumber } from './PageNumber';
+import { AppContext } from '../../contexts';
+import { handlePageNumberClick } from '../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -23,30 +25,33 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Paging = ({ paging }) => {
-  const { endPage, page, perPageNum, startPage, totalPage } = paging;
+  const { page, startPage, totalPage } = paging;
   const firstIndex = Math.floor(startPage / 10);
   const lastIndex = Math.floor(totalPage / 10);
   const [index, setIndex] = useState(firstIndex);
-  const [curPage, setCurPage] = useState(page);
+  const { dispatch } = useContext(AppContext);
 
   const classes = useStyles();
 
   const pagingNumber = [];
-  for (let i = index * 10 + 1; i < index * 10 + 1 + 10; i += 1) {
-    const number = <PageNumber key={i} id={i} color="secondary" onActive={curPage === i} />;
+  for (let i = index * 10 + 1; i <= index * 10 + 10; i += 1) {
+    const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
     pagingNumber.push(number);
   }
 
   const handleMoveBtnClick = value => {
-    setIndex(index + value);
+    const newIndex = index + value;
+    const newPage = newIndex * 10 + 1;
+    setIndex(newIndex);
+    dispatch(handlePageNumberClick(newPage));
   };
 
   const handleNumberClick = ({ target }) => {
-    const { id, innerText } = target;
+    const { innerText } = target;
     if (!innerText || innerText === '') {
       return;
     }
-    setCurPage(innerText);
+    dispatch(handlePageNumberClick(Number(innerText)));
   };
 
   return (
