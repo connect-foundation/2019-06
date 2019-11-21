@@ -110,6 +110,15 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  User.findOneByEmail = email => {
+    return User.findOne({
+      where: {
+        sub_email: email,
+      },
+      raw: true,
+    });
+  };
+
   User.beforeBulkCreate(async instances => {
     for (const instance of instances) {
       await convertToUserModel(instance);

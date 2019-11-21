@@ -39,7 +39,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
   const pagingResult = getPaging(totalCount, pagingOptions);
 
   return {
-    ...pagingResult,
+    paging: pagingResult,
     mails,
   };
 };
