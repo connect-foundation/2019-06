@@ -6,10 +6,7 @@ import { StarBorder } from '@material-ui/icons';
 
 const ReadMail = ({ mail }) => {
   const { to, from, subject, createdAt, text } = mail;
-  const receivers = to
-    .split(',')
-    .map(receiver => `<${receiver}>`)
-    .join(', ');
+  const receivers = to.replace(',', ', ');
 
   return (
     <S.Container>
