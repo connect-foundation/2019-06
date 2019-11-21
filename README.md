@@ -22,6 +22,29 @@
 ## Concept
 ![메일전송과정](https://user-images.githubusercontent.com/33617083/69132049-ae41c580-0af6-11ea-85e6-46f569b39360.png)
 
+## View
+
+### 로그인
+
+![로그인](https://user-images.githubusercontent.com/31912670/69363192-6035e900-0cd3-11ea-9779-7c768e366cdf.png)
+
+### 회원가입
+
+![회원가입](https://user-images.githubusercontent.com/31912670/69363195-60ce7f80-0cd3-11ea-9c5b-7dacffcad66c.png)
+
+### 메일 리스트
+
+![메일](https://user-images.githubusercontent.com/31912670/69363194-60ce7f80-0cd3-11ea-9d89-19d1bde39eb1.png)
+
+
+### 메일쓰기 
+
+![메일쓰기](https://user-images.githubusercontent.com/31912670/69363193-6035e900-0cd3-11ea-939b-95823be1ba9a.png)
+
+
+
+
+
 ## Prerequisites
 
 - node 10.16.0
