@@ -7,11 +7,11 @@ import MailArea from '../components/MailArea';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loading from '../components/Loading';
+import ReadMail from '../components/ReadMail';
 import { AppContext } from '../contexts';
-import { handleClickCategory } from '../contexts/reducer';
 
 const Home = () => {
-  const { state, dispatch } = useContext(AppContext);
+  const { state, dispatch, selected } = useContext(AppContext);
   const [user, setUser] = useState(null);
   const [view, setView] = useState(null);
 
@@ -32,7 +32,7 @@ const Home = () => {
       <Header brand={'Daitnu'} />
       <GS.Content>
         <Aside setView={setView} />
-        {view}
+        {selected ? <ReadMail mail={selected.mail} /> : view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>

@@ -22,13 +22,13 @@ const MailArea = ({ mailList }) => {
   });
 
   const mailTemplates = processedMails.map((mail, i) => (
-    <MailTemplate key={`mail-${i}`} mail={mail} />
+    <MailTemplate key={`mail-${i}`} mail={mail} no={i} />
   ));
 
   return (
     <S.MailArea>
       <S.Tools>tools</S.Tools>
-      <S.MailListArea onClick={onClick}>{mailTemplates}</S.MailListArea>
+      <S.MailListArea>{mailTemplates}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />
       </S.MailPagingArea>
