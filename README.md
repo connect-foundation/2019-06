@@ -26,7 +26,7 @@
 
 ### 로그인
 
-![로그인](https://user-images.githubusercontent.com/31912670/69363192-6035e900-0cd3-11ea-9779-7c768e366cdf.png)
+![로그인](https://i.imgur.com/YFNnn8D.png)
 
 ### 회원가입
 
