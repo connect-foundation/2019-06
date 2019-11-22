@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
-const defaultPaging = { offset: 0, limit: 100 };
+const DEFALT_PAGING = { offset: 0, limit: 100 };
 
 const model = (sequelize, DataTypes) => {
   const Mail = sequelize.define(
@@ -56,7 +56,7 @@ const model = (sequelize, DataTypes) => {
     mailFilter = {},
     mailTemplateFilter = {},
     options = {},
-    paging = defaultPaging,
+    paging = DEFALT_PAGING,
   }) => {
     return Mail.findAndCountAll({
       distinct: true,

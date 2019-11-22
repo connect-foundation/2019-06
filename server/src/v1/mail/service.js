@@ -21,10 +21,11 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
       limit: perPageNum,
       offset: (page - 1) * perPageNum,
     },
+    mailFilter: {},
   };
 
   if (category > 0) {
-    query.category_no = category;
+    query.mailFilter.category_no = category;
   }
 
   return query;
@@ -33,7 +34,6 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
 const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   let { category, page, perPageNum } = queryOptions;
-
   category = Number(category);
   page = Number(page);
   perPageNum = Number(perPageNum);
@@ -48,7 +48,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
   const pagingResult = getPaging(totalCount, pagingOptions);
 
   return {
-    paging: { ...pagingResult },
+    paging: pagingResult,
     mails,
   };
 };
