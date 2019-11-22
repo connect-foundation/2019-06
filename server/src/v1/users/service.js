@@ -24,6 +24,8 @@ const register = async ({ id, password, name, sub_email }) => {
   }
 
   delete newUser.password;
+  delete newUser.salt;
+
   return newUser;
 };
 
