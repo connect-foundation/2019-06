@@ -2,16 +2,16 @@ import React from 'react';
 
 import FindIdForm from '../../components/FindIdForm';
 
-import * as S from '../../components/GlobalStyle';
+import * as GS from '../../components/GlobalStyle';
 
 const FindIdPage = () => (
-  <S.FlexRowCenterWrap>
-    <S.SmallBoard>
-      <S.FlexItem>
+  <GS.FlexRowCenterWrap>
+    <GS.SmallBoard>
+      <GS.FlexItem>
         <FindIdForm />
-      </S.FlexItem>
-    </S.SmallBoard>
-  </S.FlexRowCenterWrap>
+      </GS.FlexItem>
+    </GS.SmallBoard>
+  </GS.FlexRowCenterWrap>
 );
 
 export default FindIdPage;
