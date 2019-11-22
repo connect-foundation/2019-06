@@ -41,8 +41,9 @@
 
 ![메일쓰기](https://user-images.githubusercontent.com/31912670/69363193-6035e900-0cd3-11ea-939b-95823be1ba9a.png)
 
+### 메일읽기
 
-
+![메일읽기](https://user-images.githubusercontent.com/33617083/69391164-44533700-0d15-11ea-96c3-1a1dc3a3b83c.PNG)
 
 
 ## Prerequisites
