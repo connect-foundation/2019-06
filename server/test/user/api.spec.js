@@ -259,13 +259,6 @@ describe('POST /users/search는...', () => {
       });
   });
 
-  it('# 아이디를 찾을 때 존재하는 메일을 넘겨줄 경우 상태코드는 204이다.', done => {
-    request(app)
-      .post('/v1/users/search?type=id')
-      .send({ email: 'daitnu@daitnu.com' })
-      .expect(204, done);
-  });
-
   it('# 아이디를 찾을 때 가입에 사용하지 않은 메일을 넘겨줄 경우 상태코드는 404이다.', done => {
     request(app)
       .post('/v1/users/search?type=id')

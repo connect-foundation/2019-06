@@ -99,10 +99,5 @@ describe('user service는...', () => {
         error.should.be.instanceOf(ErrorResponse);
       }
     });
-
-    it('# 존재하는 이메일일 경우 메일을 보내고 true를 반환한다.', async () => {
-      const result = await service.sendUserIdToEmail(user.sub_email);
-      result.should.be.true;
-    });
   });
 });
