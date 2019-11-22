@@ -6,7 +6,7 @@ import { AppContext } from '../../contexts';
 import { setSelected } from '../../contexts/reducer';
 
 const Header = ({ brand }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
   const handleAtagClick = () => dispatch(setSelected(null));
   return (
     <S.Header>

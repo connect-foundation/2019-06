@@ -13,7 +13,8 @@ const MailTemplate = ({ mail, no }) => {
   return (
     <S.MailTemplateWrap>
       <div>
-        <input type="checkbox" />
+        {no}
+        {/* <input type="checkbox" /> */}
       </div>
       <div>{is_important ? 'O' : 'X'}</div>
       <div>{is_read ? 'O' : 'X'}</div>

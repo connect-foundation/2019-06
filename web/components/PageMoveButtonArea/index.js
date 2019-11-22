@@ -10,16 +10,16 @@ const PageMoveButtonArea = () => {
   const { state, dispatch } = useContext(AppContext);
   const { mails, selected } = state;
   const handlePrevClick = () =>
-    dispatch(setSelected(mails.mails[selected.no - 1].MailTemplate, selected.no - 1));
+    dispatch(setSelected(mails[selected.no - 1].MailTemplate, selected.no - 1));
   const handleNextClick = () =>
-    dispatch(setSelected(mails.mails[selected.no + 1].MailTemplate, selected.no + 1));
+    dispatch(setSelected(mails[selected.no + 1].MailTemplate, selected.no + 1));
 
   return (
     <S.Container>
       <IconButton disabled={selected.no < 1} onClick={handlePrevClick}>
         <ArrowBackIosIcon />
       </IconButton>
-      <IconButton disabled={selected.no === mails.mails.length - 1} onClick={handleNextClick}>
+      <IconButton disabled={selected.no === mails.length - 1} onClick={handleNextClick}>
         <ArrowForwardIosIcon />
       </IconButton>
     </S.Container>

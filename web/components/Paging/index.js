@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+/* eslint-disable import/no-extraneous-dependencies */
+import React, { useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import PropTypes from 'prop-types';
 
 import * as GS from '../GlobalStyle';
 import { PageNumber } from './PageNumber';
+import { AppContext } from '../../contexts';
+import { handlePageNumberClick } from '../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   fab: {
@@ -22,31 +26,40 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const getPageNumberRange = index => {
+  const start = index * 10;
+  return [start + 1, start + 10];
+};
+
 const Paging = ({ paging }) => {
-  const { endPage, page, perPageNum, startPage, totalPage } = paging;
+  const { page, startPage, totalPage } = paging;
   const firstIndex = Math.floor(startPage / 10);
   const lastIndex = Math.floor(totalPage / 10);
   const [index, setIndex] = useState(firstIndex);
-  const [curPage, setCurPage] = useState(page);
+  const { dispatch } = useContext(AppContext);
 
   const classes = useStyles();
 
   const pagingNumber = [];
-  for (let i = index * 10 + 1; i < index * 10 + 1 + 10; i += 1) {
-    const number = <PageNumber key={i} id={i} color="secondary" onActive={curPage === i} />;
+  const [startNumber, endNumber] = getPageNumberRange(index);
+  for (let i = startNumber; i <= endNumber && i <= totalPage; i += 1) {
+    const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
     pagingNumber.push(number);
   }
 
   const handleMoveBtnClick = value => {
-    setIndex(index + value);
+    const newIndex = index + value;
+    const [newPageNumber] = getPageNumberRange(newIndex);
+    setIndex(newIndex);
+    dispatch(handlePageNumberClick(newPageNumber));
   };
 
   const handleNumberClick = ({ target }) => {
-    const { id, innerText } = target;
+    const { innerText } = target;
     if (!innerText || innerText === '') {
       return;
     }
-    setCurPage(innerText);
+    dispatch(handlePageNumberClick(Number(innerText)));
   };
 
   return (
@@ -74,6 +87,16 @@ const Paging = ({ paging }) => {
       </Fab>
     </GS.FlexRowWrap>
   );
+};
+
+const pagingShape = {
+  page: PropTypes.number,
+  startPage: PropTypes.number,
+  totalPage: PropTypes.number,
+};
+
+Paging.propTypes = {
+  paging: PropTypes.shape(pagingShape),
 };
 
 export default Paging;

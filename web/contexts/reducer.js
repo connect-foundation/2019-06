@@ -1,27 +1,33 @@
-import axios from 'axios';
-
 export const initialState = {
   category: 0,
   page: 1,
   mails: null,
   selected: { mail: null, no: 0 },
+  paging: null,
 };
 
 const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const SET_CURRENT_MAIL = 'SET_CURRENT_MAIL';
-const SET_MAILS = 'SET_MAILS';
+const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 
-export const handleCategoryClick = async category => {
-  const URL = `/v1/mail?category=${category}`;
-  const mails = await axios.get(URL);
-
+export const handleCategoryClick = category => {
   return {
     type: CATEGORY_CLICK,
     payload: {
       category,
-      mails,
       page: 1,
+      selected: { mail: null, no: 0 },
+    },
+  };
+};
+
+export const handleMailsChange = ({ mails, paging }) => {
+  return {
+    type: CHANGE_MAILS_DATA,
+    payload: {
+      mails,
+      paging,
     },
   };
 };
@@ -44,15 +50,6 @@ export const setSelected = (mail, no) => {
   };
 };
 
-export const setMails = mails => {
-  return {
-    type: SET_MAILS,
-    payload: {
-      mails,
-    },
-  };
-};
-
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
@@ -62,7 +59,7 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case SET_CURRENT_MAIL:
       return { ...state, ...payload };
-    case SET_MAILS:
+    case CHANGE_MAILS_DATA:
       return { ...state, ...payload };
     default:
       return { ...state };
