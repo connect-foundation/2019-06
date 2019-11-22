@@ -93,7 +93,7 @@ const RegisterForm = () => {
   };
 
   return (
-    <S.InputForm>
+    <S.InputForm autoComplete="off">
       <S.InputContainer>
         <S.Title>Daitnu 계정 만들기</S.Title>
       </S.InputContainer>
@@ -102,12 +102,12 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이름"
           type="search"
-          value={values.name}
-          onChange={handleInputChange('name')}
+          onBlur={handleInputChange('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
           variant="outlined"
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>
@@ -117,8 +117,7 @@ const RegisterForm = () => {
         <OutlinedInput
           id="outlined-adornment-weight"
           label="아이디"
-          value={values.id}
-          onChange={handleInputChange('id')}
+          onBlur={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           endAdornment={<InputAdornment position="end">@daitnu.com</InputAdornment>}
@@ -126,6 +125,7 @@ const RegisterForm = () => {
           inputProps={{
             'aria-label': 'weight',
           }}
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>
@@ -135,24 +135,22 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="비밀번호"
-          value={values.password}
-          onChange={handleInputChange('password')}
+          onBlur={handleInputChange('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
-          autoComplete="current-password"
+          autoComplete="off"
           margin="normal"
           variant="outlined"
         />
         <TextField
           id="outlined-password-input"
           label="확인"
-          value={values.checkPassword}
-          onChange={handleInputChange('checkPassword')}
+          onBlur={handleInputChange('checkPassword')}
           className={classes.textField}
           error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
-          autoComplete="current-password"
+          autoComplete="off"
           margin="normal"
           variant="outlined"
         />
@@ -168,12 +166,12 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          value={values.email}
-          onChange={handleInputChange('email')}
+          onBlur={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
           variant="outlined"
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>
