@@ -14,7 +14,7 @@ export const PageNumber = ({ id, onActive }) => {
 
   return (
     <IconButton aria-label="delete" className={classes.margin} color={color}>
-      {id}
+      <span id={id}>{id}</span>
     </IconButton>
   );
 };

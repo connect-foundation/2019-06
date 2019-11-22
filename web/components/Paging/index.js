@@ -55,11 +55,16 @@ const Paging = ({ paging }) => {
   };
 
   const handleNumberClick = ({ target }) => {
-    const { innerText } = target;
-    if (!innerText || innerText === '') {
+    const { id } = target;
+    if (!id || id === '') {
       return;
     }
-    dispatch(handlePageNumberClick(Number(innerText)));
+
+    if (Number.isInteger(id)) {
+      return;
+    }
+
+    dispatch(handlePageNumberClick(Number(id)));
   };
 
   return (
