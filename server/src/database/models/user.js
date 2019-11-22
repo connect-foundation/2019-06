@@ -1,20 +1,35 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import DB from '../index';
 
 const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
 
-  const hashedPassword = crypto
-    .createHash('sha512')
-    .update(password)
-    .digest('base64');
+  const [saltQueryresult] = await DB.sequelize.query('SELECT SUBSTRING(SHA(RAND()), -16)', {
+    raw: true,
+    type: DB.sequelize.QueryTypes.SELECT,
+  });
+
+  const [saltKey] = Object.keys(saltQueryresult);
+  const salt = saltQueryresult[saltKey].toString();
+
+  const [passQueryResult] = await DB.sequelize.query(
+    `SELECT ENCRYPT('${password}', CONCAT('$6$', '${salt}'))`,
+    {
+      raw: true,
+      type: DB.sequelize.QueryTypes.SELECT,
+    },
+  );
+
+  const [passKey] = Object.keys(passQueryResult);
+  const hashedPassword = passQueryResult[passKey].toString();
+
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
+  instance.salt = salt;
 };
 
 const model = (sequelize, DataTypes) => {
@@ -91,6 +106,10 @@ const model = (sequelize, DataTypes) => {
             msg: 'sub email의 형식이 올바르지 않습니다.',
           },
         },
+      },
+      salt: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
