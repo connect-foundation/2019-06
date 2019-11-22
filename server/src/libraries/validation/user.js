@@ -29,9 +29,6 @@ const checkQueryForSearch = ({ type }) => {
       'type값은 아이디를 찾을 경우 "id" 비밀번호를 찾을 경우 "pw"여야 합니다.',
     );
     errorFields.push(errorField);
-  }
-
-  if (errorFields.length > 0) {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
   }
 
