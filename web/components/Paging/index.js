@@ -42,7 +42,7 @@ const Paging = ({ paging }) => {
 
   const pagingNumber = [];
   const [startNumber, endNumber] = getPageNumberRange(index);
-  for (let i = startNumber; i <= endNumber; i += 1) {
+  for (let i = startNumber; i <= endNumber && i <= totalPage; i += 1) {
     const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
     pagingNumber.push(number);
   }
