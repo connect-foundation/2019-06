@@ -1,5 +1,4 @@
-import React from 'react';
-import Link from 'next/link';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
@@ -11,6 +10,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
+import { AppContext } from '../../contexts';
+import { handleCategoryClick } from '../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -19,6 +20,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Aside = ({ setView }) => {
+  const { dispatch } = useContext(AppContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -27,11 +29,11 @@ const Aside = ({ setView }) => {
   };
 
   const defaultCategory = [
-    { name: '받은편지함', icon: <AllInboxIcon />, view: <MailArea /> },
-    { name: '중요편지함', icon: <StarBorder />, view: <></> },
-    { name: '보낸메일함', icon: <SendIcon />, view: <></> },
-    { name: '내게쓴메일함', icon: <DraftsIcon />, view: <></> },
-    { name: '휴지통', icon: <DeleteIcon />, view: <></> },
+    { name: '받은편지함', icon: <AllInboxIcon />, view: <MailArea />, category: 0 },
+    { name: '중요편지함', icon: <StarBorder />, view: <></>, category: 1 },
+    { name: '보낸메일함', icon: <SendIcon />, view: <></>, category: 2 },
+    { name: '내게쓴메일함', icon: <DraftsIcon />, view: <></>, category: 3 },
+    { name: '휴지통', icon: <DeleteIcon />, view: <></>, category: 4 },
   ];
 
   const userCategory = [
@@ -40,7 +42,7 @@ const Aside = ({ setView }) => {
   ];
 
   const defaultCard = defaultCategory.map((category, idx) => (
-    <ListItem button key={idx} onClick={() => setView(category.view)}>
+    <ListItem button key={idx} onClick={() => dispatch(handleCategoryClick(category.category))}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
