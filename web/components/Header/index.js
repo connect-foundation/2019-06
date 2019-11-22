@@ -1,25 +1,28 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react';
-import Link from 'next/link';
+import React, { useContext } from 'react';
 import * as S from './styled';
 import LogoutButton from '../LogoutButton';
+import { AppContext } from '../../contexts';
+import { setSelected } from '../../contexts/reducer';
 
-const Header = ({ brand }) => (
-  <S.Header>
-    <S.Brand>
-      <S.Center>
-        <Link href="/">
-          <S.Atag>{brand}</S.Atag>
-        </Link>
-      </S.Center>
-    </S.Brand>
-    <S.Search>
-      <button>검색</button>
-      <S.SearchInput placeholder="메일 검색" type="text" />
-      <button>필터</button>
-    </S.Search>
-    <LogoutButton />
-  </S.Header>
-);
+const Header = ({ brand }) => {
+  const { dispatch } = useContext(AppContext);
+  const handleAtagClick = () => dispatch(setSelected(null));
+  return (
+    <S.Header>
+      <S.Brand>
+        <S.Center>
+          <S.Atag onClick={handleAtagClick}>{brand}</S.Atag>
+        </S.Center>
+      </S.Brand>
+      <S.Search>
+        <button>검색</button>
+        <S.SearchInput placeholder="메일 검색" type="text" />
+        <button>필터</button>
+      </S.Search>
+      <LogoutButton />
+    </S.Header>
+  );
+};
 
 export default Header;
