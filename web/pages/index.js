@@ -24,7 +24,7 @@ const Home = () => {
       setUser(JSON.parse(userData));
       axios.get('/mail').then(({ data }) => {
         setView(<MailArea mailList={data.mails} />);
-        dispatch(setMails(data.mails.mails));
+        dispatch(setMails(data.mails));
       });
     }
   }, []);
