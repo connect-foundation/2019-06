@@ -1,6 +1,4 @@
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-
+import sequelize from 'sequelize';
 import DB from '../../database/index';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
@@ -12,10 +10,13 @@ const localLogin = async ({ id, password }) => {
     throw new ErrorResponse(ERROR_CODE.INVALID_LOGIN_ID_OR_PASSWORD);
   }
 
-  const hashedPassword = crypto
-    .createHash('sha512')
-    .update(password)
-    .digest('base64');
+  const [result] = await DB.sequelize.query(
+    `SELECT ENCRYPT('${password}', CONCAT('$6$', '${user.salt}'))`,
+    { raw: true, type: sequelize.QueryTypes.SELECT },
+  );
+  const [key] = Object.keys(result);
+  const hashedPassword = result[key].toString();
+
   const match = user.password === hashedPassword;
 
   if (!match) {
