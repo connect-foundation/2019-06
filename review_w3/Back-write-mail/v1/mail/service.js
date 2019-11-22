@@ -1,5 +1,3 @@
-/* eslint-disable no-return-await */
-/* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';

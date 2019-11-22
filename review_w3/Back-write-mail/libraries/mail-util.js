@@ -1,7 +1,6 @@
 const { DEFAULT_DOMAIN_NAME, MAIL_AUTH_USER, MAIL_AUTH_PASS, SMTP_PORT } = process.env;
 
 const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
-  // filename, buffer -> content, mimetype -> contentType
   attachments = attachments.map(({ originalname, buffer, mimetype }) => ({
     filename: originalname,
     content: buffer,

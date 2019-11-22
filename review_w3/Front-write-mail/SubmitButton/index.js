@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SendIcon from '@material-ui/icons/Send';
-import {
-  Button,
-  ButtonGroup,
-  ClickAwayListener,
-  Paper,
-  Popper,
-  MenuList,
-  MenuItem,
-  Grow,
-} from '@material-ui/core';
+import { Button, ButtonGroup, ClickAwayListener, Paper, Popper, MenuList, MenuItem, Grow } from '@material-ui/core';
 import axios from 'axios';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
