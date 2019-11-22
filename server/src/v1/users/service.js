@@ -43,7 +43,7 @@ const sendUserIdToEmail = async email => {
     throw new ErrorResponse(ERROR_CODE.EMAIL_NOT_FOUND);
   }
 
-  mailUtil.sendFindIdMail({ id: user.id, email: user.sub_email });
+  mailUtil.sendMailToFindId({ id: user.id, email: user.sub_email });
 
   return true;
 };

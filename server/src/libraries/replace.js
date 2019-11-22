@@ -1,4 +1,4 @@
-const asterisk = (str, start, end) => {
+const hideIdUseAsterisk = (str, start, end) => {
   const length = end - start;
   const asterisks = '*'.repeat(length);
 
@@ -6,5 +6,5 @@ const asterisk = (str, start, end) => {
 };
 
 export default {
-  asterisk,
+  hideIdUseAsterisk,
 };

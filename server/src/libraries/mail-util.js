@@ -32,7 +32,7 @@ const getTransport = () => {
   };
 };
 
-const makeFindIdMailHtml = id => {
+const createMailTemplateToFindId = id => {
   return `
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
     <h1 style="font-family: 'Noto Sans KR', sans-serif;">요청하신 아이디를</h1>
@@ -48,26 +48,31 @@ const makeFindIdMailHtml = id => {
     </p><span style="font-style: italic;">Copyright ⓒ Daitnu Corp. All Rights Reserved.</span>`;
 };
 
-const sendFindIdMail = ({ id, email }) => {
-  const start = 1;
-  const end = 4;
-
-  id = replace.asterisk(id, start, end);
-
+const sendMail = data => {
   const transport = getTransport();
   const transporter = nodemailer.createTransport(transport);
+
+  transporter.sendMail(data);
+};
+
+const sendMailToFindId = ({ id, email }) => {
+  const hideStartIndex = 1;
+  const hideEndIndex = 4;
+
+  id = replace.hideIdUseAsterisk(id, hideStartIndex, hideEndIndex);
+
   const mailData = {
     from: '"Daitnu" root@daitnu.com',
     to: email,
     subject: '[Daitnu] 요청하신 아이디를 알려드립니다.',
-    html: makeFindIdMailHtml(id),
+    html: createMailTemplateToFindId(id),
   };
 
-  transporter.sendMail(mailData);
+  sendMail(mailData);
 };
 
 export default {
   getSingleMailData,
   getTransport,
-  sendFindIdMail,
+  sendMailToFindId,
 };
