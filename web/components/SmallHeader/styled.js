@@ -4,9 +4,9 @@ const Brand = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #f5f6fa;
   width: 200px;
-  margin: 20px;
+  margin: 20px 0;
+  cursor: pointer;
 `;
 
 const Title = styled.span`
