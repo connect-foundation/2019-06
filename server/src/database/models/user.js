@@ -2,14 +2,17 @@
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
-const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
+const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
-  const round = parseInt(SALT_ROUND, 10);
-  const salt = await bcrypt.genSalt(round);
-  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const hashedPassword = crypto
+    .createHash('sha512')
+    .update(password)
+    .digest('base64');
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
 };
@@ -104,6 +107,15 @@ const model = (sequelize, DataTypes) => {
   User.findOneById = id => {
     return User.findOne({
       where: { id },
+      raw: true,
+    });
+  };
+
+  User.findOneByEmail = email => {
+    return User.findOne({
+      where: {
+        sub_email: email,
+      },
       raw: true,
     });
   };
