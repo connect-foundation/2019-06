@@ -38,7 +38,7 @@ const FindIdForm = () => {
     }
   };
 
-  const onSubmitHandler = e => {
+  const handleSubmitClick = e => {
     e.preventDefault();
 
     if (validateForm()) {
@@ -77,8 +77,8 @@ const FindIdForm = () => {
       <S.InputContainer>
         <S.ErrorText>{error}</S.ErrorText>
       </S.InputContainer>
-      <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
-        가입하기
+      <S.Button className="submit-btn max-width" onClick={handleSubmitClick}>
+        확인
       </S.Button>
     </S.InputForm>
   );

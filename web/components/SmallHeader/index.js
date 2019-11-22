@@ -9,7 +9,7 @@ const SmallHeader = () => {
     <Link href="/">
       <S.Brand>
         <S.Logo src={logo} />
-        <S.Title>Daitne</S.Title>
+        <S.Title>Daitnu</S.Title>
       </S.Brand>
     </Link>
   );
