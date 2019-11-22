@@ -10,12 +10,12 @@ const CATEGORY_NUMBER_RANGE = { min: 0, max: MAX_SAFE_INTEGER };
 const checkQuery = ({ category, page }) => {
   const errorFields = [];
 
-  if (!isInt(category, CATEGORY_NUMBER_RANGE)) {
+  if (category && !isInt(category, CATEGORY_NUMBER_RANGE)) {
     const errorField = new ErrorField('category', category, '유효하지 않은 값입니다.');
     errorFields.push(errorField);
   }
 
-  if (!isInt(page, PAGE_NUMBER_RANGE)) {
+  if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
     const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
     errorFields.push(errorField);
   }

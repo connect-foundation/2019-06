@@ -50,7 +50,7 @@ app.use((err, req, res, next) => {
   }
 
   // TODO : SAVE ERROR
-
+  console.log(err);
   return res.status(500).json(INTERNAL_SERVER_ERROR_EXCEPTION);
 });
 

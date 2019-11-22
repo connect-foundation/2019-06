@@ -59,7 +59,7 @@ describe('Mail Service Test', () => {
 
     it('# category가 양수이면 category가 포함된다.', () => {
       const query = service.getQueryByOptions({ ...data, category: 1 });
-      query.should.have.property('category_no');
+      query.mailFilter.should.have.property('category_no');
     });
   });
 });
