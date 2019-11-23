@@ -48,6 +48,23 @@ const createMailTemplateToFindId = id => {
     </p><span style="font-style: italic;">Copyright ⓒ Daitnu Corp. All Rights Reserved.</span>`;
 };
 
+const createMailTemplateToFindPassword = password => {
+  return `
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <h1 style="font-family: 'Noto Sans KR', sans-serif;">임시 비밀번호를</h1>
+    <h1 style="color: #3742fa; font-family: 'Noto Sans KR', sans-serif;">알려드립니다.</h1>
+    <img src="https://user-images.githubusercontent.com/33617083/68571001-457a9d80-04a5-11ea-9a47-98c0fd36a1d9.png"/>
+    <p style="font-family: 'Noto Sans KR', sans-serif;"><span style="font-size: 20px; margin-left: 5px; font-weight: bold">임시 비밀번호: </span>
+    <span style="color: #3742fa; font-size: 20px; font-weight: bold;">${password}</span></p>
+    <br>
+    <p style="font-size: 16px; font-family: 'Noto Sans KR', sans-serif;">
+
+    Daitnu를 이용해 주셔서 감사합니다.<br>
+    더욱 편리한 서비스를 제공하기 위해 항상 최선을 다하겠습니다.<br>
+    </p>
+    </p><span style="font-style: italic;">Copyright ⓒ Daitnu Corp. All Rights Reserved.</span>`;
+};
+
 const sendMail = data => {
   const transport = getTransport();
   const transporter = nodemailer.createTransport(transport);
@@ -71,8 +88,20 @@ const sendMailToFindId = ({ id, email }) => {
   sendMail(mailData);
 };
 
+const sendMailToFindPassword = ({ id, password, email }) => {
+  const mailData = {
+    from: '"Daitnu" root@daitnu.com',
+    to: email,
+    subject: '[Daitnu] 임시 비밀번호를 알려드립니다.',
+    html: createMailTemplateToFindPassword(password),
+  };
+
+  sendMail(mailData);
+};
+
 export default {
   getSingleMailData,
   getTransport,
   sendMailToFindId,
+  sendMailToFindPassword,
 };
