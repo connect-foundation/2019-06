@@ -88,7 +88,7 @@ const sendMailToFindId = ({ id, email }) => {
   sendMail(mailData);
 };
 
-const sendMailToFindPassword = ({ id, password, email }) => {
+const sendMailToFindPassword = ({ password, email }) => {
   const mailData = {
     from: '"Daitnu" root@daitnu.com',
     to: email,
