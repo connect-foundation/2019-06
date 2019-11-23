@@ -38,8 +38,8 @@ const FindPwForm = () => {
   const [values, setValues] = useState(initialInputState);
   const [errors, setErrorMsg] = useState(initialErrorState);
 
-  const handleInputChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleInputChange = prop => ({ target }) => {
+    setValues({ ...values, [prop]: target.value });
   };
 
   const setSearchErrMsg = msg => {

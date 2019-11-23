@@ -46,8 +46,8 @@ const RegisterForm = () => {
   const [values, setValues] = React.useState(initialInputState);
   const [errors, setErrorMsg] = React.useState(initialErrorState);
 
-  const handleInputChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleInputChange = prop => ({ target }) => {
+    setValues({ ...values, [prop]: target.value });
   };
 
   const handleClickShowPassword = () => {
