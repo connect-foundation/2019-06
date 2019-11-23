@@ -8,5 +8,6 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', ctrl.registerUser);
+router.post('/search', ctrl.search);
 
 export default router;

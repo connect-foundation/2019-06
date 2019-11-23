@@ -1,17 +1,19 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import bcrypt from 'bcrypt';
+import { createSalt, encrypt } from '../../libraries/crypto';
 
-const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
+const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
-  const round = parseInt(SALT_ROUND, 10);
-  const salt = await bcrypt.genSalt(round);
-  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const salt = await createSalt();
+  const hashedPassword = await encrypt(password, salt);
+
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
+  instance.salt = salt;
 };
 
 const model = (sequelize, DataTypes) => {
@@ -89,6 +91,10 @@ const model = (sequelize, DataTypes) => {
           },
         },
       },
+      salt: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,
@@ -104,6 +110,15 @@ const model = (sequelize, DataTypes) => {
   User.findOneById = id => {
     return User.findOne({
       where: { id },
+      raw: true,
+    });
+  };
+
+  User.findOneByEmail = email => {
+    return User.findOne({
+      where: {
+        sub_email: email,
+      },
       raw: true,
     });
   };

@@ -1,6 +1,7 @@
 import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ERROR_CODE from '../../libraries/exception/error-code';
+import mailUtil from '../../libraries/mail-util';
 
 const DEFAULT_CATEGORIES = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 
@@ -23,6 +24,8 @@ const register = async ({ id, password, name, sub_email }) => {
   }
 
   delete newUser.password;
+  delete newUser.salt;
+
   return newUser;
 };
 
@@ -35,4 +38,16 @@ const createDefaultCategories = async (no, transaction) => {
   await DB.Category.bulkCreate(categories, { transaction });
 };
 
-export default { register, createDefaultCategories };
+const sendUserIdToEmail = async email => {
+  const user = await DB.User.findOneByEmail(email);
+
+  if (!user) {
+    throw new ErrorResponse(ERROR_CODE.EMAIL_NOT_FOUND);
+  }
+
+  mailUtil.sendMailToFindId({ id: user.id, email: user.sub_email });
+
+  return true;
+};
+
+export default { register, createDefaultCategories, sendUserIdToEmail };

@@ -90,4 +90,14 @@ describe('user service는...', () => {
       });
     }
   });
+
+  describe('sendUserIdToEmail 함수는...', () => {
+    it('# 가입에 사용되지 않은 이메일일 경우 ErrorResponse instance를 반환한다.', async () => {
+      try {
+        await service.sendUserIdToEmail('abcabc@zzz.zzz');
+      } catch (error) {
+        error.should.be.instanceOf(ErrorResponse);
+      }
+    });
+  });
 });
