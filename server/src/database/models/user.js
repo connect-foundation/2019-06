@@ -1,31 +1,15 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import DB from '../index';
+import { createSalt, encrypt } from '../../libraries/crypto';
 
 const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
 
-  const [saltQueryresult] = await DB.sequelize.query('SELECT SUBSTRING(SHA(RAND()), -16)', {
-    raw: true,
-    type: DB.sequelize.QueryTypes.SELECT,
-  });
-
-  const [saltKey] = Object.keys(saltQueryresult);
-  const salt = saltQueryresult[saltKey].toString();
-
-  const [passQueryResult] = await DB.sequelize.query(
-    `SELECT ENCRYPT('${password}', CONCAT('$6$', '${salt}'))`,
-    {
-      raw: true,
-      type: DB.sequelize.QueryTypes.SELECT,
-    },
-  );
-
-  const [passKey] = Object.keys(passQueryResult);
-  const hashedPassword = passQueryResult[passKey].toString();
+  const salt = await createSalt();
+  const hashedPassword = await encrypt(password, salt);
 
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
