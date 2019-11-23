@@ -1,20 +1,19 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
+import { createSalt, encrypt } from '../../libraries/crypto';
 
 const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
 
-  const hashedPassword = crypto
-    .createHash('sha512')
-    .update(password)
-    .digest('base64');
+  const salt = await createSalt();
+  const hashedPassword = await encrypt(password, salt);
+
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
+  instance.salt = salt;
 };
 
 const model = (sequelize, DataTypes) => {
@@ -91,6 +90,10 @@ const model = (sequelize, DataTypes) => {
             msg: 'sub email의 형식이 올바르지 않습니다.',
           },
         },
+      },
+      salt: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {

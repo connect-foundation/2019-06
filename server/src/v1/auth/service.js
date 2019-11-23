@@ -1,9 +1,7 @@
-import bcrypt from 'bcrypt';
-import crypto from 'crypto';
-
 import DB from '../../database/index';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
+import { encrypt } from '../../libraries/crypto';
 
 const localLogin = async ({ id, password }) => {
   const user = await DB.User.findOneById(id);
@@ -12,10 +10,8 @@ const localLogin = async ({ id, password }) => {
     throw new ErrorResponse(ERROR_CODE.INVALID_LOGIN_ID_OR_PASSWORD);
   }
 
-  const hashedPassword = crypto
-    .createHash('sha512')
-    .update(password)
-    .digest('base64');
+  const hashedPassword = await encrypt(password, user.salt);
+
   const match = user.password === hashedPassword;
 
   if (!match) {
