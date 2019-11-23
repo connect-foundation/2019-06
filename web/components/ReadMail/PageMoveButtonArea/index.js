@@ -3,8 +3,8 @@ import * as S from './styled';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import { AppContext } from '../../contexts';
-import { setSelected } from '../../contexts/reducer';
+import { AppContext } from '../../../contexts';
+import { setSelected } from '../../../contexts/reducer';
 
 const PageMoveButtonArea = () => {
   const { state, dispatch } = useContext(AppContext);

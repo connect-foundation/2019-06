@@ -5,33 +5,29 @@ import MailTemplate from '../MailTemplate';
 import S from './styled';
 import Paging from '../Paging';
 import { AppContext } from '../../contexts';
-import { handleMailsChange } from '../../contexts/reducer';
 import Loading from '../Loading';
+import { handleMailsChange } from '../../contexts/reducer';
 
-const useFetch = ({ category, page }, dispatch) => {
+const useFetch = ({ category, page }, callback) => {
   const [isLoading, setIsLoading] = useState(true);
-
-  const fetchInitData = async (callback, URL) => {
+  const fetchInitData = async URL => {
     setIsLoading(true);
     const { data } = await axios.get(URL);
-    callback(data.mails);
+    callback(data);
     setIsLoading(false);
   };
-
   useEffect(() => {
     const URL = `/mail?category=${category}&page=${page}`;
-    const callback = mails => dispatch(handleMailsChange({ category, ...mails, page }));
-    fetchInitData(callback, URL);
+    fetchInitData(URL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, category]);
-
   return isLoading;
 };
-
 const MailArea = () => {
   const { state, dispatch } = useContext(AppContext);
-  const isLoading = useFetch(state, dispatch);
-
+  const { category, page } = state;
+  const callback = data => dispatch(handleMailsChange({ category, ...data.mails, page }));
+  const isLoading = useFetch(state, callback);
   if (isLoading) {
     return <Loading />;
   }
