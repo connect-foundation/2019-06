@@ -41,6 +41,7 @@ describe('validator 모듈의', () => {
       validate('email', 'abcde@daitne..com').should.be.equal(false);
       validate('email', 'a@a.m').should.be.equal(false);
       validate('email', 'abcdef@abcdef').should.be.equal(false);
+      validate('email', 'eoiwjw@aspd').should.be.equal(false);
     });
   });
 
