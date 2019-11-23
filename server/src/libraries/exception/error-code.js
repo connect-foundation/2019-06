@@ -32,6 +32,11 @@ const ERROR_CODE = {
     'LOGIN001',
   ),
   EMAIL_NOT_FOUND: $(404, '가입된 적 없는 이메일 입니다.', 'COMMON009'),
+  LOGIN_ID_OR_EMAIL_NOT_FOUND: $(
+    404,
+    '가입하지 않은 아이디이거나, 가입에 사용하지 않은 이메일 입니다.',
+    'COMMON010',
+  ),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
 

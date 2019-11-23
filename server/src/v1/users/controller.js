@@ -26,6 +26,8 @@ const search = async (req, res, next) => {
         break;
       }
       case 'pw':
+        validation.checkBodyForPasswordSearch(req.body);
+        await service.sendUserPasswordToEmail(req.body.id, req.body.email);
         break;
 
       default:
