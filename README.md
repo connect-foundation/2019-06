@@ -64,11 +64,6 @@ cd server
 npm install
 npm start
 ```
-- Infra
-```sh
-cd infra
-./init.sh
-```
 
 ## Run tests
 ```sh
