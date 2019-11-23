@@ -265,4 +265,54 @@ describe('POST /users/search는...', () => {
       .send({ email: 'daitnu@daitnu22.com' })
       .expect(404, done);
   });
+
+  it('# 비밀번호를 찾을 때 가입에 사용하지 않은 메일을 넘겨줄 경우 상태코드는 404이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ id: user1.id, email: 'daitnu@daitnu22.com' })
+      .expect(404, done);
+  });
+
+  it('# 비밀번호를 찾을 때 가입을 하지 않은 아이디를 넘겨줄 경우 상태코드는 404이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ id: 'hahoho', email: user1.sub_email })
+      .expect(404, done);
+  });
+
+  it('# type이 pw이고 body로 email을 주지 않을 경우 상태코드는 400이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ id: 'hihihi' })
+      .expect(400, done);
+  });
+
+  it('# type이 pw이고 body로 id를 주지 않을 경우 상태코드는 400이다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ email: 'test@test.com' })
+      .expect(400, done);
+  });
+
+  it('# 비밀번호 찾을 때 body로 email을 주지 않을 경우 실패한다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ id: 'hihihi' })
+      .end((err, { body }) => {
+        const { fieldErrors } = body;
+        fieldErrors[0].should.be.properties({ field: 'email' });
+        done();
+      });
+  });
+
+  it('# 비밀번호 찾을 때 body로 id를 주지 않을 경우 실패한다.', done => {
+    request(app)
+      .post('/v1/users/search?type=pw')
+      .send({ email: 'test@test.com' })
+      .end((err, { body }) => {
+        const { fieldErrors } = body;
+        fieldErrors[0].should.be.properties({ field: 'id' });
+        done();
+      });
+  });
 });
