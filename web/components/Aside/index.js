@@ -20,9 +20,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Aside = ({ setView }) => {
-  const { dispatch } = useContext(AppContext);
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const { state, dispatch } = useContext(AppContext);
 
   const handleClick = () => {
     setOpen(!open);

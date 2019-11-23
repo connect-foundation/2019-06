@@ -45,7 +45,7 @@ const Header = styled.div`
   border-bottom: 2px solid #eceff1;
   flex-direction: row;
   overflow: hidden;
-  padding: 5px 10px;
+  padding: 20px 10px;
 `;
 
 export { Brand, Center, Search, SearchInput, Atag, Header };

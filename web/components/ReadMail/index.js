@@ -1,27 +1,36 @@
 import React from 'react';
 import * as S from './styled';
-import { SUBJECT, ADDRESS } from './constant';
+import PageMoveButtonArea from '../PageMoveButtonArea';
+import { ListItemIcon } from '@material-ui/core';
+import { StarBorder } from '@material-ui/icons';
 
 const ReadMail = ({ mail }) => {
-  const { to, from, subject, date, body } = mail;
+  const { to, from, subject, createdAt, text } = mail;
+  const receivers = to.replace(',', ', ');
+
   return (
-    <S.ReadArea>
-      <S.TitleView>
-        <S.Column role={SUBJECT}>
-          <h4>{subject}</h4>
-          <div>{date}</div>
-        </S.Column>
-        <S.Column role={ADDRESS}>
-          <span>보낸 사람</span>
-          <div>{from}</div>
-        </S.Column>
-        <S.Column role={ADDRESS}>
-          <span>받은 사람</span>
-          <div>{to}</div>
-        </S.Column>
-      </S.TitleView>
-      <S.ReadFrame>{body}</S.ReadFrame>
-    </S.ReadArea>
+    <S.Container>
+      <S.Tools>Tools</S.Tools>
+      <S.ReadArea>
+        <S.TitleView>
+          <S.Subject>
+            <StarBorder />
+            <h3>{subject}</h3>
+            <div>{createdAt}</div>
+          </S.Subject>
+          <S.Address>
+            <span>보낸 사람</span>
+            <div>{from}</div>
+          </S.Address>
+          <S.Address>
+            <span>받은 사람</span>
+            <div>{receivers}</div>
+          </S.Address>
+        </S.TitleView>
+        <S.ReadFrame>{text}</S.ReadFrame>
+      </S.ReadArea>
+      <PageMoveButtonArea />
+    </S.Container>
   );
 };
 
