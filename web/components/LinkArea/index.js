@@ -8,7 +8,7 @@ const Footer = () => (
     <Link href="help/id">
       <S.TextLink>아이디 찾기</S.TextLink>
     </Link>
-    <Link href="held/password">
+    <Link href="help/password">
       <S.TextLink>비밀번호 찾기</S.TextLink>
     </Link>
     <Link href="register">
