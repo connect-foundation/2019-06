@@ -48,7 +48,7 @@ const checkBodyForPasswordSearch = ({ id, email }) => {
   const errorFields = [];
 
   if (!id || !validate('id', id)) {
-    const errorField = new ErrorField('email', email, 'id 값이 올바르지 않습니다.');
+    const errorField = new ErrorField('id', id, 'id 값이 올바르지 않습니다.');
     errorFields.push(errorField);
   }
 
