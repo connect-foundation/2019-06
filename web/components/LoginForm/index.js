@@ -75,9 +75,8 @@ const LoignForm = () => {
         className="form-control"
         id="userId"
         placeholder="아이디"
-        value={userId}
         name="userId"
-        onChange={({ target: { value } }) => setUserId(value)}
+        onBlur={({ target: { value } }) => setUserId(value)}
       />
       <S.ErrorText>{idErrorMsg}</S.ErrorText>
       <S.Input
@@ -85,9 +84,8 @@ const LoignForm = () => {
         className="form-control"
         id="password"
         placeholder="비밀번호"
-        value={userPassword}
         name="password"
-        onChange={({ target: { value } }) => setUserPassword(value)}
+        onBlur={({ target: { value } }) => setUserPassword(value)}
       />
       <S.ErrorText>{passwordErrorMsg || loginErrorMsg}</S.ErrorText>
       <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
