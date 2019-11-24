@@ -79,7 +79,7 @@ const sendMailToFindId = ({ id, email }) => {
   id = replace.hideIdUseAsterisk(id, hideStartIndex, hideEndIndex);
 
   const mailData = {
-    from: '"Daitnu" root@daitnu.com',
+    from: '"Daitnu" no-reply@daitnu.com',
     to: email,
     subject: '[Daitnu] 요청하신 아이디를 알려드립니다.',
     html: createMailTemplateToFindId(id),
@@ -90,7 +90,7 @@ const sendMailToFindId = ({ id, email }) => {
 
 const sendMailToFindPassword = ({ password, email }) => {
   const mailData = {
-    from: '"Daitnu" root@daitnu.com',
+    from: '"Daitnu" no-reply@daitnu.com',
     to: email,
     subject: '[Daitnu] 임시 비밀번호를 알려드립니다.',
     html: createMailTemplateToFindPassword(password),
