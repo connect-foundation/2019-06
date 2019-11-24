@@ -35,4 +35,16 @@ const search = async (req, res, next) => {
   return res.status(status.NO_CONTENT).end();
 };
 
-export default { registerUser, search };
+const updatePassword = async (req, res, next) => {
+  const { no, salt } = req.user;
+  try {
+    validation.checkBodyForPasswordUpdate(req.body);
+    await service.updatePassword(no, salt, req.body.password);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.status(status.NO_CONTENT).end();
+};
+
+export default { registerUser, updatePassword, search };

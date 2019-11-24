@@ -21,7 +21,6 @@ passport.use(
       try {
         user = await authService.localLogin({ id, password });
         delete user.password;
-        delete user.salt;
       } catch (err) {
         return done(err);
       }

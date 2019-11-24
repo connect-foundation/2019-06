@@ -35,6 +35,15 @@ const checkQueryForSearch = ({ type }) => {
   return true;
 };
 
+const checkBodyForPasswordUpdate = ({ password }) => {
+  if (!password || !validate('password', password)) {
+    const errorField = new ErrorField('email', password, 'email 값이 올바르지 않습니다.');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, [errorField]);
+  }
+
+  return true;
+};
+
 const checkBodyForIdSearch = ({ email }) => {
   if (!email || !validate('email', email)) {
     const errorField = new ErrorField('email', email, 'email 값이 올바르지 않습니다.');
@@ -64,4 +73,10 @@ const checkBodyForPasswordSearch = ({ id, email }) => {
   return true;
 };
 
-export default { join, checkQueryForSearch, checkBodyForIdSearch, checkBodyForPasswordSearch };
+export default {
+  join,
+  checkQueryForSearch,
+  checkBodyForPasswordUpdate,
+  checkBodyForIdSearch,
+  checkBodyForPasswordSearch,
+};
