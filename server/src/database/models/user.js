@@ -107,6 +107,15 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
+  User.updatePassword = (no, password) => {
+    return User.update(
+      {
+        password,
+      },
+      { where: { no }, validate: false },
+    );
+  };
+
   User.findOneById = id => {
     return User.findOne({
       where: { id },
@@ -160,7 +169,6 @@ const model = (sequelize, DataTypes) => {
       },
     });
   };
-
   return User;
 };
 
