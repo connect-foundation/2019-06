@@ -1,7 +1,6 @@
 import React from 'react';
 import * as S from './styled';
-import PageMoveButtonArea from '../PageMoveButtonArea';
-import { ListItemIcon } from '@material-ui/core';
+import PageMoveButtonArea from './PageMoveButtonArea';
 import { StarBorder } from '@material-ui/icons';
 
 const ReadMail = ({ mail }) => {

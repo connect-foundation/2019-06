@@ -23,7 +23,6 @@ const useFetch = ({ category, page }, callback) => {
     fetchInitData(URL);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, category]);
-
   return isLoading;
 };
 
@@ -32,7 +31,6 @@ const MailArea = () => {
   const { category, page } = state;
   const callback = data => dispatch(handleMailsChange({ category, ...data.mails, page }));
   const isLoading = useFetch(state, callback);
-
   if (isLoading) {
     return <Loading />;
   }

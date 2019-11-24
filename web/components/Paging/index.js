@@ -54,8 +54,10 @@ const Paging = ({ paging }) => {
     dispatch(handlePageNumberClick(newPageNumber));
   };
 
-  const handleNumberClick = ({ target }) => {
-    const { id } = target;
+  const handleNumberClick = e => {
+    e.preventDefault();
+
+    const { id } = e.target;
     if (!id || id === '') {
       return;
     }
