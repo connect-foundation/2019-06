@@ -32,12 +32,17 @@ const makeAttachmentsEntity = ({ msg, attachments }) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const makeMimeMessage = ({ messageId, html, text, attachments }) => {
+export const makeMimeMessage = ({ messageId, mailOptions, attachments }) => {
   const msg = mimemessage.factory({
     contentType: 'multipart/mixed',
     body: [],
   });
+  const { from, to, subject, html, text } = mailOptions;
   msg.header('Message-ID', messageId);
+  msg.header('From', from);
+  msg.header('To', to);
+  msg.header('Subject', subject);
+  msg.header('Date', new Date());
   msg.body.push(getTextEntity({ html, text }));
   makeAttachmentsEntity({ msg, attachments });
   return msg;
