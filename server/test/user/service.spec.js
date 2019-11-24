@@ -100,4 +100,40 @@ describe('user service는...', () => {
       }
     });
   });
+
+  describe('sendUserPasswordToEmail 함수는...', () => {
+    it('# 가입에 사용되지 않은 이메일일 경우 ErrorResponse instance를 반환한다.', async () => {
+      try {
+        await service.sendUserPasswordToEmail(user.id, 'abcabc@zzz.zzz');
+      } catch (error) {
+        error.should.be.instanceOf(ErrorResponse);
+      }
+    });
+
+    it('# 가입에 사용되지 않은 이메일일 경우 ERROR_CODE는 LOGIN_ID_OR_EMAIL_NOT_FOUND이다.', async () => {
+      try {
+        await service.sendUserPasswordToEmail(user.id, 'abcabc@zzz.zzz');
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.LOGIN_ID_OR_EMAIL_NOT_FOUND);
+      }
+    });
+
+    it('# 가입하지 않은 아이디일 경우 ErrorResponse instance를 반환한다.', async () => {
+      try {
+        await service.sendUserPasswordToEmail('kkzzzk', user.sub_email);
+      } catch (error) {
+        error.should.be.instanceOf(ErrorResponse);
+      }
+    });
+
+    it('# 가입하지 않은 아이디일 경우 ERROR_CODE는 LOGIN_ID_OR_EMAIL_NOT_FOUND이다.', async () => {
+      try {
+        await service.sendUserPasswordToEmail('kkzzzk', user.sub_email);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.LOGIN_ID_OR_EMAIL_NOT_FOUND);
+      }
+    });
+  });
 });
