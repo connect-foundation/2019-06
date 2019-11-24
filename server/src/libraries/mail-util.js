@@ -20,14 +20,14 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   };
 };
 
-const getTransport = () => {
+const getTransport = user => {
   return {
     host: `mail.${DEFAULT_DOMAIN_NAME}`,
     port: SMTP_PORT,
     secure: true,
     auth: {
-      user: MAIL_AUTH_USER,
-      pass: MAIL_AUTH_PASS,
+      user: user.email,
+      pass: user.password,
     },
   };
 };

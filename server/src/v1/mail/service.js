@@ -86,7 +86,7 @@ const saveMail = async (mailContents, transaction) => {
 };
 
 const sendMail = async (mailContents, user) => {
-  const transporter = nodemailer.createTransport(U.getTransport());
+  const transporter = nodemailer.createTransport(U.getTransport(user));
   await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
