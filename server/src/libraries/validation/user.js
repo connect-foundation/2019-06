@@ -44,4 +44,24 @@ const checkBodyForIdSearch = ({ email }) => {
   return true;
 };
 
-export default { join, checkQueryForSearch, checkBodyForIdSearch };
+const checkBodyForPasswordSearch = ({ id, email }) => {
+  const errorFields = [];
+
+  if (!id || !validate('id', id)) {
+    const errorField = new ErrorField('id', id, 'id 값이 올바르지 않습니다.');
+    errorFields.push(errorField);
+  }
+
+  if (!email || !validate('email', email)) {
+    const errorField = new ErrorField('email', email, 'email 값이 올바르지 않습니다.');
+    errorFields.push(errorField);
+  }
+
+  if (errorFields.length > 0) {
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
+  }
+
+  return true;
+};
+
+export default { join, checkQueryForSearch, checkBodyForIdSearch, checkBodyForPasswordSearch };
