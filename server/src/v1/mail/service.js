@@ -54,6 +54,10 @@ const getMailsByOptions = async (userNo, options = {}) => {
 };
 
 const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
+  if (attachments.length === 0) {
+    return;
+  }
+
   const processedAttachments = attachments.map(attachment => {
     const { contentType, filename, content } = attachment;
     return { type: contentType, name: filename, content, mail_template_id: mailTemplateNo };
