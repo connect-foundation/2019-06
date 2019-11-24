@@ -316,3 +316,92 @@ describe('POST /users/search는...', () => {
       });
   });
 });
+
+describe('PATCH /users/password는...', () => {
+  before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
+  });
+
+  describe('로그인 하지 않은 상태로..', () => {
+    it('비밀번호를 업데이트 하고자 하면 401에러를 반환한다', done => {
+      request(app)
+        .patch('/v1/users/password')
+        .send({
+          password: '12345678',
+        })
+        .expect(401, done);
+    });
+  });
+
+  describe('로그인 한 상태로..', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/v1/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('유효한 비밀번호가 아니라면 400 에러를 반환한다', done => {
+      authenticatedUser
+        .patch('/v1/users/password')
+        .send({
+          password: '1234',
+        })
+        .expect(400, done);
+    });
+
+    it('유효한 비밀번호라면 204를 반환한다', done => {
+      authenticatedUser
+        .patch('/v1/users/password')
+        .send({
+          password: '87654321',
+        })
+        .expect(204, done);
+    });
+  });
+
+  describe('변경한 비밀번호로 로그인을 할 때..', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(() => {
+      authenticatedUser.post('/v1/auth/login').send(userCredentials);
+
+      authenticatedUser.patch('/v1/users/password').send({
+        password: '87654321',
+      });
+    });
+
+    it('변경한 비밀번호가 아니라면 401 에러를 반환한다', done => {
+      request(app)
+        .post('/v1/auth/login')
+        .send({
+          id: 'rooot',
+          password: '12345678',
+        })
+        .expect(401, done);
+    });
+
+    it('변경한 비밀번호라면 200을 반환한다', done => {
+      request(app)
+        .post('/v1/auth/login')
+        .send({
+          id: 'rooot',
+          password: '87654321',
+        })
+        .expect(200, done);
+    });
+  });
+});
