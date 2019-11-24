@@ -123,11 +123,11 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  User.findOneByIdAndEmail = (id, email) => {
+  User.findOneByIdAndSubEmail = (id, sub_email) => {
     return User.findOne({
       where: {
         id,
-        sub_email: email,
+        sub_email,
       },
     });
   };

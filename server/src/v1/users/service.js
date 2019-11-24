@@ -55,7 +55,7 @@ const sendUserIdToEmail = async email => {
 };
 
 const sendUserPasswordToEmail = async (id, email) => {
-  const user = await DB.User.findOneByIdAndEmail(id, email);
+  const user = await DB.User.findOneByIdAndSubEmail(id, email);
   if (!user) {
     throw new ErrorResponse(ERROR_CODE.LOGIN_ID_OR_EMAIL_NOT_FOUND);
   }
