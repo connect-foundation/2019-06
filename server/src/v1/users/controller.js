@@ -16,22 +16,17 @@ const registerUser = async (req, res, next) => {
 };
 
 const search = async (req, res, next) => {
+  const { type } = req.query;
+  const { id, email } = req.body;
+
   try {
     validation.checkQueryForSearch(req.query);
-
-    switch (req.query.type) {
-      case 'id': {
-        validation.checkBodyForIdSearch(req.body);
-        await service.sendUserIdToEmail(req.body.email);
-        break;
-      }
-      case 'pw':
-        validation.checkBodyForPasswordSearch(req.body);
-        await service.sendUserPasswordToEmail(req.body.id, req.body.email);
-        break;
-
-      default:
-        break;
+    if (type === 'id') {
+      validation.checkBodyForIdSearch(req.body);
+      await service.sendUserIdToEmail(email);
+    } else if (type === 'pw') {
+      validation.checkBodyForPasswordSearch(req.body);
+      await service.sendUserPasswordToEmail(id, email);
     }
   } catch (err) {
     return next(err);
