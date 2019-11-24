@@ -7,7 +7,7 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
   attachments = attachments.map(({ originalname, buffer, mimetype }) => ({
     filename: originalname,
-    content: buffer,
+    content: buffer.toString('base64'),
     contentType: mimetype,
   }));
 
