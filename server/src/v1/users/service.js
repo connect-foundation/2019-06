@@ -1,12 +1,13 @@
+import generator from 'generate-password';
+
 import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
-import { createSalt, encrypt } from '../../libraries/crypto';
-import { createRandStr } from '../../libraries/generator';
+import { encrypt } from '../../libraries/crypto';
 
 const DEFAULT_CATEGORIES = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
-const TEMP_PASSWORD_LENGTH = 8;
+const TEMP_PASSWORD_LENGTH = 15;
 
 // eslint-disable-next-line camelcase
 const register = async ({ id, password, name, sub_email }) => {
@@ -59,7 +60,11 @@ const sendUserPasswordToEmail = async (id, email) => {
     throw new ErrorResponse(ERROR_CODE.LOGIN_ID_OR_EMAIL_NOT_FOUND);
   }
 
-  const newPassword = createRandStr(TEMP_PASSWORD_LENGTH);
+  const newPassword = generator.generate({
+    length: TEMP_PASSWORD_LENGTH,
+    numbers: true,
+  });
+
   const hashedPassword = await encrypt(newPassword, user.salt);
 
   user.password = hashedPassword;
