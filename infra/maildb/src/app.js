@@ -1,20 +1,6 @@
 const simpleParser = require("mailparser").simpleParser;
 const mysql = require("mysql2/promise");
-const {
-  TABLE,
-  QUERY,
-  MAILBOX,
-  MY_DOMAIN,
-  UNTITLE,
-  TABLE_USER_NO,
-  TABLE_CATEGORY_NO,
-  TABLE_CATEGORY_USER_NO,
-  CATEGORY_NO,
-  TABLE_CATEGOTY_NAME,
-  OWNER,
-  ID,
-  NOW
-} = require("./constant");
+const format = require("./format");
 
 const [
   ORIGIN,
@@ -25,6 +11,9 @@ const [
   DB_DEV_SCHEMA,
   DB_DEV_HOST
 ] = process.argv;
+
+const MY_DOMAIN = "daitnu.com";
+const UNTITLE = "untitle";
 
 const pool = mysql.createPool({
   user: DB_DEV_USERNAME,
@@ -51,70 +40,48 @@ const parseMailContent = async content => {
   }
 };
 
-const insertMailToDB = async content => {
-  const { from, to, subject, text, attachments } = await parseMailContent(
-    content
-  );
+const getReceivers = to => {
   const receivers = [];
-  const now = mysql.raw(NOW);
-
   to.split(",").forEach(email => {
     const [id, domain] = email.split("@");
     if (domain === MY_DOMAIN) {
       receivers.push(id);
     }
   });
+  return receivers;
+};
+
+const insertMailToDB = async content => {
+  const mail = await parseMailContent(content);
+  const receivers = getReceivers(mail.to);
+  const connection = await pool.getConnection(async conn => conn);
+  let queryFormat;
 
   try {
-    const connection = await pool.getConnection(async conn => conn);
     await connection.beginTransaction();
-    const valueOfMailTemplate = {
-      from,
-      to,
-      subject,
-      text,
-      created_at: now,
-      updated_at: now
-    };
-    const insertMailTemplate = mysql.format(QUERY.INSERT, [
-      TABLE.MAIL_TEMPLATE,
-      valueOfMailTemplate
-    ]);
-    const [resultOfMailTemplate] = await connection.execute(insertMailTemplate);
-    const mail_template_id = await resultOfMailTemplate.insertId;
+    queryFormat = format.getQueryToAddMailTemplate(mail);
+    const [resultOfMailTemplate] = await connection.execute(queryFormat);
+    const mail_template_id = resultOfMailTemplate.insertId;
 
     receivers.forEach(async id => {
-      const selectOwnerAndCategoryNo = mysql.format(QUERY.SELECT, [
-        TABLE_USER_NO,
-        OWNER,
-        TABLE_CATEGORY_NO,
-        CATEGORY_NO,
-        [TABLE.USER, TABLE.CATEGORY],
-        ID,
-        id,
-        TABLE_USER_NO,
-        TABLE_CATEGORY_USER_NO,
-        TABLE_CATEGOTY_NAME,
-        MAILBOX.ENTIRE,
-        TABLE_CATEGOTY_NAME,
-        MAILBOX.RECEIVED
-      ]);
-      const [results] = await connection.query(selectOwnerAndCategoryNo);
-      results.forEach(async ({ owner, category_no }) => {
-        const valueOfMail = {
-          owner,
-          category_no,
-          mail_template_id,
-          is_important: 0,
-          is_read: 0
-        };
-        const insertMail = mysql.format(QUERY.INSERT, [
-          TABLE.MAIL,
-          valueOfMail
-        ]);
-        const [result] = await connection.execute(insertMail);
-        console.log(result);
+      queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
+      const [resultOfUserAndCategory] = await connection.query(queryFormat);
+      const { owner, category_no } = resultOfUserAndCategory[0];
+      queryFormat = format.getQueryToAddMail({
+        owner,
+        category_no,
+        mail_template_id
       });
+      await connection.execute(queryFormat);
+      console.log(
+        JSON.stringify({
+          from: mail.from,
+          to: mail.to,
+          mail_template_id,
+          owner,
+          category_no
+        })
+      );
     });
 
     await connection.commit();
