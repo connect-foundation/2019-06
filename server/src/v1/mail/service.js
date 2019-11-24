@@ -4,6 +4,8 @@ import nodemailer from 'nodemailer';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
+import { makeMimeMessage } from '../../libraries/mimemessage';
+import { saveSentMail } from '../../libraries/save-sent-mail';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
@@ -83,11 +85,12 @@ const saveMail = async (mailContents, transaction) => {
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
 };
 
-const sendMail = async mailContents => {
+const sendMail = async (mailContents, user) => {
   const transporter = nodemailer.createTransport(U.getTransport());
   await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
-  await transporter.sendMail(mailContents);
-
+  const { messageId } = await transporter.sendMail(mailContents);
+  const msg = makeMimeMessage({ messageId, mailContents });
+  saveSentMail({ user, msg });
   return mailContents;
 };
 
