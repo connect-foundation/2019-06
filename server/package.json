@@ -106,6 +106,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^5.19.6"
+    "sequelize": "^5.19.6",
+    "uuid": "^3.3.3"
   }
 }

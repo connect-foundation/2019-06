@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import uuidv4 from 'uuid/v4';
 import replace from './replace';
 
 const { DEFAULT_DOMAIN_NAME, SMTP_PORT } = process.env;
@@ -11,12 +12,20 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
     contentType: mimetype,
   }));
 
+  const dsn = {
+    id: uuidv4(),
+    return: 'full',
+    notify: ['failure', 'delay'],
+    recipient: from,
+  };
+
   return {
     from,
     to,
     subject,
     text,
     attachments,
+    dsn,
   };
 };
 
