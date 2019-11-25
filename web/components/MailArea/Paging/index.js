@@ -52,16 +52,17 @@ const Paging = ({ paging }) => {
   const handleNumberClick = e => {
     e.preventDefault();
 
-    const { id } = e.target;
+    let { id } = e.target;
     if (!id || id === '') {
       return;
     }
 
-    if (Number.isInteger(id)) {
+    id = Number(id);
+    if (!Number.isInteger(id)) {
       return;
     }
 
-    dispatch(handlePageNumberClick(Number(id)));
+    dispatch(handlePageNumberClick(id));
   };
 
   return (
