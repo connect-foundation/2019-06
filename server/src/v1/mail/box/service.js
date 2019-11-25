@@ -7,4 +7,13 @@ const findAllBoxes = async userNo => {
   return result;
 };
 
-export default { findAllBoxes };
+const createBox = async (user_no, name) => {
+  const [response] = await DB.Category.create({
+    user_no,
+    name,
+  });
+  const newCategory = response.get({ plain: true });
+  return newCategory;
+};
+
+export default { findAllBoxes, createBox };
