@@ -14,15 +14,12 @@ const getImap = ({ email, password }) => {
   });
 };
 
-export const saveSentMail = ({ user, msg }) => {
-  const imap = getImap(user);
+const connectImap = ({ email, password }, callback) => {
+  const imap = getImap({ email, password });
 
   imap.once('ready', () => {
-    imap.openBox(SENT_MAILBOX, false, err => {
-      if (err) throw err;
-      imap.append(msg.toString());
-      imap.end();
-    });
+    callback(imap);
+    imap.end();
   });
 
   imap.once('error', err => {
@@ -32,23 +29,35 @@ export const saveSentMail = ({ user, msg }) => {
   imap.connect();
 };
 
+export const saveSentMail = ({ user, msg }) => {
+  connectImap(user, imap => {
+    imap.openBox(SENT_MAILBOX, false, err => {
+      if (err) throw err;
+      imap.append(msg.toString());
+    });
+  });
+};
+
 export const addMailBox = ({ user, name }) => {
-  const imap = getImap(user);
-  imap.addBox(PREFIX + name, err => {
-    throw err;
+  connectImap(user, imap => {
+    imap.addBox(PREFIX + name, err => {
+      throw err;
+    });
   });
 };
 
 export const renameMailBox = ({ user, oldName, newName }) => {
-  const imap = getImap(user);
-  imap.renameBox(oldName, newName, err => {
-    throw err;
+  connectImap(user, imap => {
+    imap.renameBox(PREFIX + oldName, PREFIX + newName, err => {
+      throw err;
+    });
   });
 };
 
 export const deleteMailBox = ({ user, name }) => {
-  const imap = getImap(user);
-  imap.delBox(PREFIX + name, err => {
-    throw err;
+  connectImap(user, imap => {
+    imap.delBox(PREFIX + name, err => {
+      throw err;
+    });
   });
 };
