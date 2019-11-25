@@ -20,4 +20,27 @@ describe('mailbox api test...', () => {
         .expect(401, done);
     });
   });
+  describe('로그인 한 상태로...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+    before(done => {
+      authenticatedUser
+        .post('/v1/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('메일 데이터를 요청하면 기본 메일함인 5개가 온다', () => {
+      authenticatedUser
+        .get('/v1/mail/box')
+        .send()
+        .end((_, { body }) => {
+          const { createdBox } = body;
+          createdBox.should.have.length(5);
+        });
+    });
+  });
 });
