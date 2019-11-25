@@ -53,7 +53,7 @@ const MailArea = () => {
 
   const mailTemplates =
     processedMails.length > 0
-      ? processedMails.map((mail, i) => <MailTemplate key={`mail-${i}`} mail={mail} no={i} />)
+      ? processedMails.map((mail, i) => <MailTemplate key={`mail-${i}`} mail={mail} no={mail.no} />)
       : '메일이 없습니다.';
 
   return (

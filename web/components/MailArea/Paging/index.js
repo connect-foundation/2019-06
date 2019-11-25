@@ -12,17 +12,11 @@ import { AppContext } from '../../../contexts';
 import { handlePageNumberClick } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
-  fab: {
+  margin: {
     margin: theme.spacing(1),
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
-  },
-  button: {
-    margin: theme.spacing(1),
-  },
-  input: {
-    display: 'none',
   },
 }));
 
@@ -30,25 +24,24 @@ const PAGE_LIST_NUM = 10;
 
 const getPageStartNumber = index => index * PAGE_LIST_NUM + 1;
 
-const getPagingNumbers = (start, page) => {
+const getPagingNumbers = (start, end, page) => {
   const array = [];
-  for (let i = 0; i < PAGE_LIST_NUM; i += 1) {
-    const num = start + i;
-    array.push(<PageNumber key={num} id={num} color="secondary" onActive={page === num} />);
+
+  for (let i = start; i <= end; i += 1) {
+    array.push(<PageNumber key={i} value={i} onActive={page === i} />);
   }
   return array;
 };
 
 const Paging = ({ paging }) => {
-  const { page, startPage, totalPage } = paging;
+  const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
   const lastIndex = Math.floor(totalPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppContext);
 
   const classes = useStyles();
 
-  const startNumber = getPageStartNumber(currentIndex);
-  const pagingNumber = getPagingNumbers(startNumber, page);
+  const pagingNumber = getPagingNumbers(startPage, endPage, page);
 
   const handleMoveBtnClick = value => {
     const newIndex = currentIndex + value;
@@ -79,7 +72,11 @@ const Paging = ({ paging }) => {
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(-1)}
-        style={{ width: '35px', height: '10px ', display: currentIndex === 0 ? 'none' : '' }}>
+        style={{
+          width: '35px',
+          height: '10px ',
+          display: currentIndex === 0 ? 'none' : '',
+        }}>
         <ArrowBackIcon />
       </Fab>
 
