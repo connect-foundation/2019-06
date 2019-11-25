@@ -1,4 +1,4 @@
-import status from 'http-status';
+import STATUS from 'http-status';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
 import service from './service';
@@ -11,7 +11,7 @@ const getMailBox = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  res.status(status.OK).json({ boxes });
+  res.status(STATUS.OK).json({ boxes });
 };
 
 const makeMailBox = async (req, res, next) => {
@@ -23,10 +23,20 @@ const makeMailBox = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-  res.status(status.CREATED).json({ createdBox });
+  res.status(STATUS.CREATED).json({ createdBox });
 };
 
-const alterMailBox = (req, res) => {};
+const alterMailBox = async (req, res, next) => {
+  const { no } = req.user;
+  const { name } = req.body;
+  let updatedBox;
+  try {
+    updatedBox = await service.updateBox(no, name);
+  } catch (err) {
+    next(err);
+  }
+  res.status(STATUS.OK).json({ updatedBox });
+};
 
 export default {
   getMailBox,
