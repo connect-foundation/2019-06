@@ -38,3 +38,10 @@ export const addMailBox = ({ user, name }) => {
     throw err;
   });
 };
+
+export const renameMailBox = ({ user, oldName, newName }) => {
+  const imap = getImap(user);
+  imap.renameBox(oldName, newName, err => {
+    throw err;
+  });
+};
