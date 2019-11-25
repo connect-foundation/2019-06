@@ -1,7 +1,6 @@
 import React from 'react';
 
 import Profile from '../components/Profile';
-
 import * as GS from '../components/GlobalStyle';
 import BackButton from '../components/BackButton';
 

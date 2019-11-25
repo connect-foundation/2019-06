@@ -1,6 +1,6 @@
 import React from 'react';
 
-import LoginForm from '../components/LoginForm';
+import LoginForm from '../components/Forms/LoginForm';
 import SmallHeader from '../components/SmallHeader';
 import LinkArea from '../components/LinkArea';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FindIdForm from '../../components/FindIdForm';
+import FindIdForm from '../../components/Forms/FindIdForm';
 
 import * as GS from '../../components/GlobalStyle';
 

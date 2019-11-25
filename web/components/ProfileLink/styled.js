@@ -10,8 +10,8 @@ const Brand = styled.div`
 `;
 
 const Logo = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
 `;
 
 export default {

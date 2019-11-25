@@ -7,11 +7,11 @@ import {
   ERROR_PASSWORD_EMPTY,
   ERROR_ID_VALIDATION,
   ERROR_PASSWORD_VALIDATION,
-} from '../../utils/error-message';
+} from '../../../utils/error-message';
 import { initialState, errorReducer } from './reducers';
 import { RESET, SET_ID_ERROR_MSG, SET_PASSWORD_ERROR_MSG, SET_LOGIN_ERROR_MSG } from './actions';
-import validator from '../../utils/validator';
-import { errorParser } from '../../utils/error-parser';
+import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 
 const LoignForm = () => {

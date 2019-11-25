@@ -1,6 +1,6 @@
 import React from 'react';
 
-import RegisterForm from '../components/RegisterForm';
+import RegisterForm from '../components/Forms/RegisterForm';
 import RegisterLogo from '../components/RegisterLogo';
 
 import * as S from '../components/GlobalStyle';

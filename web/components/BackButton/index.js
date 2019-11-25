@@ -3,11 +3,11 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 import Router from 'next/router';
 
-export default () => {
-  const handleBackBtnClick = () => {
-    Router.back();
-  };
+const handleBackBtnClick = () => {
+  Router.back();
+};
 
+export default () => {
   return (
     <ArrowBackIosIcon
       style={{ cursor: 'pointer' }}
