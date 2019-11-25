@@ -2,12 +2,12 @@
 import React, { useContext } from 'react';
 import * as S from './styled';
 import LogoutButton from '../LogoutButton';
-import { AppContext } from '../../contexts';
+import { AppDisapthContext } from '../../contexts';
 import { setView } from '../../contexts/reducer';
 import MailArea from '../MailArea';
 
 const Header = ({ brand }) => {
-  const { dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppDisapthContext);
   const handleAtagClick = () => dispatch(setView(<MailArea />));
   return (
     <S.Header>

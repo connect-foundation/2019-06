@@ -23,11 +23,10 @@ export const handleCategoryClick = (category, view) => {
   };
 };
 
-export const handleMailsChange = ({ category, mails, paging }) => {
+export const handleMailsChange = ({ mails, paging }) => {
   return {
     type: CHANGE_MAILS_DATA,
     payload: {
-      category,
       mails,
       paging,
     },
@@ -64,6 +63,7 @@ export const setView = view => {
 
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
+
   switch (type) {
     case CATEGORY_CLICK:
       return { ...state, ...payload };
