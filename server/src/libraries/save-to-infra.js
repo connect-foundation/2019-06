@@ -45,3 +45,10 @@ export const renameMailBox = ({ user, oldName, newName }) => {
     throw err;
   });
 };
+
+export const deleteMailBox = ({ user, name }) => {
+  const imap = getImap(user);
+  imap.delBox(PREFIX + name, err => {
+    throw err;
+  });
+};
