@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 
 import S from './styled';
 import PasswordModal from '../PasswordModal';
+import LogoutButton from '../LogoutButton';
 
-const initialUserState = {
-  name: '이정환',
-  password: '12345678',
-  email: 'ljhw3377@gmail.com',
+const initialValuState = {
+  name: '',
+  sub_email: '',
+  loading: false,
 };
 
 const Profile = () => {
-  const [values, setValues] = React.useState(initialUserState);
+  const [values, setValues] = React.useState(initialValuState);
   const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    const userStr = window.sessionStorage.getItem('user');
+    if (!userStr) {
+      Router.push('/login');
+    }
+
+    const { name, sub_email } = JSON.parse(userStr);
+    setValues({
+      name,
+      email: sub_email,
+      loading: true,
+    });
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -22,9 +38,9 @@ const Profile = () => {
     setOpen(false);
   };
 
-  const { name, password, email } = values;
+  const { name, email, loading } = values;
 
-  return (
+  return loading ? (
     <S.Container>
       <S.ColumnContainer>
         <S.Title>프로필</S.Title>
@@ -50,12 +66,17 @@ const Profile = () => {
             <Button onClick={handleOpen}>********</Button>
           </S.ColumnItem>
           <S.ColumnItem>
-            <Button style={{ 'text-transform': 'none' }}>{email}</Button>
+            <Button style={{ textTransform: 'none' }}>{email}</Button>
           </S.ColumnItem>
         </S.ColumnContainer>
       </S.UserDataContainer>
+      <S.AlignRightContainer>
+        <LogoutButton />
+      </S.AlignRightContainer>
       <PasswordModal open={open} handleClose={handleClose}></PasswordModal>
     </S.Container>
+  ) : (
+    <></>
   );
 };
 export default Profile;

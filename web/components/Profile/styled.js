@@ -6,7 +6,6 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  padding: 40px;
 `;
 
 const UserDataContainer = styled.div`
@@ -19,6 +18,14 @@ const UserDataContainer = styled.div`
 const ColumnContainer = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const AlignRightContainer = styled.div`
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding-right: 20px;
+  padding-top: 20px;
 `;
 
 const ColumnItem = styled.div`
@@ -74,6 +81,7 @@ export default {
   ErrorText,
   ColumnContainer,
   ColumnItem,
+  AlignRightContainer,
   Title,
   Text,
 };
