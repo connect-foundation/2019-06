@@ -37,7 +37,7 @@ const delMailBox = async (req, res, next) => {
   const { name, no } = req.body;
   let deletedBox;
   try {
-    deletedBox = await service.deleteBox(req, no, name);
+    deletedBox = await service.deleteBox(req.user, no, name);
   } catch (err) {
     return next(err);
   }
