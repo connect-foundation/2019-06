@@ -75,6 +75,7 @@ const saveMail = async (mailContents, transaction) => {
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
+  await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
   await DB.Mail.create(
     {
       owner: user.no,
@@ -82,7 +83,6 @@ const saveMail = async (mailContents, transaction) => {
     },
     { transaction },
   );
-  await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
 };
 
 const sendMail = async (mailContents, user) => {
