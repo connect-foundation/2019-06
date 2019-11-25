@@ -37,7 +37,7 @@ const checkQueryForSearch = ({ type }) => {
 
 const checkBodyForPasswordUpdate = ({ password }) => {
   if (!password || !validate('password', password)) {
-    const errorField = new ErrorField('email', password, 'email 값이 올바르지 않습니다.');
+    const errorField = new ErrorField('password', password, 'password 값이 올바르지 않습니다.');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, [errorField]);
   }
 
