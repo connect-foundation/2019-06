@@ -10,7 +10,7 @@ const DEFAULT_PAGE_NUM = 1;
  * @returns {Object} paging result
  */
 
-function paging(totalCount, options = {}) {
+const paging = (totalCount, options = {}) => {
   const perPageNum = options.perPageNum || DEFAULT_PER_PAGE_NUM;
   let page = options.page || DEFAULT_PAGE_NUM;
 
@@ -24,6 +24,6 @@ function paging(totalCount, options = {}) {
   let endPage = startPage + DEFAULT_PAGE_LIST_NUM - 1;
   endPage = endPage > totalPage ? totalPage : endPage;
   return { startPage, endPage, page, perPageNum, totalPage };
-}
+};
 
 export default paging;
