@@ -2,7 +2,7 @@ import nodemailer from 'nodemailer';
 import uuidv4 from 'uuid/v4';
 import replace from './replace';
 
-const { DEFAULT_DOMAIN_NAME, SMTP_PORT } = process.env;
+const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
 
 const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
@@ -15,7 +15,7 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   const dsn = {
     id: uuidv4(),
     return: 'full',
-    notify: ['failure', 'delay'],
+    notify: ['failure'],
     recipient: from,
   };
 
@@ -29,14 +29,14 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   };
 };
 
-const getTransport = user => {
+const getTransport = (user = {}) => {
   return {
     host: `mail.${DEFAULT_DOMAIN_NAME}`,
     port: SMTP_PORT,
     secure: true,
     auth: {
-      user: user.email,
-      pass: user.password,
+      user: user.email || MAIL_AUTH_USER,
+      pass: user.password || MAIL_AUTH_PASS,
     },
   };
 };
