@@ -11,7 +11,7 @@ import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import { AppContext } from '../../contexts';
-import { handleCategoryClick } from '../../contexts/reducer';
+import { handleCategoryClick, setView } from '../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Aside = ({ setView }) => {
+const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const { state, dispatch } = useContext(AppContext);
@@ -29,20 +29,23 @@ const Aside = ({ setView }) => {
   };
 
   const defaultCategory = [
-    { name: '받은편지함', icon: <AllInboxIcon />, view: <MailArea />, category: 0 },
-    { name: '중요편지함', icon: <StarBorder />, view: <></>, category: 1 },
-    { name: '보낸메일함', icon: <SendIcon />, view: <></>, category: 2 },
-    { name: '내게쓴메일함', icon: <DraftsIcon />, view: <></>, category: 3 },
-    { name: '휴지통', icon: <DeleteIcon />, view: <></>, category: 4 },
+    { name: '받은편지함', icon: <AllInboxIcon />, no: 0 },
+    { name: '중요편지함', icon: <StarBorder />, no: 1 },
+    { name: '보낸메일함', icon: <SendIcon />, no: 2 },
+    { name: '내게쓴메일함', icon: <DraftsIcon />, no: 3 },
+    { name: '휴지통', icon: <DeleteIcon />, no: 4 },
   ];
 
   const userCategory = [
-    { name: '대햇', icon: <StarBorder />, view: <></> },
-    { name: '흑우', icon: <StarBorder />, view: <></> },
+    { name: '대햇', icon: <StarBorder />, no: 5 },
+    { name: '흑우', icon: <StarBorder />, no: 6 },
   ];
 
   const defaultCard = defaultCategory.map((category, idx) => (
-    <ListItem button key={idx} onClick={() => dispatch(handleCategoryClick(category.category))}>
+    <ListItem
+      button
+      key={idx}
+      onClick={() => dispatch(handleCategoryClick(category, <MailArea />))}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
@@ -58,7 +61,7 @@ const Aside = ({ setView }) => {
     <S.Aside>
       <List component="nav">
         <ListItem>
-          <S.WrtieButton onClick={e => setView(<WriteMail />)}>편지쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
         {defaultCard}
