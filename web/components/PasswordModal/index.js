@@ -54,12 +54,12 @@ const PasswordModal = ({ open, handleClose }) => {
     setErrorMsg({ ...initialErrorState, register: msg });
   };
 
-  const signUp = async () => {
+  const updatePassword = async () => {
     try {
-      const { id, password, name, email } = values;
-      const body = { id, password, sub_email: email, name: name.trim() };
-      await axios.post('/users', body);
-      Router.push('/login');
+      const { password } = values;
+      const body = { password };
+      await axios.patch('/users/password', body);
+      handleClose();
     } catch (err) {
       const message = errorParser(err);
       handleRegisterErrMsg(message);
@@ -70,7 +70,7 @@ const PasswordModal = ({ open, handleClose }) => {
     e.preventDefault();
 
     if (validateForm()) {
-      signUp();
+      updatePassword();
     }
   };
 
