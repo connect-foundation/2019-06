@@ -65,6 +65,7 @@ const model = (sequelize, DataTypes) => {
         owner: userNo,
         ...mailFilter,
       },
+      order: [['no', 'DESC']],
       include: [
         {
           model: sequelize.models.MailTemplate,
