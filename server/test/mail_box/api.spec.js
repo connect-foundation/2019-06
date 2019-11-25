@@ -12,46 +12,30 @@ describe('mailbox api test...', () => {
     await mock();
   });
 
-  describe('로그인 안하고 메일박스 데이터를 요청한다면...', () => {
-    it('401에러를 반환한다.', done => {
+  describe('로그인 안하고...', () => {
+    it('메일박스 데이터를 요청한다면 401에러를 반환한다.', done => {
       request(app)
         .get('/v1/mail/box')
         .send()
         .expect(401, done);
     });
-  });
-  describe('로그인 한 상태로...', () => {
-    const userCredentials = {
-      id: 'rooot',
-      password: '12345678',
-    };
-    const authenticatedUser = request.agent(app);
-    before(done => {
-      authenticatedUser
-        .post('/v1/auth/login')
-        .send(userCredentials)
-        .expect(200, done);
-    });
-
-    it('메일함 데이터를 요청하면 200코드를 리턴온다', done => {
-      authenticatedUser
-        .get('/v1/mail/box')
-        .send()
-        .expect(200, done);
-    });
-
-    it('메일함 추가 요청에 성공하면 201코드를 리턴한다', done => {
-      authenticatedUser
+    it('메일박스 추가를 요청한다면 401에러를 반환단다.', done => {
+      request(app)
         .post('/v1/mail/box')
-        .send({ name: '하위^^' })
-        .expect(201, done);
+        .send()
+        .expect(401, done);
     });
-
-    it('메일함 이름 업데이트에 성공하면 200을 리턴한다', done => {
-      authenticatedUser
+    it('메일박스 수정를 요청한다면 401에러를 반환단다.', done => {
+      request(app)
         .patch('/v1/mail/box')
-        .send({ name: '하', no: 6 })
-        .expect(200, done);
+        .send()
+        .expect(401, done);
+    });
+    it('메일박스 삭제를 요청한다면 401에러를 반환단다.', done => {
+      request(app)
+        .delete('/v1/mail/box')
+        .send()
+        .expect(401, done);
     });
   });
 });
