@@ -1,6 +1,7 @@
-import React, { useState, useReducer } from 'react';
+import React from 'react';
 import Router from 'next/router';
 import axios from 'axios';
+import useForm from 'react-hook-form';
 
 import {
   ERROR_ID_EMPTY,
@@ -8,16 +9,47 @@ import {
   ERROR_ID_VALIDATION,
   ERROR_PASSWORD_VALIDATION,
 } from '../../../utils/error-message';
-import { initialState, errorReducer } from './reducers';
-import { RESET, SET_ID_ERROR_MSG, SET_PASSWORD_ERROR_MSG, SET_LOGIN_ERROR_MSG } from './actions';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 
 const LoignForm = () => {
-  const [userId, setUserId] = useState('');
-  const [userPassword, setUserPassword] = useState('');
-  const [errorMsg, dispatchErrorMsg] = useReducer(errorReducer, initialState);
+  const { register, handleSubmit, errors, setError, clearError } = useForm();
+
+  const onSubmit = (data, e) => {
+    const { userId, password } = data;
+
+    e.preventDefault();
+
+    if (validateForm(userId, password)) {
+      signIn(userId, password);
+    }
+  };
+
+  const validateForm = (id, password) => {
+    let checkId;
+    let checkPassword;
+
+    if (id.length === 0) {
+      setError('userId', 'notMatch', ERROR_ID_EMPTY);
+    } else if (!validator.validate('id', id)) {
+      setError('userId', 'validate', ERROR_ID_VALIDATION);
+    } else {
+      clearError('userId');
+      checkId = true;
+    }
+
+    if (password.length === 0) {
+      setError('password', 'notMatch', ERROR_PASSWORD_EMPTY);
+    } else if (!validator.validate('password', password)) {
+      setError('password', 'validation', ERROR_PASSWORD_VALIDATION);
+    } else {
+      clearError('password');
+      checkPassword = true;
+    }
+
+    return checkId && checkPassword;
+  };
 
   const signIn = async (id, password) => {
     try {
@@ -29,66 +61,33 @@ const LoignForm = () => {
       Router.push('/');
     } catch (err) {
       const message = errorParser(err);
-      dispatchErrorMsg({ type: SET_LOGIN_ERROR_MSG, payload: message });
+      setError('login', 'api', message);
     }
   };
-
-  const onSubmitHandler = async e => {
-    e.preventDefault();
-    const id = userId.trim();
-
-    dispatchErrorMsg({ type: RESET });
-    if (validateForm(id, userPassword)) {
-      signIn(id, userPassword);
-    }
-  };
-
-  const validateForm = (id, password) => {
-    if (id.length === 0) {
-      dispatchErrorMsg({ type: SET_ID_ERROR_MSG, payload: ERROR_ID_EMPTY });
-      return false;
-    }
-
-    if (!validator.validate('id', id)) {
-      dispatchErrorMsg({ type: SET_ID_ERROR_MSG, payload: ERROR_ID_VALIDATION });
-      return false;
-    }
-
-    if (password.length === 0) {
-      dispatchErrorMsg({ type: SET_PASSWORD_ERROR_MSG, payload: ERROR_PASSWORD_EMPTY });
-      return false;
-    }
-
-    if (!validator.validate('password', password)) {
-      dispatchErrorMsg({ type: SET_PASSWORD_ERROR_MSG, payload: ERROR_PASSWORD_VALIDATION });
-      return false;
-    }
-    return true;
-  };
-
-  const { idErrorMsg, passwordErrorMsg, loginErrorMsg } = errorMsg;
 
   return (
-    <S.InputForm>
+    <S.InputForm onSubmit={handleSubmit(onSubmit)}>
       <S.Input
         type="text"
         className="form-control"
         id="userId"
         placeholder="아이디"
         name="userId"
-        onBlur={({ target: { value } }) => setUserId(value)}
+        ref={register}
       />
-      <S.ErrorText>{idErrorMsg}</S.ErrorText>
+      <S.ErrorText>{errors.userId && errors.userId.message}</S.ErrorText>
       <S.Input
         type="password"
         className="form-control"
         id="password"
         placeholder="비밀번호"
         name="password"
-        onBlur={({ target: { value } }) => setUserPassword(value)}
+        ref={register}
       />
-      <S.ErrorText>{passwordErrorMsg || loginErrorMsg}</S.ErrorText>
-      <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
+      <S.ErrorText>
+        {(errors.password && errors.password.message) || (errors.login && errors.login.message)}
+      </S.ErrorText>
+      <S.Button className="submit-btn max-width" onSubmit={handleSubmit(onSubmit)}>
         로그인
       </S.Button>
     </S.InputForm>
