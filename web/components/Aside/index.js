@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
-import { AppContext } from '../../contexts';
+import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
@@ -22,8 +22,7 @@ const useStyles = makeStyles(theme => ({
 const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
-  const { state, dispatch } = useContext(AppContext);
-
+  const { dispatch } = useContext(AppDisapthContext);
   const handleClick = () => {
     setOpen(!open);
   };
