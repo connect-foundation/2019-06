@@ -39,6 +39,13 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Category.findAllByUserNo = user_no => {
+    return Category.findAll({
+      where: { user_no },
+      raw: true,
+    });
+  };
+
   Category.associate = ({ User, Mail, ClassificationPattern }) => {
     Category.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });
     Category.hasMany(Mail, { foreignKey: 'category_no', sourceKey: 'no' });
