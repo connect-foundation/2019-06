@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import Loading from '../components/Loading';
 import ReadMail from '../components/ReadMail';
 import { AppContext } from '../contexts';
+import { getUser } from '../utils/storage';
 
 const Home = () => {
   const { state } = useContext(AppContext);
@@ -15,11 +16,11 @@ const Home = () => {
   const [view, setView] = useState(null);
 
   useEffect(() => {
-    if (!window.sessionStorage.getItem('user')) {
+    const userData = getUser(window);
+    if (!userData) {
       Router.push('/login');
     } else {
-      const userData = window.sessionStorage.getItem('user');
-      setUser(JSON.parse(userData));
+      setUser(userData);
       setView(<MailArea />);
     }
   }, []);

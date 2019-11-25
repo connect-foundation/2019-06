@@ -4,6 +4,7 @@ import Button from '@material-ui/core/Button';
 
 import S from './styled';
 import LogoutButton from '../LogoutButton';
+import { getUser } from '../../utils/storage';
 
 const initialValuState = {
   name: '',
@@ -16,12 +17,12 @@ const Profile = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const userStr = window.sessionStorage.getItem('user');
-    if (!userStr) {
+    const user = getUser(window);
+    if (!user) {
       router.push('/login');
     }
 
-    const { name, sub_email } = JSON.parse(userStr);
+    const { name, sub_email } = user;
     setValues({
       name,
       email: sub_email,
