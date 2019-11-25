@@ -50,7 +50,7 @@ const PasswordModal = ({ open, handleClose }) => {
     setValues({ ...values, [prop]: target.value });
   };
 
-  const handleRegisterErrMsg = msg => {
+  const handleChangeErrMsg = msg => {
     setErrorMsg({ ...initialErrorState, register: msg });
   };
 
@@ -62,7 +62,7 @@ const PasswordModal = ({ open, handleClose }) => {
       handleClose();
     } catch (err) {
       const message = errorParser(err);
-      handleRegisterErrMsg(message);
+      handleChangeErrMsg(message);
     }
   };
 
