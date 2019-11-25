@@ -28,9 +28,15 @@ const useStyles = makeStyles(theme => ({
 
 const PAGE_LIST_NUM = 10;
 
-const getPageNumberRange = index => {
-  const start = index * PAGE_LIST_NUM;
-  return [start + 1, start + PAGE_LIST_NUM];
+const getPageStartNumber = index => index * PAGE_LIST_NUM;
+
+const getPagingNumbers = (start, page) => {
+  const array = [];
+  for (let i = 0; i < PAGE_LIST_NUM; i += 1) {
+    const num = start + i;
+    array.push(<PageNumber key={num} id={num} color="secondary" onActive={page === num} />);
+  }
+  return array;
 };
 
 const Paging = ({ paging }) => {
@@ -41,16 +47,12 @@ const Paging = ({ paging }) => {
 
   const classes = useStyles();
 
-  const pagingNumber = [];
-  const [startNumber, endNumber] = getPageNumberRange(currentIndex);
-  for (let i = startNumber; i <= endNumber && i <= totalPage; i += 1) {
-    const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
-    pagingNumber.push(number);
-  }
+  const startNumber = getPageStartNumber(currentIndex);
+  const pagingNumber = getPagingNumbers(startNumber, page);
 
   const handleMoveBtnClick = value => {
     const newIndex = currentIndex + value;
-    const [newPageNumber] = getPageNumberRange(newIndex);
+    const [newPageNumber] = getPageStartNumber(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
   };
 
