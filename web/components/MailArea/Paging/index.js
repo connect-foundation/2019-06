@@ -1,65 +1,68 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import PropTypes from 'prop-types';
 
-import * as GS from '../GlobalStyle';
+import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
-import { AppContext } from '../../contexts';
-import { handlePageNumberClick } from '../../contexts/reducer';
+import { AppContext } from '../../../contexts';
+import { handlePageNumberClick } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
-  fab: {
+  margin: {
     margin: theme.spacing(1),
   },
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
-  button: {
-    margin: theme.spacing(1),
-  },
-  input: {
-    display: 'none',
-  },
 }));
 
-const getPageNumberRange = index => {
-  const start = index * 10;
-  return [start + 1, start + 10];
+const PAGE_LIST_NUM = 10;
+
+const getPageStartNumber = index => index * PAGE_LIST_NUM + 1;
+
+const getPagingNumbers = (start, end, page) => {
+  const array = [];
+
+  for (let i = start; i <= end; i += 1) {
+    array.push(<PageNumber key={i} value={i} onActive={page === i} />);
+  }
+  return array;
 };
 
 const Paging = ({ paging }) => {
-  const { page, startPage, totalPage } = paging;
-  const firstIndex = Math.floor(startPage / 10);
-  const lastIndex = Math.floor(totalPage / 10);
-  const [index, setIndex] = useState(firstIndex);
+  const { page, startPage, totalPage, endPage } = paging;
+  const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
+  const lastIndex = Math.floor(totalPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppContext);
 
   const classes = useStyles();
 
-  const pagingNumber = [];
-  const [startNumber, endNumber] = getPageNumberRange(index);
-  for (let i = startNumber; i <= endNumber && i <= totalPage; i += 1) {
-    const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
-    pagingNumber.push(number);
-  }
+  const pagingNumber = getPagingNumbers(startPage, endPage, page);
 
   const handleMoveBtnClick = value => {
-    const newIndex = index + value;
-    const [newPageNumber] = getPageNumberRange(newIndex);
-    setIndex(newIndex);
+    const newIndex = currentIndex + value;
+    const newPageNumber = getPageStartNumber(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
   };
 
-  const handleNumberClick = ({ target }) => {
-    const { innerText } = target;
-    if (!innerText || innerText === '') {
+  const handleNumberClick = e => {
+    e.preventDefault();
+
+    let { id } = e.target;
+    if (!id || id === '') {
       return;
     }
-    dispatch(handlePageNumberClick(Number(innerText)));
+
+    id = Number(id);
+    if (!Number.isInteger(id)) {
+      return;
+    }
+
+    dispatch(handlePageNumberClick(id));
   };
 
   return (
@@ -70,7 +73,11 @@ const Paging = ({ paging }) => {
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(-1)}
-        style={{ width: '35px', height: '10px ', display: index === 0 ? 'none' : '' }}>
+        style={{
+          width: '35px',
+          height: '10px ',
+          display: currentIndex === 0 ? 'none' : '',
+        }}>
         <ArrowBackIcon />
       </Fab>
 
@@ -82,7 +89,11 @@ const Paging = ({ paging }) => {
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(1)}
-        style={{ width: '35px', height: '10px ', display: index === lastIndex ? 'none' : '' }}>
+        style={{
+          width: '35px',
+          height: '10px ',
+          display: currentIndex === lastIndex ? 'none' : '',
+        }}>
         <ArrowForwardIcon />
       </Fab>
     </GS.FlexRowWrap>

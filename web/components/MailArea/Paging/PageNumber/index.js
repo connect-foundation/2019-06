@@ -8,13 +8,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const PageNumber = ({ id, onActive }) => {
+export const PageNumber = ({ value, onActive }) => {
   const classes = useStyles();
   const color = onActive ? 'secondary' : 'default';
 
   return (
-    <IconButton aria-label="delete" className={classes.margin} color={color}>
-      {id}
+    <IconButton aria-label="delete" className={classes.margin} color={color} id={value}>
+      <span id={value}>{value}</span>
     </IconButton>
   );
 };
