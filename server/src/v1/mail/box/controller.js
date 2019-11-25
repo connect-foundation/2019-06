@@ -1,6 +1,4 @@
 import STATUS from 'http-status';
-import ERROR_CODE from '../../../libraries/exception/error-code';
-import ErrorResponse from '../../../libraries/exception/error-response';
 import service from './service';
 
 const getMailBox = async (req, res, next) => {
