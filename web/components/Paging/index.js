@@ -26,31 +26,31 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const PAGE_LIST_NUM = 10;
+
 const getPageNumberRange = index => {
-  const start = index * 10;
-  return [start + 1, start + 10];
+  const start = index * PAGE_LIST_NUM;
+  return [start + 1, start + PAGE_LIST_NUM];
 };
 
 const Paging = ({ paging }) => {
   const { page, startPage, totalPage } = paging;
-  const firstIndex = Math.floor(startPage / 10);
-  const lastIndex = Math.floor(totalPage / 10);
-  const [index, setIndex] = useState(firstIndex);
+  const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
+  const lastIndex = Math.floor(totalPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppContext);
 
   const classes = useStyles();
 
   const pagingNumber = [];
-  const [startNumber, endNumber] = getPageNumberRange(index);
+  const [startNumber, endNumber] = getPageNumberRange(currentIndex);
   for (let i = startNumber; i <= endNumber && i <= totalPage; i += 1) {
     const number = <PageNumber key={i} id={i} color="secondary" onActive={page === i} />;
     pagingNumber.push(number);
   }
 
   const handleMoveBtnClick = value => {
-    const newIndex = index + value;
+    const newIndex = currentIndex + value;
     const [newPageNumber] = getPageNumberRange(newIndex);
-    setIndex(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
   };
 
@@ -77,7 +77,7 @@ const Paging = ({ paging }) => {
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(-1)}
-        style={{ width: '35px', height: '10px ', display: index === 0 ? 'none' : '' }}>
+        style={{ width: '35px', height: '10px ', display: currentIndex === 0 ? 'none' : '' }}>
         <ArrowBackIcon />
       </Fab>
 
@@ -89,7 +89,11 @@ const Paging = ({ paging }) => {
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(1)}
-        style={{ width: '35px', height: '10px ', display: index === lastIndex ? 'none' : '' }}>
+        style={{
+          width: '35px',
+          height: '10px ',
+          display: currentIndex === lastIndex ? 'none' : '',
+        }}>
         <ArrowForwardIcon />
       </Fab>
     </GS.FlexRowWrap>
