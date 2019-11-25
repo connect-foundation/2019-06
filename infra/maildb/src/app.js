@@ -66,10 +66,10 @@ const insertMailToDB = async content => {
     receivers.forEach(async id => {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
       const [resultOfUserAndCategory] = await connection.query(queryFormat);
-      const { owner, category_no } = resultOfUserAndCategory[0];
+      const { owner, no } = resultOfUserAndCategory[0];
       queryFormat = format.getQueryToAddMail({
         owner,
-        category_no,
+        no,
         mail_template_id
       });
       await connection.execute(queryFormat);
@@ -79,7 +79,7 @@ const insertMailToDB = async content => {
           to: mail.to,
           mail_template_id,
           owner,
-          category_no
+          category_no: no
         })
       );
     });
