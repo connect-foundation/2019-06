@@ -33,7 +33,7 @@ describe('mailbox api test...', () => {
         .expect(200, done);
     });
 
-    it('메일 데이터를 요청하면 기본 메일함인 5개가 온다', () => {
+    it('메일함 데이터를 요청하면 기본 메일함인 5개가 온다', () => {
       authenticatedUser
         .get('/v1/mail/box')
         .send()
@@ -41,6 +41,13 @@ describe('mailbox api test...', () => {
           const { createdBox } = body;
           createdBox.should.have.length(5);
         });
+    });
+
+    it('메일함 추가 요청에 성공하면 201코드를 리턴한다', () => {
+      authenticatedUser
+        .post('/v1/mail/box')
+        .send({ name: '하위^^' })
+        .expect(201, done);
     });
   });
 });
