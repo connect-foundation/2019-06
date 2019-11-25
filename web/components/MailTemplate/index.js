@@ -3,13 +3,14 @@ import React, { useContext } from 'react';
 import moment from 'moment';
 import * as S from './styled';
 import { AppContext } from '../../contexts';
-import { setSelected } from '../../contexts/reducer';
+import { handleMailClick } from '../../contexts/reducer';
+import ReadMail from '../ReadMail';
 
 const MailTemplate = ({ mail, no }) => {
-  const { state, dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
   const { from, subject, date, is_important, is_read } = mail;
   const startdate = moment(date).format('YYYY-MM-DD');
-  const handleSubjectClick = () => dispatch(setSelected(mail, no));
+  const handleSubjectClick = () => dispatch(handleMailClick(mail, <ReadMail />));
   return (
     <S.MailTemplateWrap>
       <div>
