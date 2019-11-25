@@ -33,8 +33,20 @@ const alterMailBox = async (req, res, next) => {
   res.status(STATUS.OK).json({ updatedBox });
 };
 
+const delMailBox = async (req, res, next) => {
+  const { name, no } = req.body;
+  let deletedBox;
+  try {
+    deletedBox = await service.deleteBox(req, no, name);
+  } catch (err) {
+    return next(err);
+  }
+  res.status(STATUS.OK).json({ deletedBox });
+};
+
 export default {
   getMailBox,
   makeMailBox,
   alterMailBox,
+  delMailBox,
 };
