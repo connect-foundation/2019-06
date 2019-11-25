@@ -7,7 +7,7 @@ const getMailBox = async (req, res, next) => {
   try {
     boxes = await service.findAllBoxes(no);
   } catch (err) {
-    next(err);
+    return next(err);
   }
   res.status(STATUS.OK).json({ boxes });
 };
@@ -19,7 +19,7 @@ const makeMailBox = async (req, res, next) => {
   try {
     createdBox = await service.createBox(no, name);
   } catch (err) {
-    next(err);
+    return next(err);
   }
   res.status(STATUS.CREATED).json({ createdBox });
 };
@@ -31,7 +31,7 @@ const alterMailBox = async (req, res, next) => {
   try {
     updatedBox = await service.updateBox(no, name);
   } catch (err) {
-    next(err);
+    return next(err);
   }
   res.status(STATUS.OK).json({ updatedBox });
 };

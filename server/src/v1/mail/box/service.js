@@ -13,7 +13,7 @@ const createBox = async (user_no, name = BLANK) => {
   if (name === BLANK) {
     throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
   }
-  const [response] = await DB.Category.create({
+  const response = await DB.Category.create({
     user_no,
     name,
   });
@@ -24,7 +24,7 @@ const updateBox = async (user_no, name = BLANK) => {
   if (name === BLANK) {
     throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
   }
-  const [response] = await DB.Category.update(
+  const response = await DB.Category.update(
     {
       name,
     },
