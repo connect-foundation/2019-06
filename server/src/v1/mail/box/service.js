@@ -14,6 +14,7 @@ const createBox = async (user, name = BLANK) => {
   if (name === BLANK) {
     throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
   }
+
   const response = await DB.Category.create({
     user_no: user.no,
     name,
@@ -22,33 +23,49 @@ const createBox = async (user, name = BLANK) => {
   return response.get({ plain: true });
 };
 
-const updateBox = async (user, no, newName = BLANK) => {
+const updateBox = async (user, boxNo, newName = BLANK) => {
   if (newName === BLANK) {
     throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
   }
-  const { dataValues } = await DB.Category.findByPk(no);
+
+  const boxRow = await DB.Category.findByPk(boxNo);
+  if (!boxRow) {
+    throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+  }
+
   const result = await DB.sequelize.transaction(
-    async transaction => await updateBoxName(name, no, user.no, transaction),
+    async transaction => await updateBoxName(name, boxNo, user.no, transaction),
   );
-  renameMailBox({ user, oldName: dataValues.name, newName });
+  renameMailBox({ user, oldName: boxRow.dataValues.name, newName });
   return result;
 };
 
-const updateBoxName = async (name, no, user_no, transaction) => {
+const updateBoxName = async (boxName, boxNo, user_no, transaction) => {
   await DB.Category.update(
     {
-      name,
+      name: boxName,
     },
     {
       where: {
-        no,
+        no: boxNo,
         user_no,
       },
     },
     { transaction },
   );
-  const { dataValues } = await DB.Category.findByPk(no, { transaction });
+  const { dataValues } = await DB.Category.findByPk(boxNo, { transaction });
   return dataValues;
 };
 
-export default { findAllBoxes, createBox, updateBox };
+const deleteBox = async (user, boxNo, boxName) => {
+  const boxRow = await DB.Category.findByPk(boxNo);
+  if (!boxRow) {
+    throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+  }
+
+  await DB.Category.destroy({ where: { no: boxNo } });
+  deleteMailBox({ user, name: boxName });
+  return boxRow.dataValues;
+};
+
+export default { findAllBoxes, createBox, updateBox, deleteBox };
