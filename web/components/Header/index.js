@@ -1,13 +1,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext } from 'react';
 import * as S from './styled';
+
 import ProfileLink from '../ProfileLink';
-import { AppContext } from '../../contexts';
-import { setSelected } from '../../contexts/reducer';
+import { AppDisapthContext } from '../../contexts';
+import { setView } from '../../contexts/reducer';
+import MailArea from '../MailArea';
 
 const Header = ({ brand }) => {
-  const { dispatch } = useContext(AppContext);
-  const handleAtagClick = () => dispatch(setSelected(null));
+  const { dispatch } = useContext(AppDisapthContext);
+  const handleAtagClick = () => dispatch(setView(<MailArea />));
   return (
     <S.Header>
       <S.Brand>

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
-import { StarBorder } from '@material-ui/icons';
+import { AppStateContext } from '../../contexts';
 
-const ReadMail = ({ mail }) => {
-  const { to, from, subject, createdAt, text } = mail;
+const ReadMail = () => {
+  const { state } = useContext(AppStateContext);
+  const { to, from, subject, createdAt, text } = state.mail;
   const receivers = to.replace(',', ', ');
 
   return (
