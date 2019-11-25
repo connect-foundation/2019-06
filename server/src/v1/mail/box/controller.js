@@ -14,7 +14,17 @@ const getMailBox = async (req, res, next) => {
   res.status(status.OK).json({ boxes });
 };
 
-const makeMailBox = (req, res) => {};
+const makeMailBox = async (req, res, next) => {
+  const { no } = req.user;
+  const { name } = req.body;
+  let createdBox;
+  try {
+    createdBox = await service.createBox(no, name);
+  } catch (err) {
+    next(err);
+  }
+  res.status(status.CREATED).json({ createdBox });
+};
 
 const alterMailBox = (req, res) => {};
 
