@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import MailTemplate from '../MailTemplate';
 import S from './styled';
-import Paging from '../Paging';
+import Paging from './Paging';
 import { AppContext } from '../../contexts';
 import Loading from '../Loading';
 import { handleMailsChange } from '../../contexts/reducer';

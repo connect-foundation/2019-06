@@ -1,15 +1,15 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import PropTypes from 'prop-types';
 
-import * as GS from '../GlobalStyle';
+import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
-import { AppContext } from '../../contexts';
-import { handlePageNumberClick } from '../../contexts/reducer';
+import { AppContext } from '../../../contexts';
+import { handlePageNumberClick } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   fab: {
