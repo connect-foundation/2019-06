@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
 
 const PAGE_LIST_NUM = 10;
 
-const getPageStartNumber = index => index * PAGE_LIST_NUM;
+const getPageStartNumber = index => index * PAGE_LIST_NUM + 1;
 
 const getPagingNumbers = (start, page) => {
   const array = [];
@@ -52,7 +52,7 @@ const Paging = ({ paging }) => {
 
   const handleMoveBtnClick = value => {
     const newIndex = currentIndex + value;
-    const [newPageNumber] = getPageStartNumber(newIndex);
+    const newPageNumber = getPageStartNumber(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
   };
 
