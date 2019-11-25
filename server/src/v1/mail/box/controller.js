@@ -2,10 +2,9 @@ import STATUS from 'http-status';
 import service from './service';
 
 const getMailBox = async (req, res, next) => {
-  const { no } = req.user;
   let boxes;
   try {
-    boxes = await service.findAllBoxes(no);
+    boxes = await service.findAllBoxes(req.user);
   } catch (err) {
     return next(err);
   }
@@ -13,11 +12,10 @@ const getMailBox = async (req, res, next) => {
 };
 
 const makeMailBox = async (req, res, next) => {
-  const { no } = req.user;
   const { name } = req.body;
   let createdBox;
   try {
-    createdBox = await service.createBox(no, name);
+    createdBox = await service.createBox(req.user, name);
   } catch (err) {
     return next(err);
   }
@@ -25,11 +23,10 @@ const makeMailBox = async (req, res, next) => {
 };
 
 const alterMailBox = async (req, res, next) => {
-  const { no: user_no } = req.user;
   const { name, no } = req.body;
   let updatedBox;
   try {
-    updatedBox = await service.updateBox(user_no, no, name);
+    updatedBox = await service.updateBox(req.user, no, name);
   } catch (err) {
     return next(err);
   }
