@@ -34,7 +34,7 @@ const alterMailBox = async (req, res, next) => {
 };
 
 const delMailBox = async (req, res, next) => {
-  const { name, no } = req.body;
+  const { name, no } = req.query;
   let deletedBox;
   try {
     deletedBox = await service.deleteBox(req.user, no, name);
