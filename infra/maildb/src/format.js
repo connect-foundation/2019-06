@@ -9,19 +9,22 @@ const TABLE = {
 
 const QUERY = {
   INSERT: "INSERT INTO ?? SET ?",
-  SELECT:
-    "SELECT ?? AS ??, ?? AS ?? FROM ?? WHERE ?? = ? AND ?? = ?? AND ?? = ?"
+  SELECT: "SELECT ?? AS ?, ?? FROM ?? WHERE ?? = ?? AND ?? = ? AND ?? = ?"
 };
 
-const MAILBOX = "받은메일함";
-const TABLE_USER_NO = "tbl_user.no";
-const TABLE_CATEGORY_NO = "tbl_category.no";
-const TABLE_CATEGORY_USER_NO = "tbl_category.user_no";
-const CATEGORY_NO = "category_no";
-const TABLE_CATEGOTY_NAME = "tbl_category.name";
-const OWNER = "owner";
-const ID = "id";
-const NOW = mysql.raw("now()");
+const IDENTIFIER = {
+  USER_NO: `${TABLE.USER}.no`,
+  CATEGORY_NO: `${TABLE.CATEGORY}.no`,
+  CATEGORY_USER_NO: `${TABLE.CATEGORY}.user_no`,
+  CATEGOTY_NAME: `${TABLE.CATEGORY}.name`,
+  ID: "id"
+};
+
+const VALUE = {
+  OWNER: "owner",
+  NOW: mysql.raw("now()"),
+  MAILBOX: "받은메일함"
+};
 
 const getQueryToAddMailTemplate = ({
   from,
@@ -35,8 +38,8 @@ const getQueryToAddMailTemplate = ({
     to,
     subject,
     text,
-    created_at: NOW,
-    updated_at: NOW
+    created_at: VALUE.NOW,
+    updated_at: VALUE.NOW
   };
 
   return mysql.format(QUERY.INSERT, [TABLE.MAIL_TEMPLATE, valueOfMailTemplate]);
@@ -44,24 +47,23 @@ const getQueryToAddMailTemplate = ({
 
 const getQueryToFindOwnerAndCategoryNo = id => {
   return mysql.format(QUERY.SELECT, [
-    TABLE_USER_NO,
-    OWNER,
-    TABLE_CATEGORY_NO,
-    CATEGORY_NO,
+    IDENTIFIER.USER_NO,
+    VALUE.OWNER,
+    IDENTIFIER.CATEGORY_NO,
     [TABLE.USER, TABLE.CATEGORY],
-    ID,
+    IDENTIFIER.USER_NO,
+    IDENTIFIER.CATEGORY_USER_NO,
+    IDENTIFIER.ID,
     id,
-    TABLE_USER_NO,
-    TABLE_CATEGORY_USER_NO,
-    TABLE_CATEGOTY_NAME,
-    MAILBOX
+    IDENTIFIER.CATEGOTY_NAME,
+    VALUE.MAILBOX
   ]);
 };
 
-const getQueryToAddMail = ({ owner, category_no, mail_template_id }) => {
+const getQueryToAddMail = ({ owner, no, mail_template_id }) => {
   const valueOfMail = {
     owner,
-    category_no,
+    category_no: no,
     mail_template_id,
     is_important: 0,
     is_read: 0
