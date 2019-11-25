@@ -4,6 +4,8 @@ import nodemailer from 'nodemailer';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
+import { makeMimeMessage } from '../../libraries/mimemessage';
+import { saveSentMail } from '../../libraries/save-sent-mail';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
@@ -54,6 +56,10 @@ const getMailsByOptions = async (userNo, options = {}) => {
 };
 
 const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
+  if (attachments.length === 0) {
+    return;
+  }
+
   const processedAttachments = attachments.map(attachment => {
     const { contentType, filename, content } = attachment;
     return { type: contentType, name: filename, content, mail_template_id: mailTemplateNo };
@@ -69,6 +75,7 @@ const saveMail = async (mailContents, transaction) => {
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
+  await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
   await DB.Mail.create(
     {
       owner: user.no,
@@ -76,14 +83,14 @@ const saveMail = async (mailContents, transaction) => {
     },
     { transaction },
   );
-  await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
 };
 
-const sendMail = async mailContents => {
-  const transporter = nodemailer.createTransport(U.getTransport());
+const sendMail = async (mailContents, user) => {
+  const transporter = nodemailer.createTransport(U.getTransport(user));
   await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
-  await transporter.sendMail(mailContents);
-
+  const { messageId } = await transporter.sendMail(mailContents);
+  const msg = makeMimeMessage({ messageId, mailContents });
+  saveSentMail({ user, msg });
   return mailContents;
 };
 

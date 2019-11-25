@@ -38,7 +38,7 @@ const write = async (req, res, next) => {
 
   let mail;
   try {
-    mail = await service.sendMail(mailContents);
+    mail = await service.sendMail(mailContents, req.user);
   } catch (error) {
     return next(error);
   }
