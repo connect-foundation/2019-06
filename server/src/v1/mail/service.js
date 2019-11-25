@@ -5,7 +5,7 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail } from '../../libraries/save-sent-mail';
+import { saveSentMail } from '../../libraries/save-to-infra';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
