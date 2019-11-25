@@ -33,28 +33,20 @@ const updateBox = async (user, boxNo, newName = BLANK) => {
     throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
 
-  const result = await DB.sequelize.transaction(
-    async transaction => await updateBoxName(name, boxNo, user.no, transaction),
-  );
-  renameMailBox({ user, oldName: boxRow.dataValues.name, newName });
-  return result;
-};
-
-const updateBoxName = async (boxName, boxNo, user_no, transaction) => {
   await DB.Category.update(
     {
-      name: boxName,
+      name: newName,
     },
     {
       where: {
         no: boxNo,
-        user_no,
+        user_no: user.no,
       },
     },
-    { transaction },
   );
-  const { dataValues } = await DB.Category.findByPk(boxNo, { transaction });
-  return dataValues;
+  renameMailBox({ user, oldName: boxRow.dataValues.name, newName });
+
+  return boxRow;
 };
 
 const deleteBox = async (user, boxNo, boxName) => {
