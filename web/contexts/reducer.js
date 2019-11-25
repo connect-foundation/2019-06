@@ -1,23 +1,24 @@
+const CATEGORY_CLICK = 'CATEGORY_CLICK';
+const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
+const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
+const MAIL_CLICK = 'MAIL_CLICK';
+const SET_VIEW = 'SET_VIEW';
+
 export const initialState = {
   category: 0,
   page: 1,
   mails: null,
-  selected: { mail: null, no: 0 },
   paging: null,
+  view: null,
 };
 
-const CATEGORY_CLICK = 'CATEGORY_CLICK';
-const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
-const SET_CURRENT_MAIL = 'SET_CURRENT_MAIL';
-const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
-
-export const handleCategoryClick = category => {
+export const handleCategoryClick = (category, view) => {
   return {
     type: CATEGORY_CLICK,
     payload: {
-      category,
+      category: category.no,
       page: 1,
-      selected: { mail: null, no: 0 },
+      view,
     },
   };
 };
@@ -41,25 +42,38 @@ export const handlePageNumberClick = page => {
   };
 };
 
-export const setSelected = (mail, no) => {
+export const handleMailClick = (mail, view) => {
   return {
-    type: SET_CURRENT_MAIL,
+    type: MAIL_CLICK,
     payload: {
-      selected: { mail, no },
+      mail,
+      view,
+    },
+  };
+};
+
+export const setView = view => {
+  return {
+    type: SET_VIEW,
+    payload: {
+      view,
     },
   };
 };
 
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
+
   switch (type) {
     case CATEGORY_CLICK:
       return { ...state, ...payload };
     case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
-    case SET_CURRENT_MAIL:
+    case MAIL_CLICK:
       return { ...state, ...payload };
     case CHANGE_MAILS_DATA:
+      return { ...state, ...payload };
+    case SET_VIEW:
       return { ...state, ...payload };
     default:
       return { ...state };

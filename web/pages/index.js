@@ -6,13 +6,13 @@ import MailArea from '../components/MailArea';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loading from '../components/Loading';
-import ReadMail from '../components/ReadMail';
-import { AppContext } from '../contexts';
+import { AppDisapthContext, AppStateContext } from '../contexts';
+import { setView } from '../contexts/reducer';
 
 const Home = () => {
-  const { state } = useContext(AppContext);
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDisapthContext);
   const [user, setUser] = useState(null);
-  const [view, setView] = useState(null);
 
   useEffect(() => {
     if (!window.sessionStorage.getItem('user')) {
@@ -20,16 +20,16 @@ const Home = () => {
     } else {
       const userData = window.sessionStorage.getItem('user');
       setUser(JSON.parse(userData));
-      setView(<MailArea />);
+      dispatch(setView(<MailArea />));
     }
-  }, []);
+  }, [dispatch]);
 
   const indexPage = (
     <GS.FlexWrap>
       <Header brand={'Daitnu'} />
       <GS.Content>
-        <Aside setView={setView} />
-        {state.selected.mail ? <ReadMail mail={state.selected.mail} /> : view}
+        <Aside />
+        {state.view}
       </GS.Content>
       <Footer />
     </GS.FlexWrap>
