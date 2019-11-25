@@ -25,11 +25,11 @@ const makeMailBox = async (req, res, next) => {
 };
 
 const alterMailBox = async (req, res, next) => {
-  const { no } = req.user;
-  const { name } = req.body;
+  const { no: user_no } = req.user;
+  const { name, no } = req.body;
   let updatedBox;
   try {
-    updatedBox = await service.updateBox(no, name);
+    updatedBox = await service.updateBox(user_no, no, name);
   } catch (err) {
     return next(err);
   }

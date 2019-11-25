@@ -20,21 +20,30 @@ const createBox = async (user_no, name = BLANK) => {
   return response.get({ plain: true });
 };
 
-const updateBox = async (user_no, name = BLANK) => {
+const updateBox = async (user_no, no, name = BLANK) => {
   if (name === BLANK) {
     throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
   }
-  const response = await DB.Category.update(
+  return await DB.sequelize.transaction(
+    async transaction => await updateBoxName(name, no, user_no, transaction),
+  );
+};
+
+const updateBoxName = async (name, no, user_no, transaction) => {
+  await DB.Category.update(
     {
       name,
     },
     {
       where: {
+        no,
         user_no,
       },
     },
+    { transaction },
   );
-  return response.get({ plain: true });
+  const { dataValues } = await DB.Category.findByPk(no, { transaction });
+  return dataValues;
 };
 
 export default { findAllBoxes, createBox, updateBox };

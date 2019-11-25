@@ -1,5 +1,5 @@
-import request from 'supertest';
 import should from 'should';
+import request from 'supertest';
 import app from '../../src/app';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
@@ -33,21 +33,25 @@ describe('mailbox api test...', () => {
         .expect(200, done);
     });
 
-    it('메일함 데이터를 요청하면 기본 메일함인 5개가 온다', () => {
+    it('메일함 데이터를 요청하면 200코드를 리턴온다', done => {
       authenticatedUser
         .get('/v1/mail/box')
         .send()
-        .end((_, { body }) => {
-          const { createdBox } = body;
-          createdBox.should.have.length(5);
-        });
+        .expect(200, done);
     });
 
-    it('메일함 추가 요청에 성공하면 201코드를 리턴한다', () => {
+    it('메일함 추가 요청에 성공하면 201코드를 리턴한다', done => {
       authenticatedUser
         .post('/v1/mail/box')
         .send({ name: '하위^^' })
         .expect(201, done);
+    });
+
+    it('메일함 이름 업데이트에 성공하면 200을 리턴한다', done => {
+      authenticatedUser
+        .patch('/v1/mail/box')
+        .send({ name: '하', no: 6 })
+        .expect(200, done);
     });
   });
 });
