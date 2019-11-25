@@ -376,10 +376,10 @@ describe('PATCH /users/password는...', () => {
     };
     const authenticatedUser = request.agent(app);
 
-    before(() => {
-      authenticatedUser.post('/v1/auth/login').send(userCredentials);
+    before(async () => {
+      await authenticatedUser.post('/v1/auth/login').send(userCredentials);
 
-      authenticatedUser.patch('/v1/users/password').send({
+      await authenticatedUser.patch('/v1/users/password').send({
         password: '87654321',
       });
     });
