@@ -1,17 +1,22 @@
 import Imap from 'imap';
 
-const SENT_MAILBOX = 'Private/Sent';
+const PREFIX = 'Private/';
+const SENT_MAILBOX = `${PREFIX}Sent`;
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 
-// eslint-disable-next-line import/prefer-default-export
-export const saveSentMail = ({ user, msg }) => {
-  const imap = new Imap({
-    user: user.email,
-    password: user.password,
+const getImap = ({ email, password }) => {
+  return new Imap({
+    user: email,
+    password,
     host: `mail.${DEFAULT_DOMAIN_NAME}`,
     port: IMAP_PORT,
     tls: true,
   });
+};
+
+// eslint-disable-next-line import/prefer-default-export
+export const saveSentMail = ({ user, msg }) => {
+  const imap = getImap(user);
 
   imap.once('ready', () => {
     imap.openBox(SENT_MAILBOX, false, err => {
