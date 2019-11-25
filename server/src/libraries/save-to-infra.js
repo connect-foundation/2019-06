@@ -14,7 +14,6 @@ const getImap = ({ email, password }) => {
   });
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export const saveSentMail = ({ user, msg }) => {
   const imap = getImap(user);
 
@@ -31,4 +30,11 @@ export const saveSentMail = ({ user, msg }) => {
   });
 
   imap.connect();
+};
+
+export const addMailBox = ({ user, name }) => {
+  const imap = getImap(user);
+  imap.addBox(PREFIX + name, err => {
+    throw err;
+  });
 };
