@@ -12,11 +12,11 @@ export const initialState = {
   view: null,
 };
 
-export const handleCategoryClick = (category, view) => {
+export const handleCategoryClick = (no, view) => {
   return {
     type: CATEGORY_CLICK,
     payload: {
-      category: category.no,
+      category: no,
       page: 1,
       view,
     },

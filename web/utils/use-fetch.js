@@ -7,8 +7,12 @@ const useFetch = (callback, URL) => {
   useEffect(() => {
     const fetchInitData = async () => {
       setIsLoading(true);
-      const { data } = await request.get(URL);
-      callback(data);
+      const { isError, data } = await request.get(URL);
+      if (isError) {
+        callback(data);
+        return;
+      }
+      callback(null, data);
       setIsLoading(false);
     };
 

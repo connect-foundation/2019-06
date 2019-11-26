@@ -1,16 +1,26 @@
+const isContainedErrorCode = error => {
+  const { response } = error;
+  return response && response.data && response.data.errorCode;
+};
+
 const errorParser = error => {
-  const { errorCode, fieldErrors } = error.response.data;
-  let errorMessage = errorCode.message;
-  if (!fieldErrors) {
-    return errorMessage;
+  if (!isContainedErrorCode(error)) {
+    return { status: 500, message: error.message };
   }
 
-  errorMessage = fieldErrors.reduce(
-    (prev, next) => (prev += `\n${error.field} : ${error.reason}`),
-    errorMessage,
-  );
+  const { errorCode, fieldErrors } = error.response.data;
 
-  return errorMessage;
+  const { status, message } = errorCode;
+  if (status !== 400) {
+    return { status, message };
+  }
+
+  const errorMessage = fieldErrors.reduce((prev, next) => {
+    const line = `${next.field} : ${next.reason}\n`;
+    return prev + line;
+  }, '');
+
+  return { status: 400, message: errorMessage };
 };
 
 export { errorParser };

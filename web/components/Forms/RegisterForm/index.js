@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import validator from '../../utils/validator';
-import { errorParser } from '../../utils/error-parser';
-import { ERROR_DIFFERENT_PASSWORD } from '../../utils/error-message';
+import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
+import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import S from './styled';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -43,8 +43,8 @@ const initialErrorState = {
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const [values, setValues] = React.useState(initialInputState);
-  const [errors, setErrorMsg] = React.useState(initialErrorState);
+  const [values, setValues] = useState(initialInputState);
+  const [errors, setErrorMsg] = useState(initialErrorState);
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });
@@ -59,15 +59,15 @@ const RegisterForm = () => {
   };
 
   const signUp = async () => {
-    try {
-      const { id, password, name, email } = values;
-      const body = { id, password, sub_email: email, name: name.trim() };
-      await axios.post('/users', body);
-      Router.push('/login');
-    } catch (err) {
-      const message = errorParser(err);
+    const { id, password, name, email } = values;
+    const body = { id, password, sub_email: email, name: name.trim() };
+    const { isError, data } = await request.post('/users', body);
+    if (isError) {
+      const { message } = errorParser(data);
       handleRegisterErrMsg(message);
+      return;
     }
+    Router.push('/login');
   };
 
   const onSubmitHandler = e => {
@@ -102,7 +102,7 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이름"
           type="search"
-          onBlur={handleInputChange('name')}
+          onChange={handleInputChange('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
@@ -117,7 +117,7 @@ const RegisterForm = () => {
         <OutlinedInput
           id="outlined-adornment-weight"
           label="아이디"
-          onBlur={handleInputChange('id')}
+          onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           endAdornment={<InputAdornment position="end">@daitnu.com</InputAdornment>}
@@ -135,7 +135,7 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="비밀번호"
-          onBlur={handleInputChange('password')}
+          onChange={handleInputChange('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -146,7 +146,7 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="확인"
-          onBlur={handleInputChange('checkPassword')}
+          onChange={handleInputChange('checkPassword')}
           className={classes.textField}
           error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -166,7 +166,7 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          onBlur={handleInputChange('email')}
+          onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
