@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
 
 const splitMoment = value =>
   moment(value)
+    .utc()
     .format('YYYY-MM-DD')
     .split('-');
 

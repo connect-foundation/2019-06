@@ -3,11 +3,15 @@ import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
+import moment from 'moment';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
-  const { to, from, subject, date, text } = state.mail;
+  const { to, from, subject, createdAt, text } = state.mail;
   const receivers = to.replace(',', ', ');
+  const date = moment(createdAt)
+    .utc()
+    .format('YYYY-MM-DD HH:mm');
 
   return (
     <S.Container>
