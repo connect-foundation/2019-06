@@ -39,7 +39,14 @@ const alterMailBox = async (req, res, next) => {
   const { oldName, newName, no } = req.body;
   const boxNo = Number(no);
 
-  if (newName === BLANK || oldName === BLANK || !oldName || !newName || Number.isNaN(boxNo)) {
+  if (
+    newName === BLANK ||
+    oldName === BLANK ||
+    !oldName ||
+    !newName ||
+    no === '' ||
+    Number.isNaN(boxNo)
+  ) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
@@ -60,7 +67,7 @@ const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
   const boxNo = Number(no);
 
-  if (name === BLANK || !name || Number.isNaN(boxNo)) {
+  if (name === BLANK || !name || no === '' || Number.isNaN(boxNo)) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 

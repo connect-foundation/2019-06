@@ -98,6 +98,13 @@ describe('mailbox api test...', () => {
           .send({ oldName: '하위^^', no: 9 })
           .expect(400, done);
       });
+
+      it('넘겨지는 데이터중 no가 숫자가 아니라면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: '' })
+          .expect(400, done);
+      });
     });
   });
 });
