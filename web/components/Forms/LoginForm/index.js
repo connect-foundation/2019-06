@@ -72,6 +72,7 @@ const LoignForm = () => {
         name="userId"
         maxLength={20}
         ref={register}
+        autoComplete="off"
       />
       <S.ErrorText>{errors.userId && errors.userId.message}</S.ErrorText>
       <S.Input
@@ -82,6 +83,7 @@ const LoignForm = () => {
         name="password"
         maxLength={20}
         ref={register}
+        autoComplete="off"
       />
       <S.ErrorText>
         {(errors.password && errors.password.message) || (errors.login && errors.login.message)}
