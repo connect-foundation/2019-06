@@ -2,12 +2,6 @@ import axios from 'axios';
 import { errorParser } from './error-parser';
 import HTTPResponse from './http-response';
 
-const BASE_URL = 'http://localhost/v1';
-
-const instance = axios.create({
-  baseURL: BASE_URL,
-});
-
 const execute = async fn => {
   let response;
 
@@ -21,33 +15,43 @@ const execute = async fn => {
   return response;
 };
 
+const BASE_URL = 'http://localhost/v1';
+axios.defaults.baseURL = BASE_URL;
+axios.defaults.withCredentials = true;
+const defaultOptions = {
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+};
+
 export default {
-  async get(url) {
-    const fn = () => instance.get(url);
+  async get(url, options = {}) {
+    const fn = () => axios.get(url, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async post(url, body) {
-    const fn = () => instance.post(url, body);
+  async post(url, body, options) {
+    const fn = () => axios.post(url, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async put(url, body) {
-    const fn = () => instance.put(url, body);
+  async put(url, body, options) {
+    const fn = () => axios.put(url, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async delete(url) {
-    const fn = () => instance.delete(url);
+  async delete(url, options) {
+    const fn = () => axios.delete(url, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async patch(url, body) {
-    const fn = () => instance.patch(url, body);
+  async patch(url, body, options) {
+    const fn = () => axios.patch(url, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
