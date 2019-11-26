@@ -19,8 +19,8 @@ const createBox = async (user, name = BLANK) => {
   return response.get({ plain: true });
 };
 
-const updateBox = async (user, boxNo, newName = BLANK) => {
-  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, newName);
+const updateBox = async (user, boxNo, oldName, newName) => {
+  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, oldName);
   if (!boxRow.no) {
     throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }

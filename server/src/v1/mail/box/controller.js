@@ -31,14 +31,14 @@ const makeMailBox = async (req, res, next) => {
 };
 
 const alterMailBox = async (req, res, next) => {
-  const { name, no } = req.body;
-  if (name === BLANK) {
+  const { oldName, newName, no } = req.body;
+  if (newName === BLANK || oldName === BLANK) {
     return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
   let updatedBox;
   try {
-    updatedBox = await service.updateBox(req.user, no, name);
+    updatedBox = await service.updateBox(req.user, no, oldName, newName);
   } catch (err) {
     return next(err);
   }
@@ -47,6 +47,10 @@ const alterMailBox = async (req, res, next) => {
 
 const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
+  if (name === BLANK) {
+    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  }
+
   let deletedBox;
   try {
     deletedBox = await service.deleteBox(req.user, no, name);
