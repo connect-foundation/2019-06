@@ -65,8 +65,7 @@ const insertMailToDB = async content => {
 
     receivers.forEach(async id => {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
-      const [resultOfUserAndCategory] = await connection.query(queryFormat);
-      const { owner, no } = resultOfUserAndCategory[0];
+      const [[{ owner, no }]] = await connection.query(queryFormat);
       queryFormat = format.getQueryToAddMail({
         owner,
         no,
