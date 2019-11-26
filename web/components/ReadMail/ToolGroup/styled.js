@@ -5,8 +5,28 @@ const Container = styled.div`
   border-bottom: 2px solid #e9ecef;
   display: flex;
   text-align: center;
-  justify-content: center;
   align-items: center;
+  padding: 0 20px;
 `;
 
-export { Container };
+const ButtonSet = styled.div`
+  button + button {
+    border-left: none;
+  }
+
+  button {
+    height: 28px;
+    padding: 0 9px;
+    border: 2px solid #cbcbcb;
+    background-color: #f8f8f8;
+    color: #333;
+    font: 700 14px Arial;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #cbcbcb;
+  }
+`;
+
+export { Container, ButtonSet };
