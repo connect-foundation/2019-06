@@ -168,10 +168,33 @@ describe('mailbox api test...', () => {
           .expect(400, done);
       });
 
-      it('name을 빈값을 넘기면 400에러를 반환한다.', done => {
+      it('name에 빈값을 넘기면 400에러를 반환한다.', done => {
         authenticatedUser
           .delete('/v1/mail/box')
           .send({ no: 9, name: '' })
+          .expect(400, done);
+      });
+
+      it('no 데이터가 숫자가 아니면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: '', name: '하위^^' })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 'ㅁㄴㅇ', name: '하위^^' })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 'asd', name: '하위^^' })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: undefined, name: '하위^^' })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: null, name: '하위^^' })
           .expect(400, done);
       });
 
