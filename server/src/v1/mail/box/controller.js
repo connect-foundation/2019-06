@@ -1,7 +1,7 @@
 import STATUS from 'http-status';
 import service from './service';
 
-const getMailBox = async (req, res, next) => {
+const getMailBoxes = async (req, res, next) => {
   let boxes;
   try {
     boxes = await service.findAllBoxes(req.user);
@@ -33,7 +33,7 @@ const alterMailBox = async (req, res, next) => {
   res.status(STATUS.OK).json({ updatedBox });
 };
 
-const delMailBox = async (req, res, next) => {
+const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
   let deletedBox;
   try {
@@ -45,8 +45,8 @@ const delMailBox = async (req, res, next) => {
 };
 
 export default {
-  getMailBox,
+  getMailBoxes,
   makeMailBox,
   alterMailBox,
-  delMailBox,
+  deleteMailBox,
 };
