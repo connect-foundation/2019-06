@@ -69,11 +69,25 @@ const createMailDummyData = async () => {
 
   await db.Mail.bulkCreate(mails);
 };
+
+const createMailboxDummyData = async () => {
+  const mailBoxes = [
+    { user_no: 1, name: '받은편지함', is_default: 1 },
+    { user_no: 1, name: '중요편지함', is_default: 1 },
+    { user_no: 1, name: '보낸편지함', is_default: 1 },
+    { user_no: 1, name: '내게쓴메일함', is_default: 1 },
+    { user_no: 1, name: '휴지통', is_default: 1 },
+  ];
+
+  await db.Category.bulkCreate(mailBoxes);
+};
+
 const createDummyData = async () => {
   await createDomainDummyData();
   await createUserDummyData();
   await createMailTemplateDummyData();
   await createMailDummyData();
+  await createMailboxDummyData();
 };
 
 export default createDummyData;

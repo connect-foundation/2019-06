@@ -37,6 +37,8 @@ const ERROR_CODE = {
     '가입하지 않은 아이디이거나, 가입에 사용하지 않은 이메일 입니다.',
     'COMMON010',
   ),
+  MAILBOX_NOT_FOUND: $(404, '존재하지 않는 메일함 입니다.', 'COMMON011'),
+  MAILBOX_EXCEED_NAME: $(400, '메일함 이름은 최대 20글자입니다.', 'COMMON012'),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
 

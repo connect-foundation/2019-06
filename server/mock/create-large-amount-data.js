@@ -17,7 +17,7 @@ const bulkCreateMailTemplate = async () => {
 
 const bulkCreateMail = async () => {
   const mails = [];
-  for (let i = 0; i < 10000; i += 1) {
+  for (let i = 0; i < 1000; i += 1) {
     const mail = {
       owner: 1,
       mail_template_id: (i % 10) + 1,

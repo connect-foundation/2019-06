@@ -108,6 +108,46 @@ describe('Mail api test...', () => {
       it('# page를 음수로 요청시 status는 400이다', done => {
         authenticatedUser.get('/v1/mail?page=0').expect(400, done);
       });
+
+      it('# 유효하지 않은 sort가 들어갈경우 status 400이다. ', done => {
+        authenticatedUser.get('/v1/mail?sort=asd').expect(400, done);
+      });
+
+      it('# 유효하지 않은 sort가 들어갈경우 status 400이다2. ', done => {
+        authenticatedUser.get('/v1/mail?sort=dwqdwqd').expect(400, done);
+      });
+
+      it('# 유효하지 않은 sort가 들어갈경우 status 400이다3. ', done => {
+        authenticatedUser.get('/v1/mail?sort=%$#gf').expect(400, done);
+      });
+
+      it('# 유효하지 않은 sort가 들어갈경우 INVALID INPUT VALUE을 반환한다. ', done => {
+        authenticatedUser.get('/v1/mail?sort=%$#gf').end((err, { body }) => {
+          const { errorCode, fieldErrors } = body;
+          errorCode.status.should.be.equals(400);
+          errorCode.message.should.be.equals('INVALID INPUT VALUE');
+          fieldErrors[0].field.should.be.equals('sort');
+          fieldErrors[0].value.should.be.equals('%$');
+          fieldErrors[0].reason.should.be.equals('유효하지 않은 정렬기준 입니다.');
+          done();
+        });
+      });
+
+      it('# sort가 datedesc면 받은 시간 역순으로 출력한다. ', done => {
+        authenticatedUser.get('/v1/mail?sort=datedesc').end((err, { body }) => {
+          const { mails } = body;
+          mails[0].no.should.be.above(mails[1].no);
+          done();
+        });
+      });
+
+      it('# sort가 dateasc면 받은 시간순으로 출력한다. ', done => {
+        authenticatedUser.get('/v1/mail?sort=dateasc').end((err, { body }) => {
+          const { mails } = body;
+          mails[0].no.should.be.below(mails[1].no);
+          done();
+        });
+      });
     });
   });
 });
