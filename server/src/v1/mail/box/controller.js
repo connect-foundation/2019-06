@@ -2,6 +2,7 @@ import STATUS from 'http-status';
 import service from './service';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
+import ErrorField from '../../../libraries/exception/error-field';
 
 const BLANK = '';
 const { MAILBOX_NAME_LENGTH_LIMIT } = process.env;
@@ -19,11 +20,13 @@ const getMailBoxes = async (req, res, next) => {
 const makeMailBox = async (req, res, next) => {
   const { name } = req.body;
   if (name === BLANK || !name) {
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+    const errorField = new ErrorField('boxName', name, '추가할 메일함 이름을 입력해주세요');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
   if (name.length > MAILBOX_NAME_LENGTH_LIMIT) {
-    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
+    const errorField = new ErrorField('boxName', name, '메일함 이름은 최대 20글자로 작성해주세요');
+    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField));
   }
 
   let createdBox;
@@ -39,20 +42,24 @@ const alterMailBox = async (req, res, next) => {
   const { oldName, newName, no } = req.body;
   const boxNo = Number(no);
 
-  if (
-    newName === BLANK ||
-    oldName === BLANK ||
-    !oldName ||
-    !newName ||
-    no === '' ||
-    Number.isNaN(boxNo) ||
-    boxNo < 1
-  ) {
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  if (newName === BLANK || !newName) {
+    const errorField = new ErrorField('newName', newName, '새로운 메일함 이름을 입력해주세요');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
+  }
+
+  if (oldName === BLANK || !oldName) {
+    const errorField = new ErrorField('oldName', oldName, '메일함이 선택되지 않았습니다');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
+  }
+
+  if (no === '' || Number.isNaN(boxNo) || boxNo < 1) {
+    const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
   if (newName.length > MAILBOX_NAME_LENGTH_LIMIT) {
-    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
+    const errorField = new ErrorField('boxName', newName, '메일함은 최대 20글자로 작성해주세요');
+    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField));
   }
 
   let updatedBox;
@@ -68,8 +75,14 @@ const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
   const boxNo = Number(no);
 
-  if (name === BLANK || !name || no === '' || Number.isNaN(boxNo) || boxNo < 1) {
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  if (name === BLANK || !name) {
+    const errorField = new ErrorField('boxName', name, '메일함이 잘못 전달되었습니다');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
+  }
+
+  if (no === '' || Number.isNaN(boxNo) || boxNo < 1) {
+    const errorField = new ErrorField('boxNo', boxNo, '메일함이 잘못 전달되었습니다');
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
   let deletedBox;
