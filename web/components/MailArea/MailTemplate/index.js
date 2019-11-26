@@ -8,9 +8,9 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
-import ReadMail from '../ReadMail';
-import { handleMailClick } from '../../contexts/reducer';
-import { AppDisapthContext } from '../../contexts';
+import ReadMail from '../../ReadMail';
+import { handleMailClick } from '../../../contexts/reducer';
+import { AppDisapthContext } from '../../../contexts';
 import * as S from './styled';
 
 const useStyles = makeStyles(theme => ({
