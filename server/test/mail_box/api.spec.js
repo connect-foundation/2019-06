@@ -66,5 +66,12 @@ describe('mailbox api test...', () => {
         .send({ name: '' })
         .expect(400, done);
     });
+
+    it('메일함 이름의 길이가 20을 초과하면 400에러를 반환한다.', done => {
+      authenticatedUser
+        .post('/v1/mail/box')
+        .send({ name: 'asdfghjklqwertyuiopzx' })
+        .expect(400, done);
+    });
   });
 });
