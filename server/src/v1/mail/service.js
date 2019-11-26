@@ -13,9 +13,13 @@ const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
   page: 1,
   perPageNum: 100,
+  sort: 'datedesc',
 };
 
-const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
+const DATE_DESC = 'datedesc';
+const DATE_ASC = 'dateasc';
+
+const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
   const query = {
     userNo,
     options: {
@@ -32,17 +36,24 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
     query.mailFilter.category_no = category;
   }
 
+  if (sort === DATE_DESC) {
+    query.order = [['no', 'DESC']];
+  } else if (sort === DATE_ASC) {
+    query.order = [['no', 'ASC']];
+  }
+
   return query;
 };
 
 const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
   category = Number(category);
   page = Number(page);
   perPageNum = Number(perPageNum);
 
-  const query = getQueryByOptions({ userNo, category, perPageNum, page });
+  const query = getQueryByOptions({ userNo, category, perPageNum, page, sort });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
   const pagingOptions = {
