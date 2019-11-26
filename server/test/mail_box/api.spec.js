@@ -137,5 +137,14 @@ describe('mailbox api test...', () => {
           .expect(400, done);
       });
     });
+
+    describe('메일함 삭제 요청시..', () => {
+      it('아무런 값을 넘기지 않으면(undefined) 400에러를 반환한다.', done => {
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send()
+          .expect(400, done);
+      });
+    });
   });
 });
