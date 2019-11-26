@@ -83,6 +83,21 @@ describe('mailbox api test...', () => {
           .send()
           .expect(400, done);
       });
+
+      it('넘겨지는 데이터가 oldName, newName, no중 하나라도 없으면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ newName: '할룽^^', no: 9 })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', no: 9 })
+          .expect(400, done);
+      });
     });
   });
 });
