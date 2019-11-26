@@ -102,7 +102,7 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이름"
           type="search"
-          onBlur={handleInputChange('name')}
+          onChange={handleInputChange('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
@@ -117,7 +117,7 @@ const RegisterForm = () => {
         <OutlinedInput
           id="outlined-adornment-weight"
           label="아이디"
-          onBlur={handleInputChange('id')}
+          onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           endAdornment={<InputAdornment position="end">@daitnu.com</InputAdornment>}
@@ -135,7 +135,7 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="비밀번호"
-          onBlur={handleInputChange('password')}
+          onChange={handleInputChange('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -146,7 +146,7 @@ const RegisterForm = () => {
         <TextField
           id="outlined-password-input"
           label="확인"
-          onBlur={handleInputChange('checkPassword')}
+          onChange={handleInputChange('checkPassword')}
           className={classes.textField}
           error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -166,7 +166,7 @@ const RegisterForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          onBlur={handleInputChange('email')}
+          onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
