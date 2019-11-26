@@ -1,4 +1,4 @@
-export const getUser = window => {
+const getUser = () => {
   const data = window.sessionStorage.getItem('user');
 
   if (!data) {
@@ -6,4 +6,13 @@ export const getUser = window => {
   }
 
   return JSON.parse(data);
+};
+
+const setUser = user => {
+  window.sessionStorage.setItem('user', JSON.stringify(user));
+};
+
+export default {
+  getUser,
+  setUser,
 };

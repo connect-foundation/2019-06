@@ -6,7 +6,7 @@ import MailArea from '../components/MailArea';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loading from '../components/Loading';
-import { getUser } from '../utils/storage';
+import storage from '../utils/storage';
 import { AppDisapthContext, AppStateContext } from '../contexts';
 import { setView } from '../contexts/reducer';
 
@@ -16,7 +16,7 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const userData = getUser(window);
+    const userData = storage.getUser();
     if (!userData) {
       Router.push('/login');
     } else {

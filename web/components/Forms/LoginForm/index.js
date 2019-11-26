@@ -12,6 +12,7 @@ import {
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
+import storage from '../../../utils/storage';
 
 const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
@@ -56,7 +57,7 @@ const LoignForm = () => {
       const body = { id, password };
       const { data } = await axios.post('/auth/login', body);
 
-      window.sessionStorage.setItem('user', JSON.stringify(data));
+      storage.setUser(data);
 
       Router.push('/');
     } catch (err) {

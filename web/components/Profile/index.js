@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 
 import S from './styled';
 import LogoutButton from '../LogoutButton';
-import { getUser } from '../../utils/storage';
+import storage from '../../utils/storage';
 
 const initialValuState = {
   name: '',
@@ -13,11 +13,11 @@ const initialValuState = {
 };
 
 const Profile = () => {
-  const [values, setValues] = React.useState(initialValuState);
+  const [values, setValues] = useState(initialValuState);
   const router = useRouter();
 
   useEffect(() => {
-    const user = getUser(window);
+    const user = storage.getUser();
     if (!user) {
       router.push('/login');
     }
