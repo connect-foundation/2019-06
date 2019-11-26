@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useContext, useCallback } from 'react';
-import MailTemplate from '../MailTemplate';
+import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
