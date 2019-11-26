@@ -57,7 +57,9 @@ const model = (sequelize, DataTypes) => {
     mailTemplateFilter = {},
     options = {},
     paging = DEFALT_PAGING,
+    order,
   }) => {
+    console.log(order);
     return Mail.findAndCountAll({
       distinct: true,
       ...paging,
@@ -65,7 +67,7 @@ const model = (sequelize, DataTypes) => {
         owner: userNo,
         ...mailFilter,
       },
-      order: [['no', 'DESC']],
+      order,
       include: [
         {
           model: sequelize.models.MailTemplate,
