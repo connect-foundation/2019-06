@@ -54,9 +54,8 @@ const LoignForm = () => {
   const signIn = async (id, password) => {
     const body = { id, password };
     const { isError, data } = await request.post('/auth/login', body);
-
     if (isError) {
-      setError('login', 'api', data);
+      setError('login', 'api', data.message);
       return;
     }
     storage.setUser(data);
