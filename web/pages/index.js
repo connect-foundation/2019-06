@@ -6,6 +6,7 @@ import MailArea from '../components/MailArea';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loading from '../components/Loading';
+import storage from '../utils/storage';
 import { AppDisapthContext, AppStateContext } from '../contexts';
 import { setView } from '../contexts/reducer';
 
@@ -15,11 +16,11 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    if (!window.sessionStorage.getItem('user')) {
+    const userData = storage.getUser();
+    if (!userData) {
       Router.push('/login');
     } else {
-      const userData = window.sessionStorage.getItem('user');
-      setUser(JSON.parse(userData));
+      setUser(userData);
       dispatch(setView(<MailArea />));
     }
   }, [dispatch]);

@@ -24,7 +24,7 @@ const SubmitButton = () => {
   const dispatch = useDispatchForWM();
 
   const [sendMessage, setSendMessage] = useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const anchorRef = React.useRef(null);
 
   const handleClick = () => {

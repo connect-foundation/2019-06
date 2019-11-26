@@ -39,6 +39,15 @@ const SmallBoard = styled.div`
   width: 800px;
 `;
 
+const SmallColumnBoard = styled.div`
+  height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 800px;
+`;
+
 const FlexItem = styled(FlexWrap)`
   height: 100%;
   align-items: center;
@@ -57,6 +66,12 @@ const Content = styled.div`
   height: 85%;
 `;
 
+const AlignLeftContainer = styled.div`
+  display: flex;
+  width: 60%;
+  justify-content: flex-start;
+`;
+
 export {
   FlexWrap,
   FlexRowWrap,
@@ -66,4 +81,6 @@ export {
   Content,
   HorizontalLine,
   SmallBoard,
+  SmallColumnBoard,
+  AlignLeftContainer,
 };
