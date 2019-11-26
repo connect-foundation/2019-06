@@ -9,12 +9,7 @@ const execute = async fn => {
     const { data } = await fn();
     response = new HTTPResponse(false, data);
   } catch (err) {
-    let error;
-    if (err.errorCode) {
-      error = errorParser(err);
-    } else {
-      console.log(err);
-    }
+    const error = err.errorCode ? errorParser(err) : err.message;
     response = new HTTPResponse(true, error);
   }
   return response;
