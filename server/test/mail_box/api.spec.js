@@ -53,10 +53,17 @@ describe('mailbox api test...', () => {
         .expect(200, done);
     });
 
-    it('빈 값을 넘기며 메일박스 생성을 요청하면 400에러를 반환한다.', done => {
+    it('아무런 값을 넘기지 않으며 메일함 생성을 요청하면 400에러를 반환한다.', done => {
       authenticatedUser
         .post('/v1/mail/box')
         .send({})
+        .expect(400, done);
+    });
+
+    it('빈 값을 넘기며 메일함 생성을 요청하면 400에러를 반환한다.', done => {
+      authenticatedUser
+        .post('/v1/mail/box')
+        .send({ name: '' })
         .expect(400, done);
     });
   });
