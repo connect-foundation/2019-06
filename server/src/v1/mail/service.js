@@ -5,7 +5,9 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail } from '../../libraries/save-sent-mail';
+import { saveSentMail } from '../../libraries/save-to-infra';
+
+const SENT_MAILBOX_NAME = '보낸메일함';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
@@ -87,10 +89,12 @@ const saveMail = async (mailContents, transaction) => {
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
+  const userCategory = await DB.Category.findOneByUserNoAndName(user.no, SENT_MAILBOX_NAME);
   await DB.Mail.create(
     {
       owner: user.no,
       mail_template_id: mailTemplate.no,
+      category_no: userCategory.no,
     },
     { transaction },
   );
