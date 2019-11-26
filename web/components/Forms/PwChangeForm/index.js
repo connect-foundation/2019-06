@@ -101,7 +101,7 @@ const PasswordModal = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="standard-basic"
+          id="passwrd"
           label="비밀번호 입력"
           type="password"
           onChange={handleInputChange('password')}
@@ -116,7 +116,7 @@ const PasswordModal = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="standard-basic"
+          id="checkPassword"
           label="비밀번호 재입력"
           type="password"
           onChange={handleInputChange('checkPassword')}
