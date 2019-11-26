@@ -174,6 +174,17 @@ describe('mailbox api test...', () => {
           .send({ no: 9, name: '' })
           .expect(400, done);
       });
+
+      it('no 데이터가 1 미만이라면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 0, name: '하위^^' })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: -1, name: '하위^^' })
+          .expect(400, done);
+      });
     });
   });
 });
