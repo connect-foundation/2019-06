@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const InputForm = styled.div`
+const InputForm = styled.form`
   width: 300px;
   display: flex;
   flex-direction: column;

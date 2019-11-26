@@ -61,6 +61,11 @@ const PasswordModal = () => {
     router.back();
   };
 
+  const handleCancle = e => {
+    e.preventDefault();
+    router.back();
+  };
+
   const updatePassword = async () => {
     try {
       const { password } = values;
@@ -130,7 +135,7 @@ const PasswordModal = () => {
         <S.ErrorText>{errors.checkPassword || errors.change}</S.ErrorText>
       </S.InputContainer>
       <S.ButtonContainer>
-        <S.WhiteButton className="submit-btn max-width" onClick={() => router.back()}>
+        <S.WhiteButton className="submit-btn max-width" onClick={handleCancle}>
           취소
         </S.WhiteButton>
         <S.Button className="submit-btn max-width" onClick={handleSubmit}>
