@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useContext, useCallback } from 'react';
+import Router from 'next/router';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -9,12 +10,26 @@ import { handleMailsChange } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 
+const actionByErrorStatus = ({ status, message }) => {
+  switch (status) {
+    case 401:
+      Router.push('/login');
+      break;
+    default:
+      break;
+  }
+};
+
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
-  const callback = useCallback(data => dispatch(handleMailsChange({ ...data })), [dispatch]);
+  const callback = useCallback(
+    (err, data) => (err ? actionByErrorStatus(err) : dispatch(handleMailsChange({ ...data }))),
+    [dispatch],
+  );
+
   const isLoading = useFetch(callback, URL);
 
   if (isLoading) {
