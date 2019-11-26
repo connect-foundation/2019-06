@@ -13,7 +13,7 @@ const [
 ] = process.argv;
 
 const MY_DOMAIN = "daitnu.com";
-const UNTITLE = "untitle";
+const UNTITLE = "";
 
 const pool = mysql.createPool({
   user: DB_DEV_USERNAME,
