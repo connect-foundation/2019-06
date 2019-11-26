@@ -156,6 +156,7 @@ describe('mailbox api test...', () => {
           .send()
           .expect(400, done);
       });
+
       it('넘겨지는 데이터가 name, no중 하나라도 없으면 400에러를 반환한다.', done => {
         authenticatedUser
           .delete('/v1/mail/box')
@@ -164,6 +165,13 @@ describe('mailbox api test...', () => {
         authenticatedUser
           .delete('/v1/mail/box')
           .send({ no: 9 })
+          .expect(400, done);
+      });
+
+      it('name을 빈값을 넘기면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 9, name: '' })
           .expect(400, done);
       });
     });
