@@ -33,6 +33,13 @@ const register = async ({ id, password, name, sub_email }) => {
   return newUser;
 };
 
+const updatePassword = async (no, salt, password) => {
+  const hashedPassword = await encrypt(password, salt);
+  await DB.User.updatePassword(no, hashedPassword);
+
+  return true;
+};
+
 const createDefaultCategories = async (no, transaction) => {
   const categories = DEFAULT_CATEGORIES.map(name => ({
     user_no: no,
@@ -75,4 +82,10 @@ const sendUserPasswordToEmail = async (id, email) => {
   return true;
 };
 
-export default { register, createDefaultCategories, sendUserIdToEmail, sendUserPasswordToEmail };
+export default {
+  register,
+  updatePassword,
+  createDefaultCategories,
+  sendUserIdToEmail,
+  sendUserPasswordToEmail,
+};
