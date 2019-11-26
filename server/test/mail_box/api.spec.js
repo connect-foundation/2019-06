@@ -58,35 +58,96 @@ describe('mailbox api test...', () => {
         authenticatedUser
           .post('/v1/mail/box')
           .send()
-          .expect(400, done);
+          .expect(400);
+
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send()
+          .end((err, { body }) => {
+            const { fieldErrors } = body;
+            fieldErrors[0].should.be.properties({ field: 'mailBoxName' });
+            fieldErrors[0].should.be.properties({ value: '' });
+            fieldErrors[0].should.be.properties({ reason: '추가할 메일함 이름을 입력해주세요' });
+            done();
+          });
       });
 
       it('빈 값을 넘기면("") 400에러를 반환한다.', done => {
+        const name = '';
         authenticatedUser
           .post('/v1/mail/box')
-          .send({ name: '' })
-          .expect(400, done);
+          .send({ name })
+          .expect(400);
+
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name })
+          .end((err, { body }) => {
+            const { fieldErrors } = body;
+            fieldErrors[0].should.be.properties({ field: 'mailBoxName' });
+            fieldErrors[0].should.be.properties({ value: name });
+            fieldErrors[0].should.be.properties({ reason: '추가할 메일함 이름을 입력해주세요' });
+            done();
+          });
       });
 
       it('null값을 넘기면 400에러를 반환한다.', done => {
+        const name = null;
         authenticatedUser
           .post('/v1/mail/box')
-          .send({ name: null })
-          .expect(400, done);
+          .send({ name })
+          .expect(400);
+
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name })
+          .end((err, { body }) => {
+            const { fieldErrors } = body;
+            fieldErrors[0].should.be.properties({ field: 'mailBoxName' });
+            fieldErrors[0].should.be.properties({ value: name });
+            fieldErrors[0].should.be.properties({ reason: '추가할 메일함 이름을 입력해주세요' });
+            done();
+          });
       });
 
       it('undefined를 넘기면 400에러를 반환한다.', done => {
+        const name = undefined;
         authenticatedUser
           .post('/v1/mail/box')
-          .send({ name: undefined })
-          .expect(400, done);
+          .send({ name })
+          .expect(400);
+
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name })
+          .end((err, { body }) => {
+            const { fieldErrors } = body;
+            fieldErrors[0].should.be.properties({ field: 'mailBoxName' });
+            fieldErrors[0].should.be.properties({ value: '' });
+            fieldErrors[0].should.be.properties({ reason: '추가할 메일함 이름을 입력해주세요' });
+            done();
+          });
       });
 
       it('메일함 이름의 길이가 20을 초과하면 400에러를 반환한다.', done => {
+        const name = 'asdfghjklqwertyuiopzx';
         authenticatedUser
           .post('/v1/mail/box')
-          .send({ name: 'asdfghjklqwertyuiopzx' })
-          .expect(400, done);
+          .send({ name })
+          .expect(400);
+
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name })
+          .end((err, { body }) => {
+            const { fieldErrors } = body;
+            fieldErrors[0].should.be.properties({ field: 'mailBoxName' });
+            fieldErrors[0].should.be.properties({ value: name });
+            fieldErrors[0].should.be.properties({
+              reason: '메일함 이름은 최대 20글자로 작성해주세요',
+            });
+            done();
+          });
       });
     });
 
