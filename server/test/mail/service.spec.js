@@ -44,7 +44,7 @@ describe('Mail Service Test', () => {
     });
   });
 
-  describe.only('getQueryByOptions ...', () => {
+  describe('getQueryByOptions ...', () => {
     const data = { userNo: 1, category: 0, perPageNum: 10, page: 1 };
 
     it('# category가 0이면 category가 포함되지 않는다.', () => {
