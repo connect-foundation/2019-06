@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { errorParser } from './error-parser';
+import HTTPResponse from './http-response';
 
 const BASE_URL = 'http://localhost/v1';
 
@@ -10,11 +12,11 @@ const execute = async fn => {
   let response;
 
   try {
-    response = await fn();
+    const { data } = await fn();
+    response = new HTTPResponse(false, data);
   } catch (err) {
-    response = err;
-  } finally {
-    console.log(response);
+    const error = errorParser(err);
+    response = new HTTPResponse(true, error);
   }
   return response;
 };
@@ -25,21 +27,25 @@ export default {
     const response = await execute(fn);
     return response;
   },
+
   async post(url, body) {
     const fn = () => instance.post(url, body);
     const response = await execute(fn);
     return response;
   },
+
   async put(url, body) {
     const fn = () => instance.put(url, body);
     const response = await execute(fn);
     return response;
   },
+
   async delete(url) {
     const fn = () => instance.delete(url);
     const response = await execute(fn);
     return response;
   },
+
   async patch(url, body) {
     const fn = () => instance.patch(url, body);
     const response = await execute(fn);
