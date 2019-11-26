@@ -33,11 +33,30 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MailTemplate = ({ mail, no }) => {
+const splitMoment = value =>
+  moment(value)
+    .utc()
+    .format('YYYY-MM-DD')
+    .split('-');
+
+const getDateOrTime = createdAt => {
+  const [year, month, day] = splitMoment(createdAt);
+  const [nowYear, nowMonth, nowDay] = splitMoment();
+  const time = moment(createdAt)
+    .utc()
+    .format('HH:mm');
+  let date;
+  if (day !== nowDay) date = `${month}-${day}`;
+  if (year !== nowYear) date = `${year}-${month}-${day}`;
+  return date ? `${date} ${time}` : time;
+};
+
+const MailTemplate = ({ mail }) => {
   const { dispatch } = useContext(AppDisapthContext);
-  const { from, subject, date, is_important, is_read } = mail;
-  const startdate = moment(date).format('MM-DD hh:mm A');
-  const handleSubjectClick = () => dispatch(handleMailClick(mail, <ReadMail />));
+  const { is_important, is_read, MailTemplate } = mail;
+  const { from, to, subject, text, createdAt } = MailTemplate;
+  const mailToRead = { from, to, subject, text, createdAt, is_important };
+  const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
   const classes = useStyles();
 
   return (
@@ -58,7 +77,7 @@ const MailTemplate = ({ mail, no }) => {
       </div>
       <div>{from}</div>
       <div onClick={handleSubjectClick}>{subject}</div>
-      <div>{startdate}</div>
+      <div>{getDateOrTime(createdAt)}</div>
     </S.MailTemplateWrap>
   );
 };

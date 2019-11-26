@@ -44,7 +44,7 @@ const Aside = () => {
     <ListItem
       button
       key={idx}
-      onClick={() => dispatch(handleCategoryClick(category, <MailArea />))}>
+      onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>

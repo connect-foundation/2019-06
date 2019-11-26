@@ -6,7 +6,8 @@ const MailTemplateWrap = styled.div`
   flex-direction: row;
   align-items: center;
   padding: 0 0 0 10px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+
   & + & {
     border-top: 2px solid #eceff1;
   }
@@ -50,14 +51,15 @@ const MailTemplateWrap = styled.div`
       overflow: hidden;
       cursor: pointer;
       color: ${props => (props.isRead ? 'grey' : '#0459C1')};
-      font-weight: ${props => (props.isRead ? '400' : 'bold')};
       &:hover {
         text-decoration: underline;
       }
     }
 
     &:nth-child(7) {
-      flex: 0 0 100px;
+      font-weight: 600;
+      margin: 0 10px;
+      color: grey;
     }
   }
 `;
