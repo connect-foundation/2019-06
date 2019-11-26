@@ -31,37 +31,10 @@ const makeMailBox = async (req, res, next) => {
 const alterMailBox = async (req, res, next) => {
   const { oldName, newName, no } = req.body;
   const boxNo = Number(no);
-
-  if (boxNameValidation(newName)) {
-    const errorField = new ErrorField(
-      'newMailBoxName',
-      newName,
-      '새로운 메일함 이름을 입력해주세요',
-    );
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
-  if (boxNameValidation(oldName)) {
-    const errorField = new ErrorField('oldMailBoxName', oldName, '메일함이 선택되지 않았습니다');
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
-  if (boxNoValidation(no)) {
-    const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
-  if (boxNameLengthValidation(newName.length)) {
-    const errorField = new ErrorField(
-      'mailBoxName',
-      newName,
-      '메일함은 최대 20글자로 작성해주세요',
-    );
-    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField));
-  }
-
   let updatedBox;
+
   try {
+    validation.updateMailBoxValidation(newName, oldName, no);
     updatedBox = await service.updateBox(req.user, boxNo, oldName, newName);
   } catch (err) {
     return next(err);
