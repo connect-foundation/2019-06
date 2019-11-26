@@ -14,7 +14,6 @@ const MailArea = () => {
   const { dispatch } = useContext(AppDisapthContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
-
   const callback = useCallback(data => dispatch(handleMailsChange({ ...data })), [dispatch]);
   const isLoading = useFetch(callback, URL);
 
@@ -23,7 +22,6 @@ const MailArea = () => {
   }
 
   const { mails, paging } = state;
-  console.log(mails);
   const mailList =
     mails.length > 0
       ? mails.map(mail => <MailTemplate key={mail.no} mail={mail} />)
