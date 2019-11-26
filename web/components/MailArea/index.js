@@ -23,30 +23,16 @@ const MailArea = () => {
   }
 
   const { mails, paging } = state;
-  const processedMails = mails.map(mail => {
-    const { is_important, is_read, MailTemplate, no } = mail;
-    const { from, to, subject, text, createdAt } = MailTemplate;
-    return {
-      from,
-      to,
-      subject,
-      text,
-      createdAt,
-      is_important,
-      is_read,
-      no,
-    };
-  });
-
-  const mailTemplates =
-    processedMails.length > 0
-      ? processedMails.map((mail, i) => <MailTemplate key={`mail-${i}`} mail={mail} no={mail.no} />)
+  console.log(mails);
+  const mailList =
+    mails.length > 0
+      ? mails.map(mail => <MailTemplate key={mail.no} mail={mail} />)
       : '메일이 없습니다.';
 
   return (
     <S.MailArea>
       <S.Tools>tools</S.Tools>
-      <S.MailListArea>{mailTemplates}</S.MailListArea>
+      <S.MailListArea>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />
       </S.MailPagingArea>

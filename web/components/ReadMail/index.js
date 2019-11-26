@@ -6,7 +6,7 @@ import { AppStateContext } from '../../contexts';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
-  const { to, from, subject, createdAt, text } = state.mail;
+  const { to, from, subject, date, text } = state.mail;
   const receivers = to.replace(',', ', ');
 
   return (
@@ -17,7 +17,7 @@ const ReadMail = () => {
           <S.Subject>
             <StarBorder />
             <h3>{subject}</h3>
-            <div>{createdAt}</div>
+            <div>{date}</div>
           </S.Subject>
           <S.Address>
             <span>보낸 사람</span>

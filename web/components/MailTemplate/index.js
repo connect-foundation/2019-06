@@ -6,11 +6,13 @@ import { AppDisapthContext } from '../../contexts';
 import { handleMailClick } from '../../contexts/reducer';
 import ReadMail from '../ReadMail';
 
-const MailTemplate = ({ mail, no }) => {
+const MailTemplate = ({ mail }) => {
   const { dispatch } = useContext(AppDisapthContext);
-  const { from, subject, date, is_important, is_read } = mail;
-  const startdate = moment(date).format('YYYY-MM-DD');
-  const handleSubjectClick = () => dispatch(handleMailClick(mail, <ReadMail />));
+  const { is_important, is_read, MailTemplate, no } = mail;
+  const { from, to, subject, text, createdAt } = MailTemplate;
+  const date = moment(createdAt).format('YYYY-MM-DD');
+  const mailToRead = { from, to, subject, text, date, is_important };
+  const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
   return (
     <S.MailTemplateWrap>
       <div>
@@ -21,7 +23,7 @@ const MailTemplate = ({ mail, no }) => {
       <div>{is_read ? 'O' : 'X'}</div>
       <div>{from}</div>
       <div onClick={handleSubjectClick}>{subject}</div>
-      <div>{startdate}</div>
+      <div>{date}</div>
     </S.MailTemplateWrap>
   );
 };
