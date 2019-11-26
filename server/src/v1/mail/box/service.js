@@ -27,7 +27,7 @@ const updateBox = async (user, boxNo, oldName, newName) => {
 
   boxRow.name = newName;
   await boxRow.save();
-  renameMailBox({ user, oldName: boxRow.dataValues.name, newName });
+  renameMailBox({ user, oldName, newName });
 
   return boxRow;
 };
