@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +8,7 @@ import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import S from './styled';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -59,15 +59,15 @@ const RegisterForm = () => {
   };
 
   const signUp = async () => {
-    try {
-      const { id, password, name, email } = values;
-      const body = { id, password, sub_email: email, name: name.trim() };
-      await axios.post('/users', body);
-      Router.push('/login');
-    } catch (err) {
-      const message = errorParser(err);
+    const { id, password, name, email } = values;
+    const body = { id, password, sub_email: email, name: name.trim() };
+    const { isError, data } = await request.post('/users', body);
+    if (isError) {
+      const { message } = errorParser(data);
       handleRegisterErrMsg(message);
+      return;
     }
+    Router.push('/login');
   };
 
   const onSubmitHandler = e => {
