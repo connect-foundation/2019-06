@@ -1,6 +1,6 @@
 import Imap from 'imap';
 
-const PREFIX = 'Daitnu/';
+const PREFIX = 'Private/';
 const SENT_MAILBOX = `${PREFIX}Sent`;
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 
