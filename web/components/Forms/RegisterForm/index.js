@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,6 +9,7 @@ import { errorParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -60,15 +60,15 @@ const RegisterForm = () => {
   };
 
   const signUp = async () => {
-    try {
-      const { id, password, name, email } = values;
-      const body = { id, password, sub_email: email, name: name.trim() };
-      await axios.post('/users', body);
-      Router.push({ pathname: '/login', query: { message: SUCCESS_REGISTER } });
-    } catch (err) {
-      const { message } = errorParser(err);
+    const { id, password, name, email } = values;
+    const body = { id, password, sub_email: email, name: name.trim() };
+    const { isError, data } = await request.post('/users', body);
+    if (isError) {
+      const { message } = errorParser(data);
       handleRegisterErrMsg(message);
+      return;
     }
+    Router.push({ pathname: '/login', query: { message: SUCCESS_REGISTER } });
   };
 
   const onSubmitHandler = e => {

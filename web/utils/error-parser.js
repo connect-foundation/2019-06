@@ -10,17 +10,17 @@ const errorParser = error => {
 
   const { errorCode, fieldErrors } = error.response.data;
 
-  let errorMessage = errorCode.message;
-  if (!fieldErrors) {
-    return errorMessage;
+  const { status, message } = errorCode;
+  if (status !== 400) {
+    return { status, message };
   }
 
-  errorMessage = fieldErrors.reduce(
-    (prev, next) => (prev += `\n${next.field} : ${next.reason}`),
-    errorMessage,
-  );
+  const errorMessage = fieldErrors.reduce((prev, next) => {
+    const line = `${next.field} : ${next.reason}\n`;
+    return prev + line;
+  }, '');
 
-  return { status: errorCode.status, message: errorMessage };
+  return { status: 400, message: errorMessage };
 };
 
 export { errorParser };
