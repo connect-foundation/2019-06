@@ -6,32 +6,43 @@ const instance = axios.create({
   baseURL: BASE_URL,
 });
 
+const execute = async fn => {
+  let response;
+
+  try {
+    response = await fn();
+  } catch (err) {
+    response = err;
+  } finally {
+    console.log(response);
+  }
+  return response;
+};
+
 export default {
   async get(url) {
-    let data;
-    try {
-      data = await instance.get(url);
-    } catch (error) {
-      console.log(error);
-    }
-    return data;
+    const fn = () => instance.get(url);
+    const response = await execute(fn);
+    return response;
   },
   async post(url, body) {
-    let data;
-    try {
-      data = await instance.post(url, body);
-    } catch (error) {
-      console.log(error);
-    }
-    return data;
+    const fn = () => instance.post(url, body);
+    const response = await execute(fn);
+    return response;
+  },
+  async put(url, body) {
+    const fn = () => instance.put(url, body);
+    const response = await execute(fn);
+    return response;
   },
   async delete(url) {
-    let data;
-    try {
-      data = await instance.delete(url, body);
-    } catch (error) {
-      console.log(error);
-    }
-    return data;
+    const fn = () => instance.delete(url);
+    const response = await execute(fn);
+    return response;
+  },
+  async patch(url, body) {
+    const fn = () => instance.patch(url, body);
+    const response = await execute(fn);
+    return response;
   },
 };
