@@ -45,7 +45,8 @@ const alterMailBox = async (req, res, next) => {
     !oldName ||
     !newName ||
     no === '' ||
-    Number.isNaN(boxNo)
+    Number.isNaN(boxNo) ||
+    boxNo < 1
   ) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
@@ -67,7 +68,7 @@ const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
   const boxNo = Number(no);
 
-  if (name === BLANK || !name || no === '' || Number.isNaN(boxNo)) {
+  if (name === BLANK || !name || no === '' || Number.isNaN(boxNo) || boxNo < 1) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 

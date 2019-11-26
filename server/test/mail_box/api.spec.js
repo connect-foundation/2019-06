@@ -125,6 +125,17 @@ describe('mailbox api test...', () => {
           .send({ oldName: '하위^^', newName: '할룽^^', no: 'null' })
           .expect(400, done);
       });
+
+      it('no 데이터가 1미만이라면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: 0 })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: -1 })
+          .expect(400, done);
+      });
     });
   });
 });
