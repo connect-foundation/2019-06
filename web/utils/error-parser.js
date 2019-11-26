@@ -20,7 +20,6 @@ const errorParser = error => {
     return prev + line;
   }, '');
 
-  console.log(errorMessage);
   return { status: 400, message: errorMessage };
 };
 
