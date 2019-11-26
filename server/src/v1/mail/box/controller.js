@@ -4,7 +4,7 @@ import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
 
 const BLANK = '';
-const NAME_LENGTH_LIMIT = 20;
+const { MAILBOX_NAME_LENGTH_LIMIT } = process.env;
 
 const getMailBoxes = async (req, res, next) => {
   let boxes;
@@ -18,12 +18,12 @@ const getMailBoxes = async (req, res, next) => {
 
 const makeMailBox = async (req, res, next) => {
   const { name } = req.body;
-  if (name === BLANK) {
-    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  if (name === BLANK || !name) {
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
-  if (name.length < NAME_LENGTH_LIMIT) {
-    return next(ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
+  if (name.length > MAILBOX_NAME_LENGTH_LIMIT) {
+    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
   }
 
   let createdBox;
@@ -37,12 +37,12 @@ const makeMailBox = async (req, res, next) => {
 
 const alterMailBox = async (req, res, next) => {
   const { oldName, newName, no } = req.body;
-  if (newName === BLANK || oldName === BLANK) {
-    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  if (newName === BLANK || oldName === BLANK || !oldName || !newName) {
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
-  if (newName.length < NAME_LENGTH_LIMIT) {
-    return next(ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
+  if (newName.length > MAILBOX_NAME_LENGTH_LIMIT) {
+    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME));
   }
 
   let updatedBox;
@@ -56,8 +56,8 @@ const alterMailBox = async (req, res, next) => {
 
 const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
-  if (name === BLANK) {
-    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  if (name === BLANK || !name) {
+    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
   let deletedBox;

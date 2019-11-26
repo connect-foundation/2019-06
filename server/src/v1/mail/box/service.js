@@ -3,14 +3,12 @@ import { addMailBox, renameMailBox, deleteMailBox } from '../../../libraries/sav
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
 
-const BLANK = '';
-
 const findAllBoxes = async userNo => {
   const result = await DB.Category.findAllByUserNo(userNo);
   return result;
 };
 
-const createBox = async (user, name = BLANK) => {
+const createBox = async (user, name) => {
   const response = await DB.Category.create({
     user_no: user.no,
     name,
@@ -21,21 +19,12 @@ const createBox = async (user, name = BLANK) => {
 
 const updateBox = async (user, boxNo, oldName, newName) => {
   const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, oldName);
-  if (!boxRow.no) {
-    throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+  if (!boxRow) {
+    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
 
-  await DB.Category.update(
-    {
-      name: newName,
-    },
-    {
-      where: {
-        no: boxNo,
-        user_no: user.no,
-      },
-    },
-  );
+  boxRow.name = newName;
+  await boxRow.save();
   renameMailBox({ user, oldName: boxRow.dataValues.name, newName });
 
   return boxRow;
@@ -43,8 +32,8 @@ const updateBox = async (user, boxNo, oldName, newName) => {
 
 const deleteBox = async (user, boxNo, boxName) => {
   const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, boxName);
-  if (!boxRow.no) {
-    throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+  if (!boxRow) {
+    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
 
   await DB.Category.destroy({ where: { no: boxNo } });
