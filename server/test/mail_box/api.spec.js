@@ -53,25 +53,27 @@ describe('mailbox api test...', () => {
         .expect(200, done);
     });
 
-    it('아무런 값을 넘기지 않으며 메일함 생성을 요청하면 400에러를 반환한다.', done => {
-      authenticatedUser
-        .post('/v1/mail/box')
-        .send({})
-        .expect(400, done);
-    });
+    describe('메일함 생성을 요청할 때..', () => {
+      it('아무런 값을 넘기지 않으면(undefined) 400에러를 반환한다.', done => {
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({})
+          .expect(400, done);
+      });
 
-    it('빈 값을 넘기며 메일함 생성을 요청하면 400에러를 반환한다.', done => {
-      authenticatedUser
-        .post('/v1/mail/box')
-        .send({ name: '' })
-        .expect(400, done);
-    });
+      it('빈 값을 넘기면("") 400에러를 반환한다.', done => {
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name: '' })
+          .expect(400, done);
+      });
 
-    it('메일함 이름의 길이가 20을 초과하면 400에러를 반환한다.', done => {
-      authenticatedUser
-        .post('/v1/mail/box')
-        .send({ name: 'asdfghjklqwertyuiopzx' })
-        .expect(400, done);
+      it('메일함 이름의 길이가 20을 초과하면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .post('/v1/mail/box')
+          .send({ name: 'asdfghjklqwertyuiopzx' })
+          .expect(400, done);
+      });
     });
   });
 });
