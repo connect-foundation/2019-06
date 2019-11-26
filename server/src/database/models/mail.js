@@ -59,7 +59,6 @@ const model = (sequelize, DataTypes) => {
     paging = DEFALT_PAGING,
     order,
   }) => {
-    console.log(order);
     return Mail.findAndCountAll({
       distinct: true,
       ...paging,
