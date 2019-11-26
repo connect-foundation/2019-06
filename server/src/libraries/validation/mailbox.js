@@ -1,15 +1,15 @@
 const BLANK = '';
 const MAILBOX_NAME_LENGTH_LIMIT = 20;
 
-export const MUST_NOT_BE_EMPTY_STRING = val => {
+export const boxNameValidation = val => {
   return val === BLANK || !val;
 };
 
-export const IS_MORE_THAN_MAX_LENGTH = integer => {
+export const boxNameLengthValidation = integer => {
   return integer > MAILBOX_NAME_LENGTH_LIMIT;
 };
 
-export const MAILBOX_NUMBER_CHECK = val => {
+export const boxNameNoValidation = val => {
   const toNumber = Number(val);
   return val === '' || Number.isNaN(toNumber) || toNumber < 1;
 };
