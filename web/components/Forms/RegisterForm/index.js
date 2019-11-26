@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -10,6 +10,8 @@ import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
 import request from '../../../utils/request';
+import { setMessage } from '../../../contexts/reducer';
+import { AppDisapthContext } from '../../../contexts';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -39,6 +41,7 @@ const initialErrorState = {
 
 const RegisterForm = () => {
   const classes = useStyles();
+  const { dispatch } = useContext(AppDisapthContext);
 
   const [values, setValues] = useState(initialInputState);
   const [errors, setErrorMsg] = useState(initialErrorState);
@@ -64,7 +67,8 @@ const RegisterForm = () => {
       handleRegisterErrMsg(message);
       return;
     }
-    Router.push({ pathname: '/login', query: { message: SUCCESS_REGISTER } });
+    dispatch(setMessage(SUCCESS_REGISTER));
+    Router.push('/login');
   };
 
   const onSubmitHandler = e => {
