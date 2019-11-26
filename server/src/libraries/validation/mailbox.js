@@ -1,5 +1,5 @@
 const BLANK = '';
-const { MAILBOX_NAME_LENGTH_LIMIT } = process.env;
+const MAILBOX_NAME_LENGTH_LIMIT = 20;
 
 export const MUST_NOT_BE_EMPTY_STRING = val => {
   return val === BLANK || !val;
