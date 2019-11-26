@@ -38,4 +38,26 @@ describe('mailbox api test...', () => {
         .expect(401, done);
     });
   });
+
+  describe('로그인 한 상태로..', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/v1/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('빈 값을 넘기며 메일박스 생성을 요청하면 400에러를 반환한다.', done => {
+      authenticatedUser
+        .post('/v1/mail/box')
+        .send({})
+        .expect(400, done);
+    });
+  });
 });
