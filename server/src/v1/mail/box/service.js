@@ -35,7 +35,8 @@ const updateBox = async (user, boxNo, oldName, newName) => {
 const deleteBox = async (user, boxNo, boxName) => {
   const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, boxName);
   if (!boxRow) {
-    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+    const errorField = new ErrorField('mailBox', boxRow, '존재하지 않는 메일함입니다');
+    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
   }
 
   await DB.Category.destroy({ where: { no: boxNo } });
