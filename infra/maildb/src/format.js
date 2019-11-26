@@ -60,10 +60,10 @@ const getQueryToFindOwnerAndCategoryNo = id => {
   ]);
 };
 
-const getQueryToAddMail = ({ owner, no, mail_template_id }) => {
+const getQueryToAddMail = ({ owner, category_no, mail_template_id }) => {
   const valueOfMail = {
     owner,
-    category_no: no,
+    category_no,
     mail_template_id,
     is_important: 0,
     is_read: 0

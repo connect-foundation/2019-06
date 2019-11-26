@@ -51,36 +51,37 @@ const getReceivers = to => {
   return receivers;
 };
 
+const recordLog = (mail, log) => {
+  console.log(
+    JSON.stringify({
+      from: mail.from,
+      to: mail.to,
+      ...log
+    })
+  );
+};
+
 const insertMailToDB = async content => {
   const mail = await parseMailContent(content);
   const receivers = getReceivers(mail.to);
   const connection = await pool.getConnection(async conn => conn);
   let queryFormat;
+  const log = {};
 
   try {
     await connection.beginTransaction();
     queryFormat = format.getQueryToAddMailTemplate(mail);
     const [resultOfMailTemplate] = await connection.execute(queryFormat);
-    const mail_template_id = resultOfMailTemplate.insertId;
+    log.mail_template_id = resultOfMailTemplate.insertId;
 
     receivers.forEach(async id => {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
       const [[{ owner, no }]] = await connection.query(queryFormat);
-      queryFormat = format.getQueryToAddMail({
-        owner,
-        no,
-        mail_template_id
-      });
+      log.owner = owner;
+      log.category_no = no;
+      queryFormat = format.getQueryToAddMail(log);
       await connection.execute(queryFormat);
-      console.log(
-        JSON.stringify({
-          from: mail.from,
-          to: mail.to,
-          mail_template_id,
-          owner,
-          category_no: no
-        })
-      );
+      recordLog(mail, log);
     });
 
     await connection.commit();
