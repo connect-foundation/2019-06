@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext } from 'react';
 import * as S from './styled';
-import LogoutButton from '../LogoutButton';
+
+import ProfileLink from '../ProfileLink';
 import { AppDisapthContext } from '../../contexts';
 import { setView } from '../../contexts/reducer';
 import MailArea from '../MailArea';
@@ -21,7 +22,7 @@ const Header = ({ brand }) => {
         <S.SearchInput placeholder="메일 검색" type="text" />
         <button>필터</button>
       </S.Search>
-      <LogoutButton />
+      <ProfileLink />
     </S.Header>
   );
 };

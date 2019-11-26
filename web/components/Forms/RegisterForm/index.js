@@ -5,9 +5,9 @@ import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import validator from '../../utils/validator';
-import { errorParser } from '../../utils/error-parser';
-import { ERROR_DIFFERENT_PASSWORD } from '../../utils/error-message';
+import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
+import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import S from './styled';
 
 const useStyles = makeStyles(theme => ({
@@ -43,8 +43,8 @@ const initialErrorState = {
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const [values, setValues] = React.useState(initialInputState);
-  const [errors, setErrorMsg] = React.useState(initialErrorState);
+  const [values, setValues] = useState(initialInputState);
+  const [errors, setErrorMsg] = useState(initialErrorState);
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });

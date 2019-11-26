@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FindPwForm from '../../components/FindPwForm';
+import FindPwForm from '../../components/Forms/FindPwForm';
 
 import * as GS from '../../components/GlobalStyle';
 

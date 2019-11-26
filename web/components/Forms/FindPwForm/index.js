@@ -4,9 +4,9 @@ import axios from 'axios';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import SmallHeader from '../SmallHeader';
-import validator from '../../utils/validator';
-import { errorParser } from '../../utils/error-parser';
+import SmallHeader from '../../SmallHeader';
+import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 
 const useStyles = makeStyles(theme => ({
@@ -89,7 +89,7 @@ const FindPwForm = () => {
           id="outlined-search"
           label="아이디"
           type="search"
-          onBlur={handleInputChange('id')}
+          onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           margin="normal"
@@ -104,7 +104,7 @@ const FindPwForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          onBlur={handleInputChange('email')}
+          onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
