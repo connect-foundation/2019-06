@@ -1,5 +1,9 @@
 import STATUS from 'http-status';
 import service from './service';
+import ERROR_CODE from '../../../libraries/exception/error-code';
+import ErrorResponse from '../../../libraries/exception/error-response';
+
+const BLANK = '';
 
 const getMailBoxes = async (req, res, next) => {
   let boxes;
@@ -13,6 +17,10 @@ const getMailBoxes = async (req, res, next) => {
 
 const makeMailBox = async (req, res, next) => {
   const { name } = req.body;
+  if (name === BLANK) {
+    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  }
+
   let createdBox;
   try {
     createdBox = await service.createBox(req.user, name);
@@ -24,6 +32,10 @@ const makeMailBox = async (req, res, next) => {
 
 const alterMailBox = async (req, res, next) => {
   const { name, no } = req.body;
+  if (name === BLANK) {
+    return next(ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
+  }
+
   let updatedBox;
   try {
     updatedBox = await service.updateBox(req.user, no, name);

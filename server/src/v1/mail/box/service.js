@@ -11,10 +11,6 @@ const findAllBoxes = async userNo => {
 };
 
 const createBox = async (user, name = BLANK) => {
-  if (name === BLANK) {
-    throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
-  }
-
   const response = await DB.Category.create({
     user_no: user.no,
     name,
@@ -24,12 +20,8 @@ const createBox = async (user, name = BLANK) => {
 };
 
 const updateBox = async (user, boxNo, newName = BLANK) => {
-  if (newName === BLANK) {
-    throw ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE);
-  }
-
-  const boxRow = await DB.Category.findByPk(boxNo);
-  if (!boxRow) {
+  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, newName);
+  if (!boxRow.no) {
     throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
 
@@ -50,8 +42,8 @@ const updateBox = async (user, boxNo, newName = BLANK) => {
 };
 
 const deleteBox = async (user, boxNo, boxName) => {
-  const boxRow = await DB.Category.findByPk(boxNo);
-  if (!boxRow) {
+  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, newName);
+  if (!boxRow.no) {
     throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
 
