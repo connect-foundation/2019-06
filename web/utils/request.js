@@ -9,7 +9,12 @@ const execute = async fn => {
     const { data } = await fn();
     response = new HTTPResponse(false, data);
   } catch (err) {
-    const error = errorParser(err);
+    let error;
+    if (err.errorCode) {
+      error = errorParser(err);
+    } else {
+      console.log(err);
+    }
     response = new HTTPResponse(true, error);
   }
   return response;
@@ -33,7 +38,7 @@ export default {
   },
 
   async post(url, body, options) {
-    const fn = () => axios.post(url, { ...defaultOptions, ...options });
+    const fn = () => axios.post(url, body, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
