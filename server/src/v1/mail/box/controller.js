@@ -37,7 +37,9 @@ const makeMailBox = async (req, res, next) => {
 
 const alterMailBox = async (req, res, next) => {
   const { oldName, newName, no } = req.body;
-  if (newName === BLANK || oldName === BLANK || !oldName || !newName) {
+  const boxNo = Number(no);
+
+  if (newName === BLANK || oldName === BLANK || !oldName || !newName || Number.isNaN(boxNo)) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
@@ -47,7 +49,7 @@ const alterMailBox = async (req, res, next) => {
 
   let updatedBox;
   try {
-    updatedBox = await service.updateBox(req.user, no, oldName, newName);
+    updatedBox = await service.updateBox(req.user, boxNo, oldName, newName);
   } catch (err) {
     return next(err);
   }
@@ -56,13 +58,15 @@ const alterMailBox = async (req, res, next) => {
 
 const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
-  if (name === BLANK || !name) {
+  const boxNo = Number(no);
+
+  if (name === BLANK || !name || Number.isNaN(boxNo)) {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE));
   }
 
   let deletedBox;
   try {
-    deletedBox = await service.deleteBox(req.user, no, name);
+    deletedBox = await service.deleteBox(req.user, boxNo, name);
   } catch (err) {
     return next(err);
   }
