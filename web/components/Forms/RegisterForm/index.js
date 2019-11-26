@@ -43,8 +43,8 @@ const initialErrorState = {
 const RegisterForm = () => {
   const classes = useStyles();
 
-  const [values, setValues] = React.useState(initialInputState);
-  const [errors, setErrorMsg] = React.useState(initialErrorState);
+  const [values, setValues] = useState(initialInputState);
+  const [errors, setErrorMsg] = useState(initialErrorState);
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });

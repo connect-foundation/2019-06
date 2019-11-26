@@ -50,10 +50,10 @@ const initialErrorState = {
 const PasswordModal = () => {
   const classes = useStyles();
   const router = useRouter();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
-  const [values, setValues] = React.useState(initialInputState);
-  const [errors, setErrorMsg] = React.useState(initialErrorState);
+  const [values, setValues] = useState(initialInputState);
+  const [errors, setErrorMsg] = useState(initialErrorState);
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });
