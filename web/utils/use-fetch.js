@@ -7,11 +7,12 @@ const useFetch = (callback, URL) => {
   useEffect(() => {
     const fetchInitData = async () => {
       setIsLoading(true);
-      const response = await request.get(URL);
-      if (response.isError) {
-        // TODO : 에러처리 핸들러 만들기
+      const { isError, data } = await request.get(URL);
+      if (isError) {
+        callback(data);
+        return;
       }
-      callback(response.data);
+      callback(null, data);
       setIsLoading(false);
     };
 
