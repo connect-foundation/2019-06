@@ -1,8 +1,5 @@
 import STATUS from 'http-status';
 import service from './service';
-import ERROR_CODE from '../../../libraries/exception/error-code';
-import ErrorResponse from '../../../libraries/exception/error-response';
-import ErrorField from '../../../libraries/exception/error-field';
 import validation from '../../../libraries/validation/mailbox';
 
 const getMailBoxes = async (req, res, next) => {
@@ -45,19 +42,10 @@ const alterMailBox = async (req, res, next) => {
 const deleteMailBox = async (req, res, next) => {
   const { name, no } = req.query;
   const boxNo = Number(no);
-
-  if (boxNameValidation(name)) {
-    const errorField = new ErrorField('mailBoxName', name, '메일함이 잘못 전달되었습니다');
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
-  if (boxNoValidation(no)) {
-    const errorField = new ErrorField('mailBoxNo', boxNo, '메일함이 잘못 전달되었습니다');
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
   let deletedBox;
+
   try {
+    validation.deleteMailBoxValidation(name, no);
     deletedBox = await service.deleteBox(req.user, boxNo, name);
   } catch (err) {
     return next(err);

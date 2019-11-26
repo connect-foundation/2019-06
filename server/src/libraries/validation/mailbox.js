@@ -68,6 +68,18 @@ const updateMailBoxValidation = (newName, oldName, no) => {
   return true;
 };
 
-const deleteMailBoxValidation = val => {};
+const deleteMailBoxValidation = (name, no) => {
+  if (boxNameValidation(name)) {
+    const errorField = new ErrorField('mailBoxName', name, '메일함이 잘못 전달되었습니다');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
+  if (boxNoValidation(no)) {
+    const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
+  return true;
+};
 
 export default { makeMailBoxValidation, updateMailBoxValidation, deleteMailBoxValidation };
