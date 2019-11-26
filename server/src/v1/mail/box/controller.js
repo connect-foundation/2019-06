@@ -3,11 +3,7 @@ import service from './service';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
 import ErrorField from '../../../libraries/exception/error-field';
-import {
-  boxNameValidation,
-  boxNameLengthValidation,
-  boxNameNoValidation,
-} from '../../../libraries/validation/mailbox';
+import validation from '../../../libraries/validation/mailbox';
 
 const getMailBoxes = async (req, res, next) => {
   let boxes;
@@ -21,22 +17,10 @@ const getMailBoxes = async (req, res, next) => {
 
 const makeMailBox = async (req, res, next) => {
   const { name } = req.body;
-  if (boxNameValidation(name)) {
-    const errorField = new ErrorField('mailBoxName', name, '추가할 메일함 이름을 입력해주세요');
-    return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
-  }
-
-  if (boxNameLengthValidation(name.length)) {
-    const errorField = new ErrorField(
-      'mailBoxName',
-      name,
-      '메일함 이름은 최대 20글자로 작성해주세요',
-    );
-    return next(new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField));
-  }
-
   let createdBox;
+
   try {
+    validation.makeMailBoxValidation(name);
     createdBox = await service.createBox(req.user, name);
   } catch (err) {
     return next(err);
@@ -62,7 +46,7 @@ const alterMailBox = async (req, res, next) => {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
-  if (boxNameNoValidation(no)) {
+  if (boxNoValidation(no)) {
     const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
@@ -94,7 +78,7 @@ const deleteMailBox = async (req, res, next) => {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
-  if (boxNameNoValidation(no)) {
+  if (boxNoValidation(no)) {
     const errorField = new ErrorField('mailBoxNo', boxNo, '메일함이 잘못 전달되었습니다');
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
