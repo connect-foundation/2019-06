@@ -73,7 +73,7 @@ const PasswordModal = () => {
     }
   };
 
-  const onSubmitHandler = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     if (validateForm()) {
@@ -101,7 +101,7 @@ const PasswordModal = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="passwrd"
+          id="password"
           label="비밀번호 입력"
           type="password"
           onChange={handleInputChange('password')}
@@ -133,7 +133,7 @@ const PasswordModal = () => {
         <S.WhiteButton className="submit-btn max-width" onClick={() => router.back()}>
           취소
         </S.WhiteButton>
-        <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
+        <S.Button className="submit-btn max-width" onClick={handleSubmit}>
           확인
         </S.Button>
       </S.ButtonContainer>
