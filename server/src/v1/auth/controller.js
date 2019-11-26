@@ -1,7 +1,12 @@
 import status from 'http-status';
 
 const login = (req, res) => {
-  res.json(req.user);
+  const user = { ...req.user };
+
+  delete user.password;
+  delete user.salt;
+
+  res.json(user);
 };
 
 const logout = (req, res) => {
