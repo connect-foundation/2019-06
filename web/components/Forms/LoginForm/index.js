@@ -1,6 +1,5 @@
 import React from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import useForm from 'react-hook-form';
 
 import {
@@ -13,6 +12,7 @@ import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 import storage from '../../../utils/storage';
+import request from '../../../utils/request';
 
 const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
@@ -53,17 +53,16 @@ const LoignForm = () => {
   };
 
   const signIn = async (id, password) => {
-    try {
-      const body = { id, password };
-      const { data } = await axios.post('/auth/login', body);
+    const body = { id, password };
 
-      storage.setUser(data);
+    const { isError, data } = await request.post('/auth/login', body);
 
-      Router.push('/');
-    } catch (err) {
-      const message = errorParser(err);
-      setError('login', 'api', message);
+    if (isError) {
+      setError('login', 'api', data);
+      return;
     }
+    storage.setUser(data);
+    Router.push('/');
   };
 
   return (
