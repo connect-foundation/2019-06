@@ -33,7 +33,7 @@ export default {
   },
 
   async post(url, body, options) {
-    const fn = () => axios.post(url, { ...defaultOptions, ...options });
+    const fn = () => axios.post(url, body, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },

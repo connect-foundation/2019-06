@@ -1,6 +1,5 @@
 import React from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import useForm from 'react-hook-form';
 
 import {
@@ -10,9 +9,9 @@ import {
   ERROR_PASSWORD_VALIDATION,
 } from '../../../utils/error-message';
 import validator from '../../../utils/validator';
-import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 import storage from '../../../utils/storage';
+import request from '../../../utils/request';
 
 const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
@@ -53,17 +52,14 @@ const LoignForm = () => {
   };
 
   const signIn = async (id, password) => {
-    try {
-      const body = { id, password };
-      const { data } = await axios.post('/auth/login', body);
-
-      storage.setUser(data);
-
-      Router.push('/');
-    } catch (err) {
-      const message = errorParser(err);
-      setError('login', 'api', message);
+    const body = { id, password };
+    const { isError, data } = await request.post('/auth/login', body);
+    if (isError) {
+      setError('login', 'api', data.message);
+      return;
     }
+    storage.setUser(data);
+    Router.push('/');
   };
 
   return (
@@ -74,6 +70,7 @@ const LoignForm = () => {
         id="userId"
         placeholder="아이디"
         name="userId"
+        maxLength={20}
         ref={register}
       />
       <S.ErrorText>{errors.userId && errors.userId.message}</S.ErrorText>
@@ -83,6 +80,7 @@ const LoignForm = () => {
         id="password"
         placeholder="비밀번호"
         name="password"
+        maxLength={20}
         ref={register}
       />
       <S.ErrorText>
