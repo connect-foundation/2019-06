@@ -1,10 +1,10 @@
-const isContainErrorCode = error => {
+const isContainedErrorCode = error => {
   const { response } = error;
   return response && response.data && response.data.errorCode;
 };
 
 const errorParser = error => {
-  if (!isContainErrorCode(error)) {
+  if (!isContainedErrorCode(error)) {
     return { status: 500, message: error.message };
   }
 
