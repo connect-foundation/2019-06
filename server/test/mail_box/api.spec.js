@@ -95,6 +95,17 @@ describe('mailbox api test...', () => {
           .expect(400, done);
       });
 
+      it('oldName과 newName 둘중 하나라도 undefined가 넘어오면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ no: 9, oldName: undefined, newName: '할룽^^' })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ no: 9, oldName: '하위^^', newName: undefined })
+          .expect(400, done);
+      });
+
       it('넘겨지는 데이터가 oldName, newName, no중 하나라도 없으면 400에러를 반환한다.', done => {
         authenticatedUser
           .patch('/v1/mail/box')
