@@ -21,7 +21,7 @@ axios.defaults.withCredentials = true;
 const defaultOptions = {
   headers: {
     'Content-Type': 'application/json',
-    Accept: 'application/json',
+    Accept: 'application/json; charset=utf-8',
   },
 };
 
