@@ -103,6 +103,26 @@ describe('mailbox api test...', () => {
         authenticatedUser
           .patch('/v1/mail/box')
           .send({ oldName: '하위^^', newName: '할룽^^', no: '' })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: 'asd' })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: undefined })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: 'undefined' })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: null })
+          .expect(400);
+        authenticatedUser
+          .patch('/v1/mail/box')
+          .send({ oldName: '하위^^', newName: '할룽^^', no: 'null' })
           .expect(400, done);
       });
     });
