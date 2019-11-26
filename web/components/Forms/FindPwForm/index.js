@@ -89,7 +89,7 @@ const FindPwForm = () => {
           id="outlined-search"
           label="아이디"
           type="search"
-          onBlur={handleInputChange('id')}
+          onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
           margin="normal"
@@ -104,7 +104,7 @@ const FindPwForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          onBlur={handleInputChange('email')}
+          onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"

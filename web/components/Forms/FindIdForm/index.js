@@ -66,7 +66,7 @@ const FindIdForm = () => {
           id="outlined-search"
           label="이메일"
           type="search"
-          onBlur={({ target: { value } }) => setEmail(value)}
+          onChange={({ target: { value } }) => setEmail(value)}
           className={classes.textField}
           error={error !== ''}
           margin="normal"
