@@ -2,6 +2,7 @@ import DB from '../../../database';
 import { addMailBox, renameMailBox, deleteMailBox } from '../../../libraries/save-to-infra';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
+import ErrorField from '../../../libraries/exception/error-field';
 
 const findAllBoxes = async userNo => {
   const result = await DB.Category.findAllByUserNo(userNo);
@@ -20,7 +21,8 @@ const createBox = async (user, name) => {
 const updateBox = async (user, boxNo, oldName, newName) => {
   const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, oldName);
   if (!boxRow) {
-    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
+    const errorField = new ErrorField('mailBox', boxRow, '존재하지 않는 메일함입니다');
+    throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
   }
 
   boxRow.name = newName;
