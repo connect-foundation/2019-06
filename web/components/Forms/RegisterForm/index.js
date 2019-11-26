@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
+import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
 
 const useStyles = makeStyles(theme => ({
@@ -63,9 +64,9 @@ const RegisterForm = () => {
       const { id, password, name, email } = values;
       const body = { id, password, sub_email: email, name: name.trim() };
       await axios.post('/users', body);
-      Router.push('/login');
+      Router.push({ pathname: '/login', query: { message: SUCCESS_REGISTER } });
     } catch (err) {
-      const message = errorParser(err);
+      const { message } = errorParser(err);
       handleRegisterErrMsg(message);
     }
   };
@@ -99,7 +100,7 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-search"
+          id="name"
           label="이름"
           type="search"
           onChange={handleInputChange('name')}
@@ -115,7 +116,7 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <OutlinedInput
-          id="outlined-adornment-weight"
+          id="id"
           label="아이디"
           onChange={handleInputChange('id')}
           className={classes.textField}
@@ -133,7 +134,7 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-password-input"
+          id="password"
           label="비밀번호"
           onChange={handleInputChange('password')}
           className={classes.textField}
@@ -144,7 +145,7 @@ const RegisterForm = () => {
           variant="outlined"
         />
         <TextField
-          id="outlined-password-input"
+          id="checkPassword"
           label="확인"
           onChange={handleInputChange('checkPassword')}
           className={classes.textField}
@@ -163,7 +164,7 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-search"
+          id="email"
           label="이메일"
           type="search"
           onChange={handleInputChange('email')}
