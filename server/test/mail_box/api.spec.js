@@ -175,6 +175,17 @@ describe('mailbox api test...', () => {
           .expect(400, done);
       });
 
+      it('name에 undefined나 null을 넘기면 400에러를 반환한다.', done => {
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 9, name: undefined })
+          .expect(400);
+        authenticatedUser
+          .delete('/v1/mail/box')
+          .send({ no: 9, name: null })
+          .expect(400, done);
+      });
+
       it('no 데이터가 숫자가 아니면 400에러를 반환한다.', done => {
         authenticatedUser
           .delete('/v1/mail/box')
