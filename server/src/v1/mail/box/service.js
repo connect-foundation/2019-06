@@ -42,7 +42,7 @@ const updateBox = async (user, boxNo, newName = BLANK) => {
 };
 
 const deleteBox = async (user, boxNo, boxName) => {
-  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, newName);
+  const boxRow = await DB.Category.findOneByCategoryNoAndUserNoAndName(boxNo, user.no, boxName);
   if (!boxRow.no) {
     throw ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND);
   }
