@@ -136,4 +136,25 @@ describe('user service는...', () => {
       }
     });
   });
+
+  describe('updatePassword 함수는...', () => {
+    let userInstance;
+
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await DB.Domain.create({
+        name: 'daitnu.com',
+      });
+      userInstance = await DB.User.create(user, { returning: true });
+    });
+
+    it('# 비밀번호를 바꾸고 true를 반환한다.', async () => {
+      const { no, salt } = userInstance;
+      const newPassword = '12345678';
+
+      await service.updatePassword(no, salt, newPassword).should.be.true;
+    });
+  });
 });
