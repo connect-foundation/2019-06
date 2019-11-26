@@ -7,7 +7,6 @@ const MailTemplateWrap = styled.div`
   align-items: center;
   padding: 0 0 0 10px;
   font-size: 0.8rem;
-  font-weight: ${props => (props.isRead ? '400' : 'bold')};
   & + & {
     border-top: 2px solid #eceff1;
   }
@@ -51,6 +50,7 @@ const MailTemplateWrap = styled.div`
       overflow: hidden;
       cursor: pointer;
       color: ${props => (props.isRead ? 'grey' : '#0459C1')};
+      font-weight: ${props => (props.isRead ? '400' : 'bold')};
       &:hover {
         text-decoration: underline;
       }

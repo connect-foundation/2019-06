@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
 const MailTemplate = ({ mail, no }) => {
   const { dispatch } = useContext(AppDisapthContext);
   const { from, subject, date, is_important, is_read } = mail;
-  const startdate = moment(date).format('YYYY-MM-DD');
+  const startdate = moment(date).format('MM-DD hh:mm A');
   const handleSubjectClick = () => dispatch(handleMailClick(mail, <ReadMail />));
   const classes = useStyles();
 
