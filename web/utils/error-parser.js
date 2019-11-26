@@ -16,7 +16,7 @@ const errorParser = error => {
   }
 
   errorMessage = fieldErrors.reduce(
-    (prev, next) => (prev += `\n${error.field} : ${error.reason}`),
+    (prev, next) => (prev += `\n${next.field} : ${next.reason}`),
     errorMessage,
   );
 
