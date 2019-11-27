@@ -24,14 +24,14 @@ const pool = mysql.createPool({
 
 const parseMailContent = async content => {
   try {
-    const { from, to, subject, html, attachments } = await simpleParser(
+    const { from, to, subject, html, text, attachments } = await simpleParser(
       content
     );
     return {
       from: from.text,
       to: to.text,
       subject: subject || UNTITLE,
-      text: html,
+      text: html || text,
       attachments
     };
   } catch (err) {
