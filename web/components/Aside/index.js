@@ -18,6 +18,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 import ModifyIcon from '@material-ui/icons/Create';
 import InboxIcon from '@material-ui/icons/Inbox';
 import MoveInboxIcon from '@material-ui/icons/MoveToInbox';
@@ -151,7 +152,10 @@ const Aside = () => {
           <List component="div" disablePadding>
             {userCategoryCard}
             <ListItem button className={classes.nested}>
-              <ListItemIcon></ListItemIcon>
+              <ListItemIcon>
+                <AddBoxIcon />
+              </ListItemIcon>
+              <ListItemText>메일함 추가하기</ListItemText>
             </ListItem>
           </List>
         </Collapse>
@@ -172,9 +176,6 @@ const Aside = () => {
         <List>
           <ListItem button>
             <ListItemText primary="메일함 추가하기" />
-          </ListItem>
-          <ListItem button>
-            <ListItemText primary="메일함 이름 수정하기" />
           </ListItem>
         </List>
       </Popover>
