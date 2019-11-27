@@ -10,6 +10,7 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
     filename: originalname,
     content: buffer.toString('base64'),
     contentType: mimetype,
+    encoding: 'base64',
   }));
 
   const dsn = {
