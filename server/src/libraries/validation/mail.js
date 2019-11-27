@@ -12,6 +12,8 @@ const SORTING_CRITERIA = {
   dateasc: true,
   subjectdesc: true,
   subjectasc: true,
+  fromdesc: true,
+  fromasc: true,
 };
 
 const checkQuery = ({ category, page, sort }) => {

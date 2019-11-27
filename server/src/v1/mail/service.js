@@ -21,6 +21,8 @@ const SORT_TYPE = {
   dateasc: [['no', 'ASC']],
   subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
   subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
+  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
+  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
 };
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
