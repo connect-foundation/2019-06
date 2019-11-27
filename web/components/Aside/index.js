@@ -68,10 +68,10 @@ const Aside = () => {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = (e, action) => {
-    setDialogState(getDialogData(action));
+  const handleDialogClose = e => {
     setDialogOpen(false);
   };
+
   const handleClick = () => {
     setOpen(!open);
   };
