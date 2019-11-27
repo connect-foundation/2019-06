@@ -15,13 +15,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const SORT_TYPES = [
+  { value: 'datedesc', name: '시간 역순정렬' },
+  { value: 'dateasc', name: '시간 순정렬' },
+];
+
+const sortItems = SORT_TYPES.map(type => <MenuItem value={type.value}>{type.name}</MenuItem>);
+
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
 
   const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
-
   return (
     <>
       <S.CheckBox>체크박스</S.CheckBox>
@@ -33,8 +39,7 @@ const Tools = () => {
             onChange={handleChange}
             displayEmpty
             className={classes.selectEmpty}>
-            <MenuItem value={'datedesc'}>시간 역순정렬</MenuItem>
-            <MenuItem value={'dateasc'}>시간 순정렬</MenuItem>
+            {sortItems}
           </Select>
         </FormControl>
       </S.Filter>
