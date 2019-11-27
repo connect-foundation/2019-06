@@ -45,9 +45,9 @@ const MailArea = () => {
 
   return (
     <S.MailArea>
-      <S.Tools>
+      <S.ToolsWrapper>
         <Tools />
-      </S.Tools>
+      </S.ToolsWrapper>
       <S.MailListArea>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />

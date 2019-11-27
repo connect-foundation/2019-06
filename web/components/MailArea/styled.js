@@ -7,7 +7,7 @@ const Section = styled.section`
   overflow: hidden;
 `;
 
-const Tools = styled.div`
+const ToolsWrapper = styled.div`
   flex: 0 0 50px;
   border-bottom: 2px solid #e9ecef;
   display: flex;
@@ -37,4 +37,4 @@ const MailPagingArea = styled.div`
   align-items: center;
 `;
 
-export default { Section, Tools, MailArea, MailListArea, MailPagingArea };
+export default { Section, ToolsWrapper, MailArea, MailListArea, MailPagingArea };
