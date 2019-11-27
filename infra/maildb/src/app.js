@@ -24,14 +24,14 @@ const pool = mysql.createPool({
 
 const parseMailContent = async content => {
   try {
-    const { from, to, subject, html, attachments } = await simpleParser(
+    const { from, to, subject, html, text, attachments } = await simpleParser(
       content
     );
     return {
       from: from.text,
       to: to.text,
       subject: subject || UNTITLE,
-      text: html,
+      text: html || text,
       attachments
     };
   } catch (err) {
@@ -71,18 +71,24 @@ const insertMailToDB = async content => {
   try {
     await connection.beginTransaction();
     queryFormat = format.getQueryToAddMailTemplate(mail);
-    const [resultOfMailTemplate] = await connection.execute(queryFormat);
-    log.mail_template_id = resultOfMailTemplate.insertId;
+    const [{ insertId }] = await connection.execute(queryFormat);
 
-    receivers.forEach(async id => {
+    for await (let attachment of mail.attachments) {
+      attachment.mail_template_id = insertId;
+      queryFormat = format.getQueryToAddAttachment(attachment);
+      await connection.execute(queryFormat);
+    }
+
+    for await (let id of receivers) {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
       const [[{ owner, no }]] = await connection.query(queryFormat);
+      log.mail_template_id = insertId;
       log.owner = owner;
       log.category_no = no;
       queryFormat = format.getQueryToAddMail(log);
       await connection.execute(queryFormat);
       recordLog(mail, log);
-    });
+    }
 
     await connection.commit();
     connection.release();
