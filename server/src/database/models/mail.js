@@ -77,11 +77,6 @@ const model = (sequelize, DataTypes) => {
           where: {
             ...mailTemplateFilter,
           },
-          include: [
-            {
-              model: sequelize.models.Attachment,
-            },
-          ],
         },
       ],
       raw: true,
