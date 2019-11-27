@@ -18,6 +18,8 @@ const useStyles = makeStyles(theme => ({
 const SORT_TYPES = [
   { value: 'datedesc', name: '시간 역순정렬' },
   { value: 'dateasc', name: '시간 순정렬' },
+  { value: 'subjectdesc', name: '제목 역순정렬' },
+  { value: 'subjectasc', name: '제목 순정렬' },
 ];
 
 const sortItems = SORT_TYPES.map(type => <MenuItem value={type.value}>{type.name}</MenuItem>);

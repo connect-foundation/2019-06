@@ -1,3 +1,10 @@
+const SORTING_CRITERIA = {
+  datedesc: 'sort=datedesc',
+  dateasc: 'sort=dateasc',
+  subjectdesc: 'sort=subjectdesc',
+  subjectasc: 'sort=subjectasc',
+};
+
 const getQueryByOptions = ({ category, page, sort }) => {
   const query = [];
 
@@ -9,8 +16,8 @@ const getQueryByOptions = ({ category, page, sort }) => {
     query.push(`page=${page}`);
   }
 
-  if (sort === 'dateasc') {
-    query.push('sort=dateasc');
+  if (SORTING_CRITERIA[sort]) {
+    query.push(SORTING_CRITERIA[sort]);
   }
 
   return query.join('&');
