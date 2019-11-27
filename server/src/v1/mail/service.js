@@ -108,15 +108,12 @@ const sendMail = async (mailContents, user) => {
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveSentMail({ user, msg });
-  return mailContents;
 };
 
 const saveReservationMail = async (mailContents, user, reservationTime) => {
   await DB.sequelize.transaction(
     async transaction => await saveMail(mailContents, transaction, user.no, reservationTime),
   );
-
-  return mailContents;
 };
 
 export default { getMailsByOptions, sendMail, getQueryByOptions, saveReservationMail };

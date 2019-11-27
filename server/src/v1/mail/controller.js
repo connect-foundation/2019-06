@@ -36,19 +36,18 @@ const write = async (req, res, next) => {
   }
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
 
-  let mail;
   try {
     if (!reservationTime) {
-      mail = await service.sendMail(mailContents, req.user);
+      await service.sendMail(mailContents, req.user);
     } else {
       const date = dateValidator.validateDate(reservationTime);
-      mail = await service.saveReservationMail(mailContents, req.user, date);
+      await service.saveReservationMail(mailContents, req.user, date);
     }
   } catch (error) {
     return next(error);
   }
 
-  return res.status(STATUS.CREATED).json({ mail });
+  return res.status(STATUS.CREATED).json({ mail: mailContents });
 };
 
 export default {
