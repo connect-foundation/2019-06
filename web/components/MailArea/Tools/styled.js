@@ -15,7 +15,6 @@ const Etc = styled.div`
 
 const Filter = styled.div`
   flex: 0 0 40px;
-  border: 1px solid violet;
   margin-left: 30px;
 `;
 
