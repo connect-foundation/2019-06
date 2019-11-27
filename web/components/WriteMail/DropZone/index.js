@@ -26,10 +26,7 @@ const checkOverSize = files => {
   return sum <= FILE_MAX_SIZE;
 };
 
-const checkExtension = files => {
-  const filterdFiles = files.filter(file => !AVAILABLE_EXTENSION[file.type]);
-  return filterdFiles.length === 0;
-};
+const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
 
 const DropZone = () => {
   const { files } = useStateForWM();
