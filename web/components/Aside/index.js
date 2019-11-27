@@ -7,6 +7,7 @@ import AllInboxIcon from '@material-ui/icons/AllInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SettingsIcon from '@material-ui/icons/Settings';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
@@ -17,9 +18,14 @@ const useStyles = makeStyles(theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
-  alignCenter: {
+  alignHorizontalCenter: {
     display: 'flex',
     justifyContent: 'center',
+  },
+  alignHorizonVerticalCenter: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 }));
 
@@ -63,7 +69,7 @@ const Aside = () => {
   return (
     <S.Aside>
       <List component="nav">
-        <ListItem className={classes.alignCenter}>
+        <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
@@ -80,6 +86,13 @@ const Aside = () => {
             {userCategoryCard}
           </List>
         </Collapse>
+        <ListItem className={classes.alignHorizontalCenter}>
+          <S.WrtieButton
+            onClick={() => console.log('hi')}
+            className={classes.alignHorizonVerticalCenter}>
+            {<SettingsIcon />}메일함 설정
+          </S.WrtieButton>
+        </ListItem>
       </List>
     </S.Aside>
   );
