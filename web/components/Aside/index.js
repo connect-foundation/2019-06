@@ -1,7 +1,17 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemIcon, ListItemText, Collapse, Popover } from '@material-ui/core';
+import {
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  Popover,
+  ListItemSecondaryAction,
+  IconButton,
+} from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
+import ModifyIcon from '@material-ui/icons/Create';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
@@ -56,8 +66,8 @@ const Aside = () => {
   ];
 
   const userCategory = [
-    { name: '대햇', icon: <StarBorder />, no: 5 },
-    { name: '흑우', icon: <StarBorder />, no: 6 },
+    { name: '대햇', icon: <StarBorder fontSize={'small'} />, no: 5 },
+    { name: '흑우', icon: <StarBorder fontSize={'small'} />, no: 6 },
   ];
 
   const defaultCard = defaultCategory.map((category, idx) => (
@@ -73,6 +83,14 @@ const Aside = () => {
     <ListItem button key={idx} className={classes.nested}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
+      <ListItemSecondaryAction>
+        <IconButton edge="end" aria-label="modify">
+          <ModifyIcon fontSize={'small'} />
+        </IconButton>
+        <IconButton edge="end" aria-label="delete">
+          <DeleteIcon fontSize={'small'} />
+        </IconButton>
+      </ListItemSecondaryAction>
     </ListItem>
   ));
 
