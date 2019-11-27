@@ -52,7 +52,7 @@ const Profile = () => {
         </S.ColumnContainer>
         <S.ColumnContainer>
           <S.ColumnItem>
-            <Button>{name}</Button>
+            <Button style={{ textTransform: 'none' }}>{name}</Button>
           </S.ColumnItem>
           <S.ColumnItem>
             <Button onClick={() => router.push('/profile/pwchange')}>********</Button>

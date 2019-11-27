@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Router from 'next/router';
 import useForm from 'react-hook-form';
 
@@ -12,9 +12,20 @@ import validator from '../../../utils/validator';
 import S from './styled';
 import storage from '../../../utils/storage';
 import request from '../../../utils/request';
+import { setMessage } from '../../../contexts/reducer';
+import { AppDisapthContext } from '../../../contexts';
 
 const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
+  const { dispatch } = useContext(AppDisapthContext);
+
+  const handleRouteChange = url => {
+    if (url !== '/login') {
+      dispatch(setMessage(''));
+    }
+  };
+
+  Router.events.on('routeChangeStart', handleRouteChange);
 
   const onSubmit = (data, e) => {
     const { userId, password } = data;
@@ -72,6 +83,7 @@ const LoignForm = () => {
         name="userId"
         maxLength={20}
         ref={register}
+        autoComplete="off"
       />
       <S.ErrorText>{errors.userId && errors.userId.message}</S.ErrorText>
       <S.Input
@@ -82,6 +94,7 @@ const LoignForm = () => {
         name="password"
         maxLength={20}
         ref={register}
+        autoComplete="off"
       />
       <S.ErrorText>
         {(errors.password && errors.password.message) || (errors.login && errors.login.message)}
