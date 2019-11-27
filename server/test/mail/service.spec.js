@@ -5,7 +5,7 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 import bulkMock from '../../mock/create-large-amount-data';
 
-describe('Mail Service Test', () => {
+describe.only('Mail Service Test', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
@@ -101,6 +101,20 @@ describe('Mail Service Test', () => {
 
       query = service.getQueryByOptions({ ...data, sort: '43#$G3' });
       query.should.not.have.property(query.order);
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectdesc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectasc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('ASC');
     });
   });
 });
