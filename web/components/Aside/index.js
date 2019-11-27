@@ -46,18 +46,30 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const [MODIFY, DELETE] = [true, false];
+
+const getDialogData = fixing => ({
+  title: fixing ? '메일함명 변경' : '메일함 삭제',
+  textContents: fixing ? '변경할 메일함 이름을 적어주세요' : '정말로 삭제하시겠습니까?',
+  needTextField: fixing,
+  okBtnHandler: null,
+});
+
 const Aside = () => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(true);
   const { dispatch } = useContext(AppDisapthContext);
   const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState(getDialogData(true));
 
-  const handleDialogOpen = () => {
+  const handleDialogOpen = (e, action) => {
+    setDialogState(getDialogData(action));
     setDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
+  const handleDialogClose = (e, action) => {
+    setDialogState(getDialogData(action));
     setDialogOpen(false);
   };
   const handleClick = () => {
@@ -100,10 +112,20 @@ const Aside = () => {
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="modify" onClick={handleDialogOpen}>
+        <IconButton
+          edge="end"
+          aria-label="modify"
+          onClick={e => {
+            handleDialogOpen(e, MODIFY);
+          }}>
           <ModifyIcon fontSize={'small'} />
         </IconButton>
-        <IconButton edge="end" aria-label="delete">
+        <IconButton
+          edge="end"
+          aria-label="delete"
+          onClick={e => {
+            handleDialogOpen(e, DELETE);
+          }}>
           <DeleteIcon fontSize={'small'} />
         </IconButton>
       </ListItemSecondaryAction>
@@ -156,28 +178,29 @@ const Aside = () => {
           </ListItem>
         </List>
       </Popover>
-      <Dialog open={dialogOpen} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+      <Dialog open={dialogOpen} onClose={handleDialogClose} aria-labelledby="dialog-title">
+        <DialogTitle id="dialog-title">{dialogState.title}</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Email Address"
-            type="email"
-            fullWidth
-          />
+          <DialogContentText>{dialogState.textContents}</DialogContentText>
+          {dialogState.needTextField ? (
+            <TextField
+              autoFocus
+              margin="dense"
+              id="newMailboxName"
+              label="새 메일함 이름"
+              type="text"
+              fullWidth
+            />
+          ) : (
+            ''
+          )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
+          <Button onClick={dialogState.okBtnHandler} color="primary">
+            확인
           </Button>
           <Button onClick={handleDialogClose} color="primary">
-            Subscribe
+            취소
           </Button>
         </DialogActions>
       </Dialog>
