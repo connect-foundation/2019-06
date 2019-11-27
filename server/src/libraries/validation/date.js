@@ -27,7 +27,7 @@ const validateDate = reserveTime => {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (Date.now > date.getTime()) {
+  if (Date.now() > date.getTime()) {
     const errorField = new ErrorField('reserveTime', reserveTime, '이미 지난 날짜 입니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }

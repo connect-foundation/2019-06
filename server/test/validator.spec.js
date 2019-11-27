@@ -199,5 +199,17 @@ describe('validator 모듈의', () => {
         fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
       }
     });
+
+    it('현재 날짜 이전의 날짜를 보낼 경우 에러를 throw 한다.', () => {
+      const dateStr = '2017:05:03 12:00';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
+      }
+    });
   });
 });
