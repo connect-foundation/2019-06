@@ -73,13 +73,13 @@ const insertMailToDB = async content => {
     queryFormat = format.getQueryToAddMailTemplate(mail);
     const [{ insertId }] = await connection.execute(queryFormat);
 
-    mail.attachments.forEach(async attahcment => {
-      attahcment.mail_template_id = insertId;
-      queryFormat = format.getQueryToAddAttachment(attahcment);
+    for await (let attachment of mail.attachments) {
+      attachment.mail_template_id = insertId;
+      queryFormat = format.getQueryToAddAttachment(attachment);
       await connection.execute(queryFormat);
-    });
+    }
 
-    receivers.forEach(async id => {
+    for await (let id of receivers) {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
       const [[{ owner, no }]] = await connection.query(queryFormat);
       log.mail_template_id = insertId;
@@ -88,7 +88,7 @@ const insertMailToDB = async content => {
       queryFormat = format.getQueryToAddMail(log);
       await connection.execute(queryFormat);
       recordLog(mail, log);
-    });
+    }
 
     await connection.commit();
     connection.release();
