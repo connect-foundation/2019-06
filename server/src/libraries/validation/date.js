@@ -14,7 +14,7 @@ const validateDate = reserveTime => {
       reserveTime,
       '날짜 형식은 YYYY:MM:DD hh:mm 입니다',
     );
-    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+    throw new ErrorResponse(ERROR_CODE.INVALID_DATE, errorField);
   }
 
   const date = strToDate(reserveTime);
@@ -24,12 +24,12 @@ const validateDate = reserveTime => {
       reserveTime,
       `예약은 ${MINUTES_INTERVAL}분 단위로 할 수 있습니다`,
     );
-    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+    throw new ErrorResponse(ERROR_CODE.INVALID_DATE, errorField);
   }
 
   if (Date.now() > date.getTime()) {
     const errorField = new ErrorField('reserveTime', reserveTime, '이미 지난 날짜 입니다');
-    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+    throw new ErrorResponse(ERROR_CODE.INVALID_DATE, errorField);
   }
 
   return date;
