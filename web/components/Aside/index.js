@@ -12,7 +12,8 @@ import {
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
 import ModifyIcon from '@material-ui/icons/Create';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import InboxIcon from '@material-ui/icons/Inbox';
+import MoveInboxIcon from '@material-ui/icons/MoveToInbox';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
@@ -58,8 +59,8 @@ const Aside = () => {
   };
 
   const defaultCategory = [
-    { name: '받은편지함', icon: <AllInboxIcon />, no: 0 },
-    { name: '중요편지함', icon: <StarBorder />, no: 1 },
+    { name: '전체메일함', icon: <AllInboxIcon />, no: 0 },
+    { name: '받은메일함', icon: <InboxIcon />, no: 1 },
     { name: '보낸메일함', icon: <SendIcon />, no: 2 },
     { name: '내게쓴메일함', icon: <DraftsIcon />, no: 3 },
     { name: '휴지통', icon: <DeleteIcon />, no: 4 },
@@ -104,14 +105,17 @@ const Aside = () => {
         {defaultCard}
         <ListItem button onContextMenu={handleMailboxMenuContextClick} onClick={handleClick}>
           <ListItemIcon>
-            <InboxIcon />
+            <MoveInboxIcon />
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
+          <ListItemText primary="개인메일함" />
           {open ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {userCategoryCard}
+            <ListItem button className={classes.nested}>
+              <ListItemIcon></ListItemIcon>
+            </ListItem>
           </List>
         </Collapse>
       </List>
