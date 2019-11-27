@@ -33,6 +33,10 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      reservation_time: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,
