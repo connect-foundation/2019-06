@@ -71,12 +71,18 @@ const insertMailToDB = async content => {
   try {
     await connection.beginTransaction();
     queryFormat = format.getQueryToAddMailTemplate(mail);
-    const [resultOfMailTemplate] = await connection.execute(queryFormat);
-    log.mail_template_id = resultOfMailTemplate.insertId;
+    const [{ insertId }] = await connection.execute(queryFormat);
+
+    mail.attachments.forEach(async attahcment => {
+      attahcment.mail_template_id = insertId;
+      queryFormat = format.getQueryToAddAttachment(attahcment);
+      await connection.execute(queryFormat);
+    });
 
     receivers.forEach(async id => {
       queryFormat = format.getQueryToFindOwnerAndCategoryNo(id);
       const [[{ owner, no }]] = await connection.query(queryFormat);
+      log.mail_template_id = insertId;
       log.owner = owner;
       log.category_no = no;
       queryFormat = format.getQueryToAddMail(log);

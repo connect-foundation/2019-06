@@ -4,7 +4,8 @@ const TABLE = {
   MAIL_TEMPLATE: "tbl_mail_template",
   MAIL: "tbl_mail",
   USER: "tbl_user",
-  CATEGORY: "tbl_category"
+  CATEGORY: "tbl_category",
+  ATTACHMENT: "tbl_attachment"
 };
 
 const QUERY = {
@@ -26,13 +27,7 @@ const VALUE = {
   MAILBOX: "받은메일함"
 };
 
-const getQueryToAddMailTemplate = ({
-  from,
-  to,
-  subject,
-  text,
-  attachments
-}) => {
+const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
   const valueOfMailTemplate = {
     from,
     to,
@@ -43,6 +38,21 @@ const getQueryToAddMailTemplate = ({
   };
 
   return mysql.format(QUERY.INSERT, [TABLE.MAIL_TEMPLATE, valueOfMailTemplate]);
+};
+
+const getQueryToAddAttachment = ({
+  filename,
+  content,
+  contentType,
+  mail_template_id
+}) => {
+  const valueOfAttachment = {
+    name: filename,
+    content,
+    type: contentType,
+    mail_template_id
+  };
+  return mysql.format(QUERY.INSERT, [TABLE.ATTACHMENT, valueOfAttachment]);
 };
 
 const getQueryToFindOwnerAndCategoryNo = id => {
@@ -74,6 +84,7 @@ const getQueryToAddMail = ({ owner, category_no, mail_template_id }) => {
 
 module.exports = {
   getQueryToAddMailTemplate,
+  getQueryToAddAttachment,
   getQueryToFindOwnerAndCategoryNo,
   getQueryToAddMail
 };
