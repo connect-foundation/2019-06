@@ -8,8 +8,10 @@ const PAGE_NUMBER_RANGE = { min: 1, max: MAX_SAFE_INTEGER };
 const CATEGORY_NUMBER_RANGE = { min: 0, max: MAX_SAFE_INTEGER };
 
 const SORTING_CRITERIA = {
-  datedesc: 'datedesc',
-  dateasc: 'dateasc',
+  datedesc: true,
+  dateasc: true,
+  subjectdesc: true,
+  subjectasc: true,
 };
 
 const checkQuery = ({ category, page, sort }) => {

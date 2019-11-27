@@ -16,8 +16,12 @@ const DEFAULT_MAIL_QUERY_OPTIONS = {
   sort: 'datedesc',
 };
 
-const DATE_DESC = 'datedesc';
-const DATE_ASC = 'dateasc';
+const SORT_TYPE = {
+  datedesc: [['no', 'DESC']],
+  dateasc: [['no', 'ASC']],
+  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
+  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
+};
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
   const query = {
@@ -36,10 +40,8 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
     query.mailFilter.category_no = category;
   }
 
-  if (sort === DATE_DESC) {
-    query.order = [['no', 'DESC']];
-  } else if (sort === DATE_ASC) {
-    query.order = [['no', 'ASC']];
+  if (SORT_TYPE[sort]) {
+    query.order = SORT_TYPE[sort];
   }
 
   return query;

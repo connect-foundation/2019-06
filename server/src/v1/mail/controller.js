@@ -11,6 +11,7 @@ const list = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
   let mails;
+
   try {
     checkQuery(query);
     mails = await service.getMailsByOptions(userNo, query);
