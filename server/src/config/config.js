@@ -21,6 +21,7 @@ const config = {
     dialect: 'mysql',
     operatorsAliases: 'false',
     logging: false,
+    timezone: '+09:00',
   },
   test: {
     username: DB_TEST_USERNAME,
@@ -30,6 +31,7 @@ const config = {
     dialect: 'mysql',
     operatorsAliases: 'false',
     logging: false,
+    timezone: '+09:00',
   },
   production: {
     username: DB_PRODUCTION_USERNAME,
@@ -39,6 +41,7 @@ const config = {
     dialect: 'mysql',
     operatorsAliases: 'false',
     logging: false,
+    timezone: '+09:00',
   },
 };
 

@@ -1,15 +1,15 @@
-import db from '../src/database';
+import DB from '../src/database';
 
 const MAILBOX = {
   ENTIRE: '전체메일함',
   RECEIVED: '받은메일함',
   SENT: '보낸메일함',
   SELF: '내게쓴메일함',
-  TARSH: '휴지통',
+  TRASH: '휴지통',
 };
 
 const createDomainDummyData = async () => {
-  const results = await db.Domain.bulkCreate([
+  const results = await DB.Domain.bulkCreate([
     {
       name: 'daitnu.com',
     },
@@ -34,7 +34,7 @@ const createMailTemplateDummyData = async () => {
     },
   ];
 
-  await db.MailTemplate.bulkCreate(mailTemplate);
+  await DB.MailTemplate.bulkCreate(mailTemplate);
 };
 
 const createUserDummyData = async () => {
@@ -62,7 +62,7 @@ const createUserDummyData = async () => {
     },
   ];
 
-  await db.User.bulkCreate(users);
+  await DB.User.bulkCreate(users);
 };
 
 const createMailDummyData = async () => {
@@ -75,19 +75,7 @@ const createMailDummyData = async () => {
     { owner: 3, mail_template_id: 2 },
   ];
 
-  await db.Mail.bulkCreate(mails);
-};
-
-const createMailboxDummyData = async () => {
-  const mailBoxes = [
-    { user_no: 1, name: MAILBOX.ENTIRE, is_default: 1 },
-    { user_no: 1, name: MAILBOX.RECEIVED, is_default: 1 },
-    { user_no: 1, name: MAILBOX.SENT, is_default: 1 },
-    { user_no: 1, name: MAILBOX.SELF, is_default: 1 },
-    { user_no: 1, name: MAILBOX.TARSH, is_default: 1 },
-  ];
-
-  await db.Category.bulkCreate(mailBoxes);
+  await DB.Mail.bulkCreate(mails);
 };
 
 const createCategoryDummyData = async () => {
@@ -101,7 +89,7 @@ const createCategoryDummyData = async () => {
     categories.push({ user_no: i, name: MAILBOX.TRASH, is_default: 1 });
   }
 
-  await db.Category.bulkCreate(categories);
+  await DB.Category.bulkCreate(categories);
 };
 
 const createDummyData = async () => {
@@ -109,7 +97,6 @@ const createDummyData = async () => {
   await createUserDummyData();
   await createMailTemplateDummyData();
   await createMailDummyData();
-  await createMailboxDummyData();
   await createCategoryDummyData();
 };
 
