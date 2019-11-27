@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import S from './styled';
+import { AppDisapthContext, AppStateContext } from '../../../contexts';
+import { handleSortSelect } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -15,11 +17,10 @@ const useStyles = makeStyles(theme => ({
 
 const Tools = () => {
   const classes = useStyles();
-  const [age, setAge] = React.useState('datedesc');
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDisapthContext);
 
-  const handleChange = event => {
-    setAge(event.target.value);
-  };
+  const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
 
   return (
     <>
@@ -27,7 +28,11 @@ const Tools = () => {
       <S.Etc>잡다한 여러게</S.Etc>
       <S.Filter>
         <FormControl className={classes.formControl}>
-          <Select value={age} onChange={handleChange} displayEmpty className={classes.selectEmpty}>
+          <Select
+            value={state.sort}
+            onChange={handleChange}
+            displayEmpty
+            className={classes.selectEmpty}>
             <MenuItem value={'datedesc'}>시간 역순정렬</MenuItem>
             <MenuItem value={'dateasc'}>시간 순정렬</MenuItem>
           </Select>

@@ -3,6 +3,7 @@ const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const MAIL_CLICK = 'MAIL_CLICK';
 const SET_VIEW = 'SET_VIEW';
+const SORT_SELECT = 'SORT_SELECT';
 
 export const initialState = {
   category: 0,
@@ -10,6 +11,17 @@ export const initialState = {
   mails: null,
   paging: null,
   view: null,
+  sort: 'datedesc',
+};
+
+export const handleSortSelect = sortType => {
+  return {
+    type: SORT_SELECT,
+    payload: {
+      page: 1,
+      sort: sortType,
+    },
+  };
 };
 
 export const handleCategoryClick = (no, view) => {
@@ -75,6 +87,9 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case SET_VIEW:
       return { ...state, ...payload };
+    case SORT_SELECT: {
+      return { ...state, ...payload };
+    }
     default:
       return { ...state };
   }

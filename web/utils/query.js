@@ -1,4 +1,4 @@
-const getQueryByOptions = ({ category, page }) => {
+const getQueryByOptions = ({ category, page, sort }) => {
   const query = [];
 
   if (category > 0) {
@@ -8,6 +8,11 @@ const getQueryByOptions = ({ category, page }) => {
   if (page > 0) {
     query.push(`page=${page}`);
   }
+
+  if (sort === 'dateasc') {
+    query.push('sort=dateasc');
+  }
+
   return query.join('&');
 };
 
