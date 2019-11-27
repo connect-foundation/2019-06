@@ -176,7 +176,7 @@ describe('validator 모듈의', () => {
       }
     });
 
-    it('예약 시간이 15분 단위가 아니면 메일을 throw 한다.', () => {
+    it('예약 시간이 15분 단위가 아니면 에러를 throw 한다.', () => {
       const dateStr = '2019:12:31 10:13';
       try {
         dateValidator.validateDate(dateStr);
