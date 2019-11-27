@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import { validate, checkUser } from '../src/libraries/validator';
+import { validate, checkUser, checkDate } from '../src/libraries/validator';
 
 describe('validator 모듈의', () => {
   describe('validate(id) 호출시', () => {
@@ -126,6 +126,28 @@ describe('validator 모듈의', () => {
         email: 'abc@daitne.co.kr',
         password: 'bbbB111!',
       }).should.be.equal(true);
+    });
+  });
+
+  describe('checkDate 호출시', () => {
+    it('형식에 맞지 않는 날짜를 넘겨줄 경우 false를 반환한다.', () => {
+      checkDate('2019:12:31 10:01').should.be.equal(false);
+      checkDate('2019:-1:10 10:01').should.be.equal(false);
+      checkDate('2019:-1:10 13:00').should.be.equal(false);
+      checkDate('2019:12:10 -1:00').should.be.equal(false);
+      checkDate('2019:12:32 13:00').should.be.equal(false);
+      checkDate('19:12:00 13:00').should.be.equal(false);
+      checkDate('2019:12:00').should.be.equal(false);
+      checkDate('19:12:99 13:00').should.be.equal(false);
+      checkDate('2019:12:30 25:00').should.be.equal(false);
+      checkDate('2019:12:31 10:01').should.be.equal(false);
+      checkDate('2019:02:29 10:00').should.be.equal(false);
+    });
+
+    it('형식에 맞는 날짜를 넘겨줄 경우 true를 반환한다.', () => {
+      checkDate('2019:01:10 13:00').should.be.equal(true);
+      checkDate('2019:12:31 15:00').should.be.equal(true);
+      checkDate('2020:02:29 10:00').should.be.equal(true);
     });
   });
 });

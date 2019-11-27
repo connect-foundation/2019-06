@@ -1,3 +1,5 @@
+const MINUTES_INTERVAL = 15;
+
 const regexsOfType = {
   id: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/, /^.{5,20}$/],
   email: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/],
@@ -32,4 +34,40 @@ const checkLoginForm = ({ id, password }) => {
   return Object.keys(user).every(key => validate(key, user[key]));
 };
 
-export { validate, checkUser, checkLoginForm };
+const checkDate = dateStr => {
+  // First check for the pattern
+  if (!/^\d{4}:\d{2}:\d{2} \d{2}:\d{2}$/.test(dateStr)) {
+    return false;
+  }
+  // Parse the date parts to integers
+  const parts = dateStr.split(' ');
+  let [year, month, day] = parts[0].split(':');
+  let [hours, minutes] = parts[1].split(':');
+
+  year = +year;
+  month = +month;
+  day = +day;
+  hours = +hours;
+  minutes = +minutes;
+
+  // Check the ranges of month and year
+  if (year < 1000 || year > 3000 || month === 0 || month > 12) return false;
+
+  const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  // Adjust for leap years
+  if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) monthLength[1] = 29;
+
+  // Check the range of the day
+  return (
+    day > 0 &&
+    day <= monthLength[month - 1] &&
+    hours >= 0 &&
+    hours <= 23 &&
+    minutes >= 0 &&
+    minutes <= 45 &&
+    minutes % MINUTES_INTERVAL === 0
+  );
+};
+
+export { validate, checkUser, checkLoginForm, checkDate };
