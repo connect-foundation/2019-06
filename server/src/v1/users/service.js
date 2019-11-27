@@ -83,9 +83,6 @@ const sendUserPasswordToEmail = async (id, email) => {
 };
 
 const getCategories = async user => {
-  if (!user) {
-    throw new ErrorResponse(ERROR_CODE.UNAUTHORIZED);
-  }
   const categories = await DB.Category.findAllByUserNo(user.no);
   return { categories };
 };
