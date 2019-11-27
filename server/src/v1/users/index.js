@@ -8,6 +8,7 @@ router.get('/', (req, res) => {
   res.json({});
 });
 
+router.get('/categories', ctrl.getCategories);
 router.post('/', ctrl.registerUser);
 router.post('/search', ctrl.search);
 router.patch('/password', isAuth, ctrl.updatePassword);

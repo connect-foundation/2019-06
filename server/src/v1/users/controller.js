@@ -1,6 +1,7 @@
 import status from 'http-status';
 import validation from '../../libraries/validation/user';
 import service from './service';
+import ErrorField from '../../libraries/exception/error-field';
 
 const registerUser = async (req, res, next) => {
   let newUser;
@@ -47,4 +48,16 @@ const updatePassword = async (req, res, next) => {
   return res.status(status.NO_CONTENT).end();
 };
 
-export default { registerUser, updatePassword, search };
+const getCategories = async (req, res, next) => {
+  let categories;
+
+  try {
+    categories = await service.getCategories(req.user);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.json(categories);
+};
+
+export default { registerUser, updatePassword, search, getCategories };
