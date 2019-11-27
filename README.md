@@ -20,7 +20,13 @@
 ### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
 
 ## Concept
-![메일전송과정](https://user-images.githubusercontent.com/33617083/69132049-ae41c580-0af6-11ea-85e6-46f569b39360.png)
+![다잇누-워크플로우](https://user-images.githubusercontent.com/31912670/69704777-7f030800-1137-11ea-99e7-db46beebf7c1.jpg)
+
+MUA(Mail User Agent): 메일을 읽고 보낼 때 클라이언트가 이용하는 프로그램  
+MTA(Mail Transfer Agent): 메일을 SMTP를 통해 다른 메일 서버로 전달하는 프로그램  
+MDA(Mail Delivery Agent): POP3, IMTP를 통해 서버에 저장된 이메일을 사용자에게 전달하는 프로그램  
+
+
 
 ## View
 
