@@ -9,6 +9,13 @@ import {
   Popover,
   ListItemSecondaryAction,
   IconButton,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button,
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
 import ModifyIcon from '@material-ui/icons/Create';
@@ -44,7 +51,15 @@ const Aside = () => {
   const [open, setOpen] = React.useState(true);
   const { dispatch } = useContext(AppDisapthContext);
   const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
 
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
   const handleClick = () => {
     setOpen(!open);
   };
@@ -85,7 +100,7 @@ const Aside = () => {
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
       <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="modify">
+        <IconButton edge="end" aria-label="modify" onClick={handleDialogOpen}>
           <ModifyIcon fontSize={'small'} />
         </IconButton>
         <IconButton edge="end" aria-label="delete">
@@ -141,6 +156,31 @@ const Aside = () => {
           </ListItem>
         </List>
       </Popover>
+      <Dialog open={dialogOpen} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here. We will send updates
+            occasionally.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Email Address"
+            type="email"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDialogClose} color="primary">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
     </S.Aside>
   );
 };
