@@ -7,6 +7,7 @@ import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
 import checkQuery from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
+import { strToDate } from '../../libraries/date-parser';
 
 const list = async (req, res, next) => {
   const userNo = req.user.no;
@@ -40,7 +41,8 @@ const write = async (req, res, next) => {
     if (!reservationTime) {
       await service.sendMail(mailContents, req.user);
     } else {
-      const date = dateValidator.validateDate(reservationTime);
+      dateValidator.validateDate(reservationTime);
+      const date = strToDate(reservationTime);
       await service.saveReservationMail(mailContents, req.user, date);
     }
   } catch (error) {

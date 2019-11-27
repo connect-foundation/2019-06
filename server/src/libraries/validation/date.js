@@ -32,7 +32,7 @@ const validateDate = reservationTime => {
     throw new ErrorResponse(ERROR_CODE.INVALID_DATE, errorField);
   }
 
-  return date;
+  return true;
 };
 
 export default {
