@@ -3,6 +3,7 @@ const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const MAIL_CLICK = 'MAIL_CLICK';
 const SET_VIEW = 'SET_VIEW';
+const SET_MESSAGE = 'SET_MESSAGE';
 
 export const initialState = {
   category: 0,
@@ -10,6 +11,7 @@ export const initialState = {
   mails: null,
   paging: null,
   view: null,
+  message: '',
 };
 
 export const handleCategoryClick = (no, view) => {
@@ -61,6 +63,15 @@ export const setView = view => {
   };
 };
 
+export const setMessage = message => {
+  return {
+    type: SET_MESSAGE,
+    payload: {
+      message,
+    },
+  };
+};
+
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
@@ -74,6 +85,8 @@ export const reducer = (state = initialState, action) => {
     case CHANGE_MAILS_DATA:
       return { ...state, ...payload };
     case SET_VIEW:
+      return { ...state, ...payload };
+    case SET_MESSAGE:
       return { ...state, ...payload };
     default:
       return { ...state };
