@@ -4,6 +4,7 @@ import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
 import moment from 'moment';
+import ToolGroup from './ToolGroup';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
@@ -15,7 +16,7 @@ const ReadMail = () => {
 
   return (
     <S.Container>
-      <S.Tools>Tools</S.Tools>
+      <ToolGroup />
       <S.ReadArea>
         <S.TitleView>
           <S.Subject>
