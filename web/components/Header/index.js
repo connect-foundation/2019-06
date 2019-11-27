@@ -4,12 +4,12 @@ import * as S from './styled';
 
 import ProfileLink from '../ProfileLink';
 import { AppDisapthContext } from '../../contexts';
-import { setView } from '../../contexts/reducer';
+import { handleCategoryClick } from '../../contexts/reducer';
 import MailArea from '../MailArea';
 
 const Header = ({ brand }) => {
   const { dispatch } = useContext(AppDisapthContext);
-  const handleAtagClick = () => dispatch(setView(<MailArea />));
+  const handleAtagClick = () => dispatch(handleCategoryClick(0, <MailArea />));
   return (
     <S.Header>
       <S.Brand>
