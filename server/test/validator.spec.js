@@ -158,7 +158,7 @@ describe('validator 모듈의', () => {
         dateValidator.validateDate(dateStr);
       } catch (err) {
         const { fieldErrors } = err;
-        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
         fieldErrors[0].should.be.properties({ value: dateStr });
         fieldErrors[0].should.be.properties({ reason: '날짜 형식은 YYYY:MM:DD hh:mm 입니다' });
       }
@@ -170,7 +170,7 @@ describe('validator 모듈의', () => {
         dateValidator.validateDate(dateStr);
       } catch (err) {
         const { fieldErrors } = err;
-        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
         fieldErrors[0].should.be.properties({ value: dateStr });
         fieldErrors[0].should.be.properties({ reason: '날짜 형식은 YYYY:MM:DD hh:mm 입니다' });
       }
@@ -182,7 +182,7 @@ describe('validator 모듈의', () => {
         dateValidator.validateDate(dateStr);
       } catch (err) {
         const { fieldErrors } = err;
-        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
         fieldErrors[0].should.be.properties({ value: dateStr });
         fieldErrors[0].should.be.properties({ reason: '예약은 15분 단위로 할 수 있습니다' });
       }
@@ -194,7 +194,7 @@ describe('validator 모듈의', () => {
         dateValidator.validateDate(dateStr);
       } catch (err) {
         const { fieldErrors } = err;
-        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
         fieldErrors[0].should.be.properties({ value: dateStr });
         fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
       }
@@ -206,7 +206,7 @@ describe('validator 모듈의', () => {
         dateValidator.validateDate(dateStr);
       } catch (err) {
         const { fieldErrors } = err;
-        fieldErrors[0].should.be.properties({ field: 'reserveTime' });
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
         fieldErrors[0].should.be.properties({ value: dateStr });
         fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
       }

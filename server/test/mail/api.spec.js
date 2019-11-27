@@ -81,14 +81,14 @@ describe('Mail api test...', () => {
           .expect(400, done);
       });
 
-      it('예약 메일함 전송시 보낼 사람의 이메일이 유효한 이메일이 아니라면 400 에러를 반환한다', done => {
+      it('예약 메일함 전송시 예약시간이 유효하지 않다면 400 에러를 반환한다', done => {
         authenticatedUser
           .post('/v1/mail')
           .send({
-            to: ['yyyy@da.c'],
+            to: ['yyyy@daf.cdd'],
             subject: 'title이sdadweq다',
             text: 'body이czxczx다',
-            reservationTime: '2019:11:09 12:30',
+            reservationTime: '2000:11:09 12:30',
             attachments: [],
           })
           .expect(400, done);
