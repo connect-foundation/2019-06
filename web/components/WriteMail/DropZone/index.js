@@ -16,9 +16,20 @@ import * as WM_S from '../styled';
 import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
+import AVAILABLE_EXTENSION from '../../../utils/available-extension';
 
 const MB = 1024 * 1024;
-const FILE_MAX_SIZE = 20 * MB;
+const FILE_MAX_SIZE = 10 * MB;
+
+const checkOverSize = files => {
+  const sum = files.reduce((a, b) => a + b.size, 0);
+  return sum <= FILE_MAX_SIZE;
+};
+
+const checkExtension = files => {
+  const filterdFiles = files.filter(file => !AVAILABLE_EXTENSION[file.type]);
+  return filterdFiles.length === 0;
+};
 
 const DropZone = () => {
   const { files } = useStateForWM();
@@ -26,6 +37,13 @@ const DropZone = () => {
 
   const onDrop = useCallback(
     acceptedFiles => {
+      if (!checkOverSize(acceptedFiles)) {
+        return;
+      }
+      if (!checkExtension(acceptedFiles)) {
+        return;
+      }
+
       dispatch({ type: UPDATE_FILES, payload: { files: acceptedFiles } });
     },
     [dispatch],
