@@ -112,6 +112,9 @@ const Aside = () => {
         }}>
         <List>
           <ListItem button>
+            <ListItemText primary="메일함 추가하기" />
+          </ListItem>
+          <ListItem button>
             <ListItemText primary="메일함 이름 수정하기" />
           </ListItem>
           <ListItem button>
