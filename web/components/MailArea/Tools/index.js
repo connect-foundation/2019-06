@@ -20,6 +20,8 @@ const SORT_TYPES = [
   { value: 'dateasc', name: '시간 순정렬' },
   { value: 'subjectdesc', name: '제목 역순정렬' },
   { value: 'subjectasc', name: '제목 순정렬' },
+  { value: 'fromdesc', name: '보낸 이 역순정렬' },
+  { value: 'fromasc', name: '보낸 이 순정렬' },
 ];
 
 const sortItems = SORT_TYPES.map(type => <MenuItem value={type.value}>{type.name}</MenuItem>);

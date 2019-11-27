@@ -3,6 +3,8 @@ const SORTING_CRITERIA = {
   dateasc: 'sort=dateasc',
   subjectdesc: 'sort=subjectdesc',
   subjectasc: 'sort=subjectasc',
+  fromdesc: 'sort=fromdesc',
+  fromasc: 'sort=fromasc',
 };
 
 const getQueryByOptions = ({ category, page, sort }) => {
