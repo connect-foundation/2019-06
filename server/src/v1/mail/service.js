@@ -81,20 +81,20 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });
 };
 
-const saveMail = async (mailContents, transaction) => {
+const saveMail = async (mailContents, transaction, userNo, reservationTime = null) => {
   const mailTemplateResult = await DB.MailTemplate.create(
     { ...mailContents, to: mailContents.to.join(',') },
     { transaction },
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
-  const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
-  const userCategory = await DB.Category.findOneByUserNoAndName(user.no, SENT_MAILBOX_NAME);
+  const userCategory = await DB.Category.findOneByUserNoAndName(userNo, SENT_MAILBOX_NAME);
   await DB.Mail.create(
     {
-      owner: user.no,
+      owner: userNo,
       mail_template_id: mailTemplate.no,
       category_no: userCategory.no,
+      reservation_time: reservationTime,
     },
     { transaction },
   );
@@ -102,11 +102,21 @@ const saveMail = async (mailContents, transaction) => {
 
 const sendMail = async (mailContents, user) => {
   const transporter = nodemailer.createTransport(U.getTransport(user));
-  await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
+  await DB.sequelize.transaction(
+    async transaction => await saveMail(mailContents, transaction, user.no),
+  );
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveSentMail({ user, msg });
   return mailContents;
 };
 
-export default { getMailsByOptions, sendMail, getQueryByOptions };
+const saveReservationMail = async (mailContents, user, reservationTime) => {
+  await DB.sequelize.transaction(
+    async transaction => await saveMail(mailContents, transaction, user.no, reservationTime),
+  );
+
+  return mailContents;
+};
+
+export default { getMailsByOptions, sendMail, getQueryByOptions, saveReservationMail };

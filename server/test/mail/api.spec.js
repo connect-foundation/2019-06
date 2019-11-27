@@ -27,17 +27,21 @@ describe('Mail api test...', () => {
       });
     });
     describe('로그인 한 상태로..', () => {
-      const userCredentials = {
-        id: 'rooot',
-        password: '12345678',
+      const user = {
+        id: 'userid',
+        name: '이름이뭐니',
+        password: 'pasword12',
+        sub_email: 'daitnu@daitnu.com',
       };
+
       const authenticatedUser = request.agent(app);
 
-      before(done => {
-        authenticatedUser
-          .post('/v1/auth/login')
-          .send(userCredentials)
-          .expect(200, done);
+      before(async () => {
+        await request(app)
+          .post('/v1/users')
+          .send(user);
+
+        await authenticatedUser.post('/v1/auth/login').send(user);
       });
 
       it('보낼 사람의 이메일이 유효한 이메일이 아니라면 400 에러를 반환한다', done => {
@@ -62,6 +66,58 @@ describe('Mail api test...', () => {
             attachments: [],
           })
           .expect(400, done);
+      });
+
+      it('예약 메일함 전송시 보낼 사람의 이메일이 유효한 이메일이 아니라면 400 에러를 반환한다', done => {
+        authenticatedUser
+          .post('/v1/mail')
+          .send({
+            to: ['yyyy@da.c'],
+            subject: 'title이sdadweq다',
+            text: 'body이czxczx다',
+            reservationTime: '2019:11:09 12:30',
+            attachments: [],
+          })
+          .expect(400, done);
+      });
+
+      it('예약 메일함 전송시 보낼 사람의 이메일이 유효한 이메일이 아니라면 400 에러를 반환한다', done => {
+        authenticatedUser
+          .post('/v1/mail')
+          .send({
+            to: ['yyyy@da.c'],
+            subject: 'title이sdadweq다',
+            text: 'body이czxczx다',
+            reservationTime: '2019:11:09 12:30',
+            attachments: [],
+          })
+          .expect(400, done);
+      });
+
+      it('예약 메일함 전송시 예약시간이 유효하지 않다면 400 에러를 반환한다', done => {
+        authenticatedUser
+          .post('/v1/mail')
+          .send({
+            to: ['yyyy@dada.cas'],
+            subject: 'hihihi',
+            text: 'body이czxczx다',
+            reservationTime: '2019:1-:09 --에오:30',
+            attachments: [],
+          })
+          .expect(400, done);
+      });
+
+      it('예약 메일함 전송시 예약시간이 유효하다면 상태코드는 201이다.', done => {
+        authenticatedUser
+          .post('/v1/mail')
+          .send({
+            to: ['yyyy@dada.cas'],
+            subject: 'hihihi',
+            text: 'body이czxczx다',
+            reservationTime: '2020:01:20 12:00',
+            attachments: [],
+          })
+          .expect(201, done);
       });
     });
   });

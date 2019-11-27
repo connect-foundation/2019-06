@@ -6,6 +6,7 @@ import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
 import checkQuery from '../../libraries/validation/mail';
+import dateValidator from '../../libraries/validation/date';
 
 const list = async (req, res, next) => {
   const userNo = req.user.no;
@@ -23,7 +24,7 @@ const list = async (req, res, next) => {
 
 const write = async (req, res, next) => {
   const attachments = req.files;
-  const { subject, text } = req.body;
+  const { subject, text, reservationTime } = req.body;
   let { to } = req.body;
   if (!Array.isArray(to)) {
     to = [to];
@@ -37,7 +38,12 @@ const write = async (req, res, next) => {
 
   let mail;
   try {
-    mail = await service.sendMail(mailContents, req.user);
+    if (!reservationTime) {
+      mail = await service.sendMail(mailContents, req.user);
+    } else {
+      const date = dateValidator.validateDate(reservationTime);
+      mail = await service.saveReservationMail(mailContents, req.user, date);
+    }
   } catch (error) {
     return next(error);
   }
