@@ -11,6 +11,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
+import BoxSetting from '../BoxSetting';
 import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
 
@@ -88,7 +89,7 @@ const Aside = () => {
         </Collapse>
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton
-            onClick={() => console.log('hi')}
+            onClick={() => dispatch(setView(<BoxSetting />))}
             className={classes.alignHorizonVerticalCenter}>
             {<SettingsIcon />}메일함 설정
           </S.WrtieButton>
