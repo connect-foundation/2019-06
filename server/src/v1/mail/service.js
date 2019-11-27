@@ -5,15 +5,21 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail } from '../../libraries/save-sent-mail';
+import { saveSentMail } from '../../libraries/save-to-infra';
+
+const SENT_MAILBOX_NAME = '보낸메일함';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
   page: 1,
   perPageNum: 100,
+  sort: 'datedesc',
 };
 
-const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
+const DATE_DESC = 'datedesc';
+const DATE_ASC = 'dateasc';
+
+const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
   const query = {
     userNo,
     options: {
@@ -30,17 +36,24 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
     query.mailFilter.category_no = category;
   }
 
+  if (sort === DATE_DESC) {
+    query.order = [['no', 'DESC']];
+  } else if (sort === DATE_ASC) {
+    query.order = [['no', 'ASC']];
+  }
+
   return query;
 };
 
 const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
   category = Number(category);
   page = Number(page);
   perPageNum = Number(perPageNum);
 
-  const query = getQueryByOptions({ userNo, category, perPageNum, page });
+  const query = getQueryByOptions({ userNo, category, perPageNum, page, sort });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
   const pagingOptions = {
@@ -76,10 +89,12 @@ const saveMail = async (mailContents, transaction) => {
   const mailTemplate = mailTemplateResult.get({ plain: true });
   const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
+  const userCategory = await DB.Category.findOneByUserNoAndName(user.no, SENT_MAILBOX_NAME);
   await DB.Mail.create(
     {
       owner: user.no,
       mail_template_id: mailTemplate.no,
+      category_no: userCategory.no,
     },
     { transaction },
   );
