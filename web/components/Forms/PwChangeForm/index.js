@@ -23,17 +23,6 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     width: '100%',
   },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
 }));
 
 const initialInputState = {
@@ -72,6 +61,11 @@ const PasswordModal = () => {
     router.back();
   };
 
+  const handleCancle = e => {
+    e.preventDefault();
+    router.back();
+  };
+
   const updatePassword = async () => {
     try {
       const { password } = values;
@@ -84,7 +78,7 @@ const PasswordModal = () => {
     }
   };
 
-  const onSubmitHandler = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     if (validateForm()) {
@@ -112,7 +106,7 @@ const PasswordModal = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="standard-basic"
+          id="password"
           label="비밀번호 입력"
           type="password"
           onChange={handleInputChange('password')}
@@ -127,7 +121,7 @@ const PasswordModal = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="standard-basic"
+          id="checkPassword"
           label="비밀번호 재입력"
           type="password"
           onChange={handleInputChange('checkPassword')}
@@ -141,10 +135,10 @@ const PasswordModal = () => {
         <S.ErrorText>{errors.checkPassword || errors.change}</S.ErrorText>
       </S.InputContainer>
       <S.ButtonContainer>
-        <S.WhiteButton className="submit-btn max-width" onClick={() => router.back()}>
+        <S.WhiteButton className="submit-btn max-width" onClick={handleCancle}>
           취소
         </S.WhiteButton>
-        <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
+        <S.Button className="submit-btn max-width" onClick={handleSubmit}>
           확인
         </S.Button>
       </S.ButtonContainer>
