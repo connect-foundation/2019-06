@@ -10,7 +10,7 @@
     "dev:force": "export force=true || SET \"force=true\"&& npm run dev",
     "production": "export NODE_ENV=production || set \"NODE_ENV=production\" && babel-node src/bin/www.js",
     "scss": "sass ./src/public/scss:./src/public/css",
-    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exit",
     "test:watch": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json -w",
     "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exclude ./test/**/!\"(\"database\")\".spec.js --forbid-only",
     "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --forbid-only --timeout 3000",
