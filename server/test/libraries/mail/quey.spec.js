@@ -127,4 +127,14 @@ describe('checkQuery....', () => {
     const query = checkQuery({ sort: 'subjectdesc' });
     query.should.be.true();
   });
+
+  it('# sort가 fromdesc true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'fromdesc' });
+    query.should.be.true();
+  });
+
+  it('# sort가 fromasc true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'fromasc' });
+    query.should.be.true();
+  });
 });
