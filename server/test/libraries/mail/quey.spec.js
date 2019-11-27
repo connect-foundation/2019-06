@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import should from 'should';
 import ERROR_CODE from '../../../src/libraries/exception/error-code';
 import ErrorResponse from '../../../src/libraries/exception/error-response';
@@ -96,5 +97,34 @@ describe('checkQuery....', () => {
       const { fieldErrors } = err;
       fieldErrors.should.have.length(2);
     }
+  });
+
+  it('# sort가 유효한 값이 아니면 유효하지 않은 정렬기준 입니다.를 반환한다.', () => {
+    try {
+      checkQuery({ sort: 'dsa' });
+    } catch (err) {
+      const { fieldErrors } = err;
+      fieldErrors[0].reason.should.be.equals('유효하지 않은 정렬기준 입니다.');
+    }
+  });
+
+  it('# sort가 datedesc면 true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'datedesc' });
+    query.should.be.true();
+  });
+
+  it('# sort가 dateasc true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'dateasc' });
+    query.should.be.true();
+  });
+
+  it('# sort가 subjectasc true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'subjectasc' });
+    query.should.be.true();
+  });
+
+  it('# sort가 subjectdesc true를 반환한다.', () => {
+    const query = checkQuery({ sort: 'subjectdesc' });
+    query.should.be.true();
   });
 });
