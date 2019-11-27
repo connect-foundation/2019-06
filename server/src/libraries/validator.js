@@ -1,5 +1,3 @@
-const MINUTES_INTERVAL = 15;
-
 const regexsOfType = {
   id: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$/, /^.{5,20}$/],
   email: [/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}$/],
@@ -65,8 +63,7 @@ const checkDate = dateStr => {
     hours >= 0 &&
     hours <= 23 &&
     minutes >= 0 &&
-    minutes <= 45 &&
-    minutes % MINUTES_INTERVAL === 0
+    minutes <= 59
   );
 };
 
