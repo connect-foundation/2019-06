@@ -17,6 +17,10 @@ const useStyles = makeStyles(theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
   },
+  alignCenter: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
 }));
 
 const Aside = () => {
@@ -59,7 +63,7 @@ const Aside = () => {
   return (
     <S.Aside>
       <List component="nav">
-        <ListItem>
+        <ListItem className={classes.alignCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
