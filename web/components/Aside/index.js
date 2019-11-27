@@ -1,17 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, Collapse, Popover } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import SendIcon from '@material-ui/icons/Send';
 import DeleteIcon from '@material-ui/icons/Delete';
-import SettingsIcon from '@material-ui/icons/Settings';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
-import BoxSetting from '../BoxSetting';
 import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
 
@@ -34,8 +32,19 @@ const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const { dispatch } = useContext(AppDisapthContext);
+  const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
+
   const handleClick = () => {
     setOpen(!open);
+  };
+
+  const handleMailboxMenuContextClick = e => {
+    e.preventDefault();
+    setMailBoxMenuOpen(true);
+  };
+
+  const handleMailBoxMenuContextClose = e => {
+    setMailBoxMenuOpen(false);
   };
 
   const defaultCategory = [
@@ -75,7 +84,7 @@ const Aside = () => {
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
         {defaultCard}
-        <ListItem button onClick={handleClick}>
+        <ListItem button onContextMenu={handleMailboxMenuContextClick} onClick={handleClick}>
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
@@ -87,14 +96,29 @@ const Aside = () => {
             {userCategoryCard}
           </List>
         </Collapse>
-        <ListItem className={classes.alignHorizontalCenter}>
-          <S.WrtieButton
-            onClick={() => dispatch(setView(<BoxSetting />))}
-            className={classes.alignHorizonVerticalCenter}>
-            {<SettingsIcon />}메일함 설정
-          </S.WrtieButton>
-        </ListItem>
       </List>
+      <Popover
+        anchorReference="anchorPosition"
+        open={mailBoxMenuOpen}
+        onClose={handleMailBoxMenuContextClose}
+        anchorPosition={{ top: window.event.clientY, left: window.event.clientX }}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left',
+        }}>
+        <List>
+          <ListItem button>
+            <ListItemText primary="메일함 이름 수정하기" />
+          </ListItem>
+          <ListItem button>
+            <ListItemText primary="메일함 삭제하기" />
+          </ListItem>
+        </List>
+      </Popover>
     </S.Aside>
   );
 };
