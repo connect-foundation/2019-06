@@ -9,6 +9,7 @@ import Loading from '../Loading';
 import { handleMailsChange } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
+import Tools from './Tools';
 
 const actionByErrorStatus = ({ status, message }) => {
   switch (status) {
@@ -44,7 +45,9 @@ const MailArea = () => {
 
   return (
     <S.MailArea>
-      <S.Tools>tools</S.Tools>
+      <S.ToolsWrapper>
+        <Tools />
+      </S.ToolsWrapper>
       <S.MailListArea>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />

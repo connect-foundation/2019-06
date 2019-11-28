@@ -39,7 +39,7 @@ export default {
   },
 
   async put(url, body, options) {
-    const fn = () => axios.put(url, { ...defaultOptions, ...options });
+    const fn = () => axios.put(url, body, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },
@@ -51,7 +51,7 @@ export default {
   },
 
   async patch(url, body, options) {
-    const fn = () => axios.patch(url, { ...defaultOptions, ...options });
+    const fn = () => axios.patch(url, body, { ...defaultOptions, ...options });
     const response = await execute(fn);
     return response;
   },

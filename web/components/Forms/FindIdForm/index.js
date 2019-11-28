@@ -10,10 +10,6 @@ import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
