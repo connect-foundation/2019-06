@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
@@ -10,8 +10,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
+import useFetch from '../../utils/use-fetch';
+import Loading from '../Loading';
 import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
+import { handleErrorStatus } from '../../utils/error-handler';
+
+const URL = '/users/categories';
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -19,10 +24,24 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const setCategories = ({ categories }) => {
+  console.log(categories);
+};
+
 const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const { dispatch } = useContext(AppDisapthContext);
+  const callback = useCallback(
+    (err, data) => (err ? handleErrorStatus(err) : setCategories(data)),
+    [],
+  );
+  const isLoading = useFetch(callback, URL);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   const handleClick = () => {
     setOpen(!open);
   };
