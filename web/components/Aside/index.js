@@ -104,6 +104,7 @@ const Aside = () => {
   }
 
   const { categories } = state;
+  console.log(categories);
   const filteredDefaultCategories = categories.filter(category => category.is_default);
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const customCategories = categories.filter(category => !category.is_default);

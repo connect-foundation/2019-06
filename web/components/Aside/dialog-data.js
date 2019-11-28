@@ -64,7 +64,7 @@ export const getDialogData = (
             return;
           }
           customCategory[idx].name = name;
-          dispatch(setCustomCategory({ data: customCategory }));
+          dispatch(setCustomCategory({ categories: customCategory }));
           setDialogOpen(false);
         },
       };
@@ -82,7 +82,9 @@ export const getDialogData = (
             // TODO: 상단에 에러 메세지 보여주기 (data.message)
             return;
           }
-          dispatch(setCustomCategory({ data: customCategory.filter((_, index) => idx !== index) }));
+          dispatch(
+            setCustomCategory({ categories: customCategory.filter((_, index) => idx !== index) }),
+          );
           setDialogOpen(false);
         },
       };
