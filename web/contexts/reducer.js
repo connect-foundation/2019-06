@@ -1,12 +1,14 @@
 const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
+const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
 const MAIL_CLICK = 'MAIL_CLICK';
 const SET_VIEW = 'SET_VIEW';
 const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
 
 export const initialState = {
+  categories: null,
   category: 0,
   page: 1,
   mails: null,
@@ -33,6 +35,15 @@ export const handleCategoryClick = (no, view) => {
       category: no,
       page: 1,
       view,
+    },
+  };
+};
+
+export const handleCategoriesChange = ({ categories }) => {
+  return {
+    type: CHANGE_CATEGORIES_DATA,
+    payload: {
+      categories,
     },
   };
 };
@@ -98,10 +109,11 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case SET_VIEW:
       return { ...state, ...payload };
-    case SORT_SELECT: {
+    case SORT_SELECT:
       return { ...state, ...payload };
-    }
     case SET_MESSAGE:
+      return { ...state, ...payload };
+    case CHANGE_CATEGORIES_DATA:
       return { ...state, ...payload };
     default:
       return { ...state };
