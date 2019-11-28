@@ -6,7 +6,6 @@ import {
   ListItemIcon,
   ListItemText,
   Collapse,
-  Popover,
   ListItemSecondaryAction,
   IconButton,
   TextField,
@@ -70,9 +69,12 @@ const Aside = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
+  const [customCategory, setCustomCategory] = useState(userCategory);
+
+  console.log(customCategory);
 
   const handleDialogOpen = (e, action, idx) => {
-    const dialogData = getDialogData(action, userCategory, idx, setDialogOpen);
+    const dialogData = getDialogData(action, customCategory, idx, setDialogOpen, setCustomCategory);
     if (!dialogData) return;
     setDialogState(dialogData);
     setDialogOpen(true);
@@ -95,25 +97,16 @@ const Aside = () => {
       <ListItemText primary={category.name} />
     </ListItem>
   ));
-  const userCategoryCard = userCategory.map((category, idx) => (
+
+  const userCategoryCard = customCategory.map((category, idx) => (
     <ListItem button key={idx} className={classes.nested}>
       <ListItemIcon>{category.icon}</ListItemIcon>
       <ListItemText primary={category.name} />
       <ListItemSecondaryAction>
-        <IconButton
-          edge="end"
-          aria-label="modify"
-          onClick={e => {
-            handleDialogOpen(e, MODIFY, idx);
-          }}>
+        <IconButton edge="end" aria-label="modify" onClick={e => handleDialogOpen(e, MODIFY, idx)}>
           <ModifyIcon fontSize={'small'} />
         </IconButton>
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          onClick={e => {
-            handleDialogOpen(e, DELETE, idx);
-          }}>
+        <IconButton edge="end" aria-label="delete" onClick={e => handleDialogOpen(e, DELETE, idx)}>
           <DeleteIcon fontSize={'small'} />
         </IconButton>
       </ListItemSecondaryAction>
