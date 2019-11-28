@@ -24,7 +24,11 @@ const SORT_TYPES = [
   { value: 'fromasc', name: '보낸 이 순정렬' },
 ];
 
-const sortItems = SORT_TYPES.map(type => <MenuItem value={type.value}>{type.name}</MenuItem>);
+const sortItems = SORT_TYPES.map(type => (
+  <MenuItem key={type.value} value={type.value}>
+    {type.name}
+  </MenuItem>
+));
 
 const Tools = () => {
   const classes = useStyles();
@@ -34,8 +38,9 @@ const Tools = () => {
   const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   return (
     <>
-      <S.CheckBox>체크박스</S.CheckBox>
-      <S.Etc>잡다한 여러게</S.Etc>
+      <S.CheckBox>
+        <input type="checkbox" />
+      </S.CheckBox>
       <S.Filter>
         <FormControl className={classes.formControl}>
           <Select
