@@ -41,12 +41,16 @@ describe('user service는...', () => {
   describe('register 함수는...', () => {
     it('# 성공시 newUser를 반환한다.', async () => {
       const newUser = await service.register(user);
-      newUser.should.be.properties('domain_no', 'no', 'id', 'name', 'sub_email', 'email');
-    });
-
-    it('# 성공시 password는 반환하지 않는다.', async () => {
-      const newUser = await service.register(user2);
-      newUser.should.not.be.properties('password');
+      newUser.should.be.properties(
+        'domain_no',
+        'no',
+        'id',
+        'name',
+        'sub_email',
+        'email',
+        'password',
+        'imap_password',
+      );
     });
 
     it('# 중복된 아이디인 경우 ErrorResponse instance를 반환한다. ', async () => {
