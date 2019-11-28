@@ -17,8 +17,9 @@ import { handleCategoryClick, setView } from '../../contexts/reducer';
 import { handleErrorStatus } from '../../utils/error-handler';
 
 const URL = '/mail/categories';
-const defaultCategories = [{ name: '전체메일함', no: 0 }];
-const userDefinedCategories = [];
+
+let defaultCategories, userDefinedCategories;
+
 const iconOfDefaultCategories = [
   <AllInboxIcon />,
   <StarBorder />,
@@ -34,13 +35,17 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const setCategories = ({ categories }) => {
+  const defaults = [{ name: '전체메일함', no: 0 }];
+  const defineds = [];
   categories.forEach(category => {
     if (category.is_default) {
-      defaultCategories.push(category);
+      defaults.push(category);
     } else {
-      userDefinedCategories.push(category);
+      defineds.push(category);
     }
   });
+  defaultCategories = defaults;
+  userDefinedCategories = defineds;
 };
 
 const Aside = () => {
@@ -51,6 +56,7 @@ const Aside = () => {
     (err, data) => (err ? handleErrorStatus(err) : setCategories(data)),
     [],
   );
+
   const isLoading = useFetch(callback, URL);
 
   if (isLoading) {
