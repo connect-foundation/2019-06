@@ -1,5 +1,4 @@
 import React from 'react';
-import { StarBorder } from '@material-ui/icons';
 import req from '../../utils/request';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
@@ -13,8 +12,12 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
         okBtnHandler: async (_, name) => {
-          if (customCategory.every(category => category.name === name)) {
+          if (customCategory.find(category => category.name === name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 이름을 중복해서 만들 수 없습니다)
+            return;
+          }
+          if (name.length > 20) {
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
           const { isError, data } = await req.post(url, { name });
@@ -26,7 +29,6 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
           const { name: createdName, no } = data.createdBox;
           customCategory.push({
             name: createdName,
-            icon: <StarBorder fontSize={'small'} />,
             no,
           });
           setDialogOpen(false);
@@ -38,8 +40,12 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
         okBtnHandler: async (_, name) => {
-          if (customCategory.every(category => category.name === name)) {
+          if (customCategory.find(category => category.name === name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 이름을 중복해서 만들 수 없습니다)
+            return;
+          }
+          if (name.length > 20) {
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
           const { isError } = await req.patch(url, {
