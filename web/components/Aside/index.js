@@ -71,20 +71,18 @@ const Aside = () => {
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
   const [customCategory, setCustomCategory] = useState(userCategory);
 
-  console.log(customCategory);
-
-  const handleDialogOpen = (e, action, idx) => {
+  const handleDialogOpen = (_, action, idx) => {
     const dialogData = getDialogData(action, customCategory, idx, setDialogOpen, setCustomCategory);
     if (!dialogData) return;
     setDialogState(dialogData);
     setDialogOpen(true);
   };
 
-  const handleDialogClose = e => {
+  const handleDialogClose = _ => {
     setDialogOpen(false);
   };
 
-  const handleClick = () => {
+  const handleClick = _ => {
     setMailboxFolderOpen(!mailboxFolderOpen);
   };
 
