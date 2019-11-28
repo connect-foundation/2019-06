@@ -1,6 +1,8 @@
-import React from 'react';
+import { useContext } from 'react';
+import { AppDisapthContext } from '../../contexts';
 import req from '../../utils/request';
 
+const { dispatch } = useContext(AppDisapthContext);
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
 
@@ -59,7 +61,7 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
             return;
           }
           customCategory[idx].name = name;
-          setCustomCategory([...customCategory]);
+          dispatch(setCustomCategory([...customCategory]));
           setDialogOpen(false);
         },
       };
@@ -77,7 +79,7 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
             // TODO: 상단에 에러 메세지 보여주기 (data.message)
             return;
           }
-          setCustomCategory(customCategory.filter((_, index) => idx !== index));
+          dispatch(setCustomCategory(customCategory.filter((_, index) => idx !== index)));
           setDialogOpen(false);
         },
       };

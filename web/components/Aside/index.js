@@ -19,7 +19,6 @@ import {
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import ModifyIcon from '@material-ui/icons/Create';
-import InboxIcon from '@material-ui/icons/Inbox';
 import MoveInboxIcon from '@material-ui/icons/MoveToInbox';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import DraftsIcon from '@material-ui/icons/Drafts';
@@ -30,10 +29,9 @@ import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import { handleCategoryClick, setView } from '../../contexts/reducer';
+import { handleCategoryClick, setView, handleCategoriesChange } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import { handleErrorStatus } from '../../utils/error-handler';
-import { handleCategoriesChange } from '../../contexts/reducer';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
 
 const URL = '/mail/categories';
@@ -72,10 +70,15 @@ const Aside = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
-  const [customCategory, setCustomCategory] = useState(userCategory);
 
   const handleDialogOpen = (_, action, idx) => {
-    const dialogData = getDialogData(action, customCategory, idx, setDialogOpen, setCustomCategory);
+    const dialogData = getDialogData(
+      action,
+      state.categories,
+      idx,
+      setDialogOpen,
+      handleCategoriesChange,
+    );
     if (!dialogData) return;
     setDialogState(dialogData);
     setDialogOpen(true);
@@ -104,10 +107,6 @@ const Aside = () => {
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const userDefinedCategories = categories.filter(category => !category.is_default);
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   const defaultCards = defaultCategories.map((category, idx) => (
     <ListItem
       button
@@ -118,7 +117,7 @@ const Aside = () => {
     </ListItem>
   ));
 
-  const userDefinedCategoryCards = customCategory.map((category, idx) => (
+  const userDefinedCategoryCards = userDefinedCategories.map((category, idx) => (
     <ListItem button key={idx} className={classes.nested}>
       <ListItemIcon>
         <StarBorder />
