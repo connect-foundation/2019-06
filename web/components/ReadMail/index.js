@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
+import moment from 'moment';
 import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
-import moment from 'moment';
 import ToolGroup from './ToolGroup';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
-  const { to, from, subject, createdAt, text } = state.mail;
+  const { to, from, subject, createdAt, text, no } = state.mail;
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt)
     .utc()
@@ -35,7 +35,7 @@ const ReadMail = () => {
         </S.TitleView>
         <S.ReadFrame>{text}</S.ReadFrame>
       </S.ReadArea>
-      <PageMoveButtonArea />
+      <PageMoveButtonArea no={no} />
     </S.Container>
   );
 };

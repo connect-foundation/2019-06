@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { List, ListItem, ListItemIcon, ListItemText, Collapse } from '@material-ui/core';
 import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
@@ -10,8 +10,22 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
+import useFetch from '../../utils/use-fetch';
+import Loading from '../Loading';
 import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
+import { handleErrorStatus } from '../../utils/error-handler';
+
+const URL = '/mail/categories';
+const defaultCategories = [{ name: '전체메일함', no: 0 }];
+const userDefinedCategories = [];
+const iconOfDefaultCategories = [
+  <AllInboxIcon />,
+  <StarBorder />,
+  <SendIcon />,
+  <DraftsIcon />,
+  <DeleteIcon />,
+];
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -19,39 +33,49 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const setCategories = ({ categories }) => {
+  categories.forEach(category => {
+    if (category.is_default) {
+      defaultCategories.push(category);
+    } else {
+      userDefinedCategories.push(category);
+    }
+  });
+};
+
 const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const { dispatch } = useContext(AppDisapthContext);
+  const callback = useCallback(
+    (err, data) => (err ? handleErrorStatus(err) : setCategories(data)),
+    [],
+  );
+  const isLoading = useFetch(callback, URL);
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   const handleClick = () => {
     setOpen(!open);
   };
 
-  const defaultCategory = [
-    { name: '받은편지함', icon: <AllInboxIcon />, no: 0 },
-    { name: '중요편지함', icon: <StarBorder />, no: 1 },
-    { name: '보낸메일함', icon: <SendIcon />, no: 2 },
-    { name: '내게쓴메일함', icon: <DraftsIcon />, no: 3 },
-    { name: '휴지통', icon: <DeleteIcon />, no: 4 },
-  ];
-
-  const userCategory = [
-    { name: '대햇', icon: <StarBorder />, no: 5 },
-    { name: '흑우', icon: <StarBorder />, no: 6 },
-  ];
-
-  const defaultCard = defaultCategory.map((category, idx) => (
+  const defaultCards = defaultCategories.map((category, idx) => (
     <ListItem
       button
       key={idx}
       onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
-      <ListItemIcon>{category.icon}</ListItemIcon>
+      <ListItemIcon>{iconOfDefaultCategories[idx]}</ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
   ));
-  const userCategoryCard = userCategory.map((category, idx) => (
+
+  const userDefinedCategoryCards = userDefinedCategories.map((category, idx) => (
     <ListItem button key={idx} className={classes.nested}>
-      <ListItemIcon>{category.icon}</ListItemIcon>
+      <ListItemIcon>
+        <StarBorder />
+      </ListItemIcon>
       <ListItemText primary={category.name} />
     </ListItem>
   ));
@@ -63,7 +87,7 @@ const Aside = () => {
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
-        {defaultCard}
+        {defaultCards}
         <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <InboxIcon />
@@ -73,7 +97,7 @@ const Aside = () => {
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {userCategoryCard}
+            {userDefinedCategoryCards}
           </List>
         </Collapse>
       </List>

@@ -4,7 +4,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import * as S from './styled';
 
-const PageMoveButtonArea = () => {
+const PageMoveButtonArea = ({ no }) => {
   return (
     <S.Container>
       <IconButton>
