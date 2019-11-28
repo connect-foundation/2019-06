@@ -1,4 +1,4 @@
-import req from '../../utils/request';
+import request from '../../utils/request';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
@@ -26,7 +26,7 @@ export const getDialogData = (
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
-          const { isError, data } = await req.post(url, { name });
+          const { isError, data } = await request.post(url, { name });
           if (isError) {
             console.log(isError);
             // TODO: 상단에 에러 메세지 보여주기 (data.message)
@@ -54,7 +54,7 @@ export const getDialogData = (
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
-          const { isError } = await req.patch(url, {
+          const { isError } = await request.patch(url, {
             oldName: customCategory[idx].name,
             newName: name,
             no: customCategory[idx].no,
@@ -77,7 +77,7 @@ export const getDialogData = (
         okBtnHandler: async e => {
           const { no, name } = customCategory[idx];
           const query = `no=${no}&name=${name}`;
-          const { isError } = await req.delete(`${url}?${query}`);
+          const { isError } = await request.delete(`${url}?${query}`);
           if (isError) {
             console.log(isError);
             // TODO: 상단에 에러 메세지 보여주기 (data.message)
