@@ -50,6 +50,19 @@ const useStyles = makeStyles(theme => ({
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 
+const defaultCategory = [
+  { name: '전체메일함', icon: <AllInboxIcon />, no: 0 },
+  { name: '받은메일함', icon: <InboxIcon />, no: 1 },
+  { name: '보낸메일함', icon: <SendIcon />, no: 2 },
+  { name: '내게쓴메일함', icon: <DraftsIcon />, no: 3 },
+  { name: '휴지통', icon: <DeleteIcon />, no: 4 },
+];
+
+const userCategory = [
+  { name: '대햇', icon: <StarBorder fontSize={'small'} />, no: 5 },
+  { name: '흑우', icon: <StarBorder fontSize={'small'} />, no: 6 },
+];
+
 const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
@@ -59,8 +72,8 @@ const Aside = () => {
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
-  const handleDialogOpen = (e, action, category, idx) => {
-    const dialogData = getDialogData(action, category, idx, dialogTextFieldState);
+  const handleDialogOpen = (e, action, idx) => {
+    const dialogData = getDialogData(action, userCategory, idx, dialogTextFieldState);
     if (!dialogData) return;
     setDialogState(dialogData);
     setDialogOpen(true);
@@ -84,19 +97,6 @@ const Aside = () => {
     setMailBoxMenuOpen(false);
   };
 
-  const defaultCategory = [
-    { name: '전체메일함', icon: <AllInboxIcon />, no: 0 },
-    { name: '받은메일함', icon: <InboxIcon />, no: 1 },
-    { name: '보낸메일함', icon: <SendIcon />, no: 2 },
-    { name: '내게쓴메일함', icon: <DraftsIcon />, no: 3 },
-    { name: '휴지통', icon: <DeleteIcon />, no: 4 },
-  ];
-
-  const userCategory = [
-    { name: '대햇', icon: <StarBorder fontSize={'small'} />, no: 5 },
-    { name: '흑우', icon: <StarBorder fontSize={'small'} />, no: 6 },
-  ];
-
   const defaultCard = defaultCategory.map((category, idx) => (
     <ListItem
       button
@@ -115,7 +115,7 @@ const Aside = () => {
           edge="end"
           aria-label="modify"
           onClick={e => {
-            handleDialogOpen(e, MODIFY, category, idx);
+            handleDialogOpen(e, MODIFY, idx);
           }}>
           <ModifyIcon fontSize={'small'} />
         </IconButton>
@@ -123,7 +123,7 @@ const Aside = () => {
           edge="end"
           aria-label="delete"
           onClick={e => {
-            handleDialogOpen(e, DELETE, category, idx);
+            handleDialogOpen(e, DELETE, idx);
           }}>
           <DeleteIcon fontSize={'small'} />
         </IconButton>
