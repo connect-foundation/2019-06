@@ -10,16 +10,7 @@ import { handleMailsChange } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
-
-const actionByErrorStatus = ({ status, message }) => {
-  switch (status) {
-    case 401:
-      Router.push('/login');
-      break;
-    default:
-      break;
-  }
-};
+import { handleErrorStatus } from '../../utils/error-handler';
 
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
@@ -27,7 +18,7 @@ const MailArea = () => {
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
   const callback = useCallback(
-    (err, data) => (err ? actionByErrorStatus(err) : dispatch(handleMailsChange({ ...data }))),
+    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleMailsChange({ ...data }))),
     [dispatch],
   );
 
