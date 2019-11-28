@@ -12,13 +12,14 @@ import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
 import { handleErrorStatus } from '../../utils/error-handler';
+import { handleCategoriesChange } from '../../contexts/reducer';
+import { AppDisapthContext, AppStateContext } from '../../contexts';
 
 const URL = '/mail/categories';
-const defaultCategories = [{ name: '전체메일함', no: 0 }];
-const userDefinedCategories = [];
+const ENTIRE_MAILBOX = '전체메일함';
+
 const iconOfDefaultCategories = [
   <AllInboxIcon />,
   <StarBorder />,
@@ -33,29 +34,26 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const setCategories = ({ categories }) => {
-  categories.forEach(category => {
-    if (category.is_default) {
-      defaultCategories.push(category);
-    } else {
-      userDefinedCategories.push(category);
-    }
-  });
-};
-
 const Aside = () => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
+  const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const callback = useCallback(
-    (err, data) => (err ? handleErrorStatus(err) : setCategories(data)),
-    [],
+    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleCategoriesChange({ ...data }))),
+    [dispatch],
   );
+
   const isLoading = useFetch(callback, URL);
 
   if (isLoading) {
     return <Loading />;
   }
+
+  const { categories } = state;
+  const filteredDefaultCategories = categories.filter(category => category.is_default);
+  const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
+  const userDefinedCategories = categories.filter(category => !category.is_default);
 
   const handleClick = () => {
     setOpen(!open);
