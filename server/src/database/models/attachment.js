@@ -20,7 +20,7 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
       },
       content: {
-        type: DataTypes.STRING(255),
+        type: DataTypes.BLOB('LONG'),
         allowNull: false,
       },
     },

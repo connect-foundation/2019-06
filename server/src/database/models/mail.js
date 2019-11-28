@@ -33,6 +33,10 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      reservation_time: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,
@@ -57,6 +61,7 @@ const model = (sequelize, DataTypes) => {
     mailTemplateFilter = {},
     options = {},
     paging = DEFALT_PAGING,
+    order,
   }) => {
     return Mail.findAndCountAll({
       distinct: true,
@@ -65,18 +70,13 @@ const model = (sequelize, DataTypes) => {
         owner: userNo,
         ...mailFilter,
       },
-      order: [['no', 'DESC']],
+      order,
       include: [
         {
           model: sequelize.models.MailTemplate,
           where: {
             ...mailTemplateFilter,
           },
-          include: [
-            {
-              model: sequelize.models.Attachment,
-            },
-          ],
         },
       ],
       raw: true,

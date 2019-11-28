@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import { validate, checkUser } from '../src/libraries/validator';
+import { validate, checkUser, checkDate } from '../src/libraries/validation/common';
+import dateValidator from '../src/libraries/validation/date';
 
 describe('validator 모듈의', () => {
   describe('validate(id) 호출시', () => {
@@ -126,6 +127,89 @@ describe('validator 모듈의', () => {
         email: 'abc@daitne.co.kr',
         password: 'bbbB111!',
       }).should.be.equal(true);
+    });
+  });
+
+  describe('checkDate 호출시', () => {
+    it('형식에 맞지 않는 날짜를 넘겨줄 경우 false를 반환한다.', () => {
+      checkDate('2019:-1:10 10:01').should.be.equal(false);
+      checkDate('2019:-1:10 13:00').should.be.equal(false);
+      checkDate('2019:12:10 -1:00').should.be.equal(false);
+      checkDate('2019:12:32 13:00').should.be.equal(false);
+      checkDate('19:12:00 13:00').should.be.equal(false);
+      checkDate('2019:12:00').should.be.equal(false);
+      checkDate('19:12:99 13:00').should.be.equal(false);
+      checkDate('2019:12:30 25:00').should.be.equal(false);
+      checkDate('2019:02:29 10:00').should.be.equal(false);
+    });
+
+    it('형식에 맞는 날짜를 넘겨줄 경우 true를 반환한다.', () => {
+      checkDate('2019:01:10 13:00').should.be.equal(true);
+      checkDate('2019:12:31 15:00').should.be.equal(true);
+      checkDate('2020:02:29 10:00').should.be.equal(true);
+      checkDate('2019:12:31 10:01').should.be.equal(true);
+    });
+  });
+
+  describe('dateValidator의 validateDate 호출시', () => {
+    it('형식에 맞지 않는 날짜를 넘겨줄 경우 에러를 throw 한다.', () => {
+      const dateStr = '2019:12:31 10:-1';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '날짜 형식은 YYYY:MM:DD hh:mm 입니다' });
+      }
+    });
+
+    it('형식에 맞지 않는 날짜를 넘겨줄 경우 에러를 throw 한다.', () => {
+      const dateStr = '2019:12:40 10:00';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '날짜 형식은 YYYY:MM:DD hh:mm 입니다' });
+      }
+    });
+
+    it('예약 시간이 15분 단위가 아니면 에러를 throw 한다.', () => {
+      const dateStr = '2019:12:31 10:13';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '예약은 15분 단위로 할 수 있습니다' });
+      }
+    });
+
+    it('현재 날짜 이전의 날짜를 보낼 경우 에러를 throw 한다.', () => {
+      const dateStr = '1019:12:31 10:00';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
+      }
+    });
+
+    it('현재 날짜 이전의 날짜를 보낼 경우 에러를 throw 한다.', () => {
+      const dateStr = '2017:05:03 12:00';
+      try {
+        dateValidator.validateDate(dateStr);
+      } catch (err) {
+        const { fieldErrors } = err;
+        fieldErrors[0].should.be.properties({ field: 'reservationTime' });
+        fieldErrors[0].should.be.properties({ value: dateStr });
+        fieldErrors[0].should.be.properties({ reason: '이미 지난 날짜 입니다' });
+      }
     });
   });
 });

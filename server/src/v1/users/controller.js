@@ -6,7 +6,7 @@ const registerUser = async (req, res, next) => {
   let newUser;
 
   try {
-    await validation.join(req.body);
+    await validation.register(req.body);
     newUser = await service.register(req.body);
   } catch (error) {
     return next(error);

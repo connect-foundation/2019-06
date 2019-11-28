@@ -13,9 +13,19 @@ const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
   page: 1,
   perPageNum: 100,
+  sort: 'datedesc',
 };
 
-const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
+const SORT_TYPE = {
+  datedesc: [['no', 'DESC']],
+  dateasc: [['no', 'ASC']],
+  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
+  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
+  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
+  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
+};
+
+const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
   const query = {
     userNo,
     options: {
@@ -32,17 +42,22 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page }) => {
     query.mailFilter.category_no = category;
   }
 
+  if (SORT_TYPE[sort]) {
+    query.order = SORT_TYPE[sort];
+  }
+
   return query;
 };
 
 const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
   category = Number(category);
   page = Number(page);
   perPageNum = Number(perPageNum);
 
-  const query = getQueryByOptions({ userNo, category, perPageNum, page });
+  const query = getQueryByOptions({ userNo, category, perPageNum, page, sort });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
   const pagingOptions = {
@@ -70,20 +85,20 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });
 };
 
-const saveMail = async (mailContents, transaction) => {
+const saveMail = async (mailContents, transaction, userNo, reservationTime = null) => {
   const mailTemplateResult = await DB.MailTemplate.create(
     { ...mailContents, to: mailContents.to.join(',') },
     { transaction },
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
-  const user = await DB.User.findOneById(mailContents.from.split('@')[0], { transaction });
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
-  const userCategory = await DB.Category.findOneByUserNoAndName(user.no, SENT_MAILBOX_NAME);
+  const userCategory = await DB.Category.findOneByUserNoAndName(userNo, SENT_MAILBOX_NAME);
   await DB.Mail.create(
     {
-      owner: user.no,
+      owner: userNo,
       mail_template_id: mailTemplate.no,
       category_no: userCategory.no,
+      reservation_time: reservationTime,
     },
     { transaction },
   );
@@ -91,11 +106,18 @@ const saveMail = async (mailContents, transaction) => {
 
 const sendMail = async (mailContents, user) => {
   const transporter = nodemailer.createTransport(U.getTransport(user));
-  await DB.sequelize.transaction(async transaction => await saveMail(mailContents, transaction));
+  await DB.sequelize.transaction(
+    async transaction => await saveMail(mailContents, transaction, user.no),
+  );
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveSentMail({ user, msg });
-  return mailContents;
 };
 
-export default { getMailsByOptions, sendMail, getQueryByOptions };
+const saveReservationMail = async (mailContents, user, reservationTime) => {
+  await DB.sequelize.transaction(
+    async transaction => await saveMail(mailContents, transaction, user.no, reservationTime),
+  );
+};
+
+export default { getMailsByOptions, sendMail, getQueryByOptions, saveReservationMail };

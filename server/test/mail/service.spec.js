@@ -44,7 +44,7 @@ describe('Mail Service Test', () => {
     });
   });
 
-  describe('getQueryByOptions...', () => {
+  describe('getQueryByOptions ...', () => {
     const data = { userNo: 1, category: 0, perPageNum: 10, page: 1 };
 
     it('# category가 0이면 category가 포함되지 않는다.', () => {
@@ -60,6 +60,75 @@ describe('Mail Service Test', () => {
     it('# category가 양수이면 category가 포함된다.', () => {
       const query = service.getQueryByOptions({ ...data, category: 1 });
       query.mailFilter.should.have.property('category_no');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 없다면 query에도 order가 없다..', () => {
+      const query = service.getQueryByOptions(data);
+      query.should.not.have.property('order');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 있으면 order가 존재한다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'dateasc' });
+      query.should.have.property('order');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 dateasc면 no asc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'dateasc' });
+      const order = query.order.flat();
+      order[0].should.be.equals('no');
+      order[1].should.be.equals('ASC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 datedesc면 no desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'datedesc' });
+      const order = query.order.flat();
+      order[0].should.be.equals('no');
+      order[1].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 유효한 값이 아니면 order는 존재하지 않는다...', () => {
+      let query = service.getQueryByOptions({ ...data, sort: 'ASD' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'asd' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'zxc' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'A34SD' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: '43#$G3' });
+      query.should.not.have.property(query.order);
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectdesc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectasc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('ASC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 fromdesc from desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'fromdesc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('from');
+      order[2].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'fromasc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('from');
+      order[2].should.be.equals('ASC');
     });
   });
 });
