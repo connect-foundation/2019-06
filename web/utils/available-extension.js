@@ -1,0 +1,16 @@
+export default {
+  'text/plain': true,
+  'text/csv': true,
+  'text/html': true,
+  'application/vnd.ms-powerpoint': true,
+  'application/pdf': true,
+  'application/x-font-ttf': true,
+  'application/zip': true,
+  'application/json': true,
+  'image/jpeg': true,
+  'image/png': true,
+  'image/jpg': true,
+  'image/bmp': true,
+  'image/gif': true,
+  '': true,
+};
