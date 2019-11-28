@@ -5,7 +5,7 @@ import validation from '../../../libraries/validation/mailbox';
 const getMailBoxes = async (req, res, next) => {
   let boxes;
   try {
-    boxes = await service.findAllBoxes(req.user);
+    boxes = await service.findAllBoxes(req.user.no);
   } catch (err) {
     return next(err);
   }
