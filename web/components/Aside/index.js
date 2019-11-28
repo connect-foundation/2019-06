@@ -52,25 +52,27 @@ const [ADD, MODIFY, DELETE] = [0, 1, 2];
 
 const Aside = () => {
   const classes = useStyles();
-  const [open, setOpen] = useState(true);
+  const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { dispatch } = useContext(AppDisapthContext);
   const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
+  const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
   const handleDialogOpen = (e, action, category, idx) => {
-    const dialogData = getDialogData(action, category, idx);
+    const dialogData = getDialogData(action, category, idx, dialogTextFieldState);
     if (!dialogData) return;
-    setDialogState(getDialogData(action, category, idx));
+    setDialogState(dialogData);
     setDialogOpen(true);
   };
 
   const handleDialogClose = e => {
     setDialogOpen(false);
+    setDialogTextFieldState('');
   };
 
   const handleClick = () => {
-    setOpen(!open);
+    setMailboxFolderOpen(!mailboxFolderOpen);
   };
 
   const handleMailboxMenuContextClick = e => {
@@ -142,9 +144,9 @@ const Aside = () => {
             <MoveInboxIcon />
           </ListItemIcon>
           <ListItemText primary="개인메일함" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {mailboxFolderOpen ? <ExpandLess /> : <ExpandMore />}
         </ListItem>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={mailboxFolderOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {userCategoryCard}
             <ListItem button onClick={e => handleDialogOpen(e, ADD)} className={classes.nested}>
@@ -181,10 +183,11 @@ const Aside = () => {
           <DialogContentText>{dialogState.textContents}</DialogContentText>
           {dialogState.needTextField ? (
             <TextField
+              value={dialogTextFieldState}
+              onChange={({ target: { value } }) => setDialogTextFieldState(value)}
               autoFocus
               margin="dense"
-              id="newMailboxName"
-              label="새 메일함 이름"
+              id="dialogTextField"
               type="text"
               fullWidth
             />

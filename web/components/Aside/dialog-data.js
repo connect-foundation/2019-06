@@ -7,7 +7,7 @@ export const getDialogData = (type, category) => {
         title: '메일함 추가',
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: null,
+        okBtnHandler: () => {},
       };
     case MODIFY:
       return {
