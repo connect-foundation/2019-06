@@ -1,3 +1,5 @@
+import Router from 'next/router';
+
 const handleErrorStatus = ({ status, message }) => {
   switch (status) {
     case 401:
