@@ -16,7 +16,7 @@ import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
 import { handleErrorStatus } from '../../utils/error-handler';
 
-const URL = '/users/categories';
+const URL = '/mail/categories';
 const defaultCategories = [{ name: '전체메일함', no: 0 }];
 const userDefinedCategories = [];
 const iconOfDefaultCategories = [
