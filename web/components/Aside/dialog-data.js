@@ -2,6 +2,7 @@ import request from '../../utils/request';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
+const nameValidation = /^[a-zA-Z가-힣 ]{1,20}$/;
 
 export const getDialogData = (
   type,
@@ -23,6 +24,10 @@ export const getDialogData = (
             return;
           }
           if (name.length > 20) {
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
+            return;
+          }
+          if (!nameValidation.test(name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
@@ -51,6 +56,10 @@ export const getDialogData = (
             return;
           }
           if (name.length > 20) {
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
+            return;
+          }
+          if (!nameValidation.test(name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
