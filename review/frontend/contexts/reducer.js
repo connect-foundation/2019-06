@@ -18,64 +18,7 @@ export const initialState = {
   message: '',
 };
 
-export const handleSortSelect = sortType => {
-  return {
-    type: SORT_SELECT,
-    payload: {
-      page: 1,
-      sort: sortType,
-    },
-  };
-};
-
-export const handleCategoryClick = (no, view) => {
-  return {
-    type: CATEGORY_CLICK,
-    payload: {
-      category: no,
-      page: 1,
-      view,
-    },
-  };
-};
-
-export const handleCategoriesChange = ({ categories }) => {
-  return {
-    type: CHANGE_CATEGORIES_DATA,
-    payload: {
-      categories,
-    },
-  };
-};
-
-export const handleMailsChange = ({ mails, paging }) => {
-  return {
-    type: CHANGE_MAILS_DATA,
-    payload: {
-      mails,
-      paging,
-    },
-  };
-};
-
-export const handlePageNumberClick = page => {
-  return {
-    type: PAGE_NUMBER_CLICK,
-    payload: {
-      page,
-    },
-  };
-};
-
-export const handleMailClick = (mail, view) => {
-  return {
-    type: MAIL_CLICK,
-    payload: {
-      mail,
-      view,
-    },
-  };
-};
+// ...
 
 export const setView = view => {
   return {
