@@ -21,11 +21,13 @@ morgan.format(
 );
 
 const app = express();
-const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
+const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS, NODE_ENV } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
-app.use(morgan('combined', { stream: log.debug }));
+if (NODE_ENV !== 'test') {
+  app.use(morgan('combined', { stream: log.debug }));
+}
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
