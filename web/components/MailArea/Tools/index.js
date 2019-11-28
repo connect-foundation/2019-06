@@ -38,8 +38,9 @@ const Tools = () => {
   const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   return (
     <>
-      <S.CheckBox>체크박스</S.CheckBox>
-      <S.Etc>잡다한 여러게</S.Etc>
+      <S.CheckBox>
+        <input type="checkbox" />
+      </S.CheckBox>
       <S.Filter>
         <FormControl className={classes.formControl}>
           <Select
