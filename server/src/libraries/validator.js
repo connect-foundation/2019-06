@@ -32,4 +32,37 @@ const checkLoginForm = ({ id, password }) => {
   return Object.keys(user).every(key => validate(key, user[key]));
 };
 
-export { validate, checkUser, checkLoginForm };
+const checkDate = dateStr => {
+  const regex = /^\d{4}:\d{2}:\d{2} \d{2}:\d{2}$/;
+
+  if (!regex.test(dateStr)) {
+    return false;
+  }
+
+  const parts = dateStr.split(' ');
+  let [year, month, day] = parts[0].split(':');
+  let [hours, minutes] = parts[1].split(':');
+
+  year = +year;
+  month = +month;
+  day = +day;
+  hours = +hours;
+  minutes = +minutes;
+
+  if (year < 1000 || year > 3000 || month === 0 || month > 12) return false;
+
+  const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) monthLength[1] = 29;
+
+  return (
+    day > 0 &&
+    day <= monthLength[month - 1] &&
+    hours >= 0 &&
+    hours <= 23 &&
+    minutes >= 0 &&
+    minutes <= 59
+  );
+};
+
+export { validate, checkUser, checkLoginForm, checkDate };
