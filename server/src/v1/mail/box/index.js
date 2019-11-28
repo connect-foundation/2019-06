@@ -6,7 +6,10 @@ const router = Router();
 router
   .route('/')
   .get(ctrl.getMailBoxes)
-  .post(ctrl.makeMailBox)
+  .post(ctrl.makeMailBox);
+
+router
+  .route('/:no')
   .patch(ctrl.alterMailBox)
   .delete(ctrl.deleteMailBox);
 
