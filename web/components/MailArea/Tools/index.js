@@ -24,7 +24,11 @@ const SORT_TYPES = [
   { value: 'fromasc', name: '보낸 이 순정렬' },
 ];
 
-const sortItems = SORT_TYPES.map(type => <MenuItem value={type.value}>{type.name}</MenuItem>);
+const sortItems = SORT_TYPES.map(type => (
+  <MenuItem key={type.value} value={type.value}>
+    {type.name}
+  </MenuItem>
+));
 
 const Tools = () => {
   const classes = useStyles();
