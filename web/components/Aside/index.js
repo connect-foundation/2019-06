@@ -73,7 +73,7 @@ const Aside = () => {
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
   const handleDialogOpen = (e, action, idx) => {
-    const dialogData = getDialogData(action, userCategory, idx, dialogTextFieldState);
+    const dialogData = getDialogData(action, userCategory, idx, setDialogOpen);
     if (!dialogData) return;
     setDialogState(dialogData);
     setDialogOpen(true);
@@ -81,7 +81,6 @@ const Aside = () => {
 
   const handleDialogClose = e => {
     setDialogOpen(false);
-    setDialogTextFieldState('');
   };
 
   const handleClick = () => {
@@ -183,7 +182,6 @@ const Aside = () => {
           <DialogContentText>{dialogState.textContents}</DialogContentText>
           {dialogState.needTextField ? (
             <TextField
-              value={dialogTextFieldState}
               onChange={({ target: { value } }) => setDialogTextFieldState(value)}
               autoFocus
               margin="dense"
@@ -196,7 +194,7 @@ const Aside = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={dialogState.okBtnHandler} color="primary">
+          <Button onClick={e => dialogState.okBtnHandler(e, dialogTextFieldState)} color="primary">
             확인
           </Button>
           <Button onClick={handleDialogClose} color="primary">
