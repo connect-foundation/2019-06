@@ -31,6 +31,7 @@ import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import { AppDisapthContext } from '../../contexts';
 import { handleCategoryClick, setView } from '../../contexts/reducer';
+import { getDialogData } from './dialog-data';
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -47,14 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const [MODIFY, DELETE] = [true, false];
-
-const getDialogData = (fixing, name) => ({
-  title: fixing ? `메일함명(${name}) 변경` : `메일함(${name}) 삭제`,
-  textContents: fixing ? '변경할 메일함 이름을 적어주세요' : '정말로 삭제하시겠습니까?',
-  needTextField: fixing,
-  okBtnHandler: null,
-});
+const [ADD, MODIFY, DELETE] = [0, 1, 2];
 
 const Aside = () => {
   const classes = useStyles();
@@ -64,8 +58,8 @@ const Aside = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(true));
 
-  const handleDialogOpen = (e, action, category) => {
-    setDialogState(getDialogData(action, category.name));
+  const handleDialogOpen = (e, action, category, idx) => {
+    setDialogState(getDialogData(action, category, idx));
     setDialogOpen(true);
   };
 
@@ -117,7 +111,7 @@ const Aside = () => {
           edge="end"
           aria-label="modify"
           onClick={e => {
-            handleDialogOpen(e, MODIFY, category);
+            handleDialogOpen(e, MODIFY, category, idx);
           }}>
           <ModifyIcon fontSize={'small'} />
         </IconButton>
@@ -125,7 +119,7 @@ const Aside = () => {
           edge="end"
           aria-label="delete"
           onClick={e => {
-            handleDialogOpen(e, DELETE, category);
+            handleDialogOpen(e, DELETE, category, idx);
           }}>
           <DeleteIcon fontSize={'small'} />
         </IconButton>
@@ -151,7 +145,7 @@ const Aside = () => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {userCategoryCard}
-            <ListItem button className={classes.nested}>
+            <ListItem button onClick={e => handleDialogOpen(e, ADD)} className={classes.nested}>
               <ListItemIcon>
                 <AddBoxIcon />
               </ListItemIcon>
