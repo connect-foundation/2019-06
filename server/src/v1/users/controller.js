@@ -12,6 +12,10 @@ const registerUser = async (req, res, next) => {
     return next(error);
   }
 
+  delete newUser.password;
+  delete newUser.salt;
+  delete newUser.imap_password;
+
   return res.status(status.CREATED).json({ newUser });
 };
 
