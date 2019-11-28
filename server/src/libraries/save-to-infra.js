@@ -32,7 +32,9 @@ const connectImap = ({ email, password }, callback) => {
 export const saveSentMail = ({ user, msg }) => {
   connectImap(user, imap => {
     imap.openBox(SENT_MAILBOX, false, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
       imap.append(msg.toString());
     });
   });
@@ -41,7 +43,9 @@ export const saveSentMail = ({ user, msg }) => {
 export const addMailBox = ({ user, name }) => {
   connectImap(user, imap => {
     imap.addBox(PREFIX + name, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
     });
   });
 };
@@ -49,7 +53,9 @@ export const addMailBox = ({ user, name }) => {
 export const renameMailBox = ({ user, oldName, newName }) => {
   connectImap(user, imap => {
     imap.renameBox(PREFIX + oldName, PREFIX + newName, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
     });
   });
 };
@@ -57,7 +63,9 @@ export const renameMailBox = ({ user, oldName, newName }) => {
 export const deleteMailBox = ({ user, name }) => {
   connectImap(user, imap => {
     imap.delBox(PREFIX + name, err => {
-      if (err) throw err;
+      if (err) {
+        throw err;
+      }
     });
   });
 };
