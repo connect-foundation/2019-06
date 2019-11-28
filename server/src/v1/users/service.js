@@ -6,7 +6,7 @@ import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
 import { encrypt } from '../../libraries/crypto';
 
-const DEFAULT_CATEGORIES = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
+const DEFAULT_CATEGORIES = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 const TEMP_PASSWORD_LENGTH = 15;
 
 const createDefaultCategories = async (no, transaction) => {
