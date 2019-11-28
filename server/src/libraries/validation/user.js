@@ -3,7 +3,7 @@ import getErrorResponseBySequelizeValidationError from '../exception/sequelize-e
 import ERROR_CODE from '../exception/error-code';
 import ErrorField from '../exception/error-field';
 import ErrorResponse from '../exception/error-response';
-import { validate } from '../validator';
+import { validate } from './validator';
 
 const join = async body => {
   if (body.name) {

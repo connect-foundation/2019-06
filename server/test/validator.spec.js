@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import { validate, checkUser, checkDate } from '../src/libraries/validator';
+import { validate, checkUser, checkDate } from '../src/libraries/validation/validator';
 import dateValidator from '../src/libraries/validation/date';
 
 describe('validator 모듈의', () => {

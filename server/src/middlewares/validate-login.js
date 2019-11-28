@@ -1,6 +1,6 @@
 import ErrorResponse from '../libraries/exception/error-response';
 import ErrorCode from '../libraries/exception/error-code';
-import { checkLoginForm } from '../libraries/validator';
+import { checkLoginForm } from '../libraries/validation/validator';
 
 const validateLogin = (req, res, next) => {
   if (!checkLoginForm(req.body)) {
