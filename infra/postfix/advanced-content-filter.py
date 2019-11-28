@@ -8,13 +8,15 @@ import asyncore
 import smtplib
 import traceback
 
+# please input below blank
+FROM_PORT = 0 # number
+TO_PORT = 0 # number
+SHELL_PATH = '/path/to/script ' # string
+
 class CustomSMTPServer(smtpd.SMTPServer):
 	def process_message(self, peer, mailfrom, rcpttos, data):
 		mailfrom.replace('\'', '')
 		mailfrom.replace('\"', '')
-
-		# please input below blank
-		SHELL_PATH = '' # string. ex) '/path/to/script '
 		
 		for recipient in rcpttos:
 			recipient.replace('\'', '')
@@ -23,7 +25,7 @@ class CustomSMTPServer(smtpd.SMTPServer):
 		os.system('echo "' + data + '" | ' + SHELL_PATH)
 
 		try:
-			toserver = smtplib.SMTP('127.0.0.1', 10026)
+			toserver = smtplib.SMTP('127.0.0.1', TO_PORT)
 			toserver.sendmail(mailfrom, rcpttos, data)
 			toserver.quit()
 		except smtplib.SMTPException:
@@ -59,6 +61,6 @@ class CustomSMTPServer(smtpd.SMTPServer):
 
 		return
 		
-server = CustomSMTPServer(('127.0.0.1', 10025), None)
+server = CustomSMTPServer(('127.0.0.1', FROM_PORT), None)
 
 asyncore.loop()
