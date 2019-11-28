@@ -11,9 +11,9 @@ import v1 from './v1/index';
 import ErrorResponse from './libraries/exception/error-response';
 import ERROR_CODE from './libraries/exception/error-code';
 import corsOptions from './config/cors-options';
+import log from './libraries/logger/winston';
 
 dotenv.config();
-
 const app = express();
 const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
@@ -49,8 +49,12 @@ app.use((err, req, res, next) => {
     return res.status(status).json(err);
   }
 
-  // TODO : SAVE ERROR
-  console.log(err);
+  let who = '';
+  if (req.user) {
+    who = `${JSON.stringify(req.user)}\n`;
+  }
+  log.error(who + err.stack);
+
   return res.status(500).json(INTERNAL_SERVER_ERROR_EXCEPTION);
 });
 
