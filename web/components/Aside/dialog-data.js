@@ -25,6 +25,6 @@ export const getDialogData = (type, category) => {
       };
 
     default:
-      return {};
+      return undefined;
   }
 };

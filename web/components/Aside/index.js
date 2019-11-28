@@ -56,9 +56,11 @@ const Aside = () => {
   const { dispatch } = useContext(AppDisapthContext);
   const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogState, setDialogState] = useState(getDialogData(true));
+  const [dialogState, setDialogState] = useState(getDialogData(0));
 
   const handleDialogOpen = (e, action, category, idx) => {
+    const dialogData = getDialogData(action, category, idx);
+    if (!dialogData) return;
     setDialogState(getDialogData(action, category, idx));
     setDialogOpen(true);
   };
