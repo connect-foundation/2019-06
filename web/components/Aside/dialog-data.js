@@ -3,9 +3,7 @@ import { StarBorder } from '@material-ui/icons';
 import req from '../../utils/request';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
-const url = '/mail/box';
-
-const deleteMailbox = e => {};
+const url = '/mail/box/';
 
 export const getDialogData = (type, customCategory, idx, setDialogOpen, setCustomCategory) => {
   switch (type) {
@@ -64,11 +62,17 @@ export const getDialogData = (type, customCategory, idx, setDialogOpen, setCusto
         title: `메일함(${customCategory[idx].name}) 삭제`,
         textContents: '정말로 삭제하시겠습니까?',
         needTextField: false,
-        okBtnHandler: e => {
+        okBtnHandler: async e => {
+          const { no, name } = customCategory[idx];
+          const query = `no=${no}&name=${name}`;
+          const { isError } = await req.delete(`${url}?${query}`);
+          if (isError) {
+            console.log(isError);
+            // TODO: 상단에 에러 메세지 보여주기 (data.message)
+            return;
+          }
           setCustomCategory(customCategory.filter((_, index) => idx !== index));
           setDialogOpen(false);
-          // 서버와 통신하여 메일함을 삭제해야 함
-          deleteMailbox(e);
         },
       };
 
