@@ -3,9 +3,9 @@ import getErrorResponseBySequelizeValidationError from '../exception/sequelize-e
 import ERROR_CODE from '../exception/error-code';
 import ErrorField from '../exception/error-field';
 import ErrorResponse from '../exception/error-response';
-import { validate } from '../validator';
+import { validate } from './common';
 
-const join = async body => {
+const register = async body => {
   if (body.name) {
     body.name = body.name.trim();
   }
@@ -71,7 +71,7 @@ const checkBodyForPasswordSearch = ({ id, email }) => {
 };
 
 export default {
-  join,
+  register,
   checkQueryForSearch,
   checkBodyForPasswordUpdate,
   checkBodyForIdSearch,

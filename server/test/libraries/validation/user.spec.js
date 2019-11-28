@@ -12,20 +12,20 @@ const user = {
 };
 
 describe('', () => {
-  describe('join함수는....', () => {
+  describe('register함수는....', () => {
     it('# 성공시 true를 반환한다.', async () => {
-      const data = await validate.join(user);
+      const data = await validate.register(user);
       data.should.be.true();
     });
 
     it('# 아이디가 5글자 미만일 시에 rejected가 반환된다', async () => {
-      await validate.join({ ...user, id: 'asd' }).should.be.rejected();
+      await validate.register({ ...user, id: 'asd' }).should.be.rejected();
     });
 
     it('# 실패시 error는 ErrorResponse의 인스턴스이다.', async () => {
       const userId = 'asd';
       try {
-        await validate.join({ ...user, id: userId });
+        await validate.register({ ...user, id: userId });
       } catch (error) {
         error.should.be.instanceOf(ErrorResponse);
       }
@@ -34,7 +34,7 @@ describe('', () => {
     it('# 실패시 fieldErrors 상세한 내용을 알린다. ', async () => {
       const userId = 'asd';
       try {
-        await validate.join({ ...user, id: userId });
+        await validate.register({ ...user, id: userId });
       } catch (error) {
         const { fieldErrors } = error;
         fieldErrors[0].field.should.be.eql('id');
@@ -47,7 +47,7 @@ describe('', () => {
       const userId = 'asd';
       const password = 'asd';
       try {
-        await validate.join({ ...user, id: userId, password });
+        await validate.register({ ...user, id: userId, password });
       } catch (error) {
         error.fieldErrors.length.should.be.eql(2);
       }
@@ -57,7 +57,7 @@ describe('', () => {
       const userId = 'asd';
       const password = 'asd';
       try {
-        await validate.join({ ...user, id: userId, password });
+        await validate.register({ ...user, id: userId, password });
       } catch (error) {
         error.errorCode.should.be.equals(ERROR_CODE.INVALID_INPUT_VALUE);
       }
