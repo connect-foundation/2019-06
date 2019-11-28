@@ -1,7 +1,7 @@
 import STATUS from 'http-status';
 import service from './service';
 import U from '../../libraries/mail-util';
-import { validate } from '../../libraries/validation/validator';
+import { validate } from '../../libraries/validation/common';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';

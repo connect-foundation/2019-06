@@ -1,6 +1,6 @@
 import ErrorResponse from '../libraries/exception/error-response';
 import ErrorCode from '../libraries/exception/error-code';
-import { checkUser } from '../libraries/validation/validator';
+import { checkUser } from '../libraries/validation/common';
 
 const validateUser = (req, res, next) => {
   if (!checkUser(req.body)) {

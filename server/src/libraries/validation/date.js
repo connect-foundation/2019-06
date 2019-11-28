@@ -2,7 +2,7 @@ import DB from '../../database';
 import ERROR_CODE from '../exception/error-code';
 import ErrorField from '../exception/error-field';
 import ErrorResponse from '../exception/error-response';
-import { checkDate } from './validator';
+import { checkDate } from './common';
 import { strToDate } from '../date-parser';
 
 const MINUTES_INTERVAL = 15;
