@@ -5,6 +5,8 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 import bulkMock from '../../mock/create-large-amount-data';
 
+const names = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
+
 describe('Mail Service Test', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -44,7 +46,7 @@ describe('Mail Service Test', () => {
     });
   });
 
-  describe('getQueryByOptions...', () => {
+  describe('getQueryByOptions ...', () => {
     const data = { userNo: 1, category: 0, perPageNum: 10, page: 1 };
 
     it('# category가 0이면 category가 포함되지 않는다.', () => {
@@ -59,7 +61,100 @@ describe('Mail Service Test', () => {
 
     it('# category가 양수이면 category가 포함된다.', () => {
       const query = service.getQueryByOptions({ ...data, category: 1 });
-      query.should.have.property('category_no');
+      query.mailFilter.should.have.property('category_no');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 없다면 query에도 order가 없다..', () => {
+      const query = service.getQueryByOptions(data);
+      query.should.not.have.property('order');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 있으면 order가 존재한다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'dateasc' });
+      query.should.have.property('order');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 dateasc면 no asc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'dateasc' });
+      const order = query.order.flat();
+      order[0].should.be.equals('no');
+      order[1].should.be.equals('ASC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 datedesc면 no desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'datedesc' });
+      const order = query.order.flat();
+      order[0].should.be.equals('no');
+      order[1].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 유효한 값이 아니면 order는 존재하지 않는다...', () => {
+      let query = service.getQueryByOptions({ ...data, sort: 'ASD' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'asd' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'zxc' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: 'A34SD' });
+      query.should.not.have.property(query.order);
+
+      query = service.getQueryByOptions({ ...data, sort: '43#$G3' });
+      query.should.not.have.property(query.order);
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectdesc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'subjectasc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('subject');
+      order[2].should.be.equals('ASC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 fromdesc from desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'fromdesc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('from');
+      order[2].should.be.equals('DESC');
+    });
+
+    it('# 매개변수 오브젝트에 sort가 subjectdesc면 subject desc 이다...', () => {
+      const query = service.getQueryByOptions({ ...data, sort: 'fromasc' });
+      const order = query.order.flat();
+      order[1].should.be.equals('from');
+      order[2].should.be.equals('ASC');
+    });
+  });
+
+  describe('getCategories 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 1번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(1);
+      categories.map(category => category.name).should.be.eql(names);
+    });
+
+    it('# 2번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(2);
+      categories.map(category => category.name).should.be.eql(names);
+    });
+
+    it('# 3번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(3);
+      categories.map(category => category.name).should.be.eql(names);
     });
   });
 });

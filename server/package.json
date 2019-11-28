@@ -9,11 +9,10 @@
     "prettier": "prettier --write src/**/*.js",
     "dev:force": "export force=true || SET \"force=true\"&& npm run dev",
     "production": "export NODE_ENV=production || set \"NODE_ENV=production\" && babel-node src/bin/www.js",
-    "scss": "sass ./src/public/scss:./src/public/css",
-    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exit",
     "test:watch": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json -w",
     "test:commit": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exclude ./test/**/!\"(\"database\")\".spec.js --forbid-only",
-    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --forbid-only",
+    "test:push": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --forbid-only --timeout 3000 --exit",
     "test:bulk": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --require @babel/register ./test/**/database.bulk.spec.js"
   },
   "engines": {
@@ -94,15 +93,22 @@
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "express-session": "^1.17.0",
+    "generate-password": "^1.4.2",
     "helmet": "^3.21.1",
     "http-status": "^1.4.1",
+    "imap": "^0.8.19",
+    "mimemessage": "^1.0.5",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.1",
     "multer": "^1.4.2",
     "mysql2": "^1.7.0",
-    "node-sass": "^4.12.0",
     "nodemailer": "^6.3.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^5.19.6"
+    "sequelize": "^5.19.6",
+    "uuid": "^3.3.3",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^4.3.0"
   }
 }

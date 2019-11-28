@@ -8,7 +8,7 @@ const bulkCreateMailTemplate = async () => {
       from: `root${i}@daitnu.com`,
       to: 'daitnu@daitnu.com,daitne@daitnu.com',
       subject: `제목입니다${i}.ㅎㅎ`,
-      body: `바디입니다${i}.ㅎㅎㅎ`,
+      text: `바디입니다${i}.ㅎㅎㅎ`,
     };
     mailTemplates.push(mailTemplate);
   }
@@ -17,7 +17,7 @@ const bulkCreateMailTemplate = async () => {
 
 const bulkCreateMail = async () => {
   const mails = [];
-  for (let i = 0; i < 10000; i += 1) {
+  for (let i = 0; i < 1000; i += 1) {
     const mail = {
       owner: 1,
       mail_template_id: (i % 10) + 1,

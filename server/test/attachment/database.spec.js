@@ -14,7 +14,7 @@ describe('attachment DB test..', () => {
       title: 'db test',
       subject: 'subject',
       tmp: '그냥 만들어봄 ㅎ.ㅎ',
-      body: '바디입니다.',
+      text: '바디입니다.',
     };
     const result = await DB.MailTemplate.create({ ...body });
     const data = result.get({ plain: true });

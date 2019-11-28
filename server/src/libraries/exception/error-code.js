@@ -31,6 +31,15 @@ const ERROR_CODE = {
     '가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.',
     'LOGIN001',
   ),
+  EMAIL_NOT_FOUND: $(404, '가입된 적 없는 이메일 입니다.', 'COMMON009'),
+  LOGIN_ID_OR_EMAIL_NOT_FOUND: $(
+    404,
+    '가입하지 않은 아이디이거나, 가입에 사용하지 않은 이메일 입니다.',
+    'COMMON010',
+  ),
+  MAILBOX_NOT_FOUND: $(404, '존재하지 않는 메일함 입니다.', 'COMMON011'),
+  MAILBOX_EXCEED_NAME: $(400, '메일함 이름은 최대 20글자입니다.', 'COMMON012'),
+  INVALID_DATE: $(400, '유효하지 않는 날짜 정보입니다.', 'COMMON013'),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
 

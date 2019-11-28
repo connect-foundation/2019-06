@@ -1,6 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
-const defaultPaging = { offset: 0, limit: 100 };
+const DEFALT_PAGING = { offset: 0, limit: 100 };
 
 const model = (sequelize, DataTypes) => {
   const Mail = sequelize.define(
@@ -33,6 +33,10 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      reservation_time: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,
@@ -56,7 +60,8 @@ const model = (sequelize, DataTypes) => {
     mailFilter = {},
     mailTemplateFilter = {},
     options = {},
-    paging = defaultPaging,
+    paging = DEFALT_PAGING,
+    order,
   }) => {
     return Mail.findAndCountAll({
       distinct: true,
@@ -65,17 +70,13 @@ const model = (sequelize, DataTypes) => {
         owner: userNo,
         ...mailFilter,
       },
+      order,
       include: [
         {
           model: sequelize.models.MailTemplate,
           where: {
             ...mailTemplateFilter,
           },
-          include: [
-            {
-              model: sequelize.models.Attachment,
-            },
-          ],
         },
       ],
       raw: true,

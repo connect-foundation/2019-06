@@ -1,17 +1,21 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import bcrypt from 'bcrypt';
+import { createSalt, encrypt, aesEncrypt, aesDecrypt } from '../../libraries/crypto';
 
-const { SALT_ROUND, DEFAULT_DOMAIN_NAME } = process.env;
+const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
   const { id, password } = instance.dataValues;
-  const round = parseInt(SALT_ROUND, 10);
-  const salt = await bcrypt.genSalt(round);
-  const hashedPassword = await bcrypt.hash(password, salt);
+
+  const salt = await createSalt();
+  const hashedPassword = await encrypt(password, salt);
+  const imapPassword = aesEncrypt(password);
+
   instance.email = `${id}@${DEFAULT_DOMAIN_NAME}`;
   instance.password = hashedPassword;
+  instance.salt = salt;
+  instance.imap_password = imapPassword;
 };
 
 const model = (sequelize, DataTypes) => {
@@ -67,6 +71,10 @@ const model = (sequelize, DataTypes) => {
           },
         },
       },
+      imap_password: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+      },
       email: {
         type: DataTypes.STRING(255),
         allowNull: true,
@@ -89,6 +97,10 @@ const model = (sequelize, DataTypes) => {
           },
         },
       },
+      salt: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,
@@ -101,10 +113,38 @@ const model = (sequelize, DataTypes) => {
     },
   );
 
+  User.updatePassword = (no, password, imap_password) => {
+    return User.update(
+      {
+        password,
+        imap_password,
+      },
+      { where: { no }, validate: false },
+    );
+  };
+
   User.findOneById = id => {
     return User.findOne({
       where: { id },
       raw: true,
+    });
+  };
+
+  User.findOneByEmail = email => {
+    return User.findOne({
+      where: {
+        sub_email: email,
+      },
+      raw: true,
+    });
+  };
+
+  User.findOneByIdAndSubEmail = (id, sub_email) => {
+    return User.findOne({
+      where: {
+        id,
+        sub_email,
+      },
     });
   };
 
@@ -136,7 +176,6 @@ const model = (sequelize, DataTypes) => {
       },
     });
   };
-
   return User;
 };
 
