@@ -1,20 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField, OutlinedInput, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import validator from '../../utils/validator';
-import { errorParser } from '../../utils/error-parser';
-import { ERROR_DIFFERENT_PASSWORD } from '../../utils/error-message';
+import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
+import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
+import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
+import request from '../../../utils/request';
+import { setMessage } from '../../../contexts/reducer';
+import { AppDisapthContext } from '../../../contexts';
 
 const useStyles = makeStyles(theme => ({
-  container: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
@@ -42,12 +41,13 @@ const initialErrorState = {
 
 const RegisterForm = () => {
   const classes = useStyles();
+  const { dispatch } = useContext(AppDisapthContext);
 
-  const [values, setValues] = React.useState(initialInputState);
-  const [errors, setErrorMsg] = React.useState(initialErrorState);
+  const [values, setValues] = useState(initialInputState);
+  const [errors, setErrorMsg] = useState(initialErrorState);
 
-  const handleInputChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
+  const handleInputChange = prop => ({ target }) => {
+    setValues({ ...values, [prop]: target.value });
   };
 
   const handleClickShowPassword = () => {
@@ -59,15 +59,16 @@ const RegisterForm = () => {
   };
 
   const signUp = async () => {
-    try {
-      const { id, password, name, email } = values;
-      const body = { user_id: id, password, sub_email: email, name: name.trim() };
-      await axios.post('/users', body);
-      Router.push('/login');
-    } catch (err) {
-      const message = errorParser(err);
+    const { id, password, name, email } = values;
+    const body = { id, password, sub_email: email, name: name.trim() };
+    const { isError, data } = await request.post('/users', body);
+    if (isError) {
+      const { message } = errorParser(data);
       handleRegisterErrMsg(message);
+      return;
     }
+    dispatch(setMessage(SUCCESS_REGISTER));
+    Router.push('/login');
   };
 
   const onSubmitHandler = e => {
@@ -93,21 +94,21 @@ const RegisterForm = () => {
   };
 
   return (
-    <S.InputForm>
+    <S.InputForm autoComplete="off">
       <S.InputContainer>
         <S.Title>Daitnu 계정 만들기</S.Title>
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-search"
+          id="name"
           label="이름"
           type="search"
-          value={values.name}
           onChange={handleInputChange('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
           variant="outlined"
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>
@@ -115,9 +116,8 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <OutlinedInput
-          id="outlined-adornment-weight"
+          id="id"
           label="아이디"
-          value={values.id}
           onChange={handleInputChange('id')}
           className={classes.textField}
           error={errors.id !== ''}
@@ -126,6 +126,7 @@ const RegisterForm = () => {
           inputProps={{
             'aria-label': 'weight',
           }}
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>
@@ -133,26 +134,24 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-password-input"
+          id="password"
           label="비밀번호"
-          value={values.password}
           onChange={handleInputChange('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
-          autoComplete="current-password"
+          autoComplete="off"
           margin="normal"
           variant="outlined"
         />
         <TextField
-          id="outlined-password-input"
+          id="checkPassword"
           label="확인"
-          value={values.checkPassword}
           onChange={handleInputChange('checkPassword')}
           className={classes.textField}
           error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
-          autoComplete="current-password"
+          autoComplete="off"
           margin="normal"
           variant="outlined"
         />
@@ -165,15 +164,15 @@ const RegisterForm = () => {
       </S.InputContainer>
       <S.InputContainer>
         <TextField
-          id="outlined-search"
+          id="email"
           label="이메일"
           type="search"
-          value={values.email}
           onChange={handleInputChange('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
           variant="outlined"
+          autoComplete="off"
         />
       </S.InputContainer>
       <S.InputContainer>

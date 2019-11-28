@@ -10,7 +10,7 @@ const Loading = styled.div`
   position: relative;
   z-index: 0;
   width: 100%;
-  height: 100vh;
+  height: ${props => (props.full ? '100vh' : '100%')};
   padding: 2rem;
   overflow: hidden;
 

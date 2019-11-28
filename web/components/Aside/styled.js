@@ -3,6 +3,7 @@ import styled from 'styled-components';
 const Aside = styled.aside`
   display: flex;
   flex-direction: column;
+  border-right: 1px solid #ced4da;
 `;
 
 const WriteArea = styled.div`

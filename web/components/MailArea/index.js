@@ -1,38 +1,45 @@
 /* eslint-disable camelcase */
-import React, { useState } from 'react';
-import ReadMail from '../ReadMail';
-import MailTemplate from '../MailTemplate';
+import React, { useContext, useCallback } from 'react';
+import Router from 'next/router';
+import MailTemplate from './MailTemplate';
 import S from './styled';
-import Paging from '../Paging';
+import Paging from './Paging';
+import { AppDisapthContext, AppStateContext } from '../../contexts';
+import Loading from '../Loading';
+import { handleMailsChange } from '../../contexts/reducer';
+import useFetch from '../../utils/use-fetch';
+import getQueryByOptions from '../../utils/query';
+import Tools from './Tools';
+import { handleErrorStatus } from '../../utils/error-handler';
 
-const MailArea = ({ mailList }) => {
-  const { paging, mails } = mailList;
+const MailArea = () => {
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDisapthContext);
+  const query = getQueryByOptions(state);
+  const URL = `/mail?${query}`;
+  const callback = useCallback(
+    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleMailsChange({ ...data }))),
+    [dispatch],
+  );
 
-  const processedMails = mails.map(mail => {
-    const { is_important, is_read, MailTemplate, no } = mail;
-    const { from, subject, text, createdAt } = MailTemplate;
-    return {
-      from,
-      subject,
-      text,
-      createdAt,
-      is_important,
-      is_read,
-      no,
-    };
-  });
+  const isLoading = useFetch(callback, URL);
 
-  const [selected, setSelected] = useState(null);
-  const mailTemplates = processedMails.map((mail, i) => (
-    <MailTemplate key={`mail-${i}`} mail={mail} setSelected={setSelected} no={i} />
-  ));
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  const { mails, paging } = state;
+  const mailList =
+    mails.length > 0
+      ? mails.map(mail => <MailTemplate key={mail.no} mail={mail} />)
+      : '메일이 없습니다.';
 
   return (
     <S.MailArea>
-      <S.Tools>{selected ? 'mail' : 'maillist'}</S.Tools>
-      <S.MailListArea>
-        {selected ? <ReadMail mail={selected.mail} /> : mailTemplates}
-      </S.MailListArea>
+      <S.ToolsWrapper>
+        <Tools />
+      </S.ToolsWrapper>
+      <S.MailListArea>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />
       </S.MailPagingArea>
