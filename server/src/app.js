@@ -6,6 +6,7 @@ import passport from 'passport';
 import session from 'express-session';
 import cors from 'cors';
 
+import morgan from 'morgan';
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
 import ErrorResponse from './libraries/exception/error-response';
@@ -14,11 +15,17 @@ import corsOptions from './config/cors-options';
 import log from './libraries/logger/winston';
 
 dotenv.config();
+morgan.format(
+  'combined',
+  ':method :url :status :res[content-length] - :response-time ms :remote-addr - :remote-user :referrer :user-agent',
+);
+
 const app = express();
 const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
+app.use(morgan('combined', { stream: log.debug }));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
