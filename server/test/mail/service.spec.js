@@ -5,6 +5,8 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 import bulkMock from '../../mock/create-large-amount-data';
 
+const names = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
+
 describe('Mail Service Test', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
@@ -129,6 +131,30 @@ describe('Mail Service Test', () => {
       const order = query.order.flat();
       order[1].should.be.equals('from');
       order[2].should.be.equals('ASC');
+    });
+  });
+
+  describe('getCategories 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 1번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(1);
+      categories.map(category => category.name).should.be.eql(names);
+    });
+
+    it('# 2번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(2);
+      categories.map(category => category.name).should.be.eql(names);
+    });
+
+    it('# 3번이 가지고 있는 카테고리들을 반환한다.', async () => {
+      const { categories } = await service.getCategories(3);
+      categories.map(category => category.name).should.be.eql(names);
     });
   });
 });

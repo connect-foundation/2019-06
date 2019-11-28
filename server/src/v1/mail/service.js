@@ -120,4 +120,15 @@ const saveReservationMail = async (mailContents, user, reservationTime) => {
   );
 };
 
-export default { getMailsByOptions, sendMail, getQueryByOptions, saveReservationMail };
+const getCategories = async no => {
+  const categories = await DB.Category.findAllByUserNo(no);
+  return { categories };
+};
+
+export default {
+  getMailsByOptions,
+  sendMail,
+  getQueryByOptions,
+  saveReservationMail,
+  getCategories,
+};

@@ -28,7 +28,7 @@ const rooot = {
   sub_email: 'root@asd.bcd',
 };
 
-const names = ['전체메일함', '받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
+const names = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 
 describe('user service는...', () => {
   before(async () => {
