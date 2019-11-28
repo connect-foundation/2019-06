@@ -78,6 +78,7 @@ const Aside = () => {
       idx,
       setDialogOpen,
       handleCategoriesChange,
+      dispatch,
     );
     if (!dialogData) return;
     setDialogState(dialogData);

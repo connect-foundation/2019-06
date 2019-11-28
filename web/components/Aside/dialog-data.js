@@ -1,12 +1,16 @@
-import { useContext } from 'react';
-import { AppDisapthContext } from '../../contexts';
 import req from '../../utils/request';
 
-const { dispatch } = useContext(AppDisapthContext);
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
 
-export const getDialogData = (type, customCategory, idx, setDialogOpen, setCustomCategory) => {
+export const getDialogData = (
+  type,
+  customCategory,
+  idx,
+  setDialogOpen,
+  setCustomCategory,
+  dispatch,
+) => {
   switch (type) {
     case ADD:
       return {
