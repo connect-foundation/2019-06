@@ -26,7 +26,8 @@ const makeMailBox = async (req, res, next) => {
 };
 
 const alterMailBox = async (req, res, next) => {
-  const { oldName, newName, no } = req.body;
+  const { no } = req.params;
+  const { oldName, newName } = req.body;
   const boxNo = Number(no);
   let updatedBox;
 
@@ -40,7 +41,8 @@ const alterMailBox = async (req, res, next) => {
 };
 
 const deleteMailBox = async (req, res, next) => {
-  const { name, no } = req.query;
+  const { no } = req.params;
+  const { name } = req.query;
   const boxNo = Number(no);
   let deletedBox;
 
