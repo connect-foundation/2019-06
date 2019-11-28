@@ -54,10 +54,9 @@ export const getDialogData = (
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             return;
           }
-          const { isError } = await request.patch(url, {
+          const { isError } = await request.patch(url + customCategory[idx].no, {
             oldName: customCategory[idx].name,
             newName: name,
-            no: customCategory[idx].no,
           });
           if (isError) {
             console.log(isError);
@@ -65,7 +64,7 @@ export const getDialogData = (
             return;
           }
           customCategory[idx].name = name;
-          dispatch(setCustomCategory([...customCategory]));
+          dispatch(setCustomCategory({ data: customCategory }));
           setDialogOpen(false);
         },
       };
@@ -74,16 +73,16 @@ export const getDialogData = (
         title: `메일함(${customCategory[idx].name}) 삭제`,
         textContents: '정말로 삭제하시겠습니까?',
         needTextField: false,
-        okBtnHandler: async e => {
+        okBtnHandler: async () => {
           const { no, name } = customCategory[idx];
-          const query = `no=${no}&name=${name}`;
-          const { isError } = await request.delete(`${url}?${query}`);
+          const query = `?name=${name}`;
+          const { isError } = await request.delete(url + no + query);
           if (isError) {
             console.log(isError);
             // TODO: 상단에 에러 메세지 보여주기 (data.message)
             return;
           }
-          dispatch(setCustomCategory(customCategory.filter((_, index) => idx !== index)));
+          dispatch(setCustomCategory({ data: customCategory.filter((_, index) => idx !== index) }));
           setDialogOpen(false);
         },
       };

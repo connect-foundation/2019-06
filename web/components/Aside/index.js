@@ -75,7 +75,7 @@ const Aside = () => {
     const dialogData = getDialogData(
       action,
       state.categories,
-      idx,
+      idx + 4,
       setDialogOpen,
       handleCategoriesChange,
       dispatch,
@@ -85,11 +85,11 @@ const Aside = () => {
     setDialogOpen(true);
   };
 
-  const handleDialogClose = _ => {
+  const handleDialogClose = () => {
     setDialogOpen(false);
   };
 
-  const handleClick = _ => {
+  const handleClick = () => {
     setMailboxFolderOpen(!mailboxFolderOpen);
   };
   const callback = useCallback(
@@ -106,7 +106,7 @@ const Aside = () => {
   const { categories } = state;
   const filteredDefaultCategories = categories.filter(category => category.is_default);
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
-  const userDefinedCategories = categories.filter(category => !category.is_default);
+  const customCategories = categories.filter(category => !category.is_default);
 
   const defaultCards = defaultCategories.map((category, idx) => (
     <ListItem
@@ -118,7 +118,7 @@ const Aside = () => {
     </ListItem>
   ));
 
-  const userDefinedCategoryCards = userDefinedCategories.map((category, idx) => (
+  const customCategoryCards = customCategories.map((category, idx) => (
     <ListItem button key={idx} className={classes.nested}>
       <ListItemIcon>
         <StarBorder />
@@ -152,7 +152,7 @@ const Aside = () => {
         </ListItem>
         <Collapse in={mailboxFolderOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {userDefinedCategoryCards}
+            {customCategoryCards}
             <ListItem button onClick={e => handleDialogOpen(e, ADD)} className={classes.nested}>
               <ListItemIcon>
                 <AddBoxIcon />
