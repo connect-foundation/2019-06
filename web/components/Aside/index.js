@@ -67,7 +67,6 @@ const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { dispatch } = useContext(AppDisapthContext);
-  const [mailBoxMenuOpen, setMailBoxMenuOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
@@ -85,15 +84,6 @@ const Aside = () => {
 
   const handleClick = () => {
     setMailboxFolderOpen(!mailboxFolderOpen);
-  };
-
-  const handleMailboxMenuContextClick = e => {
-    e.preventDefault();
-    setMailBoxMenuOpen(true);
-  };
-
-  const handleMailBoxMenuContextClose = e => {
-    setMailBoxMenuOpen(false);
   };
 
   const defaultCard = defaultCategory.map((category, idx) => (
@@ -138,7 +128,7 @@ const Aside = () => {
           <S.WrtieButton>내게쓰기</S.WrtieButton>
         </ListItem>
         {defaultCard}
-        <ListItem button onContextMenu={handleMailboxMenuContextClick} onClick={handleClick}>
+        <ListItem button onClick={handleClick}>
           <ListItemIcon>
             <MoveInboxIcon />
           </ListItemIcon>
@@ -157,25 +147,6 @@ const Aside = () => {
           </List>
         </Collapse>
       </List>
-      <Popover
-        anchorReference="anchorPosition"
-        open={mailBoxMenuOpen}
-        onClose={handleMailBoxMenuContextClose}
-        anchorPosition={{ top: window.event.clientY, left: window.event.clientX }}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}>
-        <List>
-          <ListItem button>
-            <ListItemText primary="메일함 추가하기" />
-          </ListItem>
-        </List>
-      </Popover>
       <Dialog open={dialogOpen} onClose={handleDialogClose} aria-labelledby="dialog-title">
         <DialogTitle id="dialog-title">{dialogState.title}</DialogTitle>
         <DialogContent>
