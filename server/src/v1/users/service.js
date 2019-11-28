@@ -78,16 +78,10 @@ const sendUserPasswordToEmail = async (id, email) => {
   return true;
 };
 
-const getCategories = async user => {
-  const categories = await DB.Category.findAllByUserNo(user.no);
-  return { categories };
-};
-
 export default {
   register,
   updatePassword,
   createDefaultCategories,
   sendUserIdToEmail,
   sendUserPasswordToEmail,
-  getCategories,
 };

@@ -53,7 +53,20 @@ const write = async (req, res, next) => {
   return res.status(STATUS.CREATED).json({ mail: mailContents });
 };
 
+const getCategories = async (req, res, next) => {
+  let categories;
+
+  try {
+    categories = await service.getCategories(req.user.no);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.json(categories);
+};
+
 export default {
   list,
   write,
+  getCategories,
 };

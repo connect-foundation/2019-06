@@ -157,28 +157,4 @@ describe('user service는...', () => {
       await service.updatePassword(no, salt, newPassword).should.be.true;
     });
   });
-
-  describe('getCategories 함수는...', () => {
-    before(async () => {
-      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-      await DB.sequelize.sync({ force: true });
-      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-      await mock();
-    });
-
-    it('# 1번이 가지고 있는 카테고리들을 반환한다.', async () => {
-      const { categories } = await service.getCategories(1);
-      categories.map(category => category.name).should.be.eql(names);
-    });
-
-    it('# 2번이 가지고 있는 카테고리들을 반환한다.', async () => {
-      const { categories } = await service.getCategories(2);
-      categories.map(category => category.name).should.be.eql(names);
-    });
-
-    it('# 3번이 가지고 있는 카테고리들을 반환한다.', async () => {
-      const { categories } = await service.getCategories(3);
-      categories.map(category => category.name).should.be.eql(names);
-    });
-  });
 });
