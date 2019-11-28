@@ -6,19 +6,28 @@ import passport from 'passport';
 import session from 'express-session';
 import cors from 'cors';
 
+import morgan from 'morgan';
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
 import ErrorResponse from './libraries/exception/error-response';
 import ERROR_CODE from './libraries/exception/error-code';
 import corsOptions from './config/cors-options';
+import log from './libraries/logger/winston';
 
 dotenv.config();
+morgan.format(
+  'combined',
+  ':method :url :status :res[content-length] - :response-time ms :remote-addr - :remote-user :referrer :user-agent',
+);
 
 const app = express();
-const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS } = process.env;
+const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS, NODE_ENV } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
+if (NODE_ENV !== 'test') {
+  app.use(morgan('combined', { stream: log.debug }));
+}
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -49,8 +58,12 @@ app.use((err, req, res, next) => {
     return res.status(status).json(err);
   }
 
-  // TODO : SAVE ERROR
-  console.log(err);
+  let who = '';
+  if (req.user) {
+    who = `${JSON.stringify(req.user)}\n`;
+  }
+  log.error(who + err.stack);
+
   return res.status(500).json(INTERNAL_SERVER_ERROR_EXCEPTION);
 });
 

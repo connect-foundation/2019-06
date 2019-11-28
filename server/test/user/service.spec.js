@@ -41,17 +41,21 @@ describe('user service는...', () => {
   describe('register 함수는...', () => {
     it('# 성공시 newUser를 반환한다.', async () => {
       const newUser = await service.register(user);
-      newUser.should.be.properties('domain_no', 'no', 'id', 'name', 'sub_email', 'email');
-    });
-
-    it('# 성공시 password는 반환하지 않는다.', async () => {
-      const newUser = await service.register(user2);
-      newUser.should.not.be.properties('password');
+      newUser.should.be.properties(
+        'domain_no',
+        'no',
+        'id',
+        'name',
+        'sub_email',
+        'email',
+        'password',
+        'imap_password',
+      );
     });
 
     it('# 중복된 아이디인 경우 ErrorResponse instance를 반환한다. ', async () => {
       try {
-        newUser = await service.register(user2);
+        newUser = await service.register(user);
       } catch (error) {
         error.should.be.instanceOf(ErrorResponse);
       }
@@ -59,7 +63,7 @@ describe('user service는...', () => {
 
     it('# 중복된 아이디인 경우 ERROR_CODE는 ID_DUPLICATION 이다', async () => {
       try {
-        newUser = await service.register(user2);
+        newUser = await service.register(user);
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.ID_DUPLICATION);
@@ -68,7 +72,7 @@ describe('user service는...', () => {
 
     it('# 중복된 아이디인 경우 ErrorFields의 length는 0이다.', async () => {
       try {
-        newUser = await service.register(user2);
+        newUser = await service.register(user);
       } catch (error) {
         const { fieldErrors } = error;
         fieldErrors.should.have.length(0);

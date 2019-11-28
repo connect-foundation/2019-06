@@ -4,7 +4,7 @@ import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
-import { encrypt } from '../../libraries/crypto';
+import { encrypt, aesEncrypt } from '../../libraries/crypto';
 
 const DEFAULT_CATEGORIES = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 const TEMP_PASSWORD_LENGTH = 15;
@@ -32,15 +32,14 @@ const register = async ({ id, password, name, sub_email }) => {
     await createDefaultCategories(newUser.no, transaction);
   });
 
-  delete newUser.password;
-  delete newUser.salt;
-
   return newUser;
 };
 
 const updatePassword = async (no, salt, password) => {
   const hashedPassword = await encrypt(password, salt);
-  await DB.User.updatePassword(no, hashedPassword);
+  const imapPassword = aesEncrypt(password);
+
+  await DB.User.updatePassword(no, hashedPassword, imapPassword);
 
   return true;
 };

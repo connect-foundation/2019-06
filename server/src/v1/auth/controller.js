@@ -5,6 +5,7 @@ const login = (req, res) => {
 
   delete user.password;
   delete user.salt;
+  delete user.imap_password;
 
   res.json(user);
 };
