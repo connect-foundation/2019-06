@@ -1,7 +1,6 @@
 import DB from '../src/database';
 
 const MAILBOX = {
-  ENTIRE: '전체메일함',
   RECEIVED: '받은메일함',
   SENT: '보낸메일함',
   SELF: '내게쓴메일함',
@@ -82,7 +81,6 @@ const createCategoryDummyData = async () => {
   const categories = [];
 
   for (let i = 1; i <= 3; i += 1) {
-    categories.push({ user_no: i, name: MAILBOX.ENTIRE, is_default: 1 });
     categories.push({ user_no: i, name: MAILBOX.RECEIVED, is_default: 1 });
     categories.push({ user_no: i, name: MAILBOX.SENT, is_default: 1 });
     categories.push({ user_no: i, name: MAILBOX.SELF, is_default: 1 });

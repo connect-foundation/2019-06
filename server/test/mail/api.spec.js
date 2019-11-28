@@ -206,4 +206,29 @@ describe('Mail api test...', () => {
       });
     });
   });
+
+  describe('카테고리 요청시...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/v1/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('로그인한 상태라면 200을 반환한다', done => {
+      authenticatedUser.get('/v1/mail/categories').expect(200, done);
+    });
+
+    it('로그인하지 않은 상태로 접근하고자 하면 401 에러를 반환한다', done => {
+      request(app)
+        .get('/v1/mail/categories')
+        .expect(401, done);
+    });
+  });
 });
