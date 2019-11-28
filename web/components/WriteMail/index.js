@@ -6,6 +6,7 @@ import InputBody from './InputBody';
 import SubmitButton from './SubmitButton';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
+import ReservationTimePicker from './ReservationTimePicker';
 
 const WriteMail = () => (
   <WriteMailContextProvider>
@@ -15,6 +16,7 @@ const WriteMail = () => (
       <InputBody />
       <SubmitButton />
       <DropZone />
+      <ReservationTimePicker />
     </S.WriteArea>
   </WriteMailContextProvider>
 );

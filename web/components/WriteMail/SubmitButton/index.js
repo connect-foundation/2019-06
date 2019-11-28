@@ -14,7 +14,7 @@ import {
 import axios from 'axios';
 import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
-import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
+import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
@@ -51,7 +51,6 @@ const SubmitButton = () => {
         dispatch({ type: UPDATE_INIT });
       })
       .catch(err => {
-        console.log(err);
         setSendMessage(<Message icon={FAIL} msg="메세지 전송 실패" />);
       });
   };
@@ -69,6 +68,10 @@ const SubmitButton = () => {
       return;
     }
     setOpen(false);
+  };
+
+  const handleOpenReservationTimePicker = () => {
+    dispatch({ type: RESERVATION_MODAL_ON });
   };
 
   return (
@@ -99,7 +102,8 @@ const SubmitButton = () => {
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList id="split-button-menu">
                       <MenuItem onClick={event => handleMenuItemClick(event)}>
-                        {<SendIcon fontSize="small" />} 보내기 예약
+                        {<SendIcon fontSize="small" />}{' '}
+                        <span onClick={handleOpenReservationTimePicker}>보내기 예약</span>
                       </MenuItem>
                     </MenuList>
                   </ClickAwayListener>

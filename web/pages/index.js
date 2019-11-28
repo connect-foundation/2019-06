@@ -16,6 +16,7 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    console.log('히히히히');
     const userData = storage.getUser();
     if (!userData) {
       Router.push('/login');
