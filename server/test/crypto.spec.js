@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import { createSalt, encrypt } from '../src/libraries/crypto';
+import { createSalt, encrypt, aesEncrypt, aesDecrypt } from '../src/libraries/crypto';
 
 describe('crypto 모듈의', () => {
   describe('createSalt() 호출시', () => {
@@ -27,6 +27,16 @@ describe('crypto 모듈의', () => {
       const encryption1 = await encrypt('hihi', 'hihi2');
       const encryption2 = await encrypt('hihi', 'hihi2');
       const match = encryption1 === encryption2;
+      match.should.be.equal(true);
+    });
+  });
+
+  describe('aesEncrypt(), aesDecrypt() 호출시', () => {
+    it('plain text를 aesEncrypt()후 aesDecrypt()한 결과는 plain text이다', () => {
+      const originPassword = 'abcdefg';
+      const encryption = aesEncrypt(originPassword);
+      const decryption = aesDecrypt(encryption);
+      const match = originPassword === decryption;
       match.should.be.equal(true);
     });
   });
