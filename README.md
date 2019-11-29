@@ -16,7 +16,7 @@
 > 우리들만의 이메일 서비스, 다잇누!  
 > Linux 환경에서 SMTP, POP3, IMAP 프로토콜을 이용하여 이메일 서버 구축
 
-### 🏠 [Homepage](https://github.com/connect-foundation/2019-06)
+### 🏠 [Homepage](https://www.daitnu.com)
 ### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
 
 ## Concept
