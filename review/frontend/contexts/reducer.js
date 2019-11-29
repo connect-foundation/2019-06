@@ -46,14 +46,9 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
-    case MAIL_CLICK:
-      return { ...state, ...payload };
-    case CHANGE_MAILS_DATA:
-      return { ...state, ...payload };
-    case SET_VIEW:
-      return { ...state, ...payload };
-    case SORT_SELECT:
-      return { ...state, ...payload };
+
+    // ...
+
     case SET_MESSAGE:
       return { ...state, ...payload };
     case CHANGE_CATEGORIES_DATA:
