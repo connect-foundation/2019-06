@@ -35,16 +35,13 @@ const useStyles = makeStyles(theme => ({
 
 const splitMoment = value =>
   moment(value)
-    .utc()
     .format('YYYY-MM-DD')
     .split('-');
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
   const [nowYear, nowMonth, nowDay] = splitMoment();
-  const time = moment(createdAt)
-    .utc()
-    .format('HH:mm');
+  const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
   if (year !== nowYear) date = `${year}-${month}-${day}`;
