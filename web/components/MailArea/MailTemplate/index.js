@@ -57,25 +57,27 @@ const MailTemplate = ({ mail }) => {
   const classes = useStyles();
 
   return (
-    <S.MailTemplateWrap isRead={is_read}>
+    <S.Container>
       <div>
         <input type="checkbox" />
       </div>
-      <div>
+      <S.ImportantButton>
         {is_important ? (
           <StarIcon className={classes.star} />
         ) : (
           <StarBorderIcon className={classes.unstar} />
         )}
-      </div>
-      <div>{is_read ? <DraftsIcon /> : <MailIcon />}</div>
-      <div>
+      </S.ImportantButton>
+      <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
+      <S.DeleteButton>
         <DeleteIcon className={classes.delete} />
-      </div>
-      <div>{from}</div>
-      <div onClick={handleSubjectClick}>{subject}</div>
-      <div>{getDateOrTime(createdAt)}</div>
-    </S.MailTemplateWrap>
+      </S.DeleteButton>
+      <S.From isRead={is_read}>{from}</S.From>
+      <S.Selectable onClick={handleSubjectClick}>
+        <S.Title isRead={is_read}>{subject}</S.Title>
+        <S.Date>{getDateOrTime(createdAt)}</S.Date>
+      </S.Selectable>
+    </S.Container>
   );
 };
 
