@@ -6,7 +6,7 @@ import {
   getTotalSize,
 } from '../../../src/libraries/validation/attachment';
 
-describe.only('attachment validation...', () => {
+describe('attachment validation...', () => {
   describe('getTotalSize는......', () => {
     it('size의 총합을 반환한다.', () => {
       const sizes = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
