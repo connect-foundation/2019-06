@@ -4,8 +4,13 @@ import ErrorField from '../exception/error-field';
 
 const BLANK = '';
 const MAILBOX_NAME_LENGTH_LIMIT = 20;
+const nameValidation = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
 
 const boxNameValidation = val => {
+  return nameValidation.test(val);
+};
+
+const boxNameBlankValidation = val => {
   return val === BLANK || !val;
 };
 
@@ -19,7 +24,7 @@ const boxNoValidation = val => {
 };
 
 const makeMailBoxValidation = name => {
-  if (boxNameValidation(name)) {
+  if (boxNameBlankValidation(name)) {
     const errorField = new ErrorField('mailBoxName', name, '추가할 메일함 이름을 입력해주세요');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
@@ -33,11 +38,20 @@ const makeMailBoxValidation = name => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
+  if (!boxNameValidation(name)) {
+    const errorField = new ErrorField(
+      'mailBoxName',
+      name,
+      '메일함 이름은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다',
+    );
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
   return true;
 };
 
 const updateMailBoxValidation = (newName, oldName, no) => {
-  if (boxNameValidation(newName)) {
+  if (boxNameBlankValidation(newName)) {
     const errorField = new ErrorField(
       'newMailBoxName',
       newName,
@@ -46,7 +60,7 @@ const updateMailBoxValidation = (newName, oldName, no) => {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNameValidation(oldName)) {
+  if (boxNameBlankValidation(oldName)) {
     const errorField = new ErrorField('oldMailBoxName', oldName, '메일함이 선택되지 않았습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
@@ -65,11 +79,20 @@ const updateMailBoxValidation = (newName, oldName, no) => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
+  if (!boxNameValidation(newName)) {
+    const errorField = new ErrorField(
+      'mailBoxName',
+      newName,
+      '메일함 이름은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다',
+    );
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
   return true;
 };
 
 const deleteMailBoxValidation = (name, no) => {
-  if (boxNameValidation(name)) {
+  if (boxNameBlankValidation(name)) {
     const errorField = new ErrorField('mailBoxName', name, '메일함이 잘못 전달되었습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
