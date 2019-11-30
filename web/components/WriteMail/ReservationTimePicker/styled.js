@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const InputForm = styled.form`
-  width: 300px;
+  width: 550px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,10 +9,17 @@ const InputForm = styled.form`
   padding: 30px;
 `;
 
-const InputContainer = styled.div`
+const RowContainer = styled.div`
   width: 100%;
   display: flex;
-  align-items: center;
+`;
+
+const ColumnContainer = styled.div`
+  margin-left: 20px;
+  width: 100%;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
 `;
 
 const ButtonContainer = styled.div`
@@ -43,8 +50,7 @@ const WhiteButton = styled(Button)`
 const ErrorText = styled.span`
   width: 100%;
   color: red;
-  margin-left: 10px;
-  margin-bottom: 15px;
+  margin-top: 10px;
   padding: 0;
   font-size: 0.8rem;
   height: 0.6rem;
@@ -55,7 +61,17 @@ const Title = styled.span`
   font-weight: bold;
   color: black;
   text-decoration: none;
-  padding: 10px;
+  padding: 20px;
+`;
+
+const Text = styled.span`
+  font-size: 1rem;
+  font-weight: bold;
+  color: black;
+  margin: 5px;
+  text-decoration: none;
+  border-bottom: 1px solid gray;
+  margin-bottom: 10px;
 `;
 
 export default {
@@ -63,7 +79,9 @@ export default {
   Button,
   WhiteButton,
   ErrorText,
-  InputContainer,
+  RowContainer,
+  ColumnContainer,
   ButtonContainer,
   Title,
+  Text,
 };
