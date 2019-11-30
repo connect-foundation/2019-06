@@ -8,6 +8,7 @@ const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
 const MAIL_CHECK = 'MAIL_CHECK';
 const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
+const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 
 export const initialState = {
   categories: null,
@@ -27,6 +28,15 @@ export const handleSortSelect = sortType => {
     payload: {
       page: 1,
       sort: sortType,
+    },
+  };
+};
+
+export const initCheckerInTools = () => {
+  return {
+    type: INIT_CHECKER_IN_TOOLS,
+    payload: {
+      allMailCheckInTools: false,
     },
   };
 };
@@ -131,6 +141,8 @@ export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case INIT_CHECKER_IN_TOOLS:
+      return { ...state, ...payload };
     case CATEGORY_CLICK:
       return { ...state, ...payload };
     case SELECT_ALL_CHANGE:

@@ -5,7 +5,7 @@ import S from './styled';
 import Paging from './Paging';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
-import { handleMailsChange } from '../../contexts/reducer';
+import { handleMailsChange, initCheckerInTools } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
@@ -17,7 +17,10 @@ const MailArea = () => {
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
   const callback = useCallback(
-    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleMailsChange({ ...data }))),
+    (err, data) => (
+      err ? handleErrorStatus(err) : dispatch(initCheckerInTools()),
+      dispatch(handleMailsChange({ ...data }))
+    ),
     [dispatch],
   );
 
