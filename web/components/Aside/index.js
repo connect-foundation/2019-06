@@ -123,7 +123,9 @@ const Aside = () => {
       <ListItemIcon>
         <StarBorder />
       </ListItemIcon>
-      <ListItemText primary={category.name} />
+      <ListItemText>
+        <S.EllipsisList>{category.name}</S.EllipsisList>
+      </ListItemText>
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="modify" onClick={e => handleDialogOpen(e, MODIFY, idx)}>
           <ModifyIcon fontSize={'small'} />
