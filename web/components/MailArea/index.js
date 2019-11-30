@@ -31,7 +31,7 @@ const MailArea = () => {
   const mailList =
     mails.length > 0
       ? mails.map((mail, index) => (
-          <MailTemplate key={mail.no} mail={mail} index={index} checked={mail.selected} />
+          <MailTemplate key={mail.no} mail={mail} index={index} selected={mail.selected} />
         ))
       : '메일이 없습니다.';
   return (

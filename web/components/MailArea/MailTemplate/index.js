@@ -51,7 +51,7 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail, checked, index }) => {
+const MailTemplate = ({ mail, selected, index }) => {
   const {
     state: { mails },
   } = useContext(AppStateContext);
@@ -68,7 +68,7 @@ const MailTemplate = ({ mail, checked, index }) => {
       <div>
         <input
           type="checkbox"
-          value={checked}
+          checked={selected}
           onChange={() => {
             handleCheckedChange();
           }}

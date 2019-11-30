@@ -7,6 +7,7 @@ const SET_VIEW = 'SET_VIEW';
 const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
 const MAIL_CHECK = 'MAIL_CHECK';
+const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 
 export const initialState = {
   categories: null,
@@ -17,7 +18,7 @@ export const initialState = {
   view: null,
   sort: 'datedesc',
   message: '',
-  checkInTools: false,
+  allMailCheckInTools: false,
 };
 
 export const handleSortSelect = sortType => {
@@ -27,6 +28,14 @@ export const handleSortSelect = sortType => {
       page: 1,
       sort: sortType,
     },
+  };
+};
+
+export const handleCheckAllMails = (allMailCheckInTools, mails) => {
+  mails.map(mail => (mail.selected = !allMailCheckInTools));
+  return {
+    type: SELECT_ALL_CHANGE,
+    payload: { mails, allMailCheckInTools: !allMailCheckInTools },
   };
 };
 
@@ -63,10 +72,20 @@ export const handleMailsChange = ({ mails, paging }) => {
 
 export const handleMailChecked = ({ mails, index }) => {
   mails[index].selected = !mails[index].selected;
+  if (mails.every(mail => mail.selected === true)) {
+    return {
+      type: MAIL_CHECK,
+      payload: {
+        mails,
+        allMailCheckInTools: true,
+      },
+    };
+  }
   return {
     type: MAIL_CHECK,
     payload: {
       mails,
+      allMailCheckInTools: false,
     },
   };
 };
@@ -113,6 +132,8 @@ export const reducer = (state = initialState, action) => {
 
   switch (type) {
     case CATEGORY_CLICK:
+      return { ...state, ...payload };
+    case SELECT_ALL_CHANGE:
       return { ...state, ...payload };
     case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };

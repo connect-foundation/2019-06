@@ -6,7 +6,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import S from './styled';
 import { AppDisapthContext, AppStateContext } from '../../../contexts';
-import { handleSortSelect } from '../../../contexts/reducer';
+import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -34,12 +34,14 @@ const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
+  const { allMailCheckInTools, mails } = state;
 
   const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
+  const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
   return (
     <>
       <S.CheckBox>
-        <input type="checkbox" />
+        <input type="checkbox" checked={allMailCheckInTools} onChange={handleCheckAllChange} />
       </S.CheckBox>
       <S.Filter>
         <FormControl className={classes.formControl}>
