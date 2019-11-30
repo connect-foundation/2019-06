@@ -4,6 +4,7 @@ const Aside = styled.aside`
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ced4da;
+  overflow-y: scroll;
 `;
 
 const EllipsisList = styled.div`
