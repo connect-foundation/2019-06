@@ -18,7 +18,7 @@ export const getDialogData = (
         title: '메일함 추가',
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (_, name) => {
+        okBtnHandler: async name => {
           if (customCategory.find(category => category.name === name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 이름을 중복해서 만들 수 없습니다)
             return;
@@ -50,7 +50,7 @@ export const getDialogData = (
         title: `메일함명(${customCategory[idx].name}) 변경`,
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (_, name) => {
+        okBtnHandler: async name => {
           if (customCategory.find(category => category.name === name)) {
             // TODO: 상단에 에러 메세지 보여주기 (메일함은 이름을 중복해서 만들 수 없습니다)
             return;

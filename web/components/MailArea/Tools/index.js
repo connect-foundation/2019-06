@@ -49,7 +49,6 @@ const Tools = () => {
             />
           }
         />
-        {/* <input type="checkbox" checked={allMailCheckInTools} onChange={handleCheckAllChange} /> */}
       </S.CheckBox>
       <S.Filter>
         <FormControl className={classes.formControl}>
