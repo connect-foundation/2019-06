@@ -127,19 +127,32 @@ const Aside = () => {
   });
 
   const customCategoryCards = customCategories.map((category, idx) => (
-    <ListItem button key={idx} className={classes.nested}>
+    <ListItem
+      key={idx}
+      className={classes.nested}
+      style={state.category === category.no ? { backgroundColor: '#0066FF' } : {}}
+      button={state.category === category.no ? false : true}
+      onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
       <ListItemIcon>
-        <StarBorder />
+        <StarBorder className={state.category === category.no ? classes.whiteIcon : null} />
       </ListItemIcon>
       <ListItemText>
-        <S.EllipsisList>{category.name}</S.EllipsisList>
+        <S.EllipsisList style={state.category === category.no ? { color: 'white' } : {}}>
+          {category.name}
+        </S.EllipsisList>
       </ListItemText>
       <ListItemSecondaryAction>
         <IconButton edge="end" aria-label="modify" onClick={e => handleDialogOpen(e, MODIFY, idx)}>
-          <ModifyIcon fontSize={'small'} />
+          <ModifyIcon
+            className={state.category === category.no ? classes.whiteIcon : null}
+            fontSize={'small'}
+          />
         </IconButton>
         <IconButton edge="end" aria-label="delete" onClick={e => handleDialogOpen(e, DELETE, idx)}>
-          <DeleteIcon fontSize={'small'} />
+          <DeleteIcon
+            className={state.category === category.no ? classes.whiteIcon : null}
+            fontSize={'small'}
+          />
         </IconButton>
       </ListItemSecondaryAction>
     </ListItem>
