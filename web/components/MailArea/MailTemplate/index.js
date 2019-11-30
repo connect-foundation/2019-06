@@ -51,7 +51,7 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail }) => {
+const MailTemplate = ({ mail, checked }) => {
   const { dispatch } = useContext(AppDisapthContext);
   const { is_important, is_read, MailTemplate, no } = mail;
   const { from, to, subject, text, createdAt } = MailTemplate;
@@ -62,7 +62,13 @@ const MailTemplate = ({ mail }) => {
   return (
     <S.MailTemplateWrap isRead={is_read}>
       <div>
-        <input type="checkbox" />
+        <input
+          type="checkbox"
+          value={checked}
+          onChange={() => {
+            console.log(mail.no + 'changed to' + checked);
+          }}
+        />
       </div>
       <div>
         {is_important ? (

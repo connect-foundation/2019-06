@@ -16,6 +16,7 @@ export const initialState = {
   view: null,
   sort: 'datedesc',
   message: '',
+  checkInTools: false,
 };
 
 export const handleSortSelect = sortType => {
@@ -49,6 +50,7 @@ export const handleCategoriesChange = ({ categories }) => {
 };
 
 export const handleMailsChange = ({ mails, paging }) => {
+  mails.map(mail => (mail.selected = false));
   return {
     type: CHANGE_MAILS_DATA,
     payload: {
