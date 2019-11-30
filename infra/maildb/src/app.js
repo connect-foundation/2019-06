@@ -13,7 +13,9 @@ const [
 ] = process.argv;
 
 const MY_DOMAIN = "daitnu.com";
+const RECEIVED_KEY = 'received';
 const UNTITLE = "";
+const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
 
 const pool = mysql.createPool({
   user: DB_DEV_USERNAME,
@@ -24,15 +26,16 @@ const pool = mysql.createPool({
 
 const parseMailContent = async content => {
   try {
-    const { from, to, subject, html, text, attachments } = await simpleParser(
+    const { from, to, subject, html, text, attachments, headers } = await simpleParser(
       content
     );
     return {
       from: from.text,
       to: to.text,
       subject: subject || UNTITLE,
-      text: html || text,
-      attachments
+      text: text || html,
+      attachments,
+      headers
     };
   } catch (err) {
     console.log(err);
@@ -40,14 +43,22 @@ const parseMailContent = async content => {
   }
 };
 
-const getReceivers = to => {
+const addReceiver = (receviers, email) => {
+  const [id, domain] = email.trim().split("@");
+  if (domain === MY_DOMAIN) {
+    receviers.push(id);
+  }
+}
+
+const getReceivers = ({ headers, to }) => {
+  const receivedOfHeader = headers.get(RECEIVED_KEY)[0];
+  const realReceiver = EXP_EXTRACT_RECEIVER.exec(receivedOfHeader);
   const receivers = [];
-  to.split(",").forEach(email => {
-    const [id, domain] = email.split("@");
-    if (domain === MY_DOMAIN) {
-      receivers.push(id);
-    }
-  });
+  if (realReceiver) {
+    addReceiver(receivers, realReceiver[0].slice(1, -1));
+  } else {
+    to.split(",").forEach(email => addReceiver(receivers, email));
+  }
   return receivers;
 };
 
@@ -63,7 +74,7 @@ const recordLog = (mail, log) => {
 
 const insertMailToDB = async content => {
   const mail = await parseMailContent(content);
-  const receivers = getReceivers(mail.to);
+  const receivers = getReceivers(mail);
   const connection = await pool.getConnection(async conn => conn);
   let queryFormat;
   const log = {};
