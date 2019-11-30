@@ -2,7 +2,7 @@ import request from '../../utils/request';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
-const nameValidation = /^[a-zA-Z가-힣 ]{1,20}$/;
+const nameValidation = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
 
 export const getDialogData = (
   type,
@@ -28,7 +28,7 @@ export const getDialogData = (
             return;
           }
           if (!nameValidation.test(name)) {
-            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다)
             return;
           }
           const { isError, data } = await request.post(url, { name });
@@ -60,7 +60,7 @@ export const getDialogData = (
             return;
           }
           if (!nameValidation.test(name)) {
-            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
+            // TODO: 상단에 에러 메세지 보여주기 (메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다)
             return;
           }
           const { isError } = await request.patch(url + customCategory[idx].no, {
