@@ -37,14 +37,6 @@ import { AppDisapthContext, AppStateContext } from '../../contexts';
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
 
-const iconOfDefaultCategories = [
-  <AllInboxIcon />,
-  <StarBorder />,
-  <SendIcon />,
-  <DraftsIcon />,
-  <DeleteIcon />,
-];
-
 const useStyles = makeStyles(theme => ({
   nested: {
     paddingLeft: theme.spacing(4),
@@ -58,12 +50,22 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  whiteIcon: {
+    color: 'white',
+  },
 }));
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 
 const Aside = () => {
   const classes = useStyles();
+  const iconOfDefaultCategories = [
+    selected => <AllInboxIcon className={selected ? classes.whiteIcon : null} />,
+    selected => <StarBorder className={selected ? classes.whiteIcon : null} />,
+    selected => <SendIcon className={selected ? classes.whiteIcon : null} />,
+    selected => <DraftsIcon className={selected ? classes.whiteIcon : null} />,
+    selected => <DeleteIcon className={selected ? classes.whiteIcon : null} />,
+  ];
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
@@ -108,15 +110,21 @@ const Aside = () => {
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const customCategories = categories.filter(category => !category.is_default);
 
-  const defaultCards = defaultCategories.map((category, idx) => (
-    <ListItem
-      button
-      key={idx}
-      onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
-      <ListItemIcon>{iconOfDefaultCategories[idx]}</ListItemIcon>
-      <ListItemText primary={category.name} />
-    </ListItem>
-  ));
+  const defaultCards = defaultCategories.map((category, idx) => {
+    return (
+      <ListItem
+        style={state.category === category.no ? { backgroundColor: '#0066FF' } : {}}
+        button={state.category === category.no ? false : true}
+        key={idx}
+        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        <ListItemIcon>{iconOfDefaultCategories[idx](state.category === category.no)}</ListItemIcon>
+        <ListItemText
+          primary={category.name}
+          style={state.category === category.no ? { color: 'white' } : {}}
+        />
+      </ListItem>
+    );
+  });
 
   const customCategoryCards = customCategories.map((category, idx) => (
     <ListItem button key={idx} className={classes.nested}>
