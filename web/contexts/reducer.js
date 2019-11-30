@@ -6,6 +6,7 @@ const MAIL_CLICK = 'MAIL_CLICK';
 const SET_VIEW = 'SET_VIEW';
 const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
+const MAIL_CHECK = 'MAIL_CHECK';
 
 export const initialState = {
   categories: null,
@@ -60,6 +61,16 @@ export const handleMailsChange = ({ mails, paging }) => {
   };
 };
 
+export const handleMailChecked = ({ mails, index }) => {
+  mails[index].selected = !mails[index].selected;
+  return {
+    type: MAIL_CHECK,
+    payload: {
+      mails,
+    },
+  };
+};
+
 export const handlePageNumberClick = page => {
   return {
     type: PAGE_NUMBER_CLICK,
@@ -104,6 +115,8 @@ export const reducer = (state = initialState, action) => {
     case CATEGORY_CLICK:
       return { ...state, ...payload };
     case PAGE_NUMBER_CLICK:
+      return { ...state, ...payload };
+    case MAIL_CHECK:
       return { ...state, ...payload };
     case MAIL_CLICK:
       return { ...state, ...payload };
