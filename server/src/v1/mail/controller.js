@@ -8,6 +8,7 @@ import ErrorField from '../../libraries/exception/error-field';
 import checkQuery from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
 import { strToDate } from '../../libraries/date-parser';
+import { checkAttachment } from '../../libraries/validation/attachment';
 
 const list = async (req, res, next) => {
   const userNo = req.user.no;
@@ -36,6 +37,13 @@ const write = async (req, res, next) => {
     const errorField = new ErrorField('email', to, '이메일이 올바르지 않습니다');
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
+
+  try {
+    checkAttachment(attachments);
+  } catch (err) {
+    return next(err);
+  }
+
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
 
   try {
