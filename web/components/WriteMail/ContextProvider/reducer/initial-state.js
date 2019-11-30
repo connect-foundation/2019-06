@@ -4,5 +4,5 @@ export const initialState = {
   text: '',
   files: [],
   reservationModalOn: false,
-  date: null,
+  date: '',
 };

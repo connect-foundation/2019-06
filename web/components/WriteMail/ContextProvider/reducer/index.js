@@ -25,6 +25,9 @@ export const wmReducer = (state, action) => {
     case ACTYPE.RESERVATION_MODAL_OFF: {
       return { ...state, reservationModalOn: false };
     }
+    case ACTYPE.UPDATE_DATE: {
+      return { ...state, ...payload, reservationModalOn: false };
+    }
     default: {
       throw new Error(`Unhandled action type: ${type}`);
     }
