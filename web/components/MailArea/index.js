@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import React, { useContext, useCallback } from 'react';
-import Router from 'next/router';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
