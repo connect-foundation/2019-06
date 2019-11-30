@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useContext } from 'react';
 import moment from 'moment';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
@@ -66,12 +67,15 @@ const MailTemplate = ({ mail, selected, index }) => {
   return (
     <S.MailTemplateWrap isRead={is_read}>
       <div>
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={() => {
-            handleCheckedChange();
-          }}
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selected}
+              onChange={handleCheckedChange}
+              color="primary"
+              size="small"
+            />
+          }
         />
       </div>
       <div>

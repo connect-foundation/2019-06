@@ -1,9 +1,7 @@
 import React, { useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
+import { MenuItem, FormControl, FormControlLabel, Checkbox, Select } from '@material-ui/core';
 import S from './styled';
 import { AppDisapthContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
@@ -41,7 +39,17 @@ const Tools = () => {
   return (
     <>
       <S.CheckBox>
-        <input type="checkbox" checked={allMailCheckInTools} onChange={handleCheckAllChange} />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={allMailCheckInTools}
+              onChange={handleCheckAllChange}
+              color="primary"
+              size="small"
+            />
+          }
+        />
+        {/* <input type="checkbox" checked={allMailCheckInTools} onChange={handleCheckAllChange} /> */}
       </S.CheckBox>
       <S.Filter>
         <FormControl className={classes.formControl}>
