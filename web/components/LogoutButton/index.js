@@ -24,7 +24,7 @@ export default () => {
   };
 
   return (
-    <a href="/">
+    <a href="/" style={{ textDecoration: 'none' }}>
       <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
         로그아웃
       </Button>
