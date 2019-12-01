@@ -61,6 +61,19 @@ const write = async (req, res, next) => {
   return res.status(STATUS.CREATED).json({ mail: mailContents });
 };
 
+const update = async (req, res, next) => {
+  const { no, props } = req.body;
+  let mail;
+
+  try {
+    mail = await service.updateMail(no, props);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.json(mail);
+};
+
 const getCategories = async (req, res, next) => {
   let categories;
 
@@ -76,5 +89,6 @@ const getCategories = async (req, res, next) => {
 export default {
   list,
   write,
+  update,
   getCategories,
 };
