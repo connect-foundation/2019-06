@@ -6,6 +6,9 @@ import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
 import { saveSentMail } from '../../libraries/save-to-infra';
+import ERROR_CODE from '../../libraries/exception/error-code';
+import ErrorResponse from '../../libraries/exception/error-response';
+import ErrorField from '../../libraries/exception/error-field';
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 
@@ -125,10 +128,32 @@ const getCategories = async no => {
   return { categories };
 };
 
+const updateMail = async (no, props) => {
+  const mail = await DB.Mail.findOne({ where: { no } });
+  if (!mail) {
+    const errorField = new ErrorField('mail', mail, '존재하지 않는 메일입니다');
+    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+  }
+
+  Object.keys(props).forEach(key => {
+    mail[key] = props[key];
+  });
+
+  const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
+  if (!category) {
+    const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
+    throw new ErrorResponse(ERROR_CODE.CATEGORY_NOT_FOUND, errorField);
+  }
+
+  await mail.save();
+  return mail;
+};
+
 export default {
   getMailsByOptions,
   sendMail,
   getQueryByOptions,
   saveReservationMail,
   getCategories,
+  updateMail,
 };
