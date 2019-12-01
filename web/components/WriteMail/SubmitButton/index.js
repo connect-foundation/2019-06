@@ -16,11 +16,14 @@ import * as WM_S from '../styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
+import { formatDateToRequestReservation } from '../../../utils/format';
+import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
+import validator from '../../../utils/validator';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
 const SubmitButton = () => {
-  const { receivers, files, subject, text } = useStateForWM();
+  const { receivers, files, subject, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
   const [sendMessage, setSendMessage] = useState(null);
@@ -39,6 +42,14 @@ const SubmitButton = () => {
     files.forEach(f => {
       formData.append('attachments', f);
     });
+
+    if (date) {
+      if (!validator.canReservation(date)) {
+        setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
+        return;
+      }
+      formData.append('reservationTime', formatDateToRequestReservation(date));
+    }
 
     axios
       .post('/mail', formData, {
