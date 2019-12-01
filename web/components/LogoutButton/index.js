@@ -21,12 +21,13 @@ export default () => {
   const handleSignOutBtnClick = () => {
     window.sessionStorage.clear();
     axios.post('/auth/logout');
-    Router.push('/login');
   };
 
   return (
-    <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
-      로그아웃
-    </Button>
+    <a href="/">
+      <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
+        로그아웃
+      </Button>
+    </a>
   );
 };
