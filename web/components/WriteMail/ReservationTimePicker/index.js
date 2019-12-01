@@ -29,19 +29,21 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
-  formControl: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
   selectBox: {
     flexGrow: 1,
     margin: '5px',
   },
 }));
 
-const hours = createArray(24).map((_, index) => <MenuItem value={index}>{index}시</MenuItem>);
+const hours = createArray(24).map((_, index) => (
+  <MenuItem readOnly key={index} value={index}>
+    {index}시
+  </MenuItem>
+));
 const minutes = createArray(4).map((_, index) => (
-  <MenuItem value={index * 15}>{index * 15}분</MenuItem>
+  <MenuItem readOnly key={index} value={index * 15}>
+    {index * 15}분
+  </MenuItem>
 ));
 
 const ReservationTimePicker = () => {
@@ -94,7 +96,7 @@ const ReservationTimePicker = () => {
         }}>
         <Fade in={reservationModalOn}>
           <div className={classes.paper}>
-            <S.InputForm autoComplete="off">
+            <S.InputForm>
               <S.Title>날짜 및 시간 선택</S.Title>
               <S.RowContainer>
                 <MuiPickersUtilsProvider utils={MomentUtils} locale="ko">
@@ -110,7 +112,7 @@ const ReservationTimePicker = () => {
                 </MuiPickersUtilsProvider>
                 <S.ColumnContainer>
                   <S.Text>{formatDateForReservationTimePicker(date)}</S.Text>
-                  <FormControl className={classes.formControl}>
+                  <S.RowContainer>
                     <Select
                       value={hour}
                       onChange={({ target: { value } }) => setHour(value)}
@@ -125,7 +127,7 @@ const ReservationTimePicker = () => {
                       className={classes.selectBox}>
                       {minutes}
                     </Select>
-                  </FormControl>
+                  </S.RowContainer>
                   <S.ErrorText>{error}</S.ErrorText>
                 </S.ColumnContainer>
               </S.RowContainer>
