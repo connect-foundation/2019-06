@@ -46,14 +46,13 @@ const minutes = createArray(4).map((_, index) => (
   </MenuItem>
 ));
 
-const ReservationTimePicker = () => {
+const ReservationTimePicker = ({ open, handleModalClose }) => {
   const classes = useStyles();
   const [date, setDate] = useState(moment());
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
   const [error, setError] = useState('');
 
-  const { reservationModalOn } = useStateForWM();
   const dispatch = useDispatchForWM();
 
   const handleSubmit = e => {
@@ -70,15 +69,11 @@ const ReservationTimePicker = () => {
       return;
     }
 
+    handleModalClose();
     dispatch({
       type: UPDATE_DATE,
       payload: { date: reservationDate },
     });
-  };
-
-  const handleClose = e => {
-    e.preventDefault();
-    dispatch({ type: RESERVATION_MODAL_OFF });
   };
 
   return (
@@ -87,13 +82,13 @@ const ReservationTimePicker = () => {
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
-        open={reservationModalOn}
+        open={open}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
           timeout: 500,
         }}>
-        <Fade in={reservationModalOn}>
+        <Fade in={open}>
           <div className={classes.paper}>
             <S.InputForm>
               <S.Title>날짜 및 시간 선택</S.Title>
@@ -131,7 +126,7 @@ const ReservationTimePicker = () => {
                 </S.ColumnContainer>
               </S.RowContainer>
               <S.ButtonContainer>
-                <S.WhiteButton className="submit-btn max-width" onClick={handleClose}>
+                <S.WhiteButton className="submit-btn max-width" onClick={handleModalClose}>
                   취소
                 </S.WhiteButton>
                 <S.Button className="submit-btn max-width" onClick={handleSubmit}>

@@ -3,6 +3,5 @@ export const initialState = {
   subject: '',
   text: '',
   files: [],
-  reservationModalOn: false,
   date: null,
 };
