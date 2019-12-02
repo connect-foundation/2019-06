@@ -20,6 +20,7 @@ export const initialState = {
   sort: 'datedesc',
   message: '',
   allMailCheckInTools: false,
+  categoryNoByName: null,
 };
 
 export const handleSortSelect = sortType => {
@@ -61,16 +62,23 @@ export const handleCategoryClick = (no, view) => {
 };
 
 export const handleCategoriesChange = ({ categories }) => {
+  const categoryNoByName = categories.reduce((total, category) => {
+    total[category.name] = category.no;
+    return total;
+  }, {});
   return {
     type: CHANGE_CATEGORIES_DATA,
     payload: {
       categories,
+      categoryNoByName,
     },
   };
 };
 
 export const handleMailsChange = ({ mails, paging }) => {
-  mails.map(mail => (mail.selected = false));
+  if (mails) {
+    mails.map(mail => (mail.selected = false));
+  }
   return {
     type: CHANGE_MAILS_DATA,
     payload: {
