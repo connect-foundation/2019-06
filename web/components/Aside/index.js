@@ -37,6 +37,7 @@ import { handleCategoryClick, setView, handleCategoriesChange } from '../../cont
 import { getDialogData } from './dialog-data';
 import { handleErrorStatus } from '../../utils/error-handler';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
+import MessageSnackbar from '../Snackbar';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -60,6 +61,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
+const snackbarInitState = {
+  open: false,
+  variant: 'error',
+  contentText: '앗녕',
+};
 
 const Aside = () => {
   const classes = useStyles();
@@ -69,6 +75,7 @@ const Aside = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
+  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
 
   const callback = useCallback(
     (err, data) => (err ? handleErrorStatus(err) : dispatch(handleCategoriesChange({ ...data }))),
@@ -159,8 +166,14 @@ const Aside = () => {
     );
   });
 
+  const messageSnackbarProps = {
+    snackbarState,
+    setSnackbarState,
+  };
+
   return (
     <S.Aside>
+      <MessageSnackbar {...messageSnackbarProps} />
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>

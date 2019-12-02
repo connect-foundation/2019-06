@@ -9,7 +9,7 @@ import * as S from '../components/GlobalStyle';
 
 const LoginPage = () => (
   <S.FlexCenterWrap>
-    <MessageHeader></MessageHeader>
+    <MessageHeader />
     <SmallHeader />
     <LoginForm />
     <S.HorizontalLine />
