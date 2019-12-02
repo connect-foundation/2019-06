@@ -111,6 +111,7 @@ const Aside = () => {
   };
 
   const handleDialogClose = () => {
+    setDialogTextFieldState('');
     setDialogOpen(false);
   };
 
