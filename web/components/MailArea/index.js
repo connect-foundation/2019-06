@@ -32,19 +32,14 @@ const MailArea = () => {
     return <Loading />;
   }
 
-  const { paging, category, categories } = state;
-  let { mails } = state;
-  if (category === 0) {
-    const wastebasketCategoryNo = categories.filter(({ name }) => name === WASTEBASKET_NAME)[0].no;
-    mails = mails.filter(({ category_no }) => category_no !== wastebasketCategoryNo);
-  }
-
+  const { paging, mails } = state;
   const mailList =
     mails.length > 0
       ? mails.map((mail, index) => (
           <MailTemplate key={mail.no} mail={mail} index={index} selected={mail.selected} />
         ))
       : '메일이 없습니다.';
+
   return (
     <S.MailArea>
       <S.ToolsWrapper>
