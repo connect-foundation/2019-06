@@ -1,6 +1,6 @@
 import Imap from 'imap';
 
-const PREFIX = 'Private/';
+const PREFIX = '';
 const SENT_MAILBOX = `${PREFIX}보낸메일함`;
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 

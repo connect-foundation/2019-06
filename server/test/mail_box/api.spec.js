@@ -152,169 +152,116 @@ describe('mailbox api test...', () => {
     });
 
     describe('메일함 이름 변경을 요청할 때..', () => {
-      it('아무런 값을 넘기지 않으면(undefined) 400에러를 반환한다.', done => {
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send()
-          .expect(400, done);
-      });
-
       it('oldName과 newName 둘중 하나라도 빈 값("")이 넘어오면 400에러를 반환한다.', done => {
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: '', newName: '할룽^^' })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: '', newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: '하위^^', newName: '' })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: '하위^^', newName: '' })
           .expect(400, done);
       });
 
       it('oldName과 newName 둘중 하나라도 undefined가 넘어오면 400에러를 반환한다.', done => {
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: undefined, newName: '할룽^^' })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: undefined, newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: '하위^^', newName: undefined })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: '하위^^', newName: undefined })
           .expect(400, done);
       });
 
       it('oldName과 newName 둘중 하나라도 null이 넘어오면 400에러를 반환한다.', done => {
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: null, newName: '할룽^^' })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: null, newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ no: 9, oldName: '하위^^', newName: null })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: '하위^^', newName: null })
           .expect(400, done);
       });
 
-      it('넘겨지는 데이터가 oldName, newName, no중 하나라도 없으면 400에러를 반환한다.', done => {
+      it('넘겨지는 데이터가 oldName, newName중 하나라도 없으면 400에러를, no가 없으면 404를 반환한다.', done => {
         authenticatedUser
           .patch('/v1/mail/box')
           .send({ oldName: '하위^^', newName: '할룽^^' })
+          .expect(404);
+        authenticatedUser
+          .patch('/v1/mail/box/9')
+          .send({ newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ newName: '할룽^^', no: 9 })
-          .expect(400);
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', no: 9 })
+          .patch('/v1/mail/box/9')
+          .send({ oldName: '하위^^' })
           .expect(400, done);
       });
 
       it('넘겨지는 데이터중 no가 숫자가 아니라면 400에러를 반환한다.', done => {
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: '' })
+          .patch('/v1/mail/box/asd')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: 'asd' })
+          .patch('/v1/mail/box/undefined')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: undefined })
-          .expect(400);
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: 'undefined' })
-          .expect(400);
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: null })
-          .expect(400);
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: 'null' })
+          .patch('/v1/mail/box/null')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
           .expect(400, done);
       });
 
       it('no 데이터가 1미만이라면 400에러를 반환한다.', done => {
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: 0 })
+          .patch('/v1/mail/box/0')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
           .expect(400);
         authenticatedUser
-          .patch('/v1/mail/box')
-          .send({ oldName: '하위^^', newName: '할룽^^', no: -1 })
+          .patch('/v1/mail/box/-1')
+          .send({ oldName: '하위^^', newName: '할룽^^' })
           .expect(400, done);
       });
     });
 
     describe('메일함 삭제 요청시..', () => {
-      it('아무런 값을 넘기지 않으면(undefined) 400에러를 반환한다.', done => {
+      it('아무런 값을 넘기지 않으면(undefined) 404에러를 반환한다.', done => {
         authenticatedUser
           .delete('/v1/mail/box')
           .send()
-          .expect(400, done);
+          .expect(404, done);
       });
 
-      it('넘겨지는 데이터가 name, no중 하나라도 없으면 400에러를 반환한다.', done => {
+      it('넘겨지는 데이터가 name이 없으면 400에러를, no가 없으면 404에러를 반환한다.', done => {
         authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ name: '할룽^^' })
-          .expect(400);
+          .delete('/v1/mail/box?name=할룽^^')
+          .send()
+          .expect(404);
         authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 9 })
+          .delete('/v1/mail/box/9')
+          .send()
           .expect(400, done);
       });
 
       it('name에 빈값을 넘기면 400에러를 반환한다.', done => {
         authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 9, name: '' })
+          .delete('/v1/mail/box/9?name=')
+          .send()
           .expect(400, done);
       });
 
-      it('name에 undefined나 null을 넘기면 400에러를 반환한다.', done => {
+      it('name에 undefined나 null을 넘기면 404에러를 반환한다.', done => {
         authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 9, name: undefined })
-          .expect(400);
+          .delete('/v1/mail/box/9?name=undefined')
+          .send()
+          .expect(404);
         authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 9, name: null })
-          .expect(400, done);
-      });
-
-      it('no 데이터가 숫자가 아니면 400에러를 반환한다.', done => {
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: '', name: '하위^^' })
-          .expect(400);
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 'ㅁㄴㅇ', name: '하위^^' })
-          .expect(400);
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 'asd', name: '하위^^' })
-          .expect(400);
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: undefined, name: '하위^^' })
-          .expect(400);
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: null, name: '하위^^' })
-          .expect(400, done);
-      });
-
-      it('no 데이터가 1 미만이라면 400에러를 반환한다.', done => {
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: 0, name: '하위^^' })
-          .expect(400);
-        authenticatedUser
-          .delete('/v1/mail/box')
-          .send({ no: -1, name: '하위^^' })
-          .expect(400, done);
+          .delete('/v1/mail/box/9?name=null')
+          .send()
+          .expect(404, done);
       });
     });
   });
