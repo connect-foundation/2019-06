@@ -10,9 +10,7 @@ const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const { to, from, subject, createdAt, text, no } = state.mail;
   const receivers = to.replace(',', ', ');
-  const date = moment(createdAt)
-    .utc()
-    .format('YYYY-MM-DD HH:mm');
+  const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
 
   return (
     <S.Container>
