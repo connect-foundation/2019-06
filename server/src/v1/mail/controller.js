@@ -9,6 +9,7 @@ import checkQuery from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
 import { strToDate } from '../../libraries/date-parser';
 import { checkAttachment } from '../../libraries/validation/attachment';
+import { multipartUpload } from '../../libraries/storage/ncloud';
 
 const list = async (req, res, next) => {
   const userNo = req.user.no;
@@ -39,10 +40,17 @@ const write = async (req, res, next) => {
   }
 
   if (attachments && attachments.length) {
+    let uploadResult;
     try {
       checkAttachment(attachments);
+      const promises = attachments.map(file => multipartUpload(file));
+      uploadResult = await Promise.all(promises);
     } catch (err) {
       return next(err);
+    }
+    const attachmentsLength = attachments.length;
+    for (let i = 0; i < attachmentsLength; i += 1) {
+      attachments[i].url = uploadResult[i].key;
     }
   }
 
