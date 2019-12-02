@@ -8,9 +8,9 @@ const [SNACKBAR_ERROR, SNACKBAR_SUCCESS] = ['error', 'success'];
 const duplicateErrorMsg = '메일함은 이름을 중복해서 만들 수 없습니다.';
 const lengthErrorMsg = '메일함 이름은 최대 20자를 넘을 수 없습니다.';
 const regexErrorMsg = '메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다.';
-const serverErrorMsg = '';
 const successToAddMsg = '메일함이 성공적으로 추가되었습니다.';
 const successToModifyMsg = '메일함이 성공적으로 수정되었습니다.';
+const successToDeleteMsg = '메일함이 성공적으로 삭제되었습니다.';
 
 export const getDialogData = (
   type,
@@ -56,7 +56,7 @@ export const getDialogData = (
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
-              contentText: '서버와 통신에 실패하였습니다. 관리자에게 문의해주세요.',
+              contentText: data.message,
             });
             return;
           }
@@ -80,7 +80,6 @@ export const getDialogData = (
         needTextField: true,
         okBtnHandler: async (name, setSnackbarState) => {
           if (customCategory.find(category => category.name === name)) {
-            // TODO: 상단에 에러 메세지 보여주기 (메일함은 이름을 중복해서 만들 수 없습니다)
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
@@ -89,7 +88,6 @@ export const getDialogData = (
             return;
           }
           if (name.length > 20) {
-            // TODO: 상단에 에러 메세지 보여주기 (메일함은 최대 20자를 넘을 수 없습니다)
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
@@ -98,7 +96,6 @@ export const getDialogData = (
             return;
           }
           if (!nameRegex.test(name)) {
-            // TODO: 상단에 에러 메세지 보여주기 (메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다)
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
@@ -106,17 +103,16 @@ export const getDialogData = (
             });
             return;
           }
-          const { isError } = await request.patch(url + customCategory[idx].no, {
+          const { isError, data } = await request.patch(url + customCategory[idx].no, {
             oldName: customCategory[idx].name,
             newName: name,
           });
           if (isError) {
             console.log(isError);
-            // TODO: 상단에 에러 메세지 보여주기 (data.message)
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
-              contentText: '서버와 통신에 실패하였습니다. 관리자에게 문의해주세요.',
+              contentText: data.message,
             });
             return;
           }
@@ -124,7 +120,7 @@ export const getDialogData = (
           dispatch(setCustomCategory({ categories: customCategory }));
           setSnackbarState({
             open: true,
-            variant: SNACKBAR_ERROR,
+            variant: SNACKBAR_SUCCESS,
             contentText: successToModifyMsg,
           });
           setDialogOpen(false);
@@ -138,15 +134,23 @@ export const getDialogData = (
         okBtnHandler: async (_, setSnackbarState) => {
           const { no, name } = customCategory[idx];
           const query = `?name=${name}`;
-          const { isError } = await request.delete(url + no + query);
+          const { isError, data } = await request.delete(url + no + query);
           if (isError) {
-            console.log(isError);
-            // TODO: 상단에 에러 메세지 보여주기 (data.message)
+            setSnackbarState({
+              open: true,
+              variant: SNACKBAR_ERROR,
+              contentText: data.message,
+            });
             return;
           }
           dispatch(
             setCustomCategory({ categories: customCategory.filter((_, index) => idx !== index) }),
           );
+          setSnackbarState({
+            open: true,
+            variant: SNACKBAR_SUCCESS,
+            contentText: successToDeleteMsg,
+          });
           setDialogOpen(false);
         },
       };
