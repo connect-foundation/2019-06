@@ -2,7 +2,7 @@
 /* eslint-disable no-undef */
 import DB from '../../src/database';
 
-describe.only('attachment DB test..', () => {
+describe('attachment DB test..', () => {
   let mail_template_id = 1;
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');

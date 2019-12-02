@@ -47,6 +47,7 @@ const model = (sequelize, DataTypes) => {
         {
           model: sequelize.models.Attachment,
           attributes: { exclude: ['url'] },
+          required: true,
         },
       ],
       raw: true,
