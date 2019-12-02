@@ -1,14 +1,10 @@
-import moment from 'moment';
+// date: moment 객체
 
 const transformDateForReservationTimePicker = date => date.format('YYYY. MM. DD.');
 
-const transformDateToReserve = date => {
-  return moment(date).format('YYYY:MM:DD HH:mm');
-};
+const transformDateToReserve = date => date.format('YYYY:MM:DD HH:mm');
 
-const transformDateForReservationDateText = date => {
-  return moment(date).format('YYYY:MM:DD A hh:mm');
-};
+const transformDateForReservationDateText = date => date.format('YYYY:MM:DD A hh:mm');
 
 export {
   transformDateForReservationTimePicker,
