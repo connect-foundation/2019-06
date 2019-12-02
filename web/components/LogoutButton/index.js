@@ -1,17 +1,15 @@
 import React from 'react';
-import Router from 'next/router';
 import axios from 'axios';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
+import * as S from './styled';
+
 const useStyles = makeStyles(theme => ({
   button: {
     margin: theme.spacing(1),
     width: '100px',
-  },
-  input: {
-    display: 'none',
   },
 }));
 
@@ -24,10 +22,10 @@ export default () => {
   };
 
   return (
-    <a href="/" style={{ textDecoration: 'none' }}>
+    <S.ReloadLink href="/">
       <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
         로그아웃
       </Button>
-    </a>
+    </S.ReloadLink>
   );
 };
