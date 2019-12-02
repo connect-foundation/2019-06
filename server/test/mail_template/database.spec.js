@@ -2,7 +2,7 @@
 import should from 'should';
 import DB from '../../src/database';
 
-describe('MailTemplate DB test...', () => {
+describe.only('MailTemplate DB test...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
@@ -51,5 +51,10 @@ describe('MailTemplate DB test...', () => {
   it('select test', async () => {
     const result = await DB.MailTemplate.findByPk(1, { raw: true });
     result.should.have.keys('from', 'to', 'subject', 'text');
+  });
+
+  it('findAllAttachmentsByNo는 attachments의 속성을 갖는다.', async () => {
+    const attachments = await DB.MailTemplate.findAllAttachmentsByNo({ no: 2 });
+    attachments[0].should.have.properties('Attachments.no');
   });
 });

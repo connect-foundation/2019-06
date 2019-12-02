@@ -40,6 +40,19 @@ const model = (sequelize, DataTypes) => {
     MailTemplate.hasMany(Attachment, { foreignKey: 'mail_template_id', sourceKey: 'no' });
   };
 
+  MailTemplate.findAllAttachmentsByNo = ({ no, options = {} }) => {
+    return MailTemplate.findAll({
+      where: { no },
+      include: [
+        {
+          model: sequelize.models.Attachment,
+        },
+      ],
+      raw: true,
+      ...options,
+    });
+  };
+
   return MailTemplate;
 };
 
