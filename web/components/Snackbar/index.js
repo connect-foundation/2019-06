@@ -10,7 +10,7 @@ import MessageSnackbarContentWrapper from './content';
  * @param {String} snackbar.snackbarState.variant - 'error' || 'success' || 'warning'
  * @param {String} snackbar.snackbarState.contentText - snackbar에 넣을 text
  * @param {Function} snackbar.setSnackbarState - setState for snackbar
- * @param {Number} autoHideDuration - 자동 숨김 시간 (단위 - ms) default: 5000
+ * @param {Number} autoHideDuration - 자동 닫힘 시간 (단위 - ms) default: 5000
  */
 const MessageSnackbar = ({ snackbarState, setSnackbarState, autoHideDuration = 5000 }) => {
   const handleClose = () => {
