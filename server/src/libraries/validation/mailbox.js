@@ -4,10 +4,10 @@ import ErrorField from '../exception/error-field';
 
 const BLANK = '';
 const MAILBOX_NAME_LENGTH_LIMIT = 20;
-const nameValidation = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
+const nameRegex = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
 
-const boxNameValidation = val => {
-  return nameValidation.test(val);
+const validateBoxName = val => {
+  return !nameRegex.test(val);
 };
 
 const boxNameBlankValidation = val => {
@@ -38,7 +38,7 @@ const makeMailBoxValidation = name => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
-  if (!boxNameValidation(name)) {
+  if (validateBoxName(name)) {
     const errorField = new ErrorField(
       'mailBoxName',
       name,
@@ -79,7 +79,7 @@ const updateMailBoxValidation = (newName, oldName, no) => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
-  if (!boxNameValidation(newName)) {
+  if (validateBoxName(newName)) {
     const errorField = new ErrorField(
       'mailBoxName',
       newName,
