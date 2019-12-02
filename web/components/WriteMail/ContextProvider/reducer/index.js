@@ -19,6 +19,9 @@ export const wmReducer = (state, action) => {
     case ACTYPE.UPDATE_INIT: {
       return { ...initialState };
     }
+    case ACTYPE.UPDATE_DATE: {
+      return { ...state, ...payload };
+    }
     default: {
       throw new Error(`Unhandled action type: ${type}`);
     }
