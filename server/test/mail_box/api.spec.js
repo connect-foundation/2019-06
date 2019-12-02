@@ -152,13 +152,6 @@ describe('mailbox api test...', () => {
     });
 
     describe('메일함 이름 변경을 요청할 때..', () => {
-      it('아무런 값을 넘기지 않으면(undefined) 404에러를 반환한다.', done => {
-        authenticatedUser
-          .patch('/v1/mail/box')
-          .send()
-          .expect(404, done);
-      });
-
       it('oldName과 newName 둘중 하나라도 빈 값("")이 넘어오면 400에러를 반환한다.', done => {
         authenticatedUser
           .patch('/v1/mail/box/9')
