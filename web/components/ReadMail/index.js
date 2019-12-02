@@ -1,18 +1,27 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
 import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
 import ToolGroup from './ToolGroup';
+import request from '../../utils/request';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
-  const { to, from, subject, createdAt, text, no } = state.mail;
+  const [attachments, setAttachments] = useState(null);
+  const { to, from, subject, createdAt, text, no, mailTemplateNo } = state.mail;
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt)
     .utc()
     .format('YYYY-MM-DD HH:mm');
+
+  useEffect(() => {
+    const url = `/mail/template/${mailTemplateNo}/attachments`;
+    request.get(url).then(({ data }) => {
+      setAttachments(data.attachments);
+    });
+  }, [mailTemplateNo]);
 
   return (
     <S.Container>
@@ -33,6 +42,7 @@ const ReadMail = () => {
             <div>{receivers}</div>
           </S.Address>
         </S.TitleView>
+        {attachments ? '첨부파일 있음' : '첨부파일 없음'}
         <S.ReadFrame>{text}</S.ReadFrame>
       </S.ReadArea>
       <PageMoveButtonArea no={no} />
