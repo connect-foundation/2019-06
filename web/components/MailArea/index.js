@@ -31,12 +31,12 @@ const MailArea = () => {
   }
 
   const { mails, paging } = state;
+
   const mailList =
     mails.length > 0
-      ? mails.map((mail, index) => (
-          <MailTemplate key={mail.no} mail={mail} index={index} selected={mail.selected} />
-        ))
+      ? mails.map(mail => <MailTemplate key={mail.no} mail={mail} />)
       : '메일이 없습니다.';
+
   return (
     <S.MailArea>
       <S.ToolsWrapper>
