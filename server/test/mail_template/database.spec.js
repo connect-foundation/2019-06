@@ -1,12 +1,16 @@
 /* eslint-disable no-undef */
 import should from 'should';
 import DB from '../../src/database';
+import mock from '../../mock/create-dummy-data';
+import dummyMock from '../../mock/create-large-amount-data';
 
 describe('MailTemplate DB test...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
+    await dummyMock();
   });
 
   it('create test', async () => {
@@ -54,7 +58,7 @@ describe('MailTemplate DB test...', () => {
   });
 
   it('findAllAttachmentsByNo는 attachments의 속성을 갖는다.', async () => {
-    const attachments = await DB.MailTemplate.findAllAttachmentsByNo({ no: 2 });
+    const attachments = await DB.MailTemplate.findAllAttachmentsByNo({ no: 1 });
     attachments[0].should.have.properties('Attachments.no');
   });
 });
