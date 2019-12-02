@@ -3,6 +3,7 @@ const ERROR_ID_VALIDATION = '잘못된 아이디입니다';
 const ERROR_PASSWORD_EMPTY = '비밀번호가 입력되지 않았습니다';
 const ERROR_PASSWORD_VALIDATION = '잘못된 비밀번호입니다.';
 const ERROR_DIFFERENT_PASSWORD = '같은 비밀번호를 입력해주세요.';
+const ERROR_CANNOT_RESERVATION = '이미 지난 날짜입니다.';
 
 export {
   ERROR_ID_EMPTY,
@@ -10,4 +11,5 @@ export {
   ERROR_PASSWORD_EMPTY,
   ERROR_PASSWORD_VALIDATION,
   ERROR_DIFFERENT_PASSWORD,
+  ERROR_CANNOT_RESERVATION,
 };

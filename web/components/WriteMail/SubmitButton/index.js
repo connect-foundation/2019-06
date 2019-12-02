@@ -13,18 +13,24 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import * as WM_S from '../styled';
+import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
-import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
+import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
+import { transformDateToReserve } from '../../../utils/transform-date';
+import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
+import validator from '../../../utils/validator';
+import ReservationTimePicker from '../ReservationTimePicker';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
 const SubmitButton = () => {
-  const { receivers, files, subject, text } = useStateForWM();
+  const { receivers, files, subject, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
   const [sendMessage, setSendMessage] = useState(null);
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = React.useRef(null);
 
   const handleClick = () => {
@@ -40,6 +46,14 @@ const SubmitButton = () => {
       formData.append('attachments', f);
     });
 
+    if (date) {
+      if (!validator.isAfterDate(date)) {
+        setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
+        return;
+      }
+      formData.append('reservationTime', transformDateToReserve(date));
+    }
+
     axios
       .post('/mail', formData, {
         headers: {
@@ -51,13 +65,8 @@ const SubmitButton = () => {
         dispatch({ type: UPDATE_INIT });
       })
       .catch(err => {
-        console.log(err);
         setSendMessage(<Message icon={FAIL} msg="메세지 전송 실패" />);
       });
-  };
-
-  const handleMenuItemClick = () => {
-    setOpen(false);
   };
 
   const handleToggle = () => {
@@ -69,6 +78,14 @@ const SubmitButton = () => {
       return;
     }
     setOpen(false);
+  };
+
+  const handleReservationClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -98,8 +115,10 @@ const SubmitButton = () => {
                 <Paper>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList id="split-button-menu">
-                      <MenuItem onClick={event => handleMenuItemClick(event)}>
-                        {<SendIcon fontSize="small" />} 보내기 예약
+                      <MenuItem onClick={handleReservationClick}>
+                        <S.VerticalAlign>
+                          {<SendIcon fontSize="small" />} <span>보내기 예약</span>
+                        </S.VerticalAlign>
                       </MenuItem>
                     </MenuList>
                   </ClickAwayListener>
@@ -109,6 +128,7 @@ const SubmitButton = () => {
           </Popper>
         </div>
       </WM_S.RowWrapper>
+      <ReservationTimePicker open={modalOpen} handleModalClose={handleModalClose} />
     </>
   );
 };
