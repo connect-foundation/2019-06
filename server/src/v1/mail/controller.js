@@ -38,10 +38,12 @@ const write = async (req, res, next) => {
     return next(new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField));
   }
 
-  try {
-    checkAttachment(attachments);
-  } catch (err) {
-    return next(err);
+  if (attachments && attachments.length) {
+    try {
+      checkAttachment(attachments);
+    } catch (err) {
+      return next(err);
+    }
   }
 
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
