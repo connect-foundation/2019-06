@@ -248,29 +248,29 @@ describe('Mail api test...', () => {
 
     it('# 메일 1번의 category_no를 4번으로 변경하면 200', done => {
       authenticatedUser
-        .patch('/v1/mail')
-        .send({ no: 1, props: { category_no: 4 } })
+        .patch('/v1/mail/1')
+        .send({ props: { category_no: 4 } })
         .expect(200, done);
     });
 
     it('# 메일 1번의 category_no를 가지고 있지 않은 5번으로 변경하면 404', done => {
       authenticatedUser
-        .patch('/v1/mail')
-        .send({ no: 1, props: { category_no: 5 } })
+        .patch('/v1/mail/1')
+        .send({ props: { category_no: 5 } })
         .expect(404, done);
     });
 
     it('# 메일 1번을 중요 메일로 변경하면 200', done => {
       authenticatedUser
-        .patch('/v1/mail')
-        .send({ no: 1, props: { is_important: true } })
+        .patch('/v1/mail/1')
+        .send({ props: { is_important: true } })
         .expect(200, done);
     });
 
     it('# 메일 1번을 읽은 메일로 변경하면 200', done => {
       authenticatedUser
-        .patch('/v1/mail')
-        .send({ no: 1, props: { is_read: true } })
+        .patch('/v1/mail/1')
+        .send({ props: { is_read: true } })
         .expect(200, done);
     });
   });

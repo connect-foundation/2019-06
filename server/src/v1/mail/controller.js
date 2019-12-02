@@ -64,7 +64,8 @@ const write = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
-  const { no, props } = req.body;
+  const { no } = req.params;
+  const { props } = req.body;
   let mail;
 
   try {

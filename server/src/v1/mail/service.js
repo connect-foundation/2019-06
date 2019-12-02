@@ -129,7 +129,7 @@ const getCategories = async no => {
 };
 
 const updateMail = async (no, props) => {
-  const mail = await DB.Mail.findOne({ where: { no } });
+  const mail = await DB.Mail.findByPk(no);
   if (!mail) {
     const errorField = new ErrorField('mail', mail, '존재하지 않는 메일입니다');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
