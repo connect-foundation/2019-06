@@ -27,25 +27,25 @@ describe('attachment DB test..', () => {
         mail_template_id,
         type: 'image',
         name: 'tile_name1',
-        content: 'file content',
+        url: 'file url',
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name2',
-        content: 'file content',
+        url: 'file url',
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name3',
-        content: 'file content',
+        url: 'file url',
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name4',
-        content: 'file content',
+        url: 'file url',
       },
     ];
 
@@ -56,7 +56,7 @@ describe('attachment DB test..', () => {
         mail_template_id: 1,
         type: 'image',
         name: `tile_name${index + 1}`,
-        content: 'file content',
+        url: 'file url',
       });
     }
   });

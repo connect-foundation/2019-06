@@ -19,8 +19,8 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      content: {
-        type: DataTypes.BLOB('LONG'),
+      url: {
+        type: DataTypes.TEXT,
         allowNull: false,
       },
     },
