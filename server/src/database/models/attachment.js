@@ -44,6 +44,7 @@ const model = (sequelize, DataTypes) => {
       where: {
         mail_template_id: no,
       },
+      attributes: { exclude: ['url'] },
       raw: true,
     });
   };
