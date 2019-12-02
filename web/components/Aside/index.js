@@ -215,7 +215,9 @@ const Aside = () => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => dialogState.okBtnHandler(dialogTextFieldState)} color="primary">
+          <Button
+            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, setSnackbarState)}
+            color="primary">
             확인
           </Button>
           <Button onClick={handleDialogClose} color="primary">
