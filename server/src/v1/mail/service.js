@@ -9,8 +9,10 @@ import { saveSentMail } from '../../libraries/save-to-infra';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
+import { Op } from 'sequelize';
 
 const SENT_MAILBOX_NAME = '보낸메일함';
+const WASTEBASKET_NAME = '휴지통';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
@@ -28,7 +30,7 @@ const SORT_TYPE = {
   fromasc: [[DB.MailTemplate, 'from', 'ASC']],
 };
 
-const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
+const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {
     userNo,
     options: {
@@ -43,6 +45,10 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
 
   if (category > 0) {
     query.mailFilter.category_no = category;
+  } else {
+    query.mailFilter.category_no = {
+      [Op.ne]: wastebasketNo,
+    };
   }
 
   if (SORT_TYPE[sort]) {
@@ -52,15 +58,20 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page, sort }) => {
   return query;
 };
 
+const getWastebasketCategoryNo = async userNo => {
+  const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
+  return no;
+};
+
 const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
-  category = Number(category);
-  page = Number(page);
-  perPageNum = Number(perPageNum);
-
-  const query = getQueryByOptions({ userNo, category, perPageNum, page, sort });
+  category = +category;
+  page = +page;
+  perPageNum = +perPageNum;
+  const wastebasketNo = await getWastebasketCategoryNo(userNo);
+  const query = getQueryByOptions({ userNo, category, perPageNum, page, sort, wastebasketNo });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
   const pagingOptions = {
