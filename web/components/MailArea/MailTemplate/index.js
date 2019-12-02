@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useContext } from 'react';
 import moment from 'moment';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
@@ -9,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import ReadMail from '../../ReadMail';
-import { handleMailClick, handleMailsChange } from '../../../contexts/reducer';
+import { handleMailClick, handleMailChecked, handleMailsChange } from '../../../contexts/reducer';
 import { AppDisapthContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 import request from '../../../utils/request';
@@ -52,8 +53,7 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const moveMailToWastebasket = async (mailNo, state, dispatch) => {
-  const { categories, mails, paging } = state;
+const moveMailToWastebasket = async (mailNo, mails, categories, paging, dispatch) => {
   const category_no = categories.filter(({ name }) => name === WASTEBASKET_NAME)[0].no;
   const { isError, data } = await request.patch('/mail', {
     no: mailNo,
@@ -68,20 +68,32 @@ const moveMailToWastebasket = async (mailNo, state, dispatch) => {
   dispatch(handleMailsChange({ mails: updatedMails, paging }));
 };
 
-const MailTemplate = ({ mail }) => {
-  const { state } = useContext(AppStateContext);
+const MailTemplate = ({ mail, selected, index }) => {
+  const {
+    state: { mails, categories, paging },
+  } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const { is_important, is_read, MailTemplate, no } = mail;
   const { from, to, subject, text, createdAt } = MailTemplate;
   const mailToRead = { from, to, subject, text, createdAt, is_important, no };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
-  const handleDeleteClick = () => moveMailToWastebasket(no, state, dispatch);
+  const handleDeleteClick = () => moveMailToWastebasket(no, mails, categories, paging, dispatch);
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
 
   return (
     <S.Container>
       <div>
-        <input type="checkbox" />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selected}
+              onChange={handleCheckedChange}
+              color="primary"
+              size="small"
+            />
+          }
+        />
       </div>
       <S.ImportantButton>
         {is_important ? (
