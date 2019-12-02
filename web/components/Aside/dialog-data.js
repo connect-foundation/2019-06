@@ -1,4 +1,5 @@
 import request from '../../utils/request';
+import { errorParser } from '../../utils/error-parser';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
@@ -53,10 +54,11 @@ export const getDialogData = (
           }
           const { isError, data } = await request.post(url, { name });
           if (isError) {
+            const { message } = errorParser(data);
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
-              contentText: data.message,
+              contentText: message,
             });
             return;
           }
@@ -108,11 +110,11 @@ export const getDialogData = (
             newName: name,
           });
           if (isError) {
-            console.log(isError);
+            const { message } = errorParser(data);
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
-              contentText: data.message,
+              contentText: message,
             });
             return;
           }
@@ -136,10 +138,11 @@ export const getDialogData = (
           const query = `?name=${name}`;
           const { isError, data } = await request.delete(url + no + query);
           if (isError) {
+            const { message } = errorParser(data);
             setSnackbarState({
               open: true,
               variant: SNACKBAR_ERROR,
-              contentText: data.message,
+              contentText: message,
             });
             return;
           }
