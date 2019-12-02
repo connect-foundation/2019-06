@@ -44,7 +44,7 @@ const SubmitButton = () => {
     });
 
     if (date) {
-      if (!validator.canReservation(date)) {
+      if (!validator.isAfterDate(date)) {
         setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
         return;
       }

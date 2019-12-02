@@ -66,7 +66,7 @@ const ReservationTimePicker = () => {
       minute,
     });
 
-    if (!validator.canReservation(reservationDate)) {
+    if (!validator.isAfterDate(reservationDate)) {
       setError(ERROR_CANNOT_RESERVATION);
       return;
     }

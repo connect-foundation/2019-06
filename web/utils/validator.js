@@ -58,7 +58,7 @@ const checkUser = ({ id, name, password, email }) => {
   return Object.keys(user).every(key => validate(key, user[key]));
 };
 
-const canReservation = date => {
+const isAfterDate = date => {
   const curDate = moment();
 
   return curDate < date;
@@ -68,5 +68,5 @@ export default {
   validate,
   validateAndGetMsg,
   checkUser,
-  canReservation,
+  isAfterDate,
 };
