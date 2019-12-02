@@ -1,6 +1,5 @@
 /* eslint-disable camelcase */
 import React, { useContext, useCallback } from 'react';
-import Router from 'next/router';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -11,6 +10,8 @@ import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
+
+const WASTEBASKET_NAME = '휴지통';
 
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
@@ -28,7 +29,13 @@ const MailArea = () => {
     return <Loading />;
   }
 
-  const { mails, paging } = state;
+  const { paging, category, categories } = state;
+  let { mails } = state;
+  if (category === 0) {
+    const wastebasketCategoryNo = categories.filter(({ name }) => name === WASTEBASKET_NAME)[0].no;
+    mails = mails.filter(({ category_no }) => category_no !== wastebasketCategoryNo);
+  }
+
   const mailList =
     mails.length > 0
       ? mails.map(mail => <MailTemplate key={mail.no} mail={mail} />)
