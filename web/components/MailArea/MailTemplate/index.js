@@ -9,9 +9,13 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import ReadMail from '../../ReadMail';
-import { handleMailClick } from '../../../contexts/reducer';
-import { AppDisapthContext } from '../../../contexts';
+import { handleMailClick, handleMailsChange } from '../../../contexts/reducer';
+import { AppDisapthContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
+import request from '../../../utils/request';
+import { errorParser } from '../../../utils/error-parser';
+
+const WASTEBASKET_NAME = '휴지통';
 
 const useStyles = makeStyles(theme => ({
   delete: {
@@ -48,12 +52,30 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
+const moveMailToWastebasket = async (mailNo, state, dispatch) => {
+  const { categories, mails, paging } = state;
+  const category_no = categories.filter(({ name }) => name === WASTEBASKET_NAME)[0].no;
+  const { isError, data } = await request.patch('/mail', {
+    no: mailNo,
+    props: { category_no },
+  });
+  if (isError) {
+    const { message } = errorParser(data);
+    console.log(message);
+    // TODO: 휴지통 버리기 실패 메시지 출력
+  }
+  const updatedMails = mails.filter(({ no }) => no !== data.no);
+  dispatch(handleMailsChange({ mails: updatedMails, paging }));
+};
+
 const MailTemplate = ({ mail }) => {
+  const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const { is_important, is_read, MailTemplate, no } = mail;
   const { from, to, subject, text, createdAt } = MailTemplate;
   const mailToRead = { from, to, subject, text, createdAt, is_important, no };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
+  const handleDeleteClick = () => moveMailToWastebasket(no, state, dispatch);
   const classes = useStyles();
 
   return (
@@ -69,7 +91,7 @@ const MailTemplate = ({ mail }) => {
         )}
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
-      <S.DeleteButton>
+      <S.DeleteButton onClick={handleDeleteClick}>
         <DeleteIcon className={classes.delete} />
       </S.DeleteButton>
       <S.From isRead={is_read}>{from}</S.From>
