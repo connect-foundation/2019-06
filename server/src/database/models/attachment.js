@@ -39,6 +39,15 @@ const model = (sequelize, DataTypes) => {
     Attachment.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
   };
 
+  Attachment.findAllByMailTemplateNo = ({ no }) => {
+    return Attachment.findAll({
+      where: {
+        mail_template_id: no,
+      },
+      raw: true,
+    });
+  };
+
   return Attachment;
 };
 

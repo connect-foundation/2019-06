@@ -60,4 +60,13 @@ describe('attachment DB test..', () => {
       });
     }
   });
+
+  it('findAllByMailTemplateNo는 no에 해당하는 첨부파일들을 반환한다.', async () => {
+    const no = 1;
+    const attachments = await DB.Attachment.findAllByMailTemplateNo({ no });
+    const mailTemplateNo = attachments.map(attachment => attachment.mail_template_id);
+    mailTemplateNo.forEach(mno => {
+      mno.should.be.equals(no);
+    });
+  });
 });

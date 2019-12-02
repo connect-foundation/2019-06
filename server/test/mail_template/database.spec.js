@@ -2,7 +2,7 @@
 import should from 'should';
 import DB from '../../src/database';
 
-describe.only('MailTemplate DB test...', () => {
+describe('MailTemplate DB test...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
