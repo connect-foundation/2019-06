@@ -21,7 +21,7 @@ const createBox = async (user, name) => {
 const updateBox = async (user, boxNo, oldName, newName) => {
   const boxRow = await DB.Category.findOneByNoAndUserNoAndName(boxNo, user.no, oldName);
   if (!boxRow) {
-    const errorField = new ErrorField('mailBox', boxRow, '존재하지 않는 메일함입니다');
+    const errorField = new ErrorField('mailBox', oldName, '존재하지 않는 메일함입니다');
     throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
   }
 
@@ -35,7 +35,7 @@ const updateBox = async (user, boxNo, oldName, newName) => {
 const deleteBox = async (user, boxNo, boxName) => {
   const boxRow = await DB.Category.findOneByNoAndUserNoAndName(boxNo, user.no, boxName);
   if (!boxRow) {
-    const errorField = new ErrorField('mailBox', boxRow, '존재하지 않는 메일함입니다');
+    const errorField = new ErrorField('mailBox', boxName, '존재하지 않는 메일함입니다');
     throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
   }
 
