@@ -17,7 +17,7 @@ import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
-import { formatDateToRequestReservation } from '../../../utils/format';
+import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import validator from '../../../utils/validator';
 
@@ -49,7 +49,7 @@ const SubmitButton = () => {
         setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
         return;
       }
-      formData.append('reservationTime', formatDateToRequestReservation(date));
+      formData.append('reservationTime', transformDateToReserve(date));
     }
 
     axios

@@ -4,7 +4,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_DATE } from '../ContextProvider/reducer/action-type';
-import { formatDateForReservationDateText } from '../../../utils/format';
+import { transformDateForReservationDateText } from '../../../utils/transform-date';
 
 const ReservationDateText = () => {
   const { date } = useStateForWM();
@@ -16,7 +16,7 @@ const ReservationDateText = () => {
 
   return (
     <>
-      <S.Text>{date ? formatDateForReservationDateText(date) : ''}</S.Text>
+      <S.Text>{date ? transformDateForReservationDateText(date) : ''}</S.Text>
       {date && (
         <CloseIcon
           color={'error'}

@@ -7,7 +7,7 @@ import MomentUtils from '@date-io/moment';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { RESERVATION_MODAL_OFF, UPDATE_DATE } from '../ContextProvider/reducer/action-type';
 import createArray from '../../../utils/create-array';
-import { formatDateForReservationTimePicker } from '../../../utils/format';
+import { transformDateForReservationTimePicker } from '../../../utils/transform-date';
 import validator from '../../../utils/validator';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import S from './styled';
@@ -111,7 +111,7 @@ const ReservationTimePicker = () => {
                   />
                 </MuiPickersUtilsProvider>
                 <S.ColumnContainer>
-                  <S.Text>{formatDateForReservationTimePicker(date)}</S.Text>
+                  <S.Text>{transformDateForReservationTimePicker(date)}</S.Text>
                   <S.RowContainer>
                     <Select
                       value={hour}
