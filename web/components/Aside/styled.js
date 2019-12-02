@@ -4,6 +4,15 @@ const Aside = styled.aside`
   display: flex;
   flex-direction: column;
   border-right: 1px solid #ced4da;
+  overflow-y: scroll;
+`;
+
+const EllipsisList = styled.div`
+  width: 85px;
+  height: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 const WriteArea = styled.div`
@@ -51,4 +60,4 @@ const OptionReadArea = styled.div`
   }
 `;
 
-export default { WriteArea, DefaultReadArea, OptionReadArea, WrtieButton, Aside };
+export default { WriteArea, EllipsisList, DefaultReadArea, OptionReadArea, WrtieButton, Aside };

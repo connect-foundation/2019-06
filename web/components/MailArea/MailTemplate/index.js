@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useContext } from 'react';
 import moment from 'moment';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
@@ -9,8 +10,8 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import ReadMail from '../../ReadMail';
-import { handleMailClick } from '../../../contexts/reducer';
-import { AppDisapthContext } from '../../../contexts';
+import { handleMailClick, handleMailChecked } from '../../../contexts/reducer';
+import { AppDisapthContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
 const useStyles = makeStyles(theme => ({
@@ -51,18 +52,31 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail }) => {
+const MailTemplate = ({ mail, selected, index }) => {
+  const {
+    state: { mails },
+  } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const { is_important, is_read, MailTemplate, no } = mail;
   const { from, to, subject, text, createdAt } = MailTemplate;
   const mailToRead = { from, to, subject, text, createdAt, is_important, no };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
 
   return (
     <S.MailTemplateWrap isRead={is_read}>
       <div>
-        <input type="checkbox" />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selected}
+              onChange={handleCheckedChange}
+              color="primary"
+              size="small"
+            />
+          }
+        />
       </div>
       <div>
         {is_important ? (
