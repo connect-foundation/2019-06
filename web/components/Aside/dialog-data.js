@@ -9,9 +9,6 @@ const [SNACKBAR_ERROR, SNACKBAR_SUCCESS] = ['error', 'success'];
 const duplicateErrorMsg = '메일함은 이름을 중복해서 만들 수 없습니다.';
 const lengthErrorMsg = '메일함 이름은 최대 20자를 넘을 수 없습니다.';
 const regexErrorMsg = '메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다.';
-const successToAddMsg = '메일함이 성공적으로 추가되었습니다.';
-const successToModifyMsg = '메일함이 성공적으로 수정되었습니다.';
-const successToDeleteMsg = '메일함이 성공적으로 삭제되었습니다.';
 
 export const getDialogData = (
   type,
@@ -70,7 +67,7 @@ export const getDialogData = (
           setSnackbarState({
             open: true,
             variant: SNACKBAR_SUCCESS,
-            contentText: successToAddMsg,
+            contentText: '메일함이 성공적으로 추가되었습니다.',
           });
           setDialogOpen(false);
         },
@@ -123,7 +120,7 @@ export const getDialogData = (
           setSnackbarState({
             open: true,
             variant: SNACKBAR_SUCCESS,
-            contentText: successToModifyMsg,
+            contentText: '메일함이 성공적으로 수정되었습니다.',
           });
           setDialogOpen(false);
         },
@@ -152,7 +149,7 @@ export const getDialogData = (
           setSnackbarState({
             open: true,
             variant: SNACKBAR_SUCCESS,
-            contentText: successToDeleteMsg,
+            contentText: '메일함이 성공적으로 삭제되었습니다.',
           });
           setDialogOpen(false);
         },
