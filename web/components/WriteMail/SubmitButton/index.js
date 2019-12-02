@@ -13,6 +13,7 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import * as WM_S from '../styled';
+import * as S from './styled';
 import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
@@ -81,7 +82,7 @@ const SubmitButton = () => {
     setOpen(false);
   };
 
-  const handleOpenReservationTimePicker = () => {
+  const handleReservationClick = () => {
     dispatch({ type: RESERVATION_MODAL_ON });
   };
 
@@ -112,9 +113,10 @@ const SubmitButton = () => {
                 <Paper>
                   <ClickAwayListener onClickAway={handleClose}>
                     <MenuList id="split-button-menu">
-                      <MenuItem onClick={event => handleMenuItemClick(event)}>
-                        {<SendIcon fontSize="small" />}{' '}
-                        <span onClick={handleOpenReservationTimePicker}>보내기 예약</span>
+                      <MenuItem onClick={handleReservationClick}>
+                        <S.VerticalAlign>
+                          {<SendIcon fontSize="small" />} <span>보내기 예약</span>
+                        </S.VerticalAlign>
                       </MenuItem>
                     </MenuList>
                   </ClickAwayListener>
