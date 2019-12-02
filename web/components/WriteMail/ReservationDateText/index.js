@@ -10,8 +10,8 @@ const ReservationDateText = () => {
   const { date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
-  const handleClick = () => {
-    dispatch({ type: UPDATE_DATE, payload: { date: '' } });
+  const handleReservationCancelClick = () => {
+    dispatch({ type: UPDATE_DATE, payload: { date: null } });
   };
 
   return (
@@ -20,7 +20,7 @@ const ReservationDateText = () => {
       {date && (
         <CloseIcon
           color={'error'}
-          onClick={handleClick}
+          onClick={handleReservationCancelClick}
           size={20}
           style={{ paddingTop: '2px', cursor: 'pointer' }}
         />
