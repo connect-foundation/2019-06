@@ -82,7 +82,7 @@ export const handleMailsChange = ({ mails, paging }) => {
 
 export const handleMailChecked = ({ mails, index }) => {
   mails[index].selected = !mails[index].selected;
-  if (mails.every(mail => mail.selected === true)) {
+  if (mails.every(mail => mail.selected)) {
     return {
       type: MAIL_CHECK,
       payload: {
