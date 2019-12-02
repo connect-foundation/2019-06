@@ -8,6 +8,7 @@
     "dev": "nodemon --config nodemon.json",
     "prettier": "prettier --write src/**/*.js",
     "pull": "git pull upstream be/develop",
+    "push": "git push origin be/develop",
     "dev:force": "export force=true || SET \"force=true\"&& npm run dev",
     "production": "export NODE_ENV=production || set \"NODE_ENV=production\" && babel-node src/bin/www.js",
     "test": "export NODE_ENV=test || SET \"NODE_ENV=test\"&& mocha --config .mocharc.json --exit",
