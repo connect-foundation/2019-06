@@ -25,7 +25,7 @@ const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS, NODE_ENV } = pro
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
-if (NODE_ENV !== 'test') {
+if (NODE_ENV === 'production') {
   app.use(morgan('combined', { stream: log.debug }));
 }
 app.use(cors(corsOptions));
