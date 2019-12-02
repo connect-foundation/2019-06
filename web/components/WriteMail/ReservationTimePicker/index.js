@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { Modal, Backdrop, Fade, FormControl, Select, MenuItem } from '@material-ui/core';
+import { Modal, Backdrop, Fade, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
@@ -48,7 +48,6 @@ const minutes = createArray(4).map((_, index) => (
 
 const ReservationTimePicker = () => {
   const classes = useStyles();
-  const rootRef = React.useRef(null);
   const [date, setDate] = useState(moment());
   const [hour, setHour] = useState(0);
   const [minute, setMinute] = useState(0);
@@ -83,7 +82,7 @@ const ReservationTimePicker = () => {
   };
 
   return (
-    <div className={classes.root} ref={rootRef}>
+    <div className={classes.root}>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
