@@ -15,7 +15,7 @@ const ReservationDateText = () => {
   };
 
   return (
-    <>
+    <S.RowContainer>
       <S.Text>{date ? transformDateForReservationDateText(date) : ''}</S.Text>
       {date && (
         <CloseIcon
@@ -25,7 +25,7 @@ const ReservationDateText = () => {
           style={{ paddingTop: '2px', cursor: 'pointer' }}
         />
       )}
-    </>
+    </S.RowContainer>
   );
 };
 
