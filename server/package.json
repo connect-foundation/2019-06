@@ -87,6 +87,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.6.2",
+    "aws-sdk": "^2.580.0",
     "bcrypt": "^3.0.6",
     "connect-redis": "^4.0.3",
     "cookie-parser": "^1.4.4",

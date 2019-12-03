@@ -37,6 +37,10 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: true,
       },
+      message_id: {
+        type: DataTypes.TEXT,
+        allowNull: true,
+      },
     },
     {
       freezeTableName: true,

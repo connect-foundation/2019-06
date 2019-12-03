@@ -92,8 +92,8 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   }
 
   const processedAttachments = attachments.map(attachment => {
-    const { contentType, filename, content } = attachment;
-    return { type: contentType, name: filename, content, mail_template_id: mailTemplateNo };
+    const { contentType, filename, url } = attachment;
+    return { type: contentType, name: filename, url, mail_template_id: mailTemplateNo };
   });
 
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });
@@ -101,10 +101,11 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
 
 const saveMail = async (mailContents, transaction, userNo, reservationTime = null) => {
   const mailTemplateResult = await DB.MailTemplate.create(
-    { ...mailContents, to: mailContents.to.join(',') },
+    { ...mailContents, to: mailContents.to.join(','), createdAt: reservationTime },
     { transaction },
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
+
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
   const userCategory = await DB.Category.findOneByUserNoAndName(userNo, SENT_MAILBOX_NAME);
   await DB.Mail.create(

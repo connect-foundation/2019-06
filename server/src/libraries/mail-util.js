@@ -6,9 +6,10 @@ const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = proce
 
 const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
-  attachments = attachments.map(({ originalname, buffer, mimetype }) => ({
+  attachments = attachments.map(({ originalname, buffer, mimetype, url }) => ({
     filename: originalname,
     content: buffer.toString('base64'),
+    url,
     contentType: mimetype,
     encoding: 'base64',
   }));
