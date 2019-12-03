@@ -6,6 +6,7 @@ import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
 import ToolGroup from './ToolGroup';
 import request from '../../utils/request';
+import FileList from './FileList';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
@@ -42,7 +43,7 @@ const ReadMail = () => {
             <div>{receivers}</div>
           </S.Address>
         </S.TitleView>
-        {attachments ? '첨부파일 있음' : '첨부파일 없음'}
+        {attachments ? <FileList files={attachments} /> : ''}
         <S.ReadFrame>{text}</S.ReadFrame>
       </S.ReadArea>
       <PageMoveButtonArea no={no} />
