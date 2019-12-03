@@ -39,7 +39,7 @@ const model = (sequelize, DataTypes) => {
       },
       message_id: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
