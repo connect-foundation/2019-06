@@ -63,15 +63,16 @@ const Title = styled.div`
 `;
 
 const Date = styled.div`
+  display: flex;
   font-weight: 600;
   margin: 0 10px;
   color: grey;
 `;
 
 const Text = styled.span`
-  width: 50px;
+  width: 35px;
   color: #0066ff;
-  margin-right: 10px;
+  margin-left: 15px;
 `;
 
 export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date, Text };

@@ -129,8 +129,8 @@ const MailTemplate = ({ mail, selected, index }) => {
       <S.Selectable onClick={handleSubjectClick}>
         <S.Title isRead={is_read}>{subject}</S.Title>
         <S.Date>
-          <S.Text>{reservation_time && '예약'}</S.Text>
           {getDateOrTime(createdAt)}
+          <S.Text>{reservation_time && '예약'}</S.Text>
         </S.Date>
       </S.Selectable>
     </S.Container>
