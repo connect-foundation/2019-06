@@ -26,7 +26,7 @@ describe('attachment service는...', () => {
       }
     });
 
-    it('권힌이 없는 첨부파일이면 404 에러를 던진다.', async () => {
+    it('권한이 없는 첨부파일이면 404 에러를 던진다.', async () => {
       const attachmentNo = 1;
       const email = 'roooott@daitnu.com';
       try {
