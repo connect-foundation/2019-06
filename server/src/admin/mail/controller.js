@@ -1,6 +1,6 @@
 import service from './service';
 
-const list = async (req, res, next) => {
+const sendReservationMails = async (req, res, next) => {
   let mails;
 
   try {
@@ -13,5 +13,5 @@ const list = async (req, res, next) => {
 };
 
 export default {
-  list,
+  sendReservationMails,
 };
