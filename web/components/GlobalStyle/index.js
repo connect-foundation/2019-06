@@ -7,6 +7,12 @@ const FlexWrap = styled.div`
   overflow: hidden;
 `;
 
+const FlexColumnWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`;
+
 const FlexRowWrap = styled.div`
   height: 100%;
   display: flex;
@@ -74,6 +80,7 @@ const AlignLeftContainer = styled.div`
 
 export {
   FlexWrap,
+  FlexColumnWrap,
   FlexRowWrap,
   FlexCenterWrap,
   FlexRowCenterWrap,

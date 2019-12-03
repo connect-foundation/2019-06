@@ -54,9 +54,20 @@ const MailTemplate = ({ mail, selected, index }) => {
     state: { mails },
   } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
+
   const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
-  const { from, to, subject, text, createdAt } = MailTemplate;
-  const mailToRead = { from, to, subject, text, createdAt, is_important, no, reservation_time };
+  const { from, to, subject, text, createdAt, no: mailTemplateNo } = MailTemplate;
+  const mailToRead = {
+    from,
+    to,
+    subject,
+    text,
+    createdAt,
+    is_important,
+    no,
+    mailTemplateNo,
+    reservation_time,
+  };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
