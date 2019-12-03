@@ -60,4 +60,20 @@ describe('attachment DB test..', () => {
       });
     }
   });
+
+  it('findAllByMailTemplateNo는 no에 해당하는 첨부파일들을 반환한다.', async () => {
+    const no = 1;
+    const attachments = await DB.Attachment.findAllByMailTemplateNo({ no });
+    attachments.forEach(attachment => {
+      attachment.mail_template_id.should.be.equals(no);
+    });
+  });
+
+  it('findAllByMailTemplateNo로 반환하는 첨부파일들은 url을 갖지 않는다.', async () => {
+    const no = 1;
+    const attachments = await DB.Attachment.findAllByMailTemplateNo({ no });
+    attachments.forEach(attachment => {
+      attachment.should.not.have.properties('url');
+    });
+  });
 });
