@@ -18,7 +18,7 @@ describe('mail template service는...', () => {
   describe('getAttachmentsByTemplateNo는....', () => {
     it('로그인 하지 않은 상태로 요청을 보내면', done => {
       request(app)
-        .get('/v1/mail/template/4/attachments')
+        .get('/mail/template/4/attachments')
         .expect(401, done);
     });
 
@@ -29,24 +29,24 @@ describe('mail template service는...', () => {
       };
       const authenticatedUser = request.agent(app);
       before(async () => {
-        await authenticatedUser.post('/v1/auth/login').send(user);
+        await authenticatedUser.post('/auth/login').send(user);
       });
 
       it('유효하지 않은 no를 보내면 400을 반환한다.', done => {
-        authenticatedUser.get('/v1/mail/template/-1/attachments').expect(400, done);
+        authenticatedUser.get('/mail/template/-1/attachments').expect(400, done);
       });
       it('유효하지 않은 no를 보내면 400을 반환한다.', done => {
-        authenticatedUser.get('/v1/mail/template/0/attachments').expect(400, done);
+        authenticatedUser.get('/mail/template/0/attachments').expect(400, done);
       });
       it('유효하지 않은 no를 보내면 400을 반환한다.', done => {
-        authenticatedUser.get('/v1/mail/template/a/attachments').expect(400, done);
+        authenticatedUser.get('/mail/template/a/attachments').expect(400, done);
       });
       it('유효하지 않은 no를 보내면 400을 반환한다.', done => {
-        authenticatedUser.get('/v1/mail/template/&/attachments').expect(400, done);
+        authenticatedUser.get('/mail/template/&/attachments').expect(400, done);
       });
 
       it('유효하지 않은 no를 보내면 올바르지 않는 값입니다를 반환한다..', done => {
-        authenticatedUser.get('/v1/mail/template/&/attachments').end((err, { body }) => {
+        authenticatedUser.get('/mail/template/&/attachments').end((err, { body }) => {
           const { errorCode, fieldErrors } = body;
           errorCode.status.should.be.equals(400);
           errorCode.message.should.be.equals('INVALID INPUT VALUE');
