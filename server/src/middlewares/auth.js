@@ -1,6 +1,8 @@
 import ErrorResponse from '../libraries/exception/error-response';
 import ErrorCode from '../libraries/exception/error-code';
 
+const { ADMIN_KEY } = process.env;
+
 const isAuth = (req, res, next) => {
   // if (!req.isAuthenticated()) {
   if (!req.user) {
@@ -9,4 +11,12 @@ const isAuth = (req, res, next) => {
   return next();
 };
 
-export { isAuth };
+const isAdmin = (req, res, next) => {
+  if (!req.body.key || req.body.key !== ADMIN_KEY) {
+    return next(new ErrorResponse(ErrorCode.PAGE_NOT_FOUND));
+  }
+
+  return next();
+};
+
+export { isAuth, isAdmin };
