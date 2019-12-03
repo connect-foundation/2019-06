@@ -5,7 +5,7 @@ import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 import bulkMock from '../../mock/create-large-amount-data';
 
-describe.only('attachment service는...', () => {
+describe('attachment service는...', () => {
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
