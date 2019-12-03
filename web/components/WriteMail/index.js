@@ -12,9 +12,9 @@ const WriteMail = () => (
     <S.WriteArea>
       <InputReceiver />
       <InputSubject />
+      <DropZone />
       <InputBody />
       <SubmitButton />
-      <DropZone />
     </S.WriteArea>
   </WriteMailContextProvider>
 );
