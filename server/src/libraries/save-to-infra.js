@@ -1,6 +1,7 @@
 import Imap from 'imap';
 
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
+const PREFIX = '';
 
 const getImap = ({ email, password }) => {
   return new Imap({
@@ -29,12 +30,7 @@ const connectImap = ({ email, password }, callback) => {
 
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
   connectImap(user, imap => {
-    imap.openBox(mailboxName, false, err => {
-      if (err) {
-        throw err;
-      }
-      imap.append(msg.toString());
-    });
+    imap.append(msg.toString(), { mailbox: PREFIX + mailboxName });
   });
 };
 
