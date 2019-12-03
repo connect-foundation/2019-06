@@ -2,7 +2,7 @@
 import should from 'should';
 import ERROR_CODE from '../../../src/libraries/exception/error-code';
 import ErrorResponse from '../../../src/libraries/exception/error-response';
-import checkQuery from '../../../src/libraries/validation/mail';
+import { checkQuery } from '../../../src/libraries/validation/mail';
 
 const data = {
   category: '1',
