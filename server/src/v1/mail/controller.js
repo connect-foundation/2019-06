@@ -5,7 +5,7 @@ import { validate } from '../../libraries/validation/common';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
-import checkQuery from '../../libraries/validation/mail';
+import { checkQuery, validateNo, validateProps } from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
 import { strToDate } from '../../libraries/date-parser';
 import { checkAttachment } from '../../libraries/validation/attachment';
@@ -70,6 +70,22 @@ const write = async (req, res, next) => {
   return res.status(STATUS.CREATED).json({ mail: mailContents });
 };
 
+const update = async (req, res, next) => {
+  const { no } = req.params;
+  const { props } = req.body;
+  let mail;
+
+  try {
+    validateNo(no);
+    validateProps(props);
+    mail = await service.updateMail(no, props);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.json(mail);
+};
+
 const getCategories = async (req, res, next) => {
   let categories;
 
@@ -85,5 +101,6 @@ const getCategories = async (req, res, next) => {
 export default {
   list,
   write,
+  update,
   getCategories,
 };

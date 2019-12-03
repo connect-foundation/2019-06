@@ -66,12 +66,12 @@ const createUserDummyData = async () => {
 
 const createMailDummyData = async () => {
   const mails = [
-    { owner: 1, mail_template_id: 1 },
-    { owner: 2, mail_template_id: 1 },
-    { owner: 3, mail_template_id: 1 },
-    { owner: 1, mail_template_id: 2 },
-    { owner: 2, mail_template_id: 2 },
-    { owner: 3, mail_template_id: 2 },
+    { owner: 1, mail_template_id: 1, category_no: 1 },
+    { owner: 2, mail_template_id: 1, category_no: 5 },
+    { owner: 3, mail_template_id: 1, category_no: 9 },
+    { owner: 1, mail_template_id: 2, category_no: 1 },
+    { owner: 2, mail_template_id: 2, category_no: 5 },
+    { owner: 3, mail_template_id: 2, category_no: 9 },
   ];
 
   await DB.Mail.bulkCreate(mails);
@@ -94,8 +94,8 @@ const createDummyData = async () => {
   await createDomainDummyData();
   await createUserDummyData();
   await createMailTemplateDummyData();
-  await createMailDummyData();
   await createCategoryDummyData();
+  await createMailDummyData();
 };
 
 export default createDummyData;

@@ -231,4 +231,54 @@ describe('Mail api test...', () => {
         .expect(401, done);
     });
   });
+
+  describe('메일 속성 변경 요청 시...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('# 메일 1번의 category_no를 4번으로 변경하면 200', done => {
+      authenticatedUser
+        .patch('/mail/1')
+        .send({ props: { category_no: 4 } })
+        .expect(200, done);
+    });
+
+    it('# 메일 1번의 category_no를 가지고 있지 않은 5번으로 변경하면 404', done => {
+      authenticatedUser
+        .patch('/mail/1')
+        .send({ props: { category_no: 5 } })
+        .expect(404, done);
+    });
+
+    it('# 메일 1번을 중요 메일로 변경하면 200', done => {
+      authenticatedUser
+        .patch('/mail/1')
+        .send({ props: { is_important: true } })
+        .expect(200, done);
+    });
+
+    it('# 메일 1번을 읽은 메일로 변경하면 200', done => {
+      authenticatedUser
+        .patch('/mail/1')
+        .send({ props: { is_read: true } })
+        .expect(200, done);
+    });
+
+    it('# 메일 1번을 is_read가 string이면 400', done => {
+      authenticatedUser
+        .patch('/mail/1')
+        .send({ props: { is_read: 'is_read' } })
+        .expect(400, done);
+    });
+  });
 });
