@@ -64,4 +64,9 @@ const MailTemplateWrap = styled.div`
   }
 `;
 
-export { MailTemplateWrap };
+const Text = styled.div`
+  width: 50px;
+  color: #0066ff;
+`;
+
+export { MailTemplateWrap, Text };
