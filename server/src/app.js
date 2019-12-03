@@ -9,6 +9,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
+import admin from './admin';
 import ErrorResponse from './libraries/exception/error-response';
 import ERROR_CODE from './libraries/exception/error-code';
 import corsOptions from './config/cors-options';
@@ -49,6 +50,7 @@ app.use(helmet());
 app.set('trust proxy', 1);
 
 app.use('/v1', v1);
+app.use('/admin', admin);
 
 app.use((req, res, next) => next(PAGE_NOT_FOUND_EXCEPTION));
 
