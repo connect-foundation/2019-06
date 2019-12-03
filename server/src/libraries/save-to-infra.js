@@ -40,6 +40,17 @@ export const saveSentMail = ({ user, msg }) => {
   });
 };
 
+export const saveToMailbox = ({ user, msg, mailboxName }) => {
+  connectImap(user, imap => {
+    imap.openBox(mailboxName, false, err => {
+      if (err) {
+        throw err;
+      }
+      imap.append(msg.toString());
+    });
+  });
+};
+
 export const addMailBox = ({ user, name }) => {
   connectImap(user, imap => {
     imap.addBox(PREFIX + name, err => {
