@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "prettier": "prettier --write ./**/*.js"
+    "prettier": "prettier --write ./**/*.js",
+    "pull": "git pull upstream fe/develop",
+    "push": "git push origin fe/develop"
   },
   "author": "Daitnu team",
   "contributors": [

@@ -11,6 +11,8 @@ import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 
+const WASTEBASKET_NAME = '휴지통';
+
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);

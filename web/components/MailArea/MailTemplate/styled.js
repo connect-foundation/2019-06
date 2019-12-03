@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const MailTemplateWrap = styled.div`
+const Container = styled.div`
   display: flex;
   flex: 0 0 50px;
   flex-direction: row;
@@ -11,57 +11,61 @@ const MailTemplateWrap = styled.div`
   & + & {
     border-top: 2px solid #eceff1;
   }
+`;
 
-  & > div {
-    &:nth-child(1) {
-      flex: 0 0 30px;
-    }
+const ImportantButton = styled.div`
+  cursor: pointer;
+  flex: 0 0 40px;
+  margin-left: 10px;
+`;
 
-    &:nth-child(2) {
-      flex: 0 0 40px;
-      cursor: pointer;
-    }
+const ReadSign = styled.div`
+  flex: 0 0 40px;
+`;
 
-    &:nth-child(3) {
-      flex: 0 0 40px;
-    }
+const DeleteButton = styled.div`
+  cursor: pointer;
+  flex: 0 0 40px;
+  margin-right: 10px;
+`;
 
-    &:nth-child(4) {
-      flex: 0 0 40px;
-      cursor: pointer;
-    }
-
-    &:nth-child(5) {
-      flex: 0 0 150px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      cursor: pointer;
-      color: ${props => (props.isRead ? 'grey' : '#0459C1')};
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    &:nth-child(6) {
-      flex: 1 1;
-      margin-left: 15px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
-      cursor: pointer;
-      color: ${props => (props.isRead ? 'grey' : '#0459C1')};
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-
-    &:nth-child(7) {
-      font-weight: 600;
-      margin: 0 10px;
-      color: grey;
-    }
+const From = styled.div`
+  flex: 0 0 150px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  color: ${props => (props.isRead ? 'grey' : '#0459C1')};
+  &:hover {
+    text-decoration: underline;
   }
+`;
+
+const Selectable = styled.div`
+  display: flex;
+  height: 100%;
+  align-items: center;
+  flex-direction: row;
+  flex: 1 1;
+`;
+
+const Title = styled.div`
+  flex: 1 1;
+  margin-left: 15px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  color: ${props => (props.isRead ? 'grey' : '#0459C1')};
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const Date = styled.div`
+  font-weight: 600;
+  margin: 0 10px;
+  color: grey;
 `;
 
 const Text = styled.div`
@@ -69,4 +73,4 @@ const Text = styled.div`
   color: #0066ff;
 `;
 
-export { MailTemplateWrap, Text };
+export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date, Text };

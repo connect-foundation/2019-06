@@ -5,6 +5,9 @@ const Aside = styled.aside`
   flex-direction: column;
   border-right: 1px solid #ced4da;
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const EllipsisList = styled.div`
