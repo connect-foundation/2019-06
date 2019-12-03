@@ -10,10 +10,10 @@ const getAttachmentsByTemplateNo = async ({ templateNo, email }) => {
   }
 
   const template = attachments[0];
-  const tos = template.to.split(',');
-  const accessibleUser = [template.from, ...tos];
+  const tos = template.to.split(',').map(user => user.trim());
+  const accessibleUsers = [template.from, ...tos];
 
-  if (!accessibleUser.some(user => user === email)) {
+  if (!accessibleUsers.some(user => user === email)) {
     throw new ErrorResponse(ERROR_CODE.PRIVATE_PATH);
   }
 
