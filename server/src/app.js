@@ -60,11 +60,11 @@ app.use((err, req, res, next) => {
 
   let who = '';
   if (req.user) {
-    const copyUser = { ...req.user };
-    delete copyUser.password;
-    delete copyUser.salt;
-    delete copyUser.imap_password;
-    who = `${JSON.stringify(copyUser)}\n`;
+    const copiedUser = { ...req.user };
+    delete copiedUser.password;
+    delete copiedUser.salt;
+    delete copiedUser.imap_password;
+    who = `${JSON.stringify(copiedUser)}\n`;
   }
   log.error(who + err.stack);
 
