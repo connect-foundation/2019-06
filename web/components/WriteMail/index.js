@@ -6,7 +6,6 @@ import InputBody from './InputBody';
 import SubmitButton from './SubmitButton';
 import { WriteMailContextProvider, useDispatchForWM, useStateForWM } from './ContextProvider';
 import DropZone from './DropZone';
-import ReservationDateText from './ReservationDateText';
 
 const WriteMail = () => {
   const props = { useStateForWM, useDispatchForWM };
@@ -16,10 +15,7 @@ const WriteMail = () => {
         <InputReceiver {...props} />
         <InputSubject {...props} />
         <InputBody {...props} />
-        <S.RowContainer>
-          <SubmitButton {...props} />
-          <ReservationDateText {...props} />
-        </S.RowContainer>
+        <SubmitButton {...props} />
         <DropZone {...props} />
       </S.WriteArea>
     </WriteMailContextProvider>

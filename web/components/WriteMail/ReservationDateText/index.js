@@ -14,7 +14,7 @@ const ReservationDateText = ({ useStateForWM, useDispatchForWM }) => {
   };
 
   return (
-    <>
+    <S.RowContainer>
       <S.Text>{date ? transformDateForReservationDateText(date) : ''}</S.Text>
       {date && (
         <CloseIcon
@@ -24,7 +24,7 @@ const ReservationDateText = ({ useStateForWM, useDispatchForWM }) => {
           style={{ paddingTop: '2px', cursor: 'pointer' }}
         />
       )}
-    </>
+    </S.RowContainer>
   );
 };
 

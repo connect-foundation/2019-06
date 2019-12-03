@@ -20,6 +20,7 @@ import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import validator from '../../../utils/validator';
 import ReservationTimePicker from '../ReservationTimePicker';
+import ReservationDateText from '../ReservationDateText';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
@@ -89,16 +90,16 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
 
   return (
     <>
-      {sendMessage}
       <WM_S.RowWrapper>
         <div></div>
-        <div>
+        <S.RowContainer>
           <ButtonGroup variant="outlined" color="default" ref={anchorRef}>
             <Button onClick={handleClick}>보내기</Button>
             <Button color="default" size="small" onClick={handleToggle}>
               <ArrowDropDownIcon />
             </Button>
           </ButtonGroup>
+          <ReservationDateText {...{ useStateForWM, useDispatchForWM }} />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
@@ -125,8 +126,9 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
               </Grow>
             )}
           </Popper>
-        </div>
+        </S.RowContainer>
       </WM_S.RowWrapper>
+      {sendMessage}
       <ReservationTimePicker
         open={modalOpen}
         handleModalClose={handleModalClose}
