@@ -14,7 +14,6 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
 import * as S from './styled';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 import AVAILABLE_EXTENSION from '../../../utils/available-extension';
 
@@ -28,7 +27,7 @@ const checkOverSize = files => {
 
 const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
 
-const DropZone = () => {
+const DropZone = ({ useStateForWM, useDispatchForWM }) => {
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
 

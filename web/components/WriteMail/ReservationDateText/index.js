@@ -1,12 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import CloseIcon from '@material-ui/icons/Close';
 
 import * as S from './styled';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import { UPDATE_DATE } from '../ContextProvider/reducer/action-type';
 import { transformDateForReservationDateText } from '../../../utils/transform-date';
 
-const ReservationDateText = () => {
+const ReservationDateText = ({ useStateForWM, useDispatchForWM }) => {
   const { date } = useStateForWM();
   const dispatch = useDispatchForWM();
 

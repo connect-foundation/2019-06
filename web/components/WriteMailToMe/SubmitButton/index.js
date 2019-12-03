@@ -20,7 +20,7 @@ import { Message } from './Message';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import validator from '../../../utils/validator';
-import ReservationTimePicker from '../ReservationTimePicker';
+import ReservationTimePicker from '../../WriteMail/ReservationTimePicker';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 

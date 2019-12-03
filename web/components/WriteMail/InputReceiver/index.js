@@ -2,11 +2,10 @@ import React, { useRef } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import V from '../../../utils/validator';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import * as SC from '../../../utils/special-characters';
 import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
-const ListOfReceivers = () => {
+const ListOfReceivers = ({ useStateForWM, useDispatchForWM }) => {
   const { receivers } = useStateForWM();
   const dispatch = useDispatchForWM();
   const receiverInput = useRef(null);
