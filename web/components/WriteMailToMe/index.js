@@ -10,7 +10,6 @@ import {
   useStateForWM,
 } from '../WriteMail/ContextProvider';
 import DropZone from '../WriteMail/DropZone';
-import ReservationDateText from '../WriteMail/ReservationDateText';
 import sessionStorage from '../../utils/storage';
 
 const WriteMailToMe = () => {
@@ -21,10 +20,7 @@ const WriteMailToMe = () => {
         <InputReceiver {...props} defaultReceiver={sessionStorage.getUser().email} />
         <InputSubject {...props} />
         <InputBody {...props} />
-        <S.RowContainer>
-          <SubmitButton {...props} />
-          <ReservationDateText {...props} />
-        </S.RowContainer>
+        <SubmitButton {...props} />
         <DropZone {...props} />
       </S.WriteArea>
     </WriteMailContextProvider>
