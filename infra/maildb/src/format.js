@@ -42,15 +42,17 @@ const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
 
 const getQueryToAddAttachment = ({
   filename,
-  content,
+  url,
   contentType,
-  mail_template_id
+  mail_template_id,
+  size
 }) => {
   const valueOfAttachment = {
     name: filename,
-    content,
+    url,
     type: contentType,
-    mail_template_id
+    mail_template_id,
+    size
   };
   return mysql.format(QUERY.INSERT, [TABLE.ATTACHMENT, valueOfAttachment]);
 };
