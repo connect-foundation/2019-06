@@ -1,5 +1,5 @@
 import { initialState } from './initial-state';
-import * as ACTYPE from './action-type';
+import * as ACTYPE from '../../../WriteMail/ContextProvider/reducer/action-type';
 
 export const writeMailToMeReducer = (state, action) => {
   const { type, payload } = action;
