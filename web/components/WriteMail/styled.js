@@ -14,11 +14,6 @@ export const RowWrapper = styled.div`
   margin: 15px;
 `;
 
-export const RowContainer = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
 export const WriteArea = styled.div`
   overflow: scroll;
 `;
