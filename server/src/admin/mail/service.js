@@ -22,12 +22,13 @@ const sendResrvationMail = async mail => {
     const { messageId } = await transporter.sendMail(mailContents);
     const msg = makeMimeMessage({ messageId, mailContents });
     saveSentMail({ user, msg });
+
     mail.reservation_time = null;
     await mail.save();
   } catch (err) {}
 };
 
-const getReservationMails = async () => {
+const sendReservationMails = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
@@ -35,11 +36,12 @@ const getReservationMails = async () => {
   for (const mail of mails) {
     sendResrvationMail(mail);
   }
+
   return {
     mails,
   };
 };
 
 export default {
-  getReservationMails,
+  sendReservationMails,
 };

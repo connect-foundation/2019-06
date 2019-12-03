@@ -4,7 +4,7 @@ const list = async (req, res, next) => {
   let mails;
 
   try {
-    mails = await service.getReservationMails();
+    mails = await service.sendReservationMails();
   } catch (error) {
     return next(error);
   }
