@@ -4,6 +4,7 @@ import service from '../../src/v1/mail/service';
 import DB from '../../src/database';
 import mock from '../../mock/create-dummy-data';
 import bulkMock from '../../mock/create-large-amount-data';
+import ERROR_CODE from '../../src/libraries/exception/error-code';
 
 const names = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 
@@ -135,13 +136,6 @@ describe('Mail Service Test', () => {
   });
 
   describe('getCategories 함수는...', () => {
-    before(async () => {
-      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
-      await DB.sequelize.sync({ force: true });
-      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
-      await mock();
-    });
-
     it('# 1번이 가지고 있는 카테고리들을 반환한다.', async () => {
       const { categories } = await service.getCategories(1);
       categories.map(category => category.name).should.be.eql(names);
@@ -155,6 +149,52 @@ describe('Mail Service Test', () => {
     it('# 3번이 가지고 있는 카테고리들을 반환한다.', async () => {
       const { categories } = await service.getCategories(3);
       categories.map(category => category.name).should.be.eql(names);
+    });
+  });
+
+  describe('updateMail 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 2번 메일의 category_no를 8로 변경한다.', async () => {
+      const props = { category_no: 8 };
+      const mail = await service.updateMail(2, props);
+      mail.should.be.have.properties(props);
+    });
+
+    it('# 2번 메일의 category_no를 없는 번호로 변경하면 ERROR_CODE는 CATEGORY_NOT_FOUND이다.', async () => {
+      try {
+        const props = { category_no: -1 };
+        const mail = await service.updateMail(2, props);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.CATEGORY_NOT_FOUND);
+      }
+    });
+
+    it('# 존재하지 않는 번호가 들어왔을 때는 ERROR_CODE는 MAIL_NOT_FOUND이다.', async () => {
+      try {
+        const mail = await service.updateMail(10001, {});
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
+    });
+
+    it('# 5번 메일을 중요 메일로 변경한다.', async () => {
+      const props = { is_important: true };
+      const mail = await service.updateMail(5, props);
+      mail.should.be.have.properties(props);
+    });
+
+    it('# 5번 메일을 읽은 메일로 변경한다.', async () => {
+      const props = { is_read: true };
+      const mail = await service.updateMail(5, props);
+      mail.should.be.have.properties(props);
     });
   });
 });
