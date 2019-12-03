@@ -59,7 +59,7 @@ const multipartUpload = ({ buffer, originalname }) => {
 const download = path => {
   const file = S3.getObject({
     Bucket: STORAGE_BUCKET,
-    Key: BASE_PATH + path,
+    Key: path,
   }).promise();
 
   return file;
