@@ -68,9 +68,10 @@ const Date = styled.div`
   color: grey;
 `;
 
-const Text = styled.div`
+const Text = styled.span`
   width: 50px;
   color: #0066ff;
+  margin-right: 10px;
 `;
 
 export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date, Text };
