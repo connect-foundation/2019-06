@@ -1,21 +1,24 @@
 import React from 'react';
 import * as S from '../WriteMail/styled';
+import InputReceiver from '../WriteMail/InputReceiver';
 import InputSubject from '../WriteMail/InputSubject';
 import InputBody from '../WriteMail/InputBody';
-import SubmitButton from './SubmitButton';
+import SubmitButton from '../WriteMail/SubmitButton';
 import {
-  WriteMailToMeContextProvider,
-  useWriteMailToMeState,
-  useWriteMailToMeDispatch,
-} from './ContextProvider';
+  WriteMailContextProvider,
+  useDispatchForWM,
+  useStateForWM,
+} from '../WriteMail/ContextProvider';
 import DropZone from '../WriteMail/DropZone';
 import ReservationDateText from '../WriteMail/ReservationDateText';
+import sessionStorage from '../../utils/storage';
 
 const WriteMailToMe = () => {
-  const props = { useWriteMailToMeState, useWriteMailToMeDispatch };
+  const props = { useStateForWM, useDispatchForWM };
   return (
-    <WriteMailToMeContextProvider>
+    <WriteMailContextProvider>
       <S.WriteArea>
+        <InputReceiver {...props} defaultReceiver={sessionStorage.getUser().email} />
         <InputSubject {...props} />
         <InputBody {...props} />
         <S.RowContainer>
@@ -24,7 +27,7 @@ const WriteMailToMe = () => {
         </S.RowContainer>
         <DropZone {...props} />
       </S.WriteArea>
-    </WriteMailToMeContextProvider>
+    </WriteMailContextProvider>
   );
 };
 
