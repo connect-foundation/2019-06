@@ -36,16 +36,13 @@ const useStyles = makeStyles(theme => ({
 
 const splitMoment = value =>
   moment(value)
-    .utc()
     .format('YYYY-MM-DD')
     .split('-');
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
   const [nowYear, nowMonth, nowDay] = splitMoment();
-  const time = moment(createdAt)
-    .utc()
-    .format('HH:mm');
+  const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
   if (year !== nowYear) date = `${year}-${month}-${day}`;
@@ -57,9 +54,20 @@ const MailTemplate = ({ mail, selected, index }) => {
     state: { mails },
   } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
-  const { is_important, is_read, MailTemplate, no } = mail;
+
+  const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
   const { from, to, subject, text, createdAt, no: mailTemplateNo } = MailTemplate;
-  const mailToRead = { from, to, subject, text, createdAt, is_important, no, mailTemplateNo };
+  const mailToRead = {
+    from,
+    to,
+    subject,
+    text,
+    createdAt,
+    is_important,
+    no,
+    mailTemplateNo,
+    reservation_time,
+  };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
@@ -92,6 +100,7 @@ const MailTemplate = ({ mail, selected, index }) => {
       <div>{from}</div>
       <div onClick={handleSubjectClick}>{subject}</div>
       <div>{getDateOrTime(createdAt)}</div>
+      <S.Text>{reservation_time && '예약'}</S.Text>
     </S.MailTemplateWrap>
   );
 };

@@ -55,4 +55,10 @@ const ReadFrame = styled.div`
   flex: 1 1;
 `;
 
-export { Container, ReadArea, Tools, TitleView, Subject, Address, ReadFrame };
+const Text = styled.span`
+  width: 50px;
+  color: #0066ff;
+  margin-right: 15px;
+`;
+
+export { Container, ReadArea, Tools, TitleView, Subject, Address, ReadFrame, Text };

@@ -11,11 +11,9 @@ import FileList from './FileList';
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const [attachments, setAttachments] = useState(null);
-  const { to, from, subject, createdAt, text, no, mailTemplateNo } = state.mail;
+  const { to, from, subject, createdAt, text, no, mailTemplateNo, reservation_time } = state.mail;
   const receivers = to.replace(',', ', ');
-  const date = moment(createdAt)
-    .utc()
-    .format('YYYY-MM-DD HH:mm');
+  const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
 
   useEffect(() => {
     const url = `/mail/template/${mailTemplateNo}/attachments`;
@@ -32,7 +30,10 @@ const ReadMail = () => {
           <S.Subject>
             <StarBorder />
             <h3>{subject}</h3>
-            <div>{date}</div>
+            <div>
+              <S.Text>{reservation_time && '예약'}</S.Text>
+              <span>{date}</span>
+            </div>
           </S.Subject>
           <S.Address>
             <span>보낸 사람</span>
