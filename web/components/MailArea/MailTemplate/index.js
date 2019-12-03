@@ -81,9 +81,9 @@ const moveMailToWastebasket = async (mailNo, state, dispatch) => {
 const MailTemplate = ({ mail, selected, index }) => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
-  const { is_important, is_read, MailTemplate, no } = mail;
+  const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
   const { from, to, subject, text, createdAt } = MailTemplate;
-  const mailToRead = { from, to, subject, text, createdAt, is_important, no };
+  const mailToRead = { from, to, subject, text, createdAt, is_important, no, reservation_time };
   const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
   const handleDeleteClick = () => moveMailToWastebasket(no, state, dispatch);
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));

@@ -8,11 +8,9 @@ import ToolGroup from './ToolGroup';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
-  const { to, from, subject, createdAt, text, no } = state.mail;
+  const { to, from, subject, createdAt, text, no, reservation_time } = state.mail;
   const receivers = to.replace(',', ', ');
-  const date = moment(createdAt)
-    .utc()
-    .format('YYYY-MM-DD HH:mm');
+  const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
 
   return (
     <S.Container>
@@ -22,7 +20,10 @@ const ReadMail = () => {
           <S.Subject>
             <StarBorder />
             <h3>{subject}</h3>
-            <div>{date}</div>
+            <div>
+              <S.Text>{reservation_time && '예약'}</S.Text>
+              <span>{date}</span>
+            </div>
           </S.Subject>
           <S.Address>
             <span>보낸 사람</span>

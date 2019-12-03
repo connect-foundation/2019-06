@@ -68,4 +68,9 @@ const Date = styled.div`
   color: grey;
 `;
 
-export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date };
+const Text = styled.div`
+  width: 50px;
+  color: #0066ff;
+`;
+
+export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date, Text };
