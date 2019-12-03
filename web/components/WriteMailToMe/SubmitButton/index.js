@@ -14,9 +14,8 @@ import {
 import axios from 'axios';
 import * as WM_S from '../../WriteMail/styled';
 import * as S from '../../WriteMail/SubmitButton/styled';
-// import { useWriteMailToMeState, useWriteMailToMeDispatch } from '../ContextProvider';
 import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
-import { Message } from './Message';
+import { Message } from '../../WriteMail/SubmitButton/Message';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import validator from '../../../utils/validator';
