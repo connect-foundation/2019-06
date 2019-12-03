@@ -15,7 +15,7 @@ const execute = async fn => {
   return response;
 };
 
-const BASE_URL = 'http://localhost/v1';
+const BASE_URL = 'http://localhost/';
 axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
 const defaultOptions = {
