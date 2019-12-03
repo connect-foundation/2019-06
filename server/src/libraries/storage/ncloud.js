@@ -65,4 +65,12 @@ const download = path => {
   return file;
 };
 
-export { download, multipartUpload };
+const getStream = path => {
+  const stream = S3.getObject({
+    Bucket: STORAGE_BUCKET,
+    Key: path,
+  }).createReadStream();
+  return stream;
+};
+
+export { download, multipartUpload, getStream };
