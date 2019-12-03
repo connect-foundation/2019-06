@@ -49,6 +49,13 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Attachment.findAttachmentAndMailTemplateByPk = no => {
+    return Attachment.findByPk(no, {
+      include: [{ model: sequelize.models.MailTemplate }],
+      raw: true,
+    });
+  };
+
   return Attachment;
 };
 

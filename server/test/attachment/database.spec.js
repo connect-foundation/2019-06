@@ -76,4 +76,9 @@ describe('attachment DB test..', () => {
       attachment.should.not.have.properties('url');
     });
   });
+
+  it('findAttachmentAndMailTemplateByPk MailTemplate을 갖는다.', async () => {
+    const attachment = await DB.Attachment.findAttachmentAndMailTemplateByPk(1);
+    attachment.should.have.properties('MailTemplate.no');
+  });
 });

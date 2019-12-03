@@ -46,9 +46,16 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Category.findOneByCategoryNoAndUserNoAndName = (no, user_no, name) => {
+  Category.findOneByNoAndUserNoAndName = (no, user_no, name) => {
     return Category.findOne({
       where: { no, user_no, name },
+    });
+  };
+
+  Category.findOneByNoAndUserNo = (no, user_no) => {
+    return Category.findOne({
+      where: { no, user_no },
+      raw: true,
     });
   };
 

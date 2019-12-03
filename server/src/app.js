@@ -49,7 +49,7 @@ app.use(passport.session());
 app.use(helmet());
 app.set('trust proxy', 1);
 
-app.use('/v1', v1);
+app.use('/', v1);
 app.use('/admin', admin);
 
 app.use((req, res, next) => next(PAGE_NOT_FOUND_EXCEPTION));

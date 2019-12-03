@@ -28,7 +28,7 @@ describe('회원등록 POST /users는...', () => {
 
   it('# 성공할 경우 상태코드는 201이며 json을 리턴한다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send(user1)
       .expect('Content-Type', /json/)
       .expect(201, done);
@@ -36,14 +36,14 @@ describe('회원등록 POST /users는...', () => {
 
   it('# 중복된 id가 있을 경우 상태코드는 409이다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send(user1)
       .expect(409, done);
   });
 
   it('# 성공시 요청한 유저정보를 포함한 내용을 반환한다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send(user2)
       .end((err, { body: { newUser } }) => {
         newUser.should.be.have
@@ -57,7 +57,7 @@ describe('회원등록 POST /users는...', () => {
 
   it('올바르지 않은 필드를 줄 경우 상태코드는 400이다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         password: 'test',
@@ -67,7 +67,7 @@ describe('회원등록 POST /users는...', () => {
 
   it('이름을 공백으로 줄 경우 상태코드는 400이다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         name: '  ',
@@ -77,7 +77,7 @@ describe('회원등록 POST /users는...', () => {
 
   it('올바르지 않은 필드를 줄 경우 fieldErrors배열의 길이는 0이 아니다.', done => {
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         password: 'test',
@@ -92,7 +92,7 @@ describe('회원등록 POST /users는...', () => {
   it('password의 필드가 올바르지 않는경우 fieldErrors를 통해 상세히 알린다.', done => {
     const invalidPassword = 'test';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         password: invalidPassword,
@@ -111,7 +111,7 @@ describe('회원등록 POST /users는...', () => {
   it('# id 필드의 길이가 5이하인 경우 실패한다.', done => {
     const id = 'test';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         id,
@@ -130,7 +130,7 @@ describe('회원등록 POST /users는...', () => {
   it('# id 필드의 길이가 20초과 경우 실패한다. ', done => {
     const id = 'a'.repeat(21);
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         id,
@@ -149,7 +149,7 @@ describe('회원등록 POST /users는...', () => {
   it('# id 필드에 특수문자가 있는경우 실패한다.', done => {
     const id = 'ㄴㅁㅇㄴㅁ@ㄴㅇㅁㄴ';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         id,
@@ -166,7 +166,7 @@ describe('회원등록 POST /users는...', () => {
   it('# sub_email 필드의 형식이 올바르지 않은경우 실패한다.', done => {
     const sub_email = '@daitnu.com';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         sub_email,
@@ -183,7 +183,7 @@ describe('회원등록 POST /users는...', () => {
   it('# sub_email 필드의 형식이 올바르지 않은경우 실패한다. 2', done => {
     const sub_email = 'a@addsada.a';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         sub_email,
@@ -200,7 +200,7 @@ describe('회원등록 POST /users는...', () => {
   it('# sub_email 필드의 형식이 올바르지 않은경우 실패한다. 3', done => {
     const sub_email = 'a@.a';
     request(app)
-      .post('/v1/users')
+      .post('/users')
       .send({
         ...user1,
         sub_email,
@@ -226,13 +226,13 @@ describe('POST /users/search는...', () => {
 
   it('# 잘못된 id, pw외의 다른 type을 query로 줄 경우 상태코드는 400이다', done => {
     request(app)
-      .post('/v1/users/search?type=test')
+      .post('/users/search?type=test')
       .expect(400, done);
   });
 
   it('# 잘못된 id, pw외의 다른 type을 query로 줄 경우 실패한다', done => {
     request(app)
-      .post('/v1/users/search?type=test')
+      .post('/users/search?type=test')
       .send(user1)
       .end((err, { body }) => {
         const { fieldErrors } = body;
@@ -243,14 +243,14 @@ describe('POST /users/search는...', () => {
 
   it('# type이 id이고 body로 email을 주지 않을 경우 상태코드는 400이다.', done => {
     request(app)
-      .post('/v1/users/search?type=id')
+      .post('/users/search?type=id')
       .send()
       .expect(400, done);
   });
 
   it('# type이 id이고 body로 email을 주지 않을 경우 실패한다.', done => {
     request(app)
-      .post('/v1/users/search?type=id')
+      .post('/users/search?type=id')
       .send()
       .end((err, { body }) => {
         const { fieldErrors } = body;
@@ -261,42 +261,42 @@ describe('POST /users/search는...', () => {
 
   it('# 아이디를 찾을 때 가입에 사용하지 않은 메일을 넘겨줄 경우 상태코드는 404이다.', done => {
     request(app)
-      .post('/v1/users/search?type=id')
+      .post('/users/search?type=id')
       .send({ email: 'daitnu@daitnu22.com' })
       .expect(404, done);
   });
 
   it('# 비밀번호를 찾을 때 가입에 사용하지 않은 메일을 넘겨줄 경우 상태코드는 404이다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ id: user1.id, email: 'daitnu@daitnu22.com' })
       .expect(404, done);
   });
 
   it('# 비밀번호를 찾을 때 가입을 하지 않은 아이디를 넘겨줄 경우 상태코드는 404이다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ id: 'hahoho', email: user1.sub_email })
       .expect(404, done);
   });
 
   it('# type이 pw이고 body로 email을 주지 않을 경우 상태코드는 400이다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ id: 'hihihi' })
       .expect(400, done);
   });
 
   it('# type이 pw이고 body로 id를 주지 않을 경우 상태코드는 400이다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ email: 'test@test.com' })
       .expect(400, done);
   });
 
   it('# 비밀번호 찾을 때 body로 email을 주지 않을 경우 실패한다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ id: 'hihihi' })
       .end((err, { body }) => {
         const { fieldErrors } = body;
@@ -307,7 +307,7 @@ describe('POST /users/search는...', () => {
 
   it('# 비밀번호 찾을 때 body로 id를 주지 않을 경우 실패한다.', done => {
     request(app)
-      .post('/v1/users/search?type=pw')
+      .post('/users/search?type=pw')
       .send({ email: 'test@test.com' })
       .end((err, { body }) => {
         const { fieldErrors } = body;
@@ -328,7 +328,7 @@ describe('PATCH /users/password는...', () => {
   describe('로그인 하지 않은 상태로..', () => {
     it('비밀번호를 업데이트 하고자 하면 401에러를 반환한다', done => {
       request(app)
-        .patch('/v1/users/password')
+        .patch('/users/password')
         .send({
           password: '12345678',
         })
@@ -345,14 +345,14 @@ describe('PATCH /users/password는...', () => {
 
     before(done => {
       authenticatedUser
-        .post('/v1/auth/login')
+        .post('/auth/login')
         .send(userCredentials)
         .expect(200, done);
     });
 
     it('유효한 비밀번호가 아니라면 400 에러를 반환한다', done => {
       authenticatedUser
-        .patch('/v1/users/password')
+        .patch('/users/password')
         .send({
           password: '1234',
         })
@@ -361,7 +361,7 @@ describe('PATCH /users/password는...', () => {
 
     it('유효한 비밀번호라면 204를 반환한다', done => {
       authenticatedUser
-        .patch('/v1/users/password')
+        .patch('/users/password')
         .send({
           password: '87654321',
         })
@@ -377,16 +377,16 @@ describe('PATCH /users/password는...', () => {
     const authenticatedUser = request.agent(app);
 
     before(async () => {
-      await authenticatedUser.post('/v1/auth/login').send(userCredentials);
+      await authenticatedUser.post('/auth/login').send(userCredentials);
 
-      await authenticatedUser.patch('/v1/users/password').send({
+      await authenticatedUser.patch('/users/password').send({
         password: '87654321',
       });
     });
 
     it('변경한 비밀번호가 아니라면 401 에러를 반환한다', done => {
       request(app)
-        .post('/v1/auth/login')
+        .post('/auth/login')
         .send({
           id: 'rooot',
           password: '12345678',
@@ -396,37 +396,12 @@ describe('PATCH /users/password는...', () => {
 
     it('변경한 비밀번호라면 200을 반환한다', done => {
       request(app)
-        .post('/v1/auth/login')
+        .post('/auth/login')
         .send({
           id: 'rooot',
           password: '87654321',
         })
         .expect(200, done);
-    });
-  });
-
-  describe('카테고리 요청시...', () => {
-    const userCredentials = {
-      id: 'rooot',
-      password: '87654321',
-    };
-    const authenticatedUser = request.agent(app);
-
-    before(done => {
-      authenticatedUser
-        .post('/v1/auth/login')
-        .send(userCredentials)
-        .expect(200, done);
-    });
-
-    it('로그인한 상태라면 200을 반환한다', done => {
-      authenticatedUser.get('/v1/mail/categories').expect(200, done);
-    });
-
-    it('로그인하지 않은 상태로 접근하고자 하면 401 에러를 반환한다', done => {
-      request(app)
-        .get('/v1/mail/categories')
-        .expect(401, done);
     });
   });
 });
