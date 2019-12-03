@@ -169,7 +169,7 @@ const Aside = () => {
 
   const messageSnackbarProps = {
     snackbarState,
-    setSnackbarState,
+    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
   };
 
   return (

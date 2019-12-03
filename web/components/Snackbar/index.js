@@ -9,14 +9,10 @@ import MessageSnackbarContentWrapper from './content';
  * @param {Boolean} snackbar.snackbarState.open - snackbarState.open
  * @param {String} snackbar.snackbarState.variant - 'error' || 'success' || 'warning'
  * @param {String} snackbar.snackbarState.contentText - snackbar에 넣을 text
- * @param {Function} snackbar.setSnackbarState - setState for snackbar
- * @param {Number} autoHideDuration - 자동 닫힘 시간 (단위 - ms) default: 5000
+ * @param {Function} snackbar.handleClose - 스낵바를 받아줄 close 함수를 넣어주세요
+ * @param {Number} snackbar.autoHideDuration - 자동 닫힘 시간 (단위 - ms) default: 5000
  */
-const MessageSnackbar = ({ snackbarState, setSnackbarState, autoHideDuration = 5000 }) => {
-  const handleClose = () => {
-    setSnackbarState({ ...snackbarState, open: false });
-  };
-
+const MessageSnackbar = ({ snackbarState, handleClose, autoHideDuration = 5000 }) => {
   return (
     <Snackbar
       anchorOrigin={{
