@@ -13,7 +13,7 @@ const FileList = ({ files }) => {
     </S.FlexColumnItem>
   ));
 
-  const handleClickDelgation = async e => {
+  const handleDownloadClick = async e => {
     e.preventDefault();
     let { id, innerText } = e.target;
     if (!id || id === '') {
@@ -37,7 +37,7 @@ const FileList = ({ files }) => {
 
   const { length } = fileList;
   return (
-    <GS.FlexColumnWrap onClick={handleClickDelgation}>
+    <GS.FlexColumnWrap onClick={handleDownloadClick}>
       <S.FlexColumnHeader>
         <AttachFileIcon />
         첨부파일 {length}개
