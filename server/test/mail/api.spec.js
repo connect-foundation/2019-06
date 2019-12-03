@@ -273,5 +273,12 @@ describe('Mail api test...', () => {
         .send({ props: { is_read: true } })
         .expect(200, done);
     });
+
+    it('# 메일 1번을 is_read가 string이면 400', done => {
+      authenticatedUser
+        .patch('/v1/mail/1')
+        .send({ props: { is_read: 'is_read' } })
+        .expect(400, done);
+    });
   });
 });
