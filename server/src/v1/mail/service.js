@@ -7,7 +7,7 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail, saveToMailbox } from '../../libraries/save-to-infra';
+import { saveToMailbox } from '../../libraries/save-to-infra';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
@@ -132,13 +132,14 @@ const wroteToMe = async (mailContents, user) => {
 };
 
 const sendMail = async (mailContents, user) => {
+  const mailboxName = SENT_MAILBOX_NAME;
   const transporter = nodemailer.createTransport(U.getTransport(user));
   await DB.sequelize.transaction(
     async transaction => await saveMail(SENT_MAILBOX_NAME, mailContents, transaction, user.no),
   );
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
-  saveSentMail({ user, msg });
+  saveToMailbox({ user, msg, mailboxName });
 };
 
 const saveReservationMail = async (mailContents, user, reservationTime) => {

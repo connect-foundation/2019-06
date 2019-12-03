@@ -1,7 +1,5 @@
 import Imap from 'imap';
 
-const PREFIX = '';
-const SENT_MAILBOX = `${PREFIX}보낸메일함`;
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 
 const getImap = ({ email, password }) => {
@@ -27,17 +25,6 @@ const connectImap = ({ email, password }, callback) => {
   });
 
   imap.connect();
-};
-
-export const saveSentMail = ({ user, msg }) => {
-  connectImap(user, imap => {
-    imap.openBox(SENT_MAILBOX, false, err => {
-      if (err) {
-        throw err;
-      }
-      imap.append(msg.toString());
-    });
-  });
 };
 
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
