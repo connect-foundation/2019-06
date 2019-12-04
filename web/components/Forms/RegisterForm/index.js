@@ -11,7 +11,7 @@ import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
 import request from '../../../utils/request';
 import { setMessage } from '../../../contexts/reducer';
-import { AppDisapthContext } from '../../../contexts';
+import { AppDispatchContext } from '../../../contexts';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -41,7 +41,7 @@ const initialErrorState = {
 
 const RegisterForm = () => {
   const classes = useStyles();
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
 
   const [values, setValues] = useState(initialInputState);
   const [errors, setErrorMsg] = useState(initialErrorState);

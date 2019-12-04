@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
-import { AppDisapthContext } from '../../../contexts';
+import { AppDispatchContext } from '../../../contexts';
 import { handlePageNumberClick } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
@@ -37,7 +37,7 @@ const Paging = ({ paging }) => {
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
   const lastIndex = Math.floor(totalPage / PAGE_LIST_NUM);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
 
   const classes = useStyles();
 

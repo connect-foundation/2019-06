@@ -3,12 +3,12 @@ import React, { useContext } from 'react';
 import * as S from './styled';
 
 import ProfileLink from '../ProfileLink';
-import { AppDisapthContext } from '../../contexts';
+import { AppDispatchContext } from '../../contexts';
 import { handleCategoryClick } from '../../contexts/reducer';
 import MailArea from '../MailArea';
 
 const Header = ({ brand }) => {
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const handleAtagClick = () => dispatch(handleCategoryClick(0, <MailArea />));
   return (
     <S.Header>

@@ -10,8 +10,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import { handleMailChecked } from '../../../contexts/reducer';
-import { AppDisapthContext, AppStateContext } from '../../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
+
+const WASTEBASKET_NAME = '휴지통';
 
 const useStyles = makeStyles(theme => ({
   delete: {
@@ -49,11 +51,11 @@ const getDateOrTime = createdAt => {
 };
 
 const MailTemplate = ({ mail, selected, index }) => {
-  const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { state: mails, category, categoryNoByName } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, MailTemplate, reservation_time } = mail;
   const { from, subject, createdAt } = MailTemplate;
-  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
 
   return (

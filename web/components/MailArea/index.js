@@ -3,7 +3,7 @@ import React, { useState, useContext, useCallback } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
 import { handleMailClick, handleMailsChange, initCheckerInTools } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
@@ -77,7 +77,7 @@ const updateMail = async (no, props, setSnackbarState) => {
 
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
