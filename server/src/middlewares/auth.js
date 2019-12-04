@@ -4,7 +4,6 @@ import ErrorCode from '../libraries/exception/error-code';
 const { ADMIN_KEY } = process.env;
 
 const isAuth = (req, res, next) => {
-  // if (!req.isAuthenticated()) {
   if (!req.user) {
     return next(new ErrorResponse(ErrorCode.UNAUTHORIZED));
   }
