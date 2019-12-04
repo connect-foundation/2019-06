@@ -44,8 +44,8 @@ const ReadMail = () => {
             <div>{receivers}</div>
           </S.Address>
         </S.TitleView>
-        {attachments && <FileList files={attachments} />}
         <S.ReadFrame>{text}</S.ReadFrame>
+        {attachments && <FileList files={attachments} />}
       </S.ReadArea>
       <PageMoveButtonArea no={no} />
     </S.Container>

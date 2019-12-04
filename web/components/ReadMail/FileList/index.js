@@ -15,7 +15,7 @@ const FileList = ({ files }) => {
     return (
       <S.FlexColumnItem>
         <File file={file} key={`file-${file.no}`} /> {prettyBytes(file.size)}
-        {isImage && <img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px  ' }} />}
+        {isImage && <img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px' }} />}
       </S.FlexColumnItem>
     );
   });
