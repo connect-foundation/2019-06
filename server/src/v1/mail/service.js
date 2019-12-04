@@ -1,18 +1,20 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
+import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail } from '../../libraries/save-to-infra';
+import { saveToMailbox } from '../../libraries/save-to-infra';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 const WASTEBASKET_NAME = '휴지통';
+const WROTE_TO_ME_MAILBOX_NAME = '내게쓴메일함';
 
 const DEFAULT_MAIL_QUERY_OPTIONS = {
   category: 0,
@@ -99,7 +101,7 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });
 };
 
-const saveMail = async (mailContents, transaction, userNo, reservationTime = null) => {
+const saveMail = async (mailboxName, mailContents, transaction, userNo, reservationTime = null) => {
   const mailTemplateResult = await DB.MailTemplate.create(
     { ...mailContents, to: mailContents.to.join(','), createdAt: reservationTime },
     { transaction },
@@ -107,7 +109,7 @@ const saveMail = async (mailContents, transaction, userNo, reservationTime = nul
   const mailTemplate = mailTemplateResult.get({ plain: true });
 
   await saveAttachments(mailContents.attachments, mailTemplate.no, transaction);
-  const userCategory = await DB.Category.findOneByUserNoAndName(userNo, SENT_MAILBOX_NAME);
+  const userCategory = await DB.Category.findOneByUserNoAndName(userNo, mailboxName);
   await DB.Mail.create(
     {
       owner: userNo,
@@ -119,19 +121,31 @@ const saveMail = async (mailContents, transaction, userNo, reservationTime = nul
   );
 };
 
+const wroteToMe = async (mailContents, user) => {
+  const mailboxName = WROTE_TO_ME_MAILBOX_NAME;
+  const messageId = `${uuidv4()}@daitnu.com`;
+  const msg = makeMimeMessage({ messageId, mailContents });
+  await DB.sequelize.transaction(
+    async transaction => await saveMail(mailboxName, mailContents, transaction, user.no),
+  );
+  saveToMailbox({ user, msg, mailboxName });
+};
+
 const sendMail = async (mailContents, user) => {
+  const mailboxName = SENT_MAILBOX_NAME;
   const transporter = nodemailer.createTransport(U.getTransport(user));
   await DB.sequelize.transaction(
-    async transaction => await saveMail(mailContents, transaction, user.no),
+    async transaction => await saveMail(mailboxName, mailContents, transaction, user.no),
   );
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
-  saveSentMail({ user, msg });
+  saveToMailbox({ user, msg, mailboxName });
 };
 
 const saveReservationMail = async (mailContents, user, reservationTime) => {
   await DB.sequelize.transaction(
-    async transaction => await saveMail(mailContents, transaction, user.no, reservationTime),
+    async transaction =>
+      await saveMail(SENT_MAILBOX_NAME, mailContents, transaction, user.no, reservationTime),
   );
 };
 
@@ -162,6 +176,7 @@ const updateMail = async (no, props) => {
 };
 
 export default {
+  wroteToMe,
   getMailsByOptions,
   sendMail,
   getQueryByOptions,
