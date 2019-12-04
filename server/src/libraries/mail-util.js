@@ -26,7 +26,7 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
     from,
     to,
     subject,
-    text,
+    html: text,
     attachments,
     dsn,
   };
