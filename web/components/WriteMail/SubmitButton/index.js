@@ -86,6 +86,7 @@ const SubmitButton = () => {
   };
 
   const handleModalClose = () => {
+    setOpen(false);
     setModalOpen(false);
   };
 
