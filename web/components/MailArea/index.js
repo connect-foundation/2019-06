@@ -59,6 +59,7 @@ const loadNewMails = async (query, dispatch, setSnackbarState) => {
       variant: 'error',
       contentText: SNACKBAR_MSG.MAILS_LOAD_FAIL,
     });
+    return;
   }
   dispatch(handleMailsChange({ ...data }));
 };
