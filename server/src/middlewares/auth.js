@@ -12,7 +12,7 @@ const isAuth = (req, res, next) => {
 
 const isAdmin = (req, res, next) => {
   if (!req.body.key || req.body.key !== ADMIN_KEY) {
-    return next(new ErrorResponse(ErrorCode.PAGE_NOT_FOUND));
+    return next(new ErrorResponse(ErrorCode.PRIVATE_PATH));
   }
 
   return next();
