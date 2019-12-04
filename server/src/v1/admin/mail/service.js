@@ -2,11 +2,11 @@
 /* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
 
-import DB from '../../database/index';
-import { aesDecrypt } from '../../libraries/crypto';
-import U from '../../libraries/mail-util';
-import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveSentMail } from '../../libraries/save-to-infra';
+import DB from '../../../database/index';
+import { aesDecrypt } from '../../../libraries/crypto';
+import U from '../../../libraries/mail-util';
+import { makeMimeMessage } from '../../../libraries/mimemessage';
+import { saveSentMail } from '../../../libraries/save-to-infra';
 
 const ALLOWED_TIME = 10;
 

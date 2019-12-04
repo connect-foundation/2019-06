@@ -9,12 +9,10 @@ import cors from 'cors';
 import morgan from 'morgan';
 import COOKIE_CONFIG from './config/cookie';
 import v1 from './v1/index';
-import admin from './admin';
 import ErrorResponse from './libraries/exception/error-response';
 import ERROR_CODE from './libraries/exception/error-code';
 import corsOptions from './config/cors-options';
 import log from './libraries/logger/winston';
-import { isAdmin } from './middlewares/auth';
 
 dotenv.config();
 morgan.format(
@@ -23,7 +21,7 @@ morgan.format(
 );
 
 const app = express();
-const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS, NODE_ENV } = process.env;
+const { SESSION_SECRET, COOKIE_SECRET, NODE_ENV } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
@@ -51,7 +49,6 @@ app.use(helmet());
 app.set('trust proxy', 1);
 
 app.use('/', v1);
-app.use('/admin', isAdmin, admin);
 
 app.use((req, res, next) => next(PAGE_NOT_FOUND_EXCEPTION));
 
