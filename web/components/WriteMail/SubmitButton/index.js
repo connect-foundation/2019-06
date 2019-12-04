@@ -27,7 +27,7 @@ import Snackbar, { SNACKBAR_VARIANT, snackbarInitState, getSnackbarState } from 
 const SNACKBAR_MSG = {
   ERROR: {
     AFTER_DATE: ERROR_CANNOT_RESERVATION,
-    LENGTH: '메일함 이름은 최대 20자를 넘을 수 없습니다.',
+    EMAIL_VALIDATION: '이메일 형식이 올바르지 않은 것이 존재합니다.',
     REGEX: '메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다.',
   },
   SUCCESS: {
@@ -48,6 +48,13 @@ const SubmitButton = () => {
   const anchorRef = React.useRef(null);
 
   const handleClick = async () => {
+    if (!receivers.every(receiver => validator.validate('email', receiver))) {
+      setSnackbarState(
+        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
+      );
+      return;
+    }
+
     setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING));
     const formData = new FormData();
     receivers.forEach(r => {
