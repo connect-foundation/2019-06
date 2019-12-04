@@ -131,8 +131,7 @@ const model = (sequelize, DataTypes) => {
   };
 
   User.findOneByNo = no => {
-    return User.findOne({
-      where: { no },
+    return User.findByPk(no, {
       raw: true,
     });
   };
