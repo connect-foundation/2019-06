@@ -14,7 +14,14 @@ const FileList = ({ files }) => {
     const isImage = file.type.split('/')[0] === 'image';
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
     if (isImage) {
-      imageList.push(<img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px' }} />);
+      imageList.push(
+        <S.ImageColumn>
+          <S.ImageWrapper onClick={() => window.open(src, '_blank')}>
+            <S.Image src={src} alt={file.name} />
+          </S.ImageWrapper>
+          <S.ImageName id={file.no}>{file.name}</S.ImageName>
+        </S.ImageColumn>,
+      );
     }
     return (
       <S.FlexColumnItem>
@@ -53,7 +60,7 @@ const FileList = ({ files }) => {
         첨부파일 {length}개
       </S.FlexColumnHeader>
       {fileList}
-      {imageList}
+      <S.ImageGrid>{imageList}</S.ImageGrid>
     </GS.FlexColumnWrap>
   );
 };
