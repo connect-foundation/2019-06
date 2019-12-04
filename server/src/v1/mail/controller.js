@@ -53,16 +53,21 @@ const write = async (req, res, next) => {
       attachments[i].url = uploadResult[i].key;
     }
   }
-
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
 
   try {
-    if (!reservationTime) {
-      await service.sendMail(mailContents, req.user);
+    if (from === to[0] && to.length === 1) {
+      // 내게쓰기
+      await service.wroteToMe(mailContents, req.user);
     } else {
-      dateValidator.validateDate(reservationTime);
-      const date = strToDate(reservationTime);
-      await service.saveReservationMail(mailContents, req.user, date);
+      // eslint-disable-next-line no-lonely-if
+      if (!reservationTime) {
+        await service.sendMail(mailContents, req.user);
+      } else {
+        dateValidator.validateDate(reservationTime);
+        const date = strToDate(reservationTime);
+        await service.saveReservationMail(mailContents, req.user, date);
+      }
     }
   } catch (error) {
     return next(error);

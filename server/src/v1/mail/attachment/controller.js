@@ -16,6 +16,24 @@ const downloadAttachment = async (req, res, next) => {
   return res.end(attachment.Body);
 };
 
+const previewAttachment = async (req, res, next) => {
+  const { no } = req.params;
+  const { email } = req.user;
+
+  let streamAndMimetype;
+  try {
+    validateNo(no);
+    streamAndMimetype = await service.getAttachmentStream({ attachmentNo: no, email });
+  } catch (error) {
+    return next(error);
+  }
+
+  const { stream, mimetype } = streamAndMimetype;
+  res.setHeader('Content-type', mimetype);
+  return stream.pipe(res);
+};
+
 export default {
   downloadAttachment,
+  previewAttachment,
 };

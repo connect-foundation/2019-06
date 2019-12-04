@@ -23,6 +23,10 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      size: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+      },
     },
     {
       freezeTableName: true,

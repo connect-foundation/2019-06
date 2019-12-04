@@ -39,6 +39,7 @@ const bulkCreateAttachment = async () => {
       type: 'image',
       name: `attachment-${i + 1}`,
       url: 'url',
+      size: i * 10,
     };
 
     attachments.push(attachment);
