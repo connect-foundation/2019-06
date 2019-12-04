@@ -28,7 +28,7 @@ const SNACKBAR_MSG = {
   ERROR: {
     AFTER_DATE: ERROR_CANNOT_RESERVATION,
     EMAIL_VALIDATION: '이메일 형식이 올바르지 않은 것이 존재합니다.',
-    REGEX: '메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다.',
+    INPUT_RECEIVERS: '받는 이메일을 입력해주세요.',
   },
   SUCCESS: {
     SEND: '메일이 성공적으로 전송되었습니다.',
@@ -48,6 +48,13 @@ const SubmitButton = () => {
   const anchorRef = React.useRef(null);
 
   const handleClick = async () => {
+    if (receivers.length === 0) {
+      setSnackbarState(
+        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
+      );
+      return;
+    }
+
     if (!receivers.every(receiver => validator.validate('email', receiver))) {
       setSnackbarState(
         getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
