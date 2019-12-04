@@ -123,6 +123,8 @@ const MailArea = () => {
 
     switch (action) {
       case ACTION.MARK:
+        await updateMail(mail.no, { is_important: !mail.is_important }, setSnackbarState);
+        loadNewMails(query, dispatch, setSnackbarState);
         break;
       case ACTION.DELETE:
         const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
@@ -132,6 +134,7 @@ const MailArea = () => {
       case ACTION.READ:
         const mailToRead = convertMailToRead(mail);
         dispatch(handleMailClick(mailToRead, <ReadMail />));
+        updateMail(mail.no, { is_read: true }, setSnackbarState);
         break;
     }
   };
