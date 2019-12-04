@@ -7,6 +7,7 @@ import MomentUtils from '@date-io/moment';
 import { UPDATE_DATE } from '../ContextProvider/reducer/action-type';
 import createArray from '../../../utils/create-array';
 import { transformDateForReservationTimePicker } from '../../../utils/transform-date';
+import { useDispatchForWM } from '../ContextProvider';
 import validator from '../../../utils/validator';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import S from './styled';
@@ -47,7 +48,7 @@ const minutes = createArray(4).map((_, index) => (
   </MenuItem>
 ));
 
-const ReservationTimePicker = ({ open, handleModalClose, useDispatchForWM }) => {
+const ReservationTimePicker = ({ open, handleModalClose }) => {
   const classes = useStyles();
   const [date, setDate] = useState(moment());
   const [hour, setHour] = useState(0);

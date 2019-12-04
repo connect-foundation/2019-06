@@ -3,9 +3,10 @@ import * as S from './styled';
 import * as WM_S from '../styled';
 import V from '../../../utils/validator';
 import * as SC from '../../../utils/special-characters';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
-const ListOfReceivers = ({ useStateForWM, useDispatchForWM, defaultReceiver }) => {
+const ListOfReceivers = ({ defaultReceiver }) => {
   const { receivers } = useStateForWM();
   const dispatch = useDispatchForWM();
   const receiverInput = useRef(null);

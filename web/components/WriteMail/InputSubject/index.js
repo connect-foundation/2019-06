@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_SUBJECT } from '../ContextProvider/reducer/action-type';
 
-const InputSubject = ({ useStateForWM, useDispatchForWM }) => {
+const InputSubject = () => {
   const { subject } = useStateForWM();
   const dispatch = useDispatchForWM();
 
