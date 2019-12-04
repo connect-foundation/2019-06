@@ -39,7 +39,7 @@ const SNACKBAR_MSG = {
 };
 
 const SubmitButton = () => {
-  const { receivers, files, subject, text, date } = useStateForWM();
+  const { receivers, files, subject, html, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
   const [snackbarState, setSnackbarState] = useState(snackbarInitState);
@@ -69,6 +69,7 @@ const SubmitButton = () => {
     });
     formData.append('subject', subject);
     formData.append('text', text);
+    formData.append('html', html);
     files.forEach(f => {
       formData.append('attachments', f);
     });

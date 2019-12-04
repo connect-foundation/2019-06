@@ -11,7 +11,17 @@ import FileList from './FileList';
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const [attachments, setAttachments] = useState(null);
-  const { to, from, subject, createdAt, text, no, mailTemplateNo, reservation_time } = state.mail;
+  const {
+    to,
+    from,
+    subject,
+    createdAt,
+    text,
+    html,
+    no,
+    mailTemplateNo,
+    reservation_time,
+  } = state.mail;
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
 
@@ -44,7 +54,7 @@ const ReadMail = () => {
             <div>{receivers}</div>
           </S.Address>
         </S.TitleView>
-        <S.ReadFrame>{text}</S.ReadFrame>
+        <S.ReadFrame>{html || text}</S.ReadFrame>
         {attachments && <FileList files={attachments} />}
       </S.ReadArea>
       <PageMoveButtonArea no={no} />
