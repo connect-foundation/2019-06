@@ -30,7 +30,7 @@ const snackbarInitState = {
 };
 
 const SNACKBAR_MSG = {
-  MAIL_DELETE_FAIL: '메일 삭제가 실패하였습니다.',
+  MAIL_DELETE_FAIL: '업데이트를 실패하였습니다.',
   MAILS_LOAD_FAIL: '메일 리스트 로드를 실패하였습니다.',
 };
 
@@ -70,7 +70,7 @@ const updateMail = async (no, props, setSnackbarState) => {
     setSnackbarState({
       open: true,
       variant: 'error',
-      contentText: SNACKBAR_MSG.MAIL_DELETE_FAIL,
+      contentText: SNACKBAR_MSG.MAIL_UPDATE_FAIL,
     });
   }
 };
