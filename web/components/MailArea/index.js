@@ -12,7 +12,7 @@ import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
-import MessageSnackbar from '../Snackbar';
+import MessageSnackbar, { snackbarInitState } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 
 const WASTEBASKET_NAME = '휴지통';
@@ -21,12 +21,6 @@ const ACTION = {
   MARK: 'mark',
   DELETE: 'delete',
   READ: 'read',
-};
-
-const snackbarInitState = {
-  open: false,
-  variant: 'error',
-  contentText: '',
 };
 
 const SNACKBAR_MSG = {
@@ -102,10 +96,12 @@ const MailArea = () => {
   const { mails, paging, categoryNoByName } = state;
   const mailList =
     mails.length > 0 ? (
-      mails.map((mail, index) => <MailTemplate key={mail.no} mail={mail} index={index} />)
+      mails.map((mail, index) => (
+        <MailTemplate key={mail.no} mail={mail} index={index} selected={mail.selected} />
+      ))
     ) : (
       <S.NothingMailView>
-        <img src={noMailImage} />
+        <img src={noMailImage} alt="no-mail" />
       </S.NothingMailView>
     );
 
@@ -123,19 +119,24 @@ const MailArea = () => {
     const mail = mails[index];
 
     switch (action) {
-      case ACTION.MARK:
+      case ACTION.MARK: {
         await updateMail(mail.no, { is_important: !mail.is_important }, setSnackbarState);
         loadNewMails(query, dispatch, setSnackbarState);
         break;
-      case ACTION.DELETE:
+      }
+      case ACTION.DELETE: {
         const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
         await updateMail(mail.no, { category_no: wastebasketNo }, setSnackbarState);
         loadNewMails(query, dispatch, setSnackbarState);
         break;
-      case ACTION.READ:
+      }
+      case ACTION.READ: {
         const mailToRead = convertMailToRead(mail);
         dispatch(handleMailClick(mailToRead, <ReadMail />));
         updateMail(mail.no, { is_read: true }, setSnackbarState);
+        break;
+      }
+      default:
         break;
     }
   };

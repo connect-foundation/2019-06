@@ -11,31 +11,58 @@ import {
   MenuItem,
   Grow,
 } from '@material-ui/core';
-import axios from 'axios';
 import * as WM_S from '../styled';
 import * as S from './styled';
 import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
-import { Message } from './Message';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
+import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
+import Snackbar, { SNACKBAR_VARIANT, snackbarInitState, getSnackbarState } from '../../Snackbar';
 
-const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
+const SNACKBAR_MSG = {
+  ERROR: {
+    AFTER_DATE: ERROR_CANNOT_RESERVATION,
+    EMAIL_VALIDATION: '이메일 형식이 올바르지 않은 것이 존재합니다.',
+    INPUT_RECEIVERS: '받는 이메일을 입력해주세요.',
+  },
+  SUCCESS: {
+    SEND: '메일이 성공적으로 전송되었습니다.',
+  },
+  WAITING: {
+    SENDING: '전송중입니다.',
+  },
+};
 
-const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
+const SubmitButton = () => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
-  const [sendMessage, setSendMessage] = useState(null);
+  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = React.useRef(null);
 
-  const handleClick = () => {
-    setSendMessage(<Message icon={LOADING} msg="메세지 보내는 중..." />);
+  const handleClick = async () => {
+    if (receivers.length === 0) {
+      setSnackbarState(
+        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
+      );
+      return;
+    }
 
+    if (!receivers.every(receiver => validator.validate('email', receiver))) {
+      setSnackbarState(
+        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
+      );
+      return;
+    }
+
+    setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING));
     const formData = new FormData();
     receivers.forEach(r => {
       formData.append('to', r);
@@ -49,25 +76,23 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
+        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE));
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
 
-    axios
-      .post('/mail', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(() => {
-        setSendMessage(<Message icon={SUCCESS} msg="메일 전송 완료" />);
-        dispatch({ type: UPDATE_INIT });
-      })
-      .catch(err => {
-        setSendMessage(<Message icon={FAIL} msg="메세지 전송 실패" />);
-      });
+    const { isError, data } = await request.post('/mail', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    if (isError) {
+      const { message } = errorParser(data);
+      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
+    } else {
+      dispatch({ type: UPDATE_INIT });
+      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
+    }
   };
 
   const handleToggle = () => {
@@ -90,8 +115,14 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
     setModalOpen(false);
   };
 
+  const messageSnackbarProps = {
+    snackbarState,
+    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
+  };
+
   return (
     <>
+      <Snackbar {...messageSnackbarProps} />
       <WM_S.RowWrapper>
         <div></div>
         <S.RowContainer>
@@ -101,7 +132,7 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
               <ArrowDropDownIcon />
             </Button>
           </ButtonGroup>
-          <ReservationDateText {...{ useStateForWM, useDispatchForWM }} />
+          <ReservationDateText />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
@@ -130,12 +161,7 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
           </Popper>
         </S.RowContainer>
       </WM_S.RowWrapper>
-      {sendMessage}
-      <ReservationTimePicker
-        open={modalOpen}
-        handleModalClose={handleModalClose}
-        useDispatchForWM={useDispatchForWM}
-      />
+      <ReservationTimePicker open={modalOpen} handleModalClose={handleModalClose} />
     </>
   );
 };

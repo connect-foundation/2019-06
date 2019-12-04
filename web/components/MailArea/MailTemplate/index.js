@@ -51,7 +51,9 @@ const getDateOrTime = createdAt => {
 };
 
 const MailTemplate = ({ mail, selected, index }) => {
-  const { state: mails, category, categoryNoByName } = useContext(AppStateContext);
+  const {
+    state: { mails },
+  } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, MailTemplate, reservation_time } = mail;
   const { from, subject, createdAt } = MailTemplate;

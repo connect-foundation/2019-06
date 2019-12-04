@@ -1,21 +1,36 @@
 import React from 'react';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import { List, ListItem, Tooltip } from '@material-ui/core';
 import fileDownload from 'js-file-download';
 import prettyBytes from 'pretty-bytes';
 import * as GS from '../../GlobalStyle';
-import File from './File';
 import * as S from './styled';
 import request from '../../../utils/request';
 
 const FileList = ({ files }) => {
+  const imageList = [];
   const fileList = files.map(file => {
     const isImage = file.type.split('/')[0] === 'image';
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
+    if (isImage) {
+      imageList.push(
+        <S.ImageColumn>
+          <S.ImageWrapper onClick={() => window.open(src, '_blank')}>
+            <S.Image src={src} alt={file.name} />
+          </S.ImageWrapper>
+          <S.ImageName id={file.no}>{file.name}</S.ImageName>
+        </S.ImageColumn>,
+      );
+    }
     return (
-      <S.FlexColumnItem>
-        <File file={file} key={`file-${file.no}`} /> {prettyBytes(file.size)}
-        {isImage && <img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px  ' }} />}
-      </S.FlexColumnItem>
+      <Tooltip title={prettyBytes(file.size)} placement="right" open={true}>
+        <ListItem
+          style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
+          button
+          id={file.no}>
+          {file.name}
+        </ListItem>
+      </Tooltip>
     );
   });
 
@@ -48,7 +63,8 @@ const FileList = ({ files }) => {
         <AttachFileIcon />
         첨부파일 {length}개
       </S.FlexColumnHeader>
-      {fileList}
+      <List style={{ width: '300px' }}>{fileList}</List>
+      <S.ImageGrid>{imageList}</S.ImageGrid>
     </GS.FlexColumnWrap>
   );
 };

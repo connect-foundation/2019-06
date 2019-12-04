@@ -8,6 +8,7 @@ const FlexWrap = styled.div`
 `;
 
 const FlexColumnWrap = styled.div`
+  margin-top: 120px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
