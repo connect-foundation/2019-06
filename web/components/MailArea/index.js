@@ -12,7 +12,7 @@ import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
-import MessageSnackbar from '../Snackbar';
+import MessageSnackbar, { snackbarInitState } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 
 const WASTEBASKET_NAME = '휴지통';
@@ -21,12 +21,6 @@ const ACTION = {
   MARK: 'mark',
   DELETE: 'delete',
   READ: 'read',
-};
-
-const snackbarInitState = {
-  open: false,
-  variant: 'error',
-  contentText: '',
 };
 
 const SNACKBAR_MSG = {
