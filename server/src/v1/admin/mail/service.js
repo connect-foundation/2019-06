@@ -33,7 +33,7 @@ const handleReservationMails = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
-  const mails = await DB.Mail.findOldDateMail(date);
+  const mails = await DB.Mail.findAllPastReservationMailByDate(date);
   for (const mail of mails) {
     sendResrvationMail(mail);
   }

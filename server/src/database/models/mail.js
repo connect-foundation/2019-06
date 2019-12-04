@@ -90,7 +90,7 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Mail.findOldDateMail = date => {
+  Mail.findAllPastReservationMailByDate = date => {
     return Mail.findAll({
       where: {
         reservation_time: {
