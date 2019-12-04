@@ -9,7 +9,7 @@ const sendReservationMails = async (req, res, next) => {
     return next(error);
   }
 
-  return res.json(mails);
+  return res.json({ mails });
 };
 
 export default {
