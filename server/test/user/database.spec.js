@@ -9,12 +9,34 @@ const user = {
   sub_email: 'daitnu@daitnu.com',
 };
 
+const user2 = {
+  id: 'userid',
+  name: '이름이뭐니',
+  password: 'pasword12',
+  sub_email: 'daitnu@daitnu.com',
+};
+
 describe('User DB Test..', () => {
+  let userData;
+
   before(async () => {
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
     await DB.sequelize.sync({ force: true });
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await DB.Domain.create({ name: 'daitnu.com' });
+    userData = await DB.User.create(user2, { raw: true });
   });
+
+  describe('findOneByNo Test...', () => {
+    it('no에 해당하는 유저를 찾는다', async () => {
+      const data = await DB.User.findOneByNo(userData.no);
+
+      data.id.should.equals(userData.id);
+      data.email.should.equals(userData.email);
+      data.sub_email.should.equals(userData.sub_email);
+    });
+  });
+
   describe('Validate Test...', () => {
     describe('userid validate는..', () => {
       it('# userid에 특수문자가 들어가면 아이디의 형식이 올바르지 않습니다.를 반환한다', async () => {
