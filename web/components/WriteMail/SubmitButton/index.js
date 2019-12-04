@@ -11,32 +11,63 @@ import {
   MenuItem,
   Grow,
 } from '@material-ui/core';
-import axios from 'axios';
 import * as WM_S from '../styled';
 import * as S from './styled';
 import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
-import { Message } from './Message';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import validator from '../../../utils/validator';
+import { errorParser } from '../../../utils/error-parser';
+import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
+import Snackbar from '../../Snackbar';
 
-const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
+const [ERROR, SUCCESS] = [true, false];
+
+const snackbarInitState = {
+  open: false,
+  variant: 'error',
+  contentText: '앗녕',
+};
+
+const SNACKBAR_VARIANT = {
+  ERROR: 'error',
+  SUCCESS: 'success',
+};
+
+const SNACKBAR_MSG = {
+  ERROR: {
+    AFTER_DATE: ERROR_CANNOT_RESERVATION,
+    LENGTH: '메일함 이름은 최대 20자를 넘을 수 없습니다.',
+    REGEX: '메일함은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다.',
+  },
+  SUCCESS: {
+    SEND: '메일이 성공적으로 전송되었습니다.',
+  },
+  WAITING: {
+    SENDING: '전송중입니다.',
+  },
+};
+
+const getSnackbarState = (isError, contentText) => ({
+  open: true,
+  variant: isError ? SNACKBAR_VARIANT.ERROR : SNACKBAR_VARIANT.SUCCESS,
+  contentText,
+});
 
 const SubmitButton = () => {
   const { receivers, files, subject, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
-  const [sendMessage, setSendMessage] = useState(null);
+  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = React.useRef(null);
 
-  const handleClick = () => {
-    setSendMessage(<Message icon={LOADING} msg="메세지 보내는 중..." />);
-
+  const handleClick = async () => {
+    setSnackbarState({ open: true, variant: 'info', contentText: SNACKBAR_MSG.WAITING.SENDING });
     const formData = new FormData();
     receivers.forEach(r => {
       formData.append('to', r);
@@ -49,25 +80,24 @@ const SubmitButton = () => {
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        setSendMessage(<Message icon={FAIL} msg={ERROR_CANNOT_RESERVATION} />);
+        setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE));
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
 
-    axios
-      .post('/mail', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-      .then(() => {
-        setSendMessage(<Message icon={SUCCESS} msg="메일 전송 완료" />);
-        dispatch({ type: UPDATE_INIT });
-      })
-      .catch(err => {
-        setSendMessage(<Message icon={FAIL} msg="메세지 전송 실패" />);
-      });
+    const { isError, data } = await request.post('/mail', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+
+    if (isError) {
+      const { message } = errorParser(data);
+      setSnackbarState({ open: true, contentText: message, variant: 'error' });
+      setSnackbarState(getSnackbarState(ERROR, message));
+    } else {
+      dispatch({ type: UPDATE_INIT });
+      setSnackbarState(getSnackbarState(SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
+    }
   };
 
   const handleToggle = () => {
@@ -89,8 +119,14 @@ const SubmitButton = () => {
     setModalOpen(false);
   };
 
+  const messageSnackbarProps = {
+    snackbarState,
+    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
+  };
+
   return (
     <>
+      <Snackbar {...messageSnackbarProps} />
       <WM_S.RowWrapper>
         <div></div>
         <S.RowContainer>
@@ -129,7 +165,6 @@ const SubmitButton = () => {
           </Popper>
         </S.RowContainer>
       </WM_S.RowWrapper>
-      {sendMessage}
       <ReservationTimePicker open={modalOpen} handleModalClose={handleModalClose} />
     </>
   );
