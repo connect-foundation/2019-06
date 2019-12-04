@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_TEXT } from '../ContextProvider/reducer/action-type';
 
-const InputBody = ({ useStateForWM, useDispatchForWM }) => {
+const InputBody = () => {
   const { text } = useStateForWM();
   const dispatch = useDispatchForWM();
   const [flag, setFlag] = useState(true);
