@@ -8,14 +8,17 @@ import * as S from './styled';
 import request from '../../../utils/request';
 
 const FileList = ({ files }) => {
+  const imageList = [];
   const fileList = files.map(file => {
     console.log(file);
     const isImage = file.type.split('/')[0] === 'image';
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
+    if (isImage) {
+      imageList.push(<img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px' }} />);
+    }
     return (
       <S.FlexColumnItem>
         <File file={file} key={`file-${file.no}`} /> {prettyBytes(file.size)}
-        {isImage && <img src={src} alt={file.name} style={{ width: '50px', hegiht: '50px' }} />}
       </S.FlexColumnItem>
     );
   });
@@ -50,6 +53,7 @@ const FileList = ({ files }) => {
         첨부파일 {length}개
       </S.FlexColumnHeader>
       {fileList}
+      {imageList}
     </GS.FlexColumnWrap>
   );
 };
