@@ -11,6 +11,8 @@ import validator from '../../../utils/validator';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import S from './styled';
 
+const MINUTES_INTERVAL = 15;
+
 const useStyles = makeStyles(theme => ({
   textField: {
     marginLeft: theme.spacing(1),
@@ -40,8 +42,8 @@ const hours = createArray(24).map((_, index) => (
   </MenuItem>
 ));
 const minutes = createArray(4).map((_, index) => (
-  <MenuItem readOnly key={index} value={index * 15}>
-    {index * 15}분
+  <MenuItem readOnly key={index} value={index * MINUTES_INTERVAL}>
+    {index * MINUTES_INTERVAL}분
   </MenuItem>
 ));
 
@@ -61,6 +63,7 @@ const ReservationTimePicker = ({ open, handleModalClose, useDispatchForWM }) => 
     reservationDate.set({
       hour,
       minute,
+      second: 0,
     });
 
     if (!validator.isAfterDate(reservationDate)) {
@@ -68,6 +71,7 @@ const ReservationTimePicker = ({ open, handleModalClose, useDispatchForWM }) => 
       return;
     }
 
+    setError('');
     handleModalClose();
     dispatch({
       type: UPDATE_DATE,

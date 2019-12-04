@@ -86,6 +86,7 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
   };
 
   const handleModalClose = () => {
+    setOpen(false);
     setModalOpen(false);
   };
 
