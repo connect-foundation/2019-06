@@ -39,7 +39,7 @@ const parseMailContent = async content => {
       from: from.text,
       to: to.text,
       subject: subject || UNTITLE,
-      text: text || html,
+      text: html || text,
       attachments,
       headers
     };
