@@ -25,7 +25,7 @@ import ReservationDateText from '../ReservationDateText';
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
 const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
-  const { receivers, files, subject, text, date } = useStateForWM();
+  const { receivers, files, subject, html, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
   const [sendMessage, setSendMessage] = useState(null);
@@ -42,6 +42,7 @@ const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
     });
     formData.append('subject', subject);
     formData.append('text', text);
+    formData.append('html', html);
     files.forEach(f => {
       formData.append('attachments', f);
     });

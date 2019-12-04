@@ -45,7 +45,13 @@ const InputBody = ({ useDispatchForWM }) => {
     });
 
     const handleEditorBlur = () => {
-      dispatch({ type: UPDATE_TEXT, payload: { text: editor.getHtml() } });
+      dispatch({
+        type: UPDATE_TEXT,
+        payload: {
+          html: editor.getHtml(),
+          text: editor.getValue(),
+        },
+      });
     };
 
     editor.on('blur', handleEditorBlur);
