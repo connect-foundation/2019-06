@@ -15,7 +15,7 @@ const sendResrvationMail = async mail => {
   const { from, to, subject, text } = MailTemplate;
 
   try {
-    const user = await DB.User.findOneByNo(owner);
+    const user = await DB.User.findByPk(owner, { raw: true });
     user.password = aesDecrypt(user.imap_password);
     const transporter = nodemailer.createTransport(U.getTransport(user));
     const mailContents = U.getSingleMailData({ from, to, subject, text });
