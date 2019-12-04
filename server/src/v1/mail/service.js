@@ -1,6 +1,7 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
 import nodemailer from 'nodemailer';
+import { Op } from 'sequelize';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
@@ -9,7 +10,6 @@ import { saveSentMail } from '../../libraries/save-to-infra';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
-import { Op } from 'sequelize';
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 const WASTEBASKET_NAME = '휴지통';
@@ -92,8 +92,8 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
   }
 
   const processedAttachments = attachments.map(attachment => {
-    const { contentType, filename, url } = attachment;
-    return { type: contentType, name: filename, url, mail_template_id: mailTemplateNo };
+    const { contentType, filename, url, size } = attachment;
+    return { type: contentType, name: filename, url, mail_template_id: mailTemplateNo, size };
   });
 
   await DB.Attachment.bulkCreate(processedAttachments, { transaction });

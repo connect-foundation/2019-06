@@ -23,6 +23,7 @@ const getAttachmentsByTemplateNo = async ({ templateNo, email }) => {
       templateNo: attachment['Attachments.mail_template_id'],
       type: attachment['Attachments.type'],
       name: attachment['Attachments.name'],
+      size: attachment['Attachments.size'],
     };
     return object;
   });

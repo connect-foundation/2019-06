@@ -28,24 +28,28 @@ describe('attachment DB test..', () => {
         type: 'image',
         name: 'tile_name1',
         url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name2',
         url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name3',
         url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name4',
         url: 'file url',
+        size: 10000,
       },
     ];
 
