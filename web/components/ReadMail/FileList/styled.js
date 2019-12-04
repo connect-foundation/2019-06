@@ -29,6 +29,9 @@ const ImageName = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: pointer;
   &:hover {
     text-decoration: underline;
