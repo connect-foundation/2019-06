@@ -31,4 +31,24 @@ const MessageSnackbar = ({ snackbarState, handleClose, autoHideDuration = 5000 }
   );
 };
 
+export const snackbarInitState = {
+  open: false,
+  variant: 'error',
+  contentText: '앗녕',
+};
+
+export const SNACKBAR_VARIANT = {
+  ERROR: 'error',
+  SUCCESS: 'success',
+  INFO: 'info',
+};
+
+export const getSnackbarState = (variant, contentText) => {
+  return {
+    open: true,
+    variant,
+    contentText,
+  };
+};
+
 export default MessageSnackbar;

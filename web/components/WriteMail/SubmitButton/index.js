@@ -22,20 +22,7 @@ import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
-import Snackbar from '../../Snackbar';
-
-const [ERROR, SUCCESS] = [true, false];
-
-const snackbarInitState = {
-  open: false,
-  variant: 'error',
-  contentText: '앗녕',
-};
-
-const SNACKBAR_VARIANT = {
-  ERROR: 'error',
-  SUCCESS: 'success',
-};
+import Snackbar, { SNACKBAR_VARIANT, snackbarInitState, getSnackbarState } from '../../Snackbar';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -51,12 +38,6 @@ const SNACKBAR_MSG = {
   },
 };
 
-const getSnackbarState = (isError, contentText) => ({
-  open: true,
-  variant: isError ? SNACKBAR_VARIANT.ERROR : SNACKBAR_VARIANT.SUCCESS,
-  contentText,
-});
-
 const SubmitButton = () => {
   const { receivers, files, subject, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
@@ -67,7 +48,7 @@ const SubmitButton = () => {
   const anchorRef = React.useRef(null);
 
   const handleClick = async () => {
-    setSnackbarState({ open: true, variant: 'info', contentText: SNACKBAR_MSG.WAITING.SENDING });
+    setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING));
     const formData = new FormData();
     receivers.forEach(r => {
       formData.append('to', r);
@@ -80,7 +61,7 @@ const SubmitButton = () => {
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE));
+        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE));
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
@@ -92,11 +73,10 @@ const SubmitButton = () => {
 
     if (isError) {
       const { message } = errorParser(data);
-      setSnackbarState({ open: true, contentText: message, variant: 'error' });
-      setSnackbarState(getSnackbarState(ERROR, message));
+      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
     } else {
       dispatch({ type: UPDATE_INIT });
-      setSnackbarState(getSnackbarState(SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
+      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
     }
   };
 
