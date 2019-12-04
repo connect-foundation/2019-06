@@ -53,7 +53,6 @@ const write = async (req, res, next) => {
       attachments[i].url = uploadResult[i].key;
     }
   }
-
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
 
   try {

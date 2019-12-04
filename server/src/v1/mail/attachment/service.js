@@ -1,7 +1,7 @@
 import DB from '../../../database';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
-import { download } from '../../../libraries/storage/ncloud';
+import { download, getStream } from '../../../libraries/storage/ncloud';
 
 const getAttachment = async ({ attachmentNo, email }) => {
   const mailTemplateAndAttachment = await DB.Attachment.findAttachmentAndMailTemplateByPk(
@@ -26,6 +26,29 @@ const getAttachment = async ({ attachmentNo, email }) => {
   return file;
 };
 
+const getAttachmentStream = async ({ attachmentNo, email }) => {
+  const mailTemplateAndAttachment = await DB.Attachment.findAttachmentAndMailTemplateByPk(
+    attachmentNo,
+  );
+
+  if (!mailTemplateAndAttachment) {
+    throw new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
+  }
+
+  const to = mailTemplateAndAttachment['MailTemplate.to'];
+  const from = mailTemplateAndAttachment['MailTemplate.from'];
+  const tos = to.split(',').map(user => user.trim());
+  const accessibleUsers = [from, ...tos];
+
+  if (!accessibleUsers.some(user => user === email)) {
+    throw new ErrorResponse(ERROR_CODE.PRIVATE_PATH);
+  }
+
+  const stream = await getStream(mailTemplateAndAttachment.url);
+  return { stream, mimetype: mailTemplateAndAttachment.type };
+};
+
 export default {
   getAttachment,
+  getAttachmentStream,
 };
