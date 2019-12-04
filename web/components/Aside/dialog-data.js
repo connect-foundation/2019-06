@@ -1,14 +1,10 @@
 import request from '../../utils/request';
 import { errorParser } from '../../utils/error-parser';
+import { SNACKBAR_VARIANT, getSnackbarState } from '../Snackbar';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
 const nameRegex = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
-
-const SNACKBAR_VARIANT = {
-  ERROR: 'error',
-  SUCCESS: 'success',
-};
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -22,13 +18,6 @@ const SNACKBAR_MSG = {
     DELETE: '메일함이 성공적으로 삭제되었습니다.',
   },
 };
-
-const [ERROR, SUCCESS] = [true, false];
-const getSnackbarState = (isError, contentText) => ({
-  open: true,
-  variant: isError ? SNACKBAR_VARIANT.ERROR : SNACKBAR_VARIANT.SUCCESS,
-  contentText,
-});
 
 export const getDialogData = (
   type,
@@ -46,21 +35,23 @@ export const getDialogData = (
         needTextField: true,
         okBtnHandler: async (name, setSnackbarState) => {
           if (customCategory.find(category => category.name === name)) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.DUPLICATE));
+            setSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+            );
             return;
           }
           if (name.length > 20) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.LENGTH));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH));
             return;
           }
           if (!nameRegex.test(name)) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.REGEX));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX));
             return;
           }
           const { isError, data } = await request.post(url, { name });
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(ERROR, message));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
             return;
           }
           const { name: createdName, no } = data.createdBox;
@@ -68,7 +59,7 @@ export const getDialogData = (
             name: createdName,
             no,
           });
-          setSnackbarState(getSnackbarState(SUCCESS, SNACKBAR_MSG.SUCCESS.ADD));
+          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD));
           setDialogOpen(false);
         },
       };
@@ -79,15 +70,17 @@ export const getDialogData = (
         needTextField: true,
         okBtnHandler: async (name, setSnackbarState) => {
           if (customCategory.find(category => category.name === name)) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.DUPLICATE));
+            setSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+            );
             return;
           }
           if (name.length > 20) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.LENGTH));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH));
             return;
           }
           if (!nameRegex.test(name)) {
-            setSnackbarState(getSnackbarState(ERROR, SNACKBAR_MSG.ERROR.REGEX));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX));
             return;
           }
           const { isError, data } = await request.patch(url + customCategory[idx].no, {
@@ -96,12 +89,12 @@ export const getDialogData = (
           });
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(ERROR, message));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
             return;
           }
           customCategory[idx].name = name;
           dispatch(setCustomCategory({ categories: customCategory }));
-          setSnackbarState(getSnackbarState(SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY));
+          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY));
           setDialogOpen(false);
         },
       };
@@ -116,13 +109,13 @@ export const getDialogData = (
           const { isError, data } = await request.delete(url + no + query);
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(ERROR, message));
+            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
             return;
           }
           dispatch(
             setCustomCategory({ categories: customCategory.filter((_, index) => idx !== index) }),
           );
-          setSnackbarState(getSnackbarState(SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE));
+          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE));
           setDialogOpen(false);
         },
       };
