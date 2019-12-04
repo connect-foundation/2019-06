@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import SendIcon from '@material-ui/icons/Send';
 import {
@@ -13,10 +13,12 @@ import {
 } from '@material-ui/core';
 import * as WM_S from '../styled';
 import * as S from './styled';
-import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
-import { useDispatchForWM, useStateForWM } from '../ContextProvider';
+import { useStateForWM } from '../ContextProvider';
+import { AppDisapthContext } from '../../../contexts';
+import { handleCategoryClick } from '../../../contexts/reducer';
+import MailArea from '../../MailArea';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
@@ -40,7 +42,7 @@ const SNACKBAR_MSG = {
 
 const SubmitButton = () => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
-  const dispatch = useDispatchForWM();
+  const { dispatch: pageDispatch } = useContext(AppDisapthContext);
 
   const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const [open, setOpen] = useState(false);
@@ -90,8 +92,8 @@ const SubmitButton = () => {
       const { message } = errorParser(data);
       setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
     } else {
-      dispatch({ type: UPDATE_INIT });
       setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
+      pageDispatch(handleCategoryClick(0, <MailArea />));
     }
   };
 
