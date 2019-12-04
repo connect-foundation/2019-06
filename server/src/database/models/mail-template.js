@@ -20,7 +20,11 @@ const model = (sequelize, DataTypes) => {
         allowNull: true,
       },
       text: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('LONG'),
+        allowNull: true,
+      },
+      html: {
+        type: DataTypes.TEXT('LONG'),
         allowNull: true,
       },
     },

@@ -4,7 +4,7 @@ import replace from './replace';
 
 const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
 
-const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
+const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
   attachments = attachments.map(({ originalname, buffer, mimetype, url, size }) => ({
     filename: originalname,
@@ -26,7 +26,8 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
     from,
     to,
     subject,
-    html: text,
+    text,
+    html,
     attachments,
     dsn,
   };

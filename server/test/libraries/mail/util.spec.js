@@ -14,7 +14,7 @@ describe('Mail Util test...', () => {
       from: 'joajoa@daitnu.com',
       to: 'yaho@daitnu.com',
       subject: 'title이다',
-      html: 'body이다',
+      text: 'body이다',
       attachments: [],
     });
   });

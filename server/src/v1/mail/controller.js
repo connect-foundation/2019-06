@@ -28,7 +28,7 @@ const list = async (req, res, next) => {
 
 const write = async (req, res, next) => {
   const attachments = req.files;
-  const { subject, text, reservationTime } = req.body;
+  const { subject, html, reservationTime, text } = req.body;
   let { to } = req.body;
   if (!Array.isArray(to)) {
     to = [to];
@@ -53,7 +53,7 @@ const write = async (req, res, next) => {
       attachments[i].url = uploadResult[i].key;
     }
   }
-  const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
+  const mailContents = U.getSingleMailData({ from, to, subject, html, text, attachments });
 
   try {
     if (!reservationTime) {
