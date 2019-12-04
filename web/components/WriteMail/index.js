@@ -4,21 +4,24 @@ import * as S from './styled';
 import InputReceiver from './InputReceiver';
 import InputSubject from './InputSubject';
 import SubmitButton from './SubmitButton';
-import { WriteMailContextProvider } from './ContextProvider';
+import { WriteMailContextProvider, useDispatchForWM, useStateForWM } from './ContextProvider';
 import DropZone from './DropZone';
 
 const InputBody = dynamic(import('./InputBody'), { ssr: false });
 
-const WriteMail = () => (
-  <WriteMailContextProvider>
-    <S.WriteArea>
-      <InputReceiver />
-      <InputSubject />
-      <DropZone />
-      <InputBody />
-      <SubmitButton />
-    </S.WriteArea>
-  </WriteMailContextProvider>
-);
+const WriteMail = () => {
+  const props = { useStateForWM, useDispatchForWM };
+  return (
+    <WriteMailContextProvider>
+      <S.WriteArea>
+        <InputReceiver {...props} />
+        <InputSubject {...props} />
+        <InputBody {...props} />
+        <SubmitButton {...props} />
+        <DropZone {...props} />
+      </S.WriteArea>
+    </WriteMailContextProvider>
+  );
+};
 
 export default WriteMail;

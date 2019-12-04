@@ -4,7 +4,6 @@ import 'codemirror/lib/codemirror.css';
 import 'tui-editor/dist/tui-editor-contents.min.css';
 import 'tui-editor/dist/tui-editor.min.css';
 import * as WM_S from '../styled';
-import { useDispatchForWM } from '../ContextProvider';
 import { UPDATE_TEXT } from '../ContextProvider/reducer/action-type';
 
 const toolbarItems = [
@@ -30,7 +29,7 @@ const toolbarItems = [
 ];
 let editor;
 
-const InputBody = () => {
+const InputBody = ({ useDispatchForWM }) => {
   const dispatch = useDispatchForWM();
 
   useEffect(() => {

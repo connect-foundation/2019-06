@@ -14,8 +14,7 @@ import {
 import axios from 'axios';
 import * as WM_S from '../styled';
 import * as S from './styled';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
-import { UPDATE_INIT, RESERVATION_MODAL_ON } from '../ContextProvider/reducer/action-type';
+import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
 import { Message } from './Message';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
@@ -25,7 +24,7 @@ import ReservationDateText from '../ReservationDateText';
 
 const [LOADING, SUCCESS, FAIL] = [0, 1, 2];
 
-const SubmitButton = () => {
+const SubmitButton = ({ useStateForWM, useDispatchForWM }) => {
   const { receivers, files, subject, text, date } = useStateForWM();
   const dispatch = useDispatchForWM();
 
@@ -100,7 +99,7 @@ const SubmitButton = () => {
               <ArrowDropDownIcon />
             </Button>
           </ButtonGroup>
-          <ReservationDateText />
+          <ReservationDateText {...{ useStateForWM, useDispatchForWM }} />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
@@ -130,7 +129,11 @@ const SubmitButton = () => {
         </S.RowContainer>
       </WM_S.RowWrapper>
       {sendMessage}
-      <ReservationTimePicker open={modalOpen} handleModalClose={handleModalClose} />
+      <ReservationTimePicker
+        open={modalOpen}
+        handleModalClose={handleModalClose}
+        useDispatchForWM={useDispatchForWM}
+      />
     </>
   );
 };
