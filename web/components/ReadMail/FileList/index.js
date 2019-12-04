@@ -1,16 +1,15 @@
 import React from 'react';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import { List, ListItem, Tooltip } from '@material-ui/core';
 import fileDownload from 'js-file-download';
 import prettyBytes from 'pretty-bytes';
 import * as GS from '../../GlobalStyle';
-import File from './File';
 import * as S from './styled';
 import request from '../../../utils/request';
 
 const FileList = ({ files }) => {
   const imageList = [];
   const fileList = files.map(file => {
-    console.log(file);
     const isImage = file.type.split('/')[0] === 'image';
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
     if (isImage) {
@@ -24,9 +23,11 @@ const FileList = ({ files }) => {
       );
     }
     return (
-      <S.FlexColumnItem>
-        <File file={file} key={`file-${file.no}`} /> {prettyBytes(file.size)}
-      </S.FlexColumnItem>
+      <Tooltip title={prettyBytes(file.size)} placement="right" open={true}>
+        <ListItem button id={file.no}>
+          {file.name}
+        </ListItem>
+      </Tooltip>
     );
   });
 
@@ -59,7 +60,7 @@ const FileList = ({ files }) => {
         <AttachFileIcon />
         첨부파일 {length}개
       </S.FlexColumnHeader>
-      {fileList}
+      <List style={{ width: '300px' }}>{fileList}</List>
       <S.ImageGrid>{imageList}</S.ImageGrid>
     </GS.FlexColumnWrap>
   );
