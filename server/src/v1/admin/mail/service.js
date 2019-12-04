@@ -29,7 +29,7 @@ const sendResrvationMail = async mail => {
   } catch (err) {}
 };
 
-const sendReservationMails = async () => {
+const handleReservationMails = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
@@ -44,5 +44,5 @@ const sendReservationMails = async () => {
 };
 
 export default {
-  sendReservationMails,
+  handleReservationMails,
 };
