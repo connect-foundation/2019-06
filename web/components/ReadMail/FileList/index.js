@@ -9,7 +9,6 @@ import request from '../../../utils/request';
 
 const FileList = ({ files }) => {
   const fileList = files.map(file => {
-    console.log(file);
     const isImage = file.type.split('/')[0] === 'image';
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
     return (
