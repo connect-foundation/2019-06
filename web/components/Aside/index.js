@@ -38,6 +38,7 @@ import { getDialogData } from './dialog-data';
 import { handleErrorStatus } from '../../utils/error-handler';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
 import MessageSnackbar from '../Snackbar';
+import WriteMailToMe from '../WriteMailToMe';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -178,7 +179,9 @@ const Aside = () => {
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
-          <S.WrtieButton>내게쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => dispatch(setView(<WriteMailToMe />))}>
+            내게쓰기
+          </S.WrtieButton>
         </ListItem>
         {defaultCards}
         <ListItem button onClick={handleClick}>

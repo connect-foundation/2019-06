@@ -4,8 +4,7 @@ import { Modal, Backdrop, Fade, Select, MenuItem } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
-import { RESERVATION_MODAL_OFF, UPDATE_DATE } from '../ContextProvider/reducer/action-type';
+import { UPDATE_DATE } from '../ContextProvider/reducer/action-type';
 import createArray from '../../../utils/create-array';
 import { transformDateForReservationTimePicker } from '../../../utils/transform-date';
 import validator from '../../../utils/validator';
@@ -46,7 +45,7 @@ const minutes = createArray(4).map((_, index) => (
   </MenuItem>
 ));
 
-const ReservationTimePicker = ({ open, handleModalClose }) => {
+const ReservationTimePicker = ({ open, handleModalClose, useDispatchForWM }) => {
   const classes = useStyles();
   const [date, setDate] = useState(moment());
   const [hour, setHour] = useState(0);
