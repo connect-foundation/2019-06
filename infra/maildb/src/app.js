@@ -13,6 +13,7 @@ const {
 const MAIL_CONTENT = process.argv[2];
 const MY_DOMAIN = "daitnu.com";
 const RECEIVED_KEY = "received";
+const MESSAGE_ID_KEY = "message-id";
 const UNTITLE = "";
 const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
 
@@ -68,21 +69,29 @@ const getReceivers = ({ headers, to }) => {
 };
 
 const recordLog = mail => {
-  const { from, to, mail_template_id, owner, category_no } = mail;
+  const { from, to, mail_template_id, owner, category_no, message_id } = mail;
   console.log(
     JSON.stringify({
       from,
       to,
       mail_template_id,
       owner,
-      category_no
+      category_no,
+      message_id
     })
   );
+};
+
+const setMessageIdOfMail = mail => {
+  const { headers } = mail;
+  const messageId = headers.get(MESSAGE_ID_KEY);
+  mail.message_id = messageId.slice(1, -1);
 };
 
 const insertMailToDB = async content => {
   const mail = await parseMailContent(content);
   const receivers = getReceivers(mail);
+  setMessageIdOfMail(mail);
   const connection = await pool.getConnection(async conn => conn);
   let queryFormat;
 
