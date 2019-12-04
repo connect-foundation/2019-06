@@ -23,7 +23,7 @@ const FileList = ({ files }) => {
       );
     }
     return (
-      <Tooltip title={prettyBytes(file.size)} placement="right" open={true}>
+      <Tooltip title={prettyBytes(file.size)} placement="right" open={true} key={file.no}>
         <ListItem
           style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}
           button
