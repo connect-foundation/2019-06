@@ -130,6 +130,12 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  User.findOneByNo = no => {
+    return User.findByPk(no, {
+      raw: true,
+    });
+  };
+
   User.findOneByEmail = email => {
     return User.findOne({
       where: {

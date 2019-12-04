@@ -15,6 +15,7 @@ describe('User DB Test..', () => {
     await DB.sequelize.sync({ force: true });
     await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
   });
+
   describe('Validate Test...', () => {
     describe('userid validate는..', () => {
       it('# userid에 특수문자가 들어가면 아이디의 형식이 올바르지 않습니다.를 반환한다', async () => {
