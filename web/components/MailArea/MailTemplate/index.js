@@ -90,7 +90,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
       {category}
       <S.Selectable id={`read-${index}`}>
         <S.Title isRead={is_read} id={`read-${index}`}>
-          {subject}
+          {subject || '제목없음'}
         </S.Title>
         <S.Date>
           {getDateOrTime(createdAt)}
