@@ -13,7 +13,7 @@ import { handleMailChecked } from '../../../contexts/reducer';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   delete: {
     '&:hover': {
       color: red[800],
@@ -40,7 +40,7 @@ const splitMoment = value =>
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
-  const [nowYear, nowMonth, nowDay] = splitMoment();
+  const [nowYear, nowDay] = splitMoment();
   const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
@@ -48,15 +48,18 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail, selected, index }) => {
-  const {
-    state: { mails },
-  } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDispatchContext);
-  const { is_important, is_read, MailTemplate, reservation_time } = mail;
+const MailTemplate = ({ mail, selected, index, categories }) => {
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDisapthContext);
+  const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
   const { from, subject, createdAt } = MailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
+
+  let category = '';
+  if (state.category === 0) {
+    category = <S.CategoryName>{`[${categories[category_no]}]`}</S.CategoryName>;
+  }
 
   return (
     <S.Container>
@@ -84,6 +87,7 @@ const MailTemplate = ({ mail, selected, index }) => {
         <DeleteIcon className={classes.delete} id={`delete-${index}`} />
       </S.DeleteButton>
       <S.From isRead={is_read}>{from}</S.From>
+      {category}
       <S.Selectable id={`read-${index}`}>
         <S.Title isRead={is_read} id={`read-${index}`}>
           {subject}
