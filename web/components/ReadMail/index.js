@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import moment from 'moment';
 import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
@@ -6,7 +6,7 @@ import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
 import ToolGroup from './ToolGroup';
 import FileList from './FileList';
-import useFetch from '../../utils/use-fetch';
+import request from '../../utils/request';
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
@@ -24,17 +24,13 @@ const ReadMail = () => {
   } = state.mail;
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
-  const URL = `/mail/template/${mailTemplateNo}/attachments`;
-  const setFileList = useCallback(
-    (err, data) => {
-      if (!err) {
-        setAttachments(data.attachments);
-      }
-    },
-    [mailTemplateNo],
-  );
 
-  useFetch(setFileList, URL);
+  useEffect(() => {
+    const url = `/mail/template/${mailTemplateNo}/attachments`;
+    request.get(url).then(({ data }) => {
+      setAttachments(data.attachments);
+    });
+  }, [mailTemplateNo]);
 
   return (
     <S.Container>

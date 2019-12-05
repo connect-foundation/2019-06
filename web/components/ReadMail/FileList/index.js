@@ -14,7 +14,7 @@ const FileList = ({ files }) => {
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
     if (isImage) {
       imageList.push(
-        <S.ImageColumn>
+        <S.ImageColumn key={file.no}>
           <S.ImageWrapper onClick={() => window.open(src, '_blank')}>
             <S.Image src={src} alt={file.name} />
           </S.ImageWrapper>
