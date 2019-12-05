@@ -45,7 +45,7 @@ const SNACKBAR_MSG = {
   },
 };
 
-const SubmitButton = ({ writeToMe }) => {
+const SubmitButton = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDisapthContext);
   const [open, setOpen] = useState(false);
@@ -132,12 +132,21 @@ const SubmitButton = ({ writeToMe }) => {
     setModalOpen(false);
   };
 
-  const changeWriteAreaButton = toMe => (
+  const changeWriteAreaButton = () => (
     <Button
       variant="outlined"
-      onClick={() => pageDispatch(setView(toMe ? <WriteMail /> : <WriteMailToMe />))}>
+      onClick={() => pageDispatch(setView(writeToMe ? <WriteMail /> : <WriteMailToMe />))}>
       <LoopIcon fontSize="small" />
-      {toMe ? '편지쓰기' : '내게쓰기'}
+      {writeToMe ? '편지쓰기' : '내게쓰기'}
+    </Button>
+  );
+
+  const switchDropzone = () => (
+    <Button
+      variant="outlined"
+      style={{ marginLeft: '10px' }}
+      onClick={() => setDropZoneVisible(!dropZoneVisible)}>
+      {dropZoneVisible ? '첨부파일 닫기' : '첨부파일 열기'}
     </Button>
   );
 
@@ -153,7 +162,8 @@ const SubmitButton = ({ writeToMe }) => {
             </Button>
           </ButtonGroup>
           <ReservationDateText />
-          {changeWriteAreaButton(writeToMe)}
+          {changeWriteAreaButton()}
+          {switchDropzone()}
           <Popper
             open={open}
             anchorEl={anchorRef.current}

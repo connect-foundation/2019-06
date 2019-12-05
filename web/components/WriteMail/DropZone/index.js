@@ -28,7 +28,7 @@ const checkOverSize = files => {
 
 const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
 
-const DropZone = () => {
+const DropZone = ({ visible }) => {
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
 
@@ -61,7 +61,7 @@ const DropZone = () => {
   };
 
   return (
-    <>
+    <div style={{ display: visible ? 'block' : 'none' }}>
       <WM_S.RowWrapper>
         <div></div>
         <div>
@@ -106,7 +106,7 @@ const DropZone = () => {
       ) : (
         <></>
       )}
-    </>
+    </div>
   );
 };
 
