@@ -28,9 +28,9 @@ const previewAttachment = async (req, res, next) => {
     return next(error);
   }
 
-  const { stream, mimetype } = streamAndMimetype;
+  const { mimetype } = streamAndMimetype;
   res.setHeader('Content-type', mimetype);
-  return stream.pipe(res);
+  return streamAndMimetype.pipe(res);
 };
 
 export default {

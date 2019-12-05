@@ -45,7 +45,8 @@ const getAttachmentStream = async ({ attachmentNo, email }) => {
   }
 
   const stream = await getStream(mailTemplateAndAttachment.url);
-  return { stream, mimetype: mailTemplateAndAttachment.type };
+  stream.mimetype = mailTemplateAndAttachment.type;
+  return stream;
 };
 
 export default {
