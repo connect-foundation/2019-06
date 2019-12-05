@@ -15,7 +15,7 @@ import * as S from './styled';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useStateForWM } from '../ContextProvider';
-import { AppDisapthContext } from '../../../contexts';
+import { AppDispatchContext } from '../../../contexts';
 import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
 import MailArea from '../../MailArea';
 import ChangeWriteAreaButton from './ChangeWriteAreaButton';
@@ -43,7 +43,7 @@ const SNACKBAR_MSG = {
 
 const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
-  const { dispatch: pageDispatch } = useContext(AppDisapthContext);
+  const { dispatch: pageDispatch } = useContext(AppDispatchContext);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = React.useRef(null);

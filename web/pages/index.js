@@ -8,12 +8,12 @@ import Footer from '../components/Footer';
 import Loading from '../components/Loading';
 import storage from '../utils/storage';
 import MessageSnackbar from '../components/Snackbar';
-import { AppDisapthContext, AppStateContext } from '../contexts';
+import { AppDispatchContext, AppStateContext } from '../contexts';
 import { setView, handleSnackbarState } from '../contexts/reducer';
 
 const Home = () => {
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const [user, setUser] = useState(null);
   const { snackbarOpen, snackbarVariant, snackbarContent } = state;
   const snackbarState = { snackbarOpen, snackbarVariant, snackbarContent };

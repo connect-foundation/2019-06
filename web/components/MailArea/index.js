@@ -3,7 +3,7 @@ import React, { useContext, useCallback } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
 import {
   handleMailClick,
@@ -17,20 +17,29 @@ import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
-import { getSnackbarState } from '../Snackbar';
+import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 
 const WASTEBASKET_NAME = '휴지통';
 
 const ACTION = {
-  MARK: 'mark',
+  STAR: 'star',
   DELETE: 'delete',
   READ: 'read',
 };
 
 const SNACKBAR_MSG = {
-  MAIL_DELETE_FAIL: '업데이트를 실패하였습니다.',
-  MAILS_LOAD_FAIL: '메일 리스트 로드를 실패하였습니다.',
+  ERROR: {
+    DELETE: '메일 삭제를 실패하였습니다.',
+    STAR: '메일 중요표시에 실패하였습니다.',
+    UNSTAR: '메일 중요표시 해제에 실패하였습니다.',
+    LOAD: '메일 불러오기에 실패하였습니다.',
+  },
+  SUCCESS: {
+    DELETE: '메일을 삭제하였습니다.',
+    STAR: '메일 중요표시를 하였습니다.',
+    UNSTAR: '메일 중요표시를 해제하였습니다.',
+  },
 };
 
 const convertMailToRead = mail => {
@@ -54,34 +63,18 @@ const convertMailToRead = mail => {
 const loadNewMails = async (query, dispatch) => {
   const { isError, data } = await request.get(`/mail/?${query}`);
   if (isError) {
-    dispatch(
-      handleSnackbarState({
-        snackbarOpen: true,
-        snackbarVariant: 'error',
-        snackbarContent: SNACKBAR_MSG.MAILS_LOAD_FAIL,
-      }),
-    );
-    return;
+    throw SNACKBAR_MSG.ERROR.LOAD;
   }
   dispatch(handleMailsChange({ ...data }));
 };
 
-const updateMail = async (no, props, dispatch) => {
-  const { isError } = await request.patch(`/mail/${no}`, { props });
-  if (isError) {
-    dispatch(
-      handleSnackbarState({
-        snackbarOpen: true,
-        snackbarVariant: 'error',
-        snackbarContent: SNACKBAR_MSG.MAIL_UPDATE_FAIL,
-      }),
-    );
-  }
+const updateMail = async (no, props) => {
+  return request.patch(`/mail/${no}`, { props });
 };
 
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
   const setMailList = useCallback(
@@ -92,7 +85,52 @@ const MailArea = () => {
     [dispatch],
   );
 
+  const handleAction = {
+    [ACTION.STAR]: async mail => {
+      try {
+        mail.is_important = !mail.is_important;
+        const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
+        if (isError) {
+          throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
+        }
+        dispatch(
+          handleSnackbarState(
+            getSnackbarState(
+              SNACKBAR_VARIANT.SUCCESS,
+              mail.is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR,
+            ),
+          ),
+        );
+      } catch (errorMessage) {
+        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+      }
+    },
+    [ACTION.DELETE]: async mail => {
+      try {
+        const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
+        const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
+        if (isError) {
+          throw SNACKBAR_MSG.ERROR.DELETE;
+        }
+        loadNewMails(query, dispatch);
+        dispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
+          ),
+        );
+      } catch (errorMessage) {
+        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+      }
+    },
+    [ACTION.READ]: mail => {
+      const mailToRead = convertMailToRead(mail);
+      dispatch(handleMailClick(mailToRead, <ReadMail />));
+      updateMail(mail.no, { is_read: true });
+    },
+  };
+
   const isLoading = useFetch(setMailList, URL);
+
   if (isLoading) {
     return <Loading />;
   }
@@ -130,28 +168,7 @@ const MailArea = () => {
 
     const [action, index] = id.split('-');
     const mail = mails[index];
-
-    switch (action) {
-      case ACTION.MARK: {
-        await updateMail(mail.no, { is_important: !mail.is_important }, dispatch);
-        loadNewMails(query, dispatch);
-        break;
-      }
-      case ACTION.DELETE: {
-        const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
-        await updateMail(mail.no, { category_no: wastebasketNo }, dispatch);
-        loadNewMails(query, dispatch);
-        break;
-      }
-      case ACTION.READ: {
-        const mailToRead = convertMailToRead(mail);
-        dispatch(handleMailClick(mailToRead, <ReadMail />), dispatch);
-        updateMail(mail.no, { is_read: true });
-        break;
-      }
-      default:
-        break;
-    }
+    handleAction[action](mail);
   };
 
   return (

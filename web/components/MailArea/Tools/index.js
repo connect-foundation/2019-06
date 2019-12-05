@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { MenuItem, FormControl, FormControlLabel, Checkbox, Select } from '@material-ui/core';
 import S from './styled';
-import { AppDisapthContext, AppStateContext } from '../../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +31,7 @@ const sortItems = SORT_TYPES.map(type => (
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails } = state;
 
   const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));

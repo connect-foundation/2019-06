@@ -3,12 +3,12 @@ import React, { useContext } from 'react';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
 import * as S from './styled';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
 import { setMessage } from '../../contexts/reducer';
 
 const MessageHeader = () => {
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
 
   return (
     <S.TopContainer show={state.message !== ''}>

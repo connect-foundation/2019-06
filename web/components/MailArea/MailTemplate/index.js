@@ -10,7 +10,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import { handleMailChecked } from '../../../contexts/reducer';
-import { AppDisapthContext, AppStateContext } from '../../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
 const useStyles = makeStyles(() => ({
@@ -53,7 +53,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
   const { dispatch } = useContext(AppDisapthContext);
   const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
   const { from, subject, createdAt } = MailTemplate;
-  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
   const classes = useStyles();
 
   let category = '';
@@ -75,11 +75,11 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
           }
         />
       </div>
-      <S.ImportantButton id={`mark-${index}`}>
+      <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
-          <StarIcon className={classes.star} id={`mark-${index}`} />
+          <StarIcon className={classes.star} id={`star-${index}`} />
         ) : (
-          <StarBorderIcon className={classes.unstar} id={`mark-${index}`} />
+          <StarBorderIcon className={classes.unstar} id={`star-${index}`} />
         )}
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>

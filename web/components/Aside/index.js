@@ -41,7 +41,7 @@ import {
 } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import { handleErrorStatus } from '../../utils/error-handler';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
 import WriteMailToMe from '../WriteMailToMe';
 
 const URL = '/mail/categories';
@@ -71,7 +71,7 @@ const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
