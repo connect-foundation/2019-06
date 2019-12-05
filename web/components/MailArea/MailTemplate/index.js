@@ -50,7 +50,7 @@ const getDateOrTime = createdAt => {
 
 const MailTemplate = ({ mail, selected, index, categories }) => {
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
   const { from, subject, createdAt } = MailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
