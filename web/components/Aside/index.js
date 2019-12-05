@@ -40,9 +40,9 @@ import {
   handleSnackbarState,
 } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
-import WriteMailToMe from '../WriteMailToMe';
 import errorHandler from '../../utils/error-handler';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
+import WriteMailToMe from '../WriteMailToMe';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -71,7 +71,7 @@ const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');

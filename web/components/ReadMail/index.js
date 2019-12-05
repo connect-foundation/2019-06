@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
 import { StarBorder } from '@material-ui/icons';
@@ -6,8 +6,8 @@ import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { AppStateContext } from '../../contexts';
 import ToolGroup from './ToolGroup';
-import request from '../../utils/request';
 import FileList from './FileList';
+import request from '../../utils/request';
 
 const Viewer = dynamic(import('./Viewer'), { ssr: false });
 
