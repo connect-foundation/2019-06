@@ -48,6 +48,10 @@ const RegisterForm = () => {
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });
+    if (prop !== 'checkPassword') {
+      const errMsg = validator.validateAndGetMsg(prop, target.value, true);
+      setErrorMsg({ ...errors, [prop]: errMsg });
+    }
   };
 
   const handleClickShowPassword = () => {
