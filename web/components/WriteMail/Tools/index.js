@@ -19,6 +19,7 @@ import { AppDisapthContext } from '../../../contexts';
 import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
 import MailArea from '../../MailArea';
 import ChangeWriteAreaButton from './ChangeWriteAreaButton';
+import SwitchDropzone from './SwitchDropzone';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
@@ -127,15 +128,6 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
     setModalOpen(false);
   };
 
-  const switchDropzone = () => (
-    <Button
-      variant="outlined"
-      style={{ marginLeft: '10px' }}
-      onClick={() => setDropZoneVisible(!dropZoneVisible)}>
-      {dropZoneVisible ? '첨부파일 닫기' : '첨부파일 열기'}
-    </Button>
-  );
-
   return (
     <>
       <WM_S.RowWrapper>
@@ -149,7 +141,7 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
           </ButtonGroup>
           <ReservationDateText />
           <ChangeWriteAreaButton writeToMe={writeToMe} />
-          {switchDropzone()}
+          <SwitchDropzone {...{ dropZoneVisible, setDropZoneVisible }} />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
