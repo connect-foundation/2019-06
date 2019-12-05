@@ -33,11 +33,15 @@ import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import { handleCategoryClick, setView, handleCategoriesChange } from '../../contexts/reducer';
+import {
+  handleCategoryClick,
+  setView,
+  handleCategoriesChange,
+  handleSnackbarState,
+} from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import { handleErrorStatus } from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
-import MessageSnackbar from '../Snackbar';
 import WriteMailToMe from '../WriteMailToMe';
 
 const URL = '/mail/categories';
@@ -62,11 +66,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
-const snackbarInitState = {
-  open: false,
-  variant: 'error',
-  contentText: '앗녕',
-};
 
 const Aside = () => {
   const classes = useStyles();
@@ -76,7 +75,6 @@ const Aside = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
-  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
 
   const callback = useCallback(
     (err, data) => (err ? handleErrorStatus(err) : dispatch(handleCategoriesChange({ ...data }))),
@@ -90,11 +88,11 @@ const Aside = () => {
   }
 
   const iconOfDefaultCategories = [
-    selected => <AllInboxIcon className={selected && classes.whiteIcon} />,
-    selected => <StarBorder className={selected && classes.whiteIcon} />,
-    selected => <SendIcon className={selected && classes.whiteIcon} />,
-    selected => <DraftsIcon className={selected && classes.whiteIcon} />,
-    selected => <DeleteIcon className={selected && classes.whiteIcon} />,
+    selected => <AllInboxIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <StarBorder className={selected ? classes.whiteIcon : ''} />,
+    selected => <SendIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <DraftsIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <DeleteIcon className={selected ? classes.whiteIcon : ''} />,
   ];
 
   const handleDialogOpen = (action, idx) => {
@@ -168,14 +166,8 @@ const Aside = () => {
     );
   });
 
-  const messageSnackbarProps = {
-    snackbarState,
-    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
-  };
-
   return (
     <S.Aside>
-      <MessageSnackbar {...messageSnackbarProps} />
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
@@ -220,7 +212,7 @@ const Aside = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, setSnackbarState)}
+            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, handleSnackbarState)}
             color="primary">
             확인
           </Button>

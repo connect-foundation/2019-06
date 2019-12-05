@@ -1,22 +1,23 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
-import { handleMailClick, handleMailsChange, initCheckerInTools } from '../../contexts/reducer';
+import {
+  handleMailClick,
+  handleMailsChange,
+  initCheckerInTools,
+  handleSnackbarState,
+} from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
-import MessageSnackbar, {
-  snackbarInitState,
-  SNACKBAR_VARIANT,
-  getSnackbarState,
-} from '../Snackbar';
+import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 
 const WASTEBASKET_NAME = '휴지통';
@@ -43,12 +44,13 @@ const SNACKBAR_MSG = {
 
 const convertMailToRead = mail => {
   const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
-  const { from, to, subject, text, createdAt, no: mailTemplateNo } = MailTemplate;
+  const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
   return {
     from,
     to,
-    subject,
+    subject: subject || '제목없음',
     text,
+    html,
     createdAt,
     is_important,
     is_read,
@@ -73,7 +75,6 @@ const updateMail = async (no, props) => {
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
   const setMailList = useCallback(
@@ -84,11 +85,6 @@ const MailArea = () => {
     [dispatch],
   );
 
-  const messageSnackbarProps = {
-    snackbarState,
-    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
-  };
-
   const handleAction = {
     [ACTION.STAR]: async mail => {
       try {
@@ -97,14 +93,16 @@ const MailArea = () => {
         if (isError) {
           throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
         }
-        setSnackbarState(
-          getSnackbarState(
-            SNACKBAR_VARIANT.SUCCESS,
-            mail.is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR,
+        dispatch(
+          handleSnackbarState(
+            getSnackbarState(
+              SNACKBAR_VARIANT.SUCCESS,
+              mail.is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR,
+            ),
           ),
         );
       } catch (errorMessage) {
-        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage));
+        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
       }
     },
     [ACTION.DELETE]: async mail => {
@@ -115,9 +113,13 @@ const MailArea = () => {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
         loadNewMails(query, dispatch);
-        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE));
+        dispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
+          ),
+        );
       } catch (errorMessage) {
-        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage));
+        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
       }
     },
     [ACTION.READ]: mail => {
@@ -162,7 +164,6 @@ const MailArea = () => {
 
   return (
     <S.MailArea>
-      <MessageSnackbar {...messageSnackbarProps} />
       <S.ToolsWrapper>
         <Tools />
       </S.ToolsWrapper>

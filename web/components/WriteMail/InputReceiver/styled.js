@@ -19,7 +19,7 @@ export const ReceiverListLi = styled.li`
   margin-right: 3px;
   float: left;
   padding: 5px 5px 2px 5px;
-  border: 1px solid grey;
+  border: ${props => (props.validation ? '1px solid #0066FF' : '1px solid #D93024')};
   border-radius: 3px;
   display: flex;
   justify-content: center;
@@ -29,8 +29,8 @@ export const ReceiverListLi = styled.li`
   width: auto;
   min-height: 20px;
   font-size: 14px;
-  background-color: ${props => (props.validation ? 'white' : '#D93024')};
-  color: ${props => (props.validation ? 'black' : '#FDEFEF')};
+  background-color: ${props => (props.validation ? '#0066FF' : '#D93024')};
+  color: ${props => (props.validation ? 'white' : '#FDEFEF')};
 `;
 
 export const ReceiverLiDeleteBtn = styled.div`
