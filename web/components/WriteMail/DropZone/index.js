@@ -73,35 +73,39 @@ const DropZone = () => {
           </S.UploadArea>
         </div>
       </WM_S.RowWrapper>
-      <WM_S.RowWrapper>
-        <div></div>
-        <div>
-          <Grid item xs={12} md={12}>
-            <div>
-              <List>
-                {files.map((file, idx) => (
-                  <ListItem key={idx}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <AttachmentIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={file.name} />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => delBtnHandler(file)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </Grid>
-        </div>
-      </WM_S.RowWrapper>
+      {files.length > 0 ? (
+        <WM_S.RowWrapper>
+          <div></div>
+          <div>
+            <Grid item xs={12} md={12}>
+              <div>
+                <List>
+                  {files.map((file, idx) => (
+                    <ListItem key={idx}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <AttachmentIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={file.name} />
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => delBtnHandler(file)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+                </List>
+              </div>
+            </Grid>
+          </div>
+        </WM_S.RowWrapper>
+      ) : (
+        <></>
+      )}
     </>
   );
 };
