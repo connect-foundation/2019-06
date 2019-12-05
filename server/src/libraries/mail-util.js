@@ -29,6 +29,7 @@ const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) 
     text,
     html,
     attachments,
+    messageId: uuidv4(),
     dsn,
   };
 };

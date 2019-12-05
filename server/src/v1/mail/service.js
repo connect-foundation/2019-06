@@ -116,6 +116,7 @@ const saveMail = async (mailboxName, mailContents, transaction, userNo, reservat
       mail_template_id: mailTemplate.no,
       category_no: userCategory.no,
       reservation_time: reservationTime,
+      message_id: mailContents.messageId,
     },
     { transaction },
   );
