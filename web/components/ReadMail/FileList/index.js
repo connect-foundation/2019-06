@@ -14,7 +14,7 @@ const FileList = ({ files }) => {
     const src = `http://localhost/mail/attachment/${file.no}/preview`;
     if (isImage) {
       imageList.push(
-        <S.ImageColumn>
+        <S.ImageColumn key={`image${file.no}`}>
           <S.ImageWrapper onClick={() => window.open(src, '_blank')}>
             <S.Image src={src} alt={file.name} />
           </S.ImageWrapper>
@@ -23,11 +23,17 @@ const FileList = ({ files }) => {
       );
     }
     return (
-      <Tooltip title={prettyBytes(file.size)} placement="right" open={true}>
-        <ListItem button id={file.no}>
-          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {file.name}
-          </div>
+      <Tooltip key={file.no} title={prettyBytes(file.size)} placement="right" open={true}>
+        <ListItem
+          style={{
+            display: 'block',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+          button
+          id={file.no}>
+          {file.name}
         </ListItem>
       </Tooltip>
     );
