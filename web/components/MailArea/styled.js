@@ -37,4 +37,15 @@ const MailPagingArea = styled.div`
   align-items: center;
 `;
 
-export default { Section, ToolsWrapper, MailArea, MailListArea, MailPagingArea };
+const NothingMailView = styled.div`
+  flex: 1 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    height: 100px;
+    width: 400px;
+  }
+`;
+
+export default { Section, ToolsWrapper, MailArea, MailListArea, MailPagingArea, NothingMailView };

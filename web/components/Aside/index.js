@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -16,34 +16,36 @@ import {
   DialogActions,
   Button,
 } from '@material-ui/core';
-import { ExpandLess, ExpandMore, StarBorder } from '@material-ui/icons';
-import AddBoxIcon from '@material-ui/icons/AddBox';
-import ModifyIcon from '@material-ui/icons/Create';
-import MoveInboxIcon from '@material-ui/icons/MoveToInbox';
-import AllInboxIcon from '@material-ui/icons/AllInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import DeleteIcon from '@material-ui/icons/Delete';
+import {
+  ExpandLess,
+  ExpandMore,
+  StarBorder,
+  AddBox as AddBoxIcon,
+  Create as ModifyIcon,
+  MoveToInbox as MoveInboxIcon,
+  AllInbox as AllInboxIcon,
+  Drafts as DraftsIcon,
+  Send as SendIcon,
+  Delete as DeleteIcon,
+} from '@material-ui/icons';
 import S from './styled';
 import MailArea from '../MailArea';
 import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import { handleCategoryClick, setView, handleCategoriesChange } from '../../contexts/reducer';
+import {
+  handleCategoryClick,
+  setView,
+  handleCategoriesChange,
+  handleSnackbarState,
+} from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
-import { handleErrorStatus } from '../../utils/error-handler';
-import { AppDisapthContext, AppStateContext } from '../../contexts';
+import errorHandler from '../../utils/error-handler';
+import { AppDispatchContext, AppStateContext } from '../../contexts';
+import WriteMailToMe from '../WriteMailToMe';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
-
-const iconOfDefaultCategories = [
-  <AllInboxIcon />,
-  <StarBorder />,
-  <SendIcon />,
-  <DraftsIcon />,
-  <DeleteIcon />,
-];
 
 const useStyles = makeStyles(theme => ({
   nested: {
@@ -58,6 +60,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  whiteIcon: {
+    color: 'white',
+  },
 }));
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
@@ -66,12 +71,40 @@ const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDisapthContext);
+  const { dispatch } = useContext(AppDispatchContext);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
-  const handleDialogOpen = (_, action, idx) => {
+  const fetchingCategories = useFetch(URL);
+
+  useEffect(() => {
+    if (fetchingCategories.data) {
+      dispatch(handleCategoriesChange({ ...fetchingCategories.data }));
+    }
+  }, [dispatch, fetchingCategories.data]);
+
+  if (fetchingCategories.loading) {
+    return <Loading />;
+  }
+
+  if (fetchingCategories.error) {
+    return errorHandler(fetchingCategories.error);
+  }
+
+  if (!state.categories) {
+    return <Loading />;
+  }
+
+  const iconOfDefaultCategories = [
+    selected => <AllInboxIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <StarBorder className={selected ? classes.whiteIcon : ''} />,
+    selected => <SendIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <DraftsIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <DeleteIcon className={selected ? classes.whiteIcon : ''} />,
+  ];
+
+  const handleDialogOpen = (action, idx) => {
     const dialogData = getDialogData(
       action,
       state.categories,
@@ -86,61 +119,70 @@ const Aside = () => {
   };
 
   const handleDialogClose = () => {
+    setDialogTextFieldState('');
     setDialogOpen(false);
   };
 
   const handleClick = () => {
     setMailboxFolderOpen(!mailboxFolderOpen);
   };
-  const callback = useCallback(
-    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleCategoriesChange({ ...data }))),
-    [dispatch],
-  );
-
-  const isLoading = useFetch(callback, URL);
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   const { categories } = state;
   const filteredDefaultCategories = categories.filter(category => category.is_default);
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const customCategories = categories.filter(category => !category.is_default);
 
-  const defaultCards = defaultCategories.map((category, idx) => (
-    <ListItem
-      button
-      key={idx}
-      onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
-      <ListItemIcon>{iconOfDefaultCategories[idx]}</ListItemIcon>
-      <ListItemText primary={category.name} />
-    </ListItem>
-  ));
+  const defaultCards = defaultCategories.map((category, idx) => {
+    const selected = state.category === category.no;
+    return (
+      <ListItem
+        style={selected ? { backgroundColor: '#0066FF' } : {}}
+        button={!selected}
+        key={idx}
+        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
+        <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
+      </ListItem>
+    );
+  });
 
-  const customCategoryCards = customCategories.map((category, idx) => (
-    <ListItem button key={idx} className={classes.nested}>
-      <ListItemIcon>
-        <StarBorder />
-      </ListItemIcon>
-      <ListItemText primary={category.name} />
-      <ListItemSecondaryAction>
-        <IconButton edge="end" aria-label="modify" onClick={e => handleDialogOpen(e, MODIFY, idx)}>
-          <ModifyIcon fontSize={'small'} />
-        </IconButton>
-        <IconButton edge="end" aria-label="delete" onClick={e => handleDialogOpen(e, DELETE, idx)}>
-          <DeleteIcon fontSize={'small'} />
-        </IconButton>
-      </ListItemSecondaryAction>
-    </ListItem>
-  ));
+  const customCategoryCards = customCategories.map((category, idx) => {
+    const selected = state.category === category.no;
+    return (
+      <ListItem
+        key={idx}
+        className={classes.nested}
+        style={selected ? { backgroundColor: '#0066FF' } : {}}
+        button={!selected}
+        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        <ListItemIcon>
+          <StarBorder className={selected && classes.whiteIcon} />
+        </ListItemIcon>
+        <ListItemText>
+          <S.EllipsisList style={selected ? { color: 'white' } : {}}>
+            {category.name}
+          </S.EllipsisList>
+        </ListItemText>
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="modify" onClick={() => handleDialogOpen(MODIFY, idx)}>
+            <ModifyIcon className={selected && classes.whiteIcon} fontSize={'small'} />
+          </IconButton>
+          <IconButton edge="end" aria-label="delete" onClick={() => handleDialogOpen(DELETE, idx)}>
+            <DeleteIcon className={selected && classes.whiteIcon} fontSize={'small'} />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    );
+  });
 
   return (
     <S.Aside>
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
-          <S.WrtieButton>내게쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => dispatch(setView(<WriteMailToMe />))}>
+            내게쓰기
+          </S.WrtieButton>
         </ListItem>
         {defaultCards}
         <ListItem button onClick={handleClick}>
@@ -153,7 +195,7 @@ const Aside = () => {
         <Collapse in={mailboxFolderOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {customCategoryCards}
-            <ListItem button onClick={e => handleDialogOpen(e, ADD)} className={classes.nested}>
+            <ListItem button onClick={() => handleDialogOpen(ADD)} className={classes.nested}>
               <ListItemIcon>
                 <AddBoxIcon />
               </ListItemIcon>
@@ -166,7 +208,7 @@ const Aside = () => {
         <DialogTitle id="dialog-title">{dialogState.title}</DialogTitle>
         <DialogContent>
           <DialogContentText>{dialogState.textContents}</DialogContentText>
-          {dialogState.needTextField ? (
+          {dialogState.needTextField && (
             <TextField
               onChange={({ target: { value } }) => setDialogTextFieldState(value)}
               autoFocus
@@ -175,12 +217,12 @@ const Aside = () => {
               type="text"
               fullWidth
             />
-          ) : (
-            ''
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={e => dialogState.okBtnHandler(e, dialogTextFieldState)} color="primary">
+          <Button
+            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, handleSnackbarState)}
+            color="primary">
             확인
           </Button>
           <Button onClick={handleDialogClose} color="primary">

@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 const regexsOfType = {
   id: [
     {
@@ -18,7 +20,7 @@ const regexsOfType = {
   password: [{ regex: /^.{8,20}$/, msg: '비밀번호 길이는 8이상 20이하 입니다' }],
   name: [
     { regex: /^.{1,10}$/, msg: '이름 길이는 1이상 10이하 입니다' },
-    { regex: /[a-zA-Z가-힣 ]/, msg: '영어, 한글만 사용할 수 있습니다.' },
+    { regex: /^[a-zA-Z가-힣 ]{1,10}$/, msg: '영어, 한글만 사용할 수 있습니다.' },
   ],
 };
 
@@ -55,8 +57,16 @@ const checkUser = ({ id, name, password, email }) => {
 
   return Object.keys(user).every(key => validate(key, user[key]));
 };
+
+const isAfterDate = date => {
+  const curDate = moment();
+
+  return curDate < date;
+};
+
 export default {
   validate,
   validateAndGetMsg,
   checkUser,
+  isAfterDate,
 };

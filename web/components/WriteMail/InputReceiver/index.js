@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import V from '../../../utils/validator';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
 import * as SC from '../../../utils/special-characters';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
-const ListOfReceivers = () => {
+const ListOfReceivers = ({ defaultReceiver }) => {
   const { receivers } = useStateForWM();
   const dispatch = useDispatchForWM();
   const receiverInput = useRef(null);
@@ -17,6 +17,15 @@ const ListOfReceivers = () => {
     inputWidthGuide.current.innerText = target.value;
     target.style.width = `${inputWidthGuide.current.clientWidth + 35}px`;
   };
+
+  useEffect(() => {
+    if (defaultReceiver) {
+      dispatch({
+        type: UPDATE_RECEIVERS,
+        payload: { receivers: [defaultReceiver] },
+      });
+    }
+  }, [defaultReceiver]);
 
   const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
   const replaceAndSetReceiver = (f, target) => {
@@ -71,7 +80,7 @@ const ListOfReceivers = () => {
     });
 
   return (
-    <WM_S.RowWrapper>
+    <WM_S.RowWrapper style={defaultReceiver ? { display: 'none' } : {}}>
       <WM_S.Label>받는 사람</WM_S.Label>
       <S.ReceiverListWrapper onClick={focusOn}>
         <S.ReceiverInputWidthGuide ref={inputWidthGuide} />

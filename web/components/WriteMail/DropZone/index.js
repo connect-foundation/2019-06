@@ -14,7 +14,7 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
 import * as WM_S from '../styled';
 import * as S from './styled';
-import { useStateForWM, useDispatchForWM } from '../ContextProvider';
+import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 import AVAILABLE_EXTENSION from '../../../utils/available-extension';
 
@@ -28,7 +28,7 @@ const checkOverSize = files => {
 
 const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
 
-const DropZone = () => {
+const DropZone = ({ visible }) => {
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
 
@@ -61,7 +61,7 @@ const DropZone = () => {
   };
 
   return (
-    <>
+    <div style={{ display: visible ? 'block' : 'none' }}>
       <WM_S.RowWrapper>
         <div></div>
         <div>
@@ -73,36 +73,40 @@ const DropZone = () => {
           </S.UploadArea>
         </div>
       </WM_S.RowWrapper>
-      <WM_S.RowWrapper>
-        <div></div>
-        <div>
-          <Grid item xs={12} md={12}>
-            <div>
-              <List>
-                {files.map((file, idx) => (
-                  <ListItem key={idx}>
-                    <ListItemAvatar>
-                      <Avatar>
-                        <AttachmentIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary={file.name} />
-                    <ListItemSecondaryAction>
-                      <IconButton
-                        edge="end"
-                        aria-label="delete"
-                        onClick={() => delBtnHandler(file)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                ))}
-              </List>
-            </div>
-          </Grid>
-        </div>
-      </WM_S.RowWrapper>
-    </>
+      {files.length > 0 ? (
+        <WM_S.RowWrapper>
+          <div></div>
+          <div>
+            <Grid item xs={12} md={12}>
+              <div>
+                <List>
+                  {files.map((file, idx) => (
+                    <ListItem key={idx}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <AttachmentIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText primary={file.name} />
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={() => delBtnHandler(file)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+                </List>
+              </div>
+            </Grid>
+          </div>
+        </WM_S.RowWrapper>
+      ) : (
+        <></>
+      )}
+    </div>
   );
 };
 

@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useContext } from 'react';
 import moment from 'moment';
+import { FormControlLabel, Checkbox } from '@material-ui/core';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
@@ -8,12 +9,11 @@ import DraftsIcon from '@material-ui/icons/Drafts';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
-import ReadMail from '../../ReadMail';
-import { handleMailClick } from '../../../contexts/reducer';
-import { AppDisapthContext } from '../../../contexts';
+import { handleMailChecked } from '../../../contexts/reducer';
+import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   delete: {
     '&:hover': {
       color: red[800],
@@ -35,50 +35,69 @@ const useStyles = makeStyles(theme => ({
 
 const splitMoment = value =>
   moment(value)
-    .utc()
     .format('YYYY-MM-DD')
     .split('-');
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
-  const [nowYear, nowMonth, nowDay] = splitMoment();
-  const time = moment(createdAt)
-    .utc()
-    .format('HH:mm');
+  const [nowYear, nowDay] = splitMoment();
+  const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
   if (year !== nowYear) date = `${year}-${month}-${day}`;
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail }) => {
-  const { dispatch } = useContext(AppDisapthContext);
-  const { is_important, is_read, MailTemplate, no } = mail;
-  const { from, to, subject, text, createdAt } = MailTemplate;
-  const mailToRead = { from, to, subject, text, createdAt, is_important, no };
-  const handleSubjectClick = () => dispatch(handleMailClick(mailToRead, <ReadMail />));
+const MailTemplate = ({ mail, selected, index, categories }) => {
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
+  const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
+  const { from, subject, createdAt } = MailTemplate;
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
 
+  let category = '';
+  if (state.category === 0) {
+    category = <S.CategoryName>{`[${categories[category_no]}]`}</S.CategoryName>;
+  }
+
   return (
-    <S.MailTemplateWrap isRead={is_read}>
+    <S.Container>
       <div>
-        <input type="checkbox" />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={selected}
+              onChange={handleCheckedChange}
+              color="primary"
+              size="small"
+            />
+          }
+        />
       </div>
-      <div>
+      <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
-          <StarIcon className={classes.star} />
+          <StarIcon className={classes.star} id={`star-${index}`} />
         ) : (
-          <StarBorderIcon className={classes.unstar} />
+          <StarBorderIcon className={classes.unstar} id={`star-${index}`} />
         )}
-      </div>
-      <div>{is_read ? <DraftsIcon /> : <MailIcon />}</div>
-      <div>
-        <DeleteIcon className={classes.delete} />
-      </div>
-      <div>{from}</div>
-      <div onClick={handleSubjectClick}>{subject}</div>
-      <div>{getDateOrTime(createdAt)}</div>
-    </S.MailTemplateWrap>
+      </S.ImportantButton>
+      <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
+      <S.DeleteButton id={`delete-${index}`}>
+        <DeleteIcon className={classes.delete} id={`delete-${index}`} />
+      </S.DeleteButton>
+      <S.From isRead={is_read}>{from}</S.From>
+      {category}
+      <S.Selectable id={`read-${index}`}>
+        <S.Title isRead={is_read} id={`read-${index}`}>
+          {subject || '제목없음'}
+        </S.Title>
+        <S.Date>
+          {getDateOrTime(createdAt)}
+          <S.Text>{reservation_time && '예약'}</S.Text>
+        </S.Date>
+      </S.Selectable>
+    </S.Container>
   );
 };
 
