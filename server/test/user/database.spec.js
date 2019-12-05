@@ -97,6 +97,20 @@ describe('User DB Test..', () => {
         error.path.should.be.equals('name');
         error.value.should.be.equals(name);
       });
+
+      it('# name에 특수문자가 포함될 경우 이름의 형식이 올바르지 않습니다.를 반환한다.', async () => {
+        const name = '가;;;;;';
+        const data = await DB.User.build({
+          ...user,
+          name,
+        })
+          .validate()
+          .should.be.rejected();
+        const error = data.errors[0];
+        error.message.should.be.equals('이름의 형식이 올바르지 않습니다.');
+        error.path.should.be.equals('name');
+        error.value.should.be.equals(name);
+      });
     });
 
     describe('password validate는...', () => {
