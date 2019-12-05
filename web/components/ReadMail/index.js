@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import moment from 'moment';
+import dynamic from 'next/dynamic';
 import { StarBorder } from '@material-ui/icons';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
@@ -7,6 +8,8 @@ import { AppStateContext } from '../../contexts';
 import ToolGroup from './ToolGroup';
 import request from '../../utils/request';
 import FileList from './FileList';
+
+const Viewer = dynamic(import('./Viewer'), { ssr: false });
 
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
@@ -54,7 +57,9 @@ const ReadMail = () => {
             <div>{receivers}</div>
           </S.Address>
         </S.TitleView>
-        <S.ReadFrame>{html || text}</S.ReadFrame>
+        <S.ReadFrame>
+          <Viewer html={html} text={text} />
+        </S.ReadFrame>
         {attachments && <FileList files={attachments} />}
       </S.ReadArea>
       <PageMoveButtonArea no={no} />
