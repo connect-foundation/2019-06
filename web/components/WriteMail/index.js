@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import * as S from './styled';
 import InputReceiver from './InputReceiver';
 import InputSubject from './InputSubject';
-import SubmitButton from './SubmitButton';
+import Tools from './Tools';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
 
@@ -15,7 +15,7 @@ const WriteMail = () => {
   return (
     <WriteMailContextProvider>
       <S.WriteArea>
-        <SubmitButton dropZoneVisible={dropZoneVisible} setDropZoneVisible={setDropZoneVisible} />
+        <Tools dropZoneVisible={dropZoneVisible} setDropZoneVisible={setDropZoneVisible} />
         <InputReceiver />
         <InputSubject />
         <DropZone visible={dropZoneVisible} />

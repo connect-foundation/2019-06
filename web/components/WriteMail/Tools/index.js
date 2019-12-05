@@ -22,7 +22,7 @@ import { useStateForWM } from '../ContextProvider';
 import { AppDisapthContext } from '../../../contexts';
 import { handleCategoryClick, handleSnackbarState, setView } from '../../../contexts/reducer';
 import MailArea from '../../MailArea';
-import WriteMail from '../../WriteMail';
+import WriteMail from '..';
 import WriteMailToMe from '../../WriteMailToMe';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
@@ -45,7 +45,7 @@ const SNACKBAR_MSG = {
   },
 };
 
-const SubmitButton = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
+const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDisapthContext);
   const [open, setOpen] = useState(false);
@@ -197,4 +197,4 @@ const SubmitButton = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   );
 };
 
-export default SubmitButton;
+export default Tools;

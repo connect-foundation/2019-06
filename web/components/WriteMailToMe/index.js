@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import * as S from '../WriteMail/styled';
 import InputReceiver from '../WriteMail/InputReceiver';
 import InputSubject from '../WriteMail/InputSubject';
-import SubmitButton from '../WriteMail/SubmitButton';
+import Tools from '../WriteMail/Tools';
 import { WriteMailContextProvider } from '../WriteMail/ContextProvider';
 import DropZone from '../WriteMail/DropZone';
 import sessionStorage from '../../utils/storage';
@@ -16,7 +16,7 @@ const WriteMailToMe = () => {
   return (
     <WriteMailContextProvider>
       <S.WriteArea>
-        <SubmitButton
+        <Tools
           writeToMe={!!sessionStorage.getUser().email}
           dropZoneVisible={dropZoneVisible}
           setDropZoneVisible={setDropZoneVisible}
