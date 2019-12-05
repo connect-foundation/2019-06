@@ -6,7 +6,11 @@
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
+  "keywords": [
+    "daitnu",
+    "mail service",
+    "lambda"
+  ],
   "author": "ljh1324",
   "license": "ISC",
   "dependencies": {
