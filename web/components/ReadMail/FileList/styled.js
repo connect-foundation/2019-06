@@ -26,9 +26,7 @@ const ImageColumn = styled.div`
 const ImageName = styled.div`
   width: 150px;
   height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

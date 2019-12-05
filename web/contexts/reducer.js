@@ -9,6 +9,7 @@ const SET_MESSAGE = 'SET_MESSAGE';
 const MAIL_CHECK = 'MAIL_CHECK';
 const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
+const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
 
 export const initialState = {
   categories: null,
@@ -21,6 +22,17 @@ export const initialState = {
   message: '',
   allMailCheckInTools: false,
   categoryNoByName: null,
+  snackbarOpen: false,
+  snackbarVariant: 'error',
+  snackbarContent: '',
+  snackbarClose: null,
+};
+
+export const handleSnackbarState = payload => {
+  return {
+    type: SET_SNACKBAR_STATE,
+    payload,
+  };
 };
 
 export const handleSortSelect = sortType => {
@@ -150,6 +162,8 @@ export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case SET_SNACKBAR_STATE:
+      return { ...state, ...payload };
     case INIT_CHECKER_IN_TOOLS:
       return { ...state, ...payload };
     case CATEGORY_CLICK:

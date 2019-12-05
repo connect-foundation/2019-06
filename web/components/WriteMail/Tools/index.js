@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import SendIcon from '@material-ui/icons/Send';
+import React, { useState, useContext } from 'react';
+import { Send as SendIcon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 import {
   Button,
   ButtonGroup,
@@ -13,16 +12,20 @@ import {
 } from '@material-ui/core';
 import * as WM_S from '../styled';
 import * as S from './styled';
-import { UPDATE_INIT } from '../ContextProvider/reducer/action-type';
 import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
-import { useDispatchForWM, useStateForWM } from '../ContextProvider';
+import { useStateForWM } from '../ContextProvider';
+import { AppDisapthContext } from '../../../contexts';
+import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
+import MailArea from '../../MailArea';
+import ChangeWriteAreaButton from './ChangeWriteAreaButton';
+import SwitchDropzone from './SwitchDropzone';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
-import Snackbar, { SNACKBAR_VARIANT, snackbarInitState, getSnackbarState } from '../../Snackbar';
+import { SNACKBAR_VARIANT, getSnackbarState } from '../../Snackbar';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -38,31 +41,35 @@ const SNACKBAR_MSG = {
   },
 };
 
-const SubmitButton = () => {
+const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
-  const dispatch = useDispatchForWM();
-
-  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
+  const { dispatch: pageDispatch } = useContext(AppDisapthContext);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const anchorRef = React.useRef(null);
 
   const handleClick = async () => {
     if (receivers.length === 0) {
-      setSnackbarState(
-        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
+      pageDispatch(
+        handleSnackbarState(
+          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
+        ),
       );
       return;
     }
 
     if (!receivers.every(receiver => validator.validate('email', receiver))) {
-      setSnackbarState(
-        getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
+      pageDispatch(
+        handleSnackbarState(
+          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
+        ),
       );
       return;
     }
 
-    setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING));
+    pageDispatch(
+      handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING)),
+    );
     const formData = new FormData();
     receivers.forEach(r => {
       formData.append('to', r);
@@ -76,7 +83,11 @@ const SubmitButton = () => {
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE));
+        pageDispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE),
+          ),
+        );
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
@@ -88,10 +99,12 @@ const SubmitButton = () => {
 
     if (isError) {
       const { message } = errorParser(data);
-      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
+      pageDispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
     } else {
-      dispatch({ type: UPDATE_INIT });
-      setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND));
+      pageDispatch(
+        handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
+      );
+      pageDispatch(handleCategoryClick(0, <MailArea />));
     }
   };
 
@@ -115,14 +128,8 @@ const SubmitButton = () => {
     setModalOpen(false);
   };
 
-  const messageSnackbarProps = {
-    snackbarState,
-    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
-  };
-
   return (
     <>
-      <Snackbar {...messageSnackbarProps} />
       <WM_S.RowWrapper>
         <div></div>
         <S.RowContainer>
@@ -133,6 +140,8 @@ const SubmitButton = () => {
             </Button>
           </ButtonGroup>
           <ReservationDateText />
+          <ChangeWriteAreaButton writeToMe={writeToMe} />
+          <SwitchDropzone {...{ dropZoneVisible, setDropZoneVisible }} />
           <Popper
             open={open}
             anchorEl={anchorRef.current}
@@ -166,4 +175,4 @@ const SubmitButton = () => {
   );
 };
 
-export default SubmitButton;
+export default Tools;
