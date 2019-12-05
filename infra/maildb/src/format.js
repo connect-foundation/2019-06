@@ -27,12 +27,13 @@ const VALUE = {
   MAILBOX: "받은메일함"
 };
 
-const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
+const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
   const valueOfMailTemplate = {
     from,
     to,
     subject,
     text,
+    html,
     created_at: VALUE.NOW,
     updated_at: VALUE.NOW
   };
@@ -42,15 +43,17 @@ const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
 
 const getQueryToAddAttachment = ({
   filename,
-  content,
+  url,
   contentType,
-  mail_template_id
+  mail_template_id,
+  size
 }) => {
   const valueOfAttachment = {
     name: filename,
-    content,
+    url,
     type: contentType,
-    mail_template_id
+    mail_template_id,
+    size
   };
   return mysql.format(QUERY.INSERT, [TABLE.ATTACHMENT, valueOfAttachment]);
 };
@@ -70,13 +73,19 @@ const getQueryToFindOwnerAndCategoryNo = id => {
   ]);
 };
 
-const getQueryToAddMail = ({ owner, category_no, mail_template_id }) => {
+const getQueryToAddMail = ({
+  owner,
+  category_no,
+  mail_template_id,
+  message_id
+}) => {
   const valueOfMail = {
     owner,
     category_no,
     mail_template_id,
     is_important: 0,
-    is_read: 0
+    is_read: 0,
+    message_id
   };
 
   return mysql.format(QUERY.INSERT, [TABLE.MAIL, valueOfMail]);
