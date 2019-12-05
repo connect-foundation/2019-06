@@ -14,7 +14,8 @@ const MAIL_CONTENT = process.argv[2];
 const MY_DOMAIN = "daitnu.com";
 const RECEIVED_KEY = "received";
 const MESSAGE_ID_KEY = "message-id";
-const UNTITLE = "";
+const NOTITLE = "제목없음";
+const NOTEXT = "";
 const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
 
 const pool = mysql.createPool({
@@ -38,8 +39,9 @@ const parseMailContent = async content => {
     return {
       from: from.text,
       to: to.text,
-      subject: subject || UNTITLE,
-      text: html || text,
+      subject: subject || NOTITLE,
+      html,
+      text: text || NOTEXT,
       attachments,
       headers
     };

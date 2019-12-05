@@ -27,12 +27,13 @@ const VALUE = {
   MAILBOX: "받은메일함"
 };
 
-const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
+const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
   const valueOfMailTemplate = {
     from,
     to,
     subject,
     text,
+    html,
     created_at: VALUE.NOW,
     updated_at: VALUE.NOW
   };
