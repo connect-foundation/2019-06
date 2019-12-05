@@ -1,4 +1,4 @@
-import React, { useContext, useState, useCallback } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -40,9 +40,9 @@ import {
   handleSnackbarState,
 } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
-import { handleErrorStatus } from '../../utils/error-handler';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
 import WriteMailToMe from '../WriteMailToMe';
+import errorHandler from '../../utils/error-handler';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -76,14 +76,23 @@ const Aside = () => {
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
-  const callback = useCallback(
-    (err, data) => (err ? handleErrorStatus(err) : dispatch(handleCategoriesChange({ ...data }))),
-    [dispatch],
-  );
+  const fetchingCategories = useFetch(URL);
 
-  const isLoading = useFetch(callback, URL);
+  useEffect(() => {
+    if (fetchingCategories.data) {
+      dispatch(handleCategoriesChange({ ...fetchingCategories.data }));
+    }
+  }, [dispatch, fetchingCategories.data]);
 
-  if (isLoading) {
+  if (fetchingCategories.loading) {
+    return <Loading />;
+  }
+
+  if (fetchingCategories.error) {
+    return errorHandler(fetchingCategories.error);
+  }
+
+  if (!state.categories) {
     return <Loading />;
   }
 
