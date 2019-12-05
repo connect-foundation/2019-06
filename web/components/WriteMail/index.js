@@ -13,11 +13,11 @@ const WriteMail = () => {
   return (
     <WriteMailContextProvider>
       <S.WriteArea>
+        <SubmitButton />
         <InputReceiver />
         <InputSubject />
         <DropZone />
         <InputBody />
-        <SubmitButton />
       </S.WriteArea>
     </WriteMailContextProvider>
   );

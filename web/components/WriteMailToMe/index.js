@@ -14,11 +14,11 @@ const WriteMailToMe = () => {
   return (
     <WriteMailContextProvider>
       <S.WriteArea>
+        <SubmitButton writeToMe={!!sessionStorage.getUser().email} />
         <InputReceiver defaultReceiver={sessionStorage.getUser().email} />
         <InputSubject />
-        <InputBody />
-        <SubmitButton />
         <DropZone />
+        <InputBody />
       </S.WriteArea>
     </WriteMailContextProvider>
   );

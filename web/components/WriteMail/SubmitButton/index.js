@@ -1,6 +1,9 @@
 import React, { useState, useContext } from 'react';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import SendIcon from '@material-ui/icons/Send';
+import {
+  Send as SendIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+  Loop as LoopIcon,
+} from '@material-ui/icons';
 import {
   Button,
   ButtonGroup,
@@ -40,7 +43,7 @@ const SNACKBAR_MSG = {
   },
 };
 
-const SubmitButton = () => {
+const SubmitButton = ({ writeToMe }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDisapthContext);
   const [open, setOpen] = useState(false);
@@ -127,6 +130,8 @@ const SubmitButton = () => {
     setModalOpen(false);
   };
 
+  const changeToWhere = () => (writeToMe ? '편지쓰기' : '내게쓰기');
+
   return (
     <>
       <WM_S.RowWrapper>
@@ -139,6 +144,10 @@ const SubmitButton = () => {
             </Button>
           </ButtonGroup>
           <ReservationDateText />
+          <Button variant="outlined">
+            <LoopIcon fontSize="small" />
+            {changeToWhere()}
+          </Button>
           <Popper
             open={open}
             anchorEl={anchorRef.current}
