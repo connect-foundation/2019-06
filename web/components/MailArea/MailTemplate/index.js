@@ -40,7 +40,7 @@ const splitMoment = value =>
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
-  const [nowYear, nowDay] = splitMoment();
+  const [nowYear, nowMonth, nowDay] = splitMoment();
   const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
