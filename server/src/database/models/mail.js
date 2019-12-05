@@ -1,5 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/no-unresolved */
+import { Op } from 'sequelize';
+
 const DEFALT_PAGING = { offset: 0, limit: 100 };
 
 const model = (sequelize, DataTypes) => {
@@ -35,6 +37,10 @@ const model = (sequelize, DataTypes) => {
       },
       reservation_time: {
         type: DataTypes.DATE,
+        allowNull: true,
+      },
+      message_id: {
+        type: DataTypes.TEXT,
         allowNull: true,
       },
     },
@@ -81,6 +87,22 @@ const model = (sequelize, DataTypes) => {
       ],
       raw: true,
       ...options,
+    });
+  };
+
+  Mail.findAllPastReservationMailByDate = date => {
+    return Mail.findAll({
+      where: {
+        reservation_time: {
+          [Op.lte]: date,
+        },
+      },
+      include: [
+        {
+          model: sequelize.models.MailTemplate,
+          include: [sequelize.models.Attachment],
+        },
+      ],
     });
   };
 

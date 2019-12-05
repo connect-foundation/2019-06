@@ -38,7 +38,8 @@ const bulkCreateAttachment = async () => {
       mail_template_id: (i % 2) + 1,
       type: 'image',
       name: `attachment-${i + 1}`,
-      content: 'content',
+      url: 'url',
+      size: i * 10,
     };
 
     attachments.push(attachment);

@@ -26,7 +26,7 @@ const makeAttachmentsEntity = ({ msg, attachments }) => {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const makeMimeMessage = ({ messageId, mailContents }) => {
+export const makeMimeMessage = ({ messageId, mailContents, date }) => {
   const msg = mimemessage.factory({
     contentType: 'multipart/mixed',
     body: [],
@@ -36,7 +36,13 @@ export const makeMimeMessage = ({ messageId, mailContents }) => {
   msg.header('From', from);
   msg.header('To', to);
   msg.header('Subject', subject);
-  msg.header('Date', new Date());
+
+  if (!date) {
+    msg.header('Date', new Date());
+  } else {
+    msg.header('Date', date);
+  }
+
   msg.body.push(getTextEntity({ text }));
   makeAttachmentsEntity({ msg, attachments });
   return msg;

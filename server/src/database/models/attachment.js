@@ -19,8 +19,12 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
       },
-      content: {
-        type: DataTypes.BLOB('LONG'),
+      url: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+      },
+      size: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
       },
     },
@@ -37,6 +41,23 @@ const model = (sequelize, DataTypes) => {
 
   Attachment.associate = ({ MailTemplate }) => {
     Attachment.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
+  };
+
+  Attachment.findAllByMailTemplateNo = ({ no }) => {
+    return Attachment.findAll({
+      where: {
+        mail_template_id: no,
+      },
+      attributes: { exclude: ['url'] },
+      raw: true,
+    });
+  };
+
+  Attachment.findAttachmentAndMailTemplateByPk = no => {
+    return Attachment.findByPk(no, {
+      include: [{ model: sequelize.models.MailTemplate }],
+      raw: true,
+    });
   };
 
   return Attachment;

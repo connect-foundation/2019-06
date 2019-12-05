@@ -21,11 +21,11 @@ morgan.format(
 );
 
 const app = express();
-const { SESSION_SECRET, COOKIE_SECRET, FRONTEND_SERVER_ADDRESS, NODE_ENV } = process.env;
+const { SESSION_SECRET, COOKIE_SECRET, NODE_ENV } = process.env;
 const PAGE_NOT_FOUND_EXCEPTION = new ErrorResponse(ERROR_CODE.PAGE_NOT_FOUND);
 const INTERNAL_SERVER_ERROR_EXCEPTION = new ErrorResponse(ERROR_CODE.INTERNAL_SERVER_ERROR);
 
-if (NODE_ENV !== 'test') {
+if (NODE_ENV === 'production') {
   app.use(morgan('combined', { stream: log.debug }));
 }
 app.use(cors(corsOptions));
@@ -48,7 +48,7 @@ app.use(passport.session());
 app.use(helmet());
 app.set('trust proxy', 1);
 
-app.use('/v1', v1);
+app.use('/', v1);
 
 app.use((req, res, next) => next(PAGE_NOT_FOUND_EXCEPTION));
 
@@ -60,7 +60,11 @@ app.use((err, req, res, next) => {
 
   let who = '';
   if (req.user) {
-    who = `${JSON.stringify(req.user)}\n`;
+    const copiedUser = { ...req.user };
+    delete copiedUser.password;
+    delete copiedUser.salt;
+    delete copiedUser.imap_password;
+    who = `${JSON.stringify(copiedUser)}\n`;
   }
   log.error(who + err.stack);
 

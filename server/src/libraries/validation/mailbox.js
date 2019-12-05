@@ -4,27 +4,32 @@ import ErrorField from '../exception/error-field';
 
 const BLANK = '';
 const MAILBOX_NAME_LENGTH_LIMIT = 20;
+const nameRegex = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
 
-const boxNameValidation = val => {
+const validateBoxName = val => {
+  return !nameRegex.test(val);
+};
+
+const checkBlank = val => {
   return val === BLANK || !val;
 };
 
-const boxNameLengthValidation = integer => {
+const validateLength = integer => {
   return integer > MAILBOX_NAME_LENGTH_LIMIT;
 };
 
-const boxNoValidation = val => {
+const validateBoxNumber = val => {
   const toNumber = Number(val);
   return val === '' || Number.isNaN(toNumber) || toNumber < 1;
 };
 
 const makeMailBoxValidation = name => {
-  if (boxNameValidation(name)) {
+  if (checkBlank(name)) {
     const errorField = new ErrorField('mailBoxName', name, '추가할 메일함 이름을 입력해주세요');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNameLengthValidation(name.length)) {
+  if (validateLength(name.length)) {
     const errorField = new ErrorField(
       'mailBoxName',
       name,
@@ -33,11 +38,20 @@ const makeMailBoxValidation = name => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
+  if (validateBoxName(name)) {
+    const errorField = new ErrorField(
+      'mailBoxName',
+      name,
+      '메일함 이름은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다',
+    );
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
   return true;
 };
 
 const updateMailBoxValidation = (newName, oldName, no) => {
-  if (boxNameValidation(newName)) {
+  if (checkBlank(newName)) {
     const errorField = new ErrorField(
       'newMailBoxName',
       newName,
@@ -46,17 +60,17 @@ const updateMailBoxValidation = (newName, oldName, no) => {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNameValidation(oldName)) {
+  if (checkBlank(oldName)) {
     const errorField = new ErrorField('oldMailBoxName', oldName, '메일함이 선택되지 않았습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNoValidation(no)) {
+  if (validateBoxNumber(no)) {
     const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNameLengthValidation(newName.length)) {
+  if (validateLength(newName.length)) {
     const errorField = new ErrorField(
       'mailBoxName',
       newName,
@@ -65,16 +79,25 @@ const updateMailBoxValidation = (newName, oldName, no) => {
     throw new ErrorResponse(ERROR_CODE.MAILBOX_EXCEED_NAME, errorField);
   }
 
+  if (validateBoxName(newName)) {
+    const errorField = new ErrorField(
+      'mailBoxName',
+      newName,
+      '메일함 이름은 완성된 한글, 영문, 숫자로만 이루어질 수 있습니다',
+    );
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
   return true;
 };
 
 const deleteMailBoxValidation = (name, no) => {
-  if (boxNameValidation(name)) {
+  if (checkBlank(name)) {
     const errorField = new ErrorField('mailBoxName', name, '메일함이 잘못 전달되었습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  if (boxNoValidation(no)) {
+  if (validateBoxNumber(no)) {
     const errorField = new ErrorField('mailBoxNo', no, '메일함이 잘못 전달되었습니다');
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }

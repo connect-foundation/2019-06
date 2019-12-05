@@ -20,7 +20,11 @@ const model = (sequelize, DataTypes) => {
         allowNull: true,
       },
       text: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('LONG'),
+        allowNull: true,
+      },
+      html: {
+        type: DataTypes.TEXT('LONG'),
         allowNull: true,
       },
     },
@@ -38,6 +42,21 @@ const model = (sequelize, DataTypes) => {
   MailTemplate.associate = ({ Mail, Attachment }) => {
     MailTemplate.hasMany(Mail, { foreignKey: 'mail_template_id', sourceKey: 'no' });
     MailTemplate.hasMany(Attachment, { foreignKey: 'mail_template_id', sourceKey: 'no' });
+  };
+
+  MailTemplate.findAllAttachmentsByNo = ({ no, options = {} }) => {
+    return MailTemplate.findAll({
+      where: { no },
+      include: [
+        {
+          model: sequelize.models.Attachment,
+          attributes: { exclude: ['url'] },
+          required: true,
+        },
+      ],
+      raw: true,
+      ...options,
+    });
   };
 
   return MailTemplate;

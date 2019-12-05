@@ -27,25 +27,29 @@ describe('attachment DB test..', () => {
         mail_template_id,
         type: 'image',
         name: 'tile_name1',
-        content: 'file content',
+        url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name2',
-        content: 'file content',
+        url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name3',
-        content: 'file content',
+        url: 'file url',
+        size: 10000,
       },
       {
         mail_template_id,
         type: 'image',
         name: 'tile_name4',
-        content: 'file content',
+        url: 'file url',
+        size: 10000,
       },
     ];
 
@@ -56,8 +60,29 @@ describe('attachment DB test..', () => {
         mail_template_id: 1,
         type: 'image',
         name: `tile_name${index + 1}`,
-        content: 'file content',
+        url: 'file url',
       });
     }
+  });
+
+  it('findAllByMailTemplateNo는 no에 해당하는 첨부파일들을 반환한다.', async () => {
+    const no = 1;
+    const attachments = await DB.Attachment.findAllByMailTemplateNo({ no });
+    attachments.forEach(attachment => {
+      attachment.mail_template_id.should.be.equals(no);
+    });
+  });
+
+  it('findAllByMailTemplateNo로 반환하는 첨부파일들은 url을 갖지 않는다.', async () => {
+    const no = 1;
+    const attachments = await DB.Attachment.findAllByMailTemplateNo({ no });
+    attachments.forEach(attachment => {
+      attachment.should.not.have.properties('url');
+    });
+  });
+
+  it('findAttachmentAndMailTemplateByPk MailTemplate을 갖는다.', async () => {
+    const attachment = await DB.Attachment.findAttachmentAndMailTemplateByPk(1);
+    attachment.should.have.properties('MailTemplate.no');
   });
 });

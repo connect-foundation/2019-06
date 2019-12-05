@@ -51,13 +51,13 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.STRING(255),
         allowNull: false,
         validate: {
-          is: {
-            args: /[a-zA-Z가-힣 ]/,
-            msg: '이름의 형식이 올바르지 않습니다.',
-          },
           len: {
             args: [1, 10],
             msg: '이름의 길이는 1이상 10이하 이어야 합니다.',
+          },
+          is: {
+            args: /^[a-zA-Z가-힣 ]{1,10}$/,
+            msg: '이름의 형식이 올바르지 않습니다.',
           },
         },
       },
@@ -126,6 +126,12 @@ const model = (sequelize, DataTypes) => {
   User.findOneById = id => {
     return User.findOne({
       where: { id },
+      raw: true,
+    });
+  };
+
+  User.findOneByNo = no => {
+    return User.findByPk(no, {
       raw: true,
     });
   };

@@ -4,13 +4,15 @@ import replace from './replace';
 
 const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
 
-const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
+const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
-  attachments = attachments.map(({ originalname, buffer, mimetype }) => ({
+  attachments = attachments.map(({ originalname, buffer, mimetype, url, size }) => ({
     filename: originalname,
     content: buffer.toString('base64'),
+    url,
     contentType: mimetype,
     encoding: 'base64',
+    size,
   }));
 
   const dsn = {
@@ -23,9 +25,11 @@ const getSingleMailData = ({ from, to, subject, text, attachments = [] }) => {
   return {
     from,
     to,
-    subject,
+    subject: subject || '제목없음',
     text,
+    html,
     attachments,
+    messageId: uuidv4(),
     dsn,
   };
 };
