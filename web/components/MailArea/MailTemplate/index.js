@@ -53,7 +53,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
   const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
   const { from, subject, createdAt } = MailTemplate;
-  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
 
   let category = '';
