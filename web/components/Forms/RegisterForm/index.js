@@ -48,13 +48,20 @@ const RegisterForm = () => {
 
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });
+  };
+
+  const handleInputBlur = prop => () => {
     if (prop !== 'checkPassword') {
-      const errMsg = validator.validateAndGetMsg(prop, target.value, true);
+      const errMsg = validator.validateAndGetMsg(prop, values[prop], true);
       setErrorMsg({ ...errors, [prop]: errMsg });
+    } else if (values.password !== values.checkPassword) {
+      setErrorMsg({ ...errors, [prop]: ERROR_DIFFERENT_PASSWORD });
+    } else {
+      setErrorMsg({ ...errors, [prop]: '' });
     }
   };
 
-  const handleClickShowPassword = () => {
+  const handlePasswordShowClick = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
@@ -75,7 +82,7 @@ const RegisterForm = () => {
     Router.push('/login');
   };
 
-  const onSubmitHandler = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
     if (validateForm()) {
@@ -108,6 +115,7 @@ const RegisterForm = () => {
           label="이름"
           type="search"
           onChange={handleInputChange('name')}
+          onBlur={handleInputBlur('name')}
           className={classes.textField}
           error={errors.name !== ''}
           margin="normal"
@@ -123,6 +131,7 @@ const RegisterForm = () => {
           id="id"
           label="아이디"
           onChange={handleInputChange('id')}
+          onBlur={handleInputBlur('id')}
           className={classes.textField}
           error={errors.id !== ''}
           endAdornment={<InputAdornment position="end">@daitnu.com</InputAdornment>}
@@ -141,6 +150,7 @@ const RegisterForm = () => {
           id="password"
           label="비밀번호"
           onChange={handleInputChange('password')}
+          onBlur={handleInputBlur('password')}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -152,6 +162,7 @@ const RegisterForm = () => {
           id="checkPassword"
           label="확인"
           onChange={handleInputChange('checkPassword')}
+          onBlur={handleInputBlur('checkPassword')}
           className={classes.textField}
           error={errors.checkPassword !== ''}
           type={values.showPassword ? 'text' : 'password'}
@@ -159,7 +170,7 @@ const RegisterForm = () => {
           margin="normal"
           variant="outlined"
         />
-        <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword}>
+        <IconButton aria-label="toggle password visibility" onClick={handlePasswordShowClick}>
           {values.showPassword ? <Visibility /> : <VisibilityOff />}
         </IconButton>
       </S.InputContainer>
@@ -172,6 +183,7 @@ const RegisterForm = () => {
           label="이메일"
           type="search"
           onChange={handleInputChange('email')}
+          onBlur={handleInputBlur('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"
@@ -182,7 +194,7 @@ const RegisterForm = () => {
       <S.InputContainer>
         <S.ErrorText>{errors.register || errors.email}</S.ErrorText>
       </S.InputContainer>
-      <S.Button onClick={onSubmitHandler}>가입하기</S.Button>
+      <S.Button onClick={handleSubmit}>가입하기</S.Button>
     </S.InputForm>
   );
 };
