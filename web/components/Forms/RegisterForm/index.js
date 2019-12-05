@@ -182,9 +182,7 @@ const RegisterForm = () => {
       <S.InputContainer>
         <S.ErrorText>{errors.register || errors.email}</S.ErrorText>
       </S.InputContainer>
-      <S.Button className="submit-btn max-width" onClick={onSubmitHandler}>
-        가입하기
-      </S.Button>
+      <S.Button onClick={onSubmitHandler}>가입하기</S.Button>
     </S.InputForm>
   );
 };
