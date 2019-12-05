@@ -75,4 +75,20 @@ const Text = styled.span`
   margin-left: 15px;
 `;
 
-export { Container, ImportantButton, ReadSign, DeleteButton, From, Selectable, Title, Date, Text };
+const CategoryName = styled.div`
+  color: grey;
+  font-size: 0.75rem;
+`;
+
+export {
+  Container,
+  ImportantButton,
+  ReadSign,
+  DeleteButton,
+  From,
+  Selectable,
+  Title,
+  Date,
+  Text,
+  CategoryName,
+};
