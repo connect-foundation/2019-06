@@ -39,7 +39,7 @@ const convertMailToRead = mail => {
   return {
     from,
     to,
-    subject,
+    subject: subject || '제목없음',
     text,
     createdAt,
     is_important,
