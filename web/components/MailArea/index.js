@@ -35,12 +35,13 @@ const SNACKBAR_MSG = {
 
 const convertMailToRead = mail => {
   const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
-  const { from, to, subject, text, createdAt, no: mailTemplateNo } = MailTemplate;
+  const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
   return {
     from,
     to,
     subject: subject || '제목없음',
     text,
+    html,
     createdAt,
     is_important,
     is_read,

@@ -68,6 +68,7 @@ export const handleCategoryClick = (no, view) => {
     payload: {
       category: no,
       page: 1,
+      sort: 'datedesc',
       view,
     },
   };
