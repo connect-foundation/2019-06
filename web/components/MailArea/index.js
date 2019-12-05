@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useContext, useCallback } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -14,11 +14,11 @@ import {
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
-import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
+import errorHandler from '../../utils/error-handler';
 
 const WASTEBASKET_NAME = '휴지통';
 
@@ -77,13 +77,26 @@ const MailArea = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
-  const setMailList = useCallback(
-    (err, data) => (
-      err ? handleErrorStatus(err) : dispatch(initCheckerInTools()),
-      dispatch(handleMailsChange({ ...data }))
-    ),
-    [dispatch],
-  );
+  const fetchingMailData = useFetch(URL);
+
+  useEffect(() => {
+    if (fetchingMailData.data) {
+      dispatch(initCheckerInTools());
+      dispatch(handleMailsChange({ ...fetchingMailData.data }));
+    }
+  }, [dispatch, fetchingMailData.data]);
+
+  if (fetchingMailData.loading) {
+    return <Loading />;
+  }
+
+  if (fetchingMailData.error) {
+    return errorHandler(fetchingMailData.error);
+  }
+
+  if (!state.mails) {
+    return <Loading />;
+  }
 
   const handleAction = {
     [ACTION.STAR]: async mail => {
@@ -128,12 +141,6 @@ const MailArea = () => {
       updateMail(mail.no, { is_read: true });
     },
   };
-
-  const isLoading = useFetch(setMailList, URL);
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   const { mails, paging, categoryNoByName } = state;
   const categories = {};

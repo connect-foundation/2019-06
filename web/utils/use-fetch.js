@@ -1,24 +1,27 @@
 import { useState, useEffect } from 'react';
 import request from './request';
 
-const useFetch = (callback, URL) => {
-  const [isLoading, setIsLoading] = useState(true);
+const initialValues = { loading: true, error: false, data: null };
+
+const useFetch = URL => {
+  const [fetchingData, setFetchingData] = useState(initialValues);
 
   useEffect(() => {
     const fetchInitData = async () => {
-      setIsLoading(true);
+      setFetchingData(initialValues);
+
       const { isError, data } = await request.get(URL);
       if (isError) {
-        callback(data);
-        return;
+        setFetchingData({ loading: false, error: data, data: null });
+      } else {
+        setFetchingData({ loading: false, error: null, data });
       }
-      callback(null, data);
-      setIsLoading(false);
     };
 
     fetchInitData(URL);
-  }, [callback, URL]);
-  return isLoading;
+  }, [URL]);
+
+  return fetchingData;
 };
 
 export default useFetch;
