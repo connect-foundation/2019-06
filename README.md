@@ -40,7 +40,7 @@ MDA(Mail Delivery Agent): POP3, IMTP를 통해 서버에 저장된 이메일을 
 
 ### 메일 리스트
 
-![메일리스트](https://user-images.githubusercontent.com/33617083/70243576-2fb37c00-17b6-11ea-99b1-e15882e3a7ee.PNG)
+![메일리스트](https://user-images.githubusercontent.com/33617083/70243807-a781a680-17b6-11ea-8035-fcd66c8f4b7c.PNG)
 
 ### 메일쓰기
 
