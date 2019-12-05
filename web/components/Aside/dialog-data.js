@@ -74,11 +74,6 @@ export const getDialogData = (
               getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD),
             ),
           );
-          console.log(
-            handleSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD),
-            ),
-          );
           setDialogOpen(false);
         },
       };
