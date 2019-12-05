@@ -20,8 +20,10 @@ import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useStateForWM } from '../ContextProvider';
 import { AppDisapthContext } from '../../../contexts';
-import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
+import { handleCategoryClick, handleSnackbarState, setView } from '../../../contexts/reducer';
 import MailArea from '../../MailArea';
+import WriteMail from '../../WriteMail';
+import WriteMailToMe from '../../WriteMailToMe';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
@@ -130,7 +132,14 @@ const SubmitButton = ({ writeToMe }) => {
     setModalOpen(false);
   };
 
-  const changeToWhere = () => (writeToMe ? '편지쓰기' : '내게쓰기');
+  const changeWriteAreaButton = toMe => (
+    <Button
+      variant="outlined"
+      onClick={() => pageDispatch(setView(toMe ? <WriteMail /> : <WriteMailToMe />))}>
+      <LoopIcon fontSize="small" />
+      {toMe ? '편지쓰기' : '내게쓰기'}
+    </Button>
+  );
 
   return (
     <>
@@ -144,10 +153,7 @@ const SubmitButton = ({ writeToMe }) => {
             </Button>
           </ButtonGroup>
           <ReservationDateText />
-          <Button variant="outlined">
-            <LoopIcon fontSize="small" />
-            {changeToWhere()}
-          </Button>
+          {changeWriteAreaButton(writeToMe)}
           <Popper
             open={open}
             anchorEl={anchorRef.current}
