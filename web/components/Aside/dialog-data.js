@@ -34,28 +34,18 @@ export const getDialogData = (
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
         okBtnHandler: async (name, handleSnackbarState) => {
-          if (customCategory.find(category => category.name === name)) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
-              ),
-            );
-            return;
+          let errorMessage = '';
+          if (!errorMessage && customCategory.find(category => category.name === name)) {
+            errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
           }
-          if (name.length > 20) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH),
-              ),
-            );
-            return;
+          if (!errorMessage && name.length > 20) {
+            errorMessage = SNACKBAR_MSG.ERROR.LENGTH;
           }
-          if (!nameRegex.test(name)) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX),
-              ),
-            );
+          if (!errorMessage && !nameRegex.test(name)) {
+            errorMessage = SNACKBAR_MSG.ERROR.REGEX;
+          }
+          if (errorMessage) {
+            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
             return;
           }
           const { isError, data } = await request.post(url, { name });
@@ -83,28 +73,18 @@ export const getDialogData = (
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
         okBtnHandler: async (name, handleSnackbarState) => {
-          if (customCategory.find(category => category.name === name)) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
-              ),
-            );
-            return;
+          let errorMessage = '';
+          if (!errorMessage && customCategory.find(category => category.name === name)) {
+            errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
           }
-          if (name.length > 20) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH),
-              ),
-            );
-            return;
+          if (!errorMessage && name.length > 20) {
+            errorMessage = SNACKBAR_MSG.ERROR.LENGTH;
           }
-          if (!nameRegex.test(name)) {
-            dispatch(
-              handleSnackbarState(
-                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX),
-              ),
-            );
+          if (!errorMessage && !nameRegex.test(name)) {
+            errorMessage = SNACKBAR_MSG.ERROR.REGEX;
+          }
+          if (errorMessage) {
+            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
             return;
           }
           const { isError, data } = await request.patch(url + customCategory[idx].no, {
