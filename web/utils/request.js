@@ -15,43 +15,43 @@ const execute = async fn => {
   return response;
 };
 
-const BASE_URL = 'http://localhost/';
-axios.defaults.baseURL = BASE_URL;
 axios.defaults.withCredentials = true;
-const defaultOptions = {
+
+const server = axios.create({
+  baseURL: 'http://localhost/',
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json; charset=utf-8',
   },
-};
+});
 
 export default {
   async get(url, options = {}) {
-    const fn = () => axios.get(url, { ...defaultOptions, ...options });
+    const fn = () => server.get(url, { ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async post(url, body, options) {
-    const fn = () => axios.post(url, body, { ...defaultOptions, ...options });
+  async post(url, body, options = {}) {
+    const fn = () => server.post(url, body, { ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async put(url, body, options) {
-    const fn = () => axios.put(url, body, { ...defaultOptions, ...options });
+  async put(url, body, options = {}) {
+    const fn = () => server.put(url, body, { ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async delete(url, options) {
-    const fn = () => axios.delete(url, { ...defaultOptions, ...options });
+  async delete(url, options = {}) {
+    const fn = () => server.delete(url, { ...options });
     const response = await execute(fn);
     return response;
   },
 
-  async patch(url, body, options) {
-    const fn = () => axios.patch(url, body, { ...defaultOptions, ...options });
+  async patch(url, body, options = {}) {
+    const fn = () => server.patch(url, body, { ...options });
     const response = await execute(fn);
     return response;
   },
