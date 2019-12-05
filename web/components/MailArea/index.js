@@ -145,7 +145,6 @@ const MailArea = () => {
   const { mails, paging, categoryNoByName } = state;
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
-  console.log(mails);
   const mailList =
     mails.length > 0 ? (
       mails.map((mail, index) => (
