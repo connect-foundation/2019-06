@@ -1,9 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {
-  Send as SendIcon,
-  ArrowDropDown as ArrowDropDownIcon,
-  Loop as LoopIcon,
-} from '@material-ui/icons';
+import { Send as SendIcon, ArrowDropDown as ArrowDropDownIcon } from '@material-ui/icons';
 import {
   Button,
   ButtonGroup,
@@ -20,10 +16,9 @@ import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useStateForWM } from '../ContextProvider';
 import { AppDisapthContext } from '../../../contexts';
-import { handleCategoryClick, handleSnackbarState, setView } from '../../../contexts/reducer';
+import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
 import MailArea from '../../MailArea';
-import WriteMail from '..';
-import WriteMailToMe from '../../WriteMailToMe';
+import ChangeWriteAreaButton from './ChangeWriteAreaButton';
 import validator from '../../../utils/validator';
 import { errorParser } from '../../../utils/error-parser';
 import request from '../../../utils/request';
@@ -132,15 +127,6 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
     setModalOpen(false);
   };
 
-  const changeWriteAreaButton = () => (
-    <Button
-      variant="outlined"
-      onClick={() => pageDispatch(setView(writeToMe ? <WriteMail /> : <WriteMailToMe />))}>
-      <LoopIcon fontSize="small" />
-      {writeToMe ? '편지쓰기' : '내게쓰기'}
-    </Button>
-  );
-
   const switchDropzone = () => (
     <Button
       variant="outlined"
@@ -162,7 +148,7 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
             </Button>
           </ButtonGroup>
           <ReservationDateText />
-          {changeWriteAreaButton()}
+          <ChangeWriteAreaButton writeToMe={writeToMe} />
           {switchDropzone()}
           <Popper
             open={open}
