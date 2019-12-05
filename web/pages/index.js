@@ -7,13 +7,16 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Loading from '../components/Loading';
 import storage from '../utils/storage';
+import MessageSnackbar from '../components/Snackbar';
 import { AppDisapthContext, AppStateContext } from '../contexts';
-import { setView } from '../contexts/reducer';
+import { setView, handleSnackbarState } from '../contexts/reducer';
 
 const Home = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
   const [user, setUser] = useState(null);
+  const { snackbarOpen, snackbarVariant, snackbarContent } = state;
+  const snackbarState = { snackbarOpen, snackbarVariant, snackbarContent };
 
   useEffect(() => {
     const userData = storage.getUser();
@@ -25,10 +28,16 @@ const Home = () => {
     }
   }, [dispatch]);
 
+  const messageSnackbarProps = {
+    ...snackbarState,
+    snackbarClose: () => dispatch(handleSnackbarState({ snackbarOpen: false })),
+  };
+
   const indexPage = (
     <GS.FlexWrap>
       <Header brand={'Daitnu'} />
       <GS.Content>
+        <MessageSnackbar {...messageSnackbarProps} />
         <Aside />
         {state.view}
       </GS.Content>

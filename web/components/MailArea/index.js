@@ -1,18 +1,23 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useCallback } from 'react';
+import React, { useContext, useCallback } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
 import { AppDisapthContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
-import { handleMailClick, handleMailsChange, initCheckerInTools } from '../../contexts/reducer';
+import {
+  handleMailClick,
+  handleMailsChange,
+  initCheckerInTools,
+  handleSnackbarState,
+} from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import { handleErrorStatus } from '../../utils/error-handler';
 import ReadMail from '../ReadMail';
 import request from '../../utils/request';
-import MessageSnackbar, { snackbarInitState } from '../Snackbar';
+import { getSnackbarState } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 
 const WASTEBASKET_NAME = '휴지통';
@@ -45,34 +50,37 @@ const convertMailToRead = mail => {
   };
 };
 
-const loadNewMails = async (query, dispatch, setSnackbarState) => {
+const loadNewMails = async (query, dispatch) => {
   const { isError, data } = await request.get(`/mail/?${query}`);
   if (isError) {
-    setSnackbarState({
-      open: true,
-      variant: 'error',
-      contentText: SNACKBAR_MSG.MAILS_LOAD_FAIL,
-    });
+    dispatch(
+      handleSnackbarState({
+        snackbarOpen: true,
+        snackbarVariant: 'error',
+        snackbarContent: SNACKBAR_MSG.MAILS_LOAD_FAIL,
+      }),
+    );
     return;
   }
   dispatch(handleMailsChange({ ...data }));
 };
 
-const updateMail = async (no, props, setSnackbarState) => {
+const updateMail = async (no, props, dispatch) => {
   const { isError } = await request.patch(`/mail/${no}`, { props });
   if (isError) {
-    setSnackbarState({
-      open: true,
-      variant: 'error',
-      contentText: SNACKBAR_MSG.MAIL_UPDATE_FAIL,
-    });
+    dispatch(
+      handleSnackbarState({
+        snackbarOpen: true,
+        snackbarVariant: 'error',
+        snackbarContent: SNACKBAR_MSG.MAIL_UPDATE_FAIL,
+      }),
+    );
   }
 };
 
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDisapthContext);
-  const [snackbarState, setSnackbarState] = useState(snackbarInitState);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
   const setMailList = useCallback(
@@ -82,11 +90,6 @@ const MailArea = () => {
     ),
     [dispatch],
   );
-
-  const messageSnackbarProps = {
-    snackbarState,
-    handleClose: () => setSnackbarState({ ...snackbarState, open: false }),
-  };
 
   const isLoading = useFetch(setMailList, URL);
   if (isLoading) {
@@ -120,20 +123,20 @@ const MailArea = () => {
 
     switch (action) {
       case ACTION.MARK: {
-        await updateMail(mail.no, { is_important: !mail.is_important }, setSnackbarState);
-        loadNewMails(query, dispatch, setSnackbarState);
+        await updateMail(mail.no, { is_important: !mail.is_important }, dispatch);
+        loadNewMails(query, dispatch);
         break;
       }
       case ACTION.DELETE: {
         const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
-        await updateMail(mail.no, { category_no: wastebasketNo }, setSnackbarState);
-        loadNewMails(query, dispatch, setSnackbarState);
+        await updateMail(mail.no, { category_no: wastebasketNo }, dispatch);
+        loadNewMails(query, dispatch);
         break;
       }
       case ACTION.READ: {
         const mailToRead = convertMailToRead(mail);
-        dispatch(handleMailClick(mailToRead, <ReadMail />));
-        updateMail(mail.no, { is_read: true }, setSnackbarState);
+        dispatch(handleMailClick(mailToRead, <ReadMail />), dispatch);
+        updateMail(mail.no, { is_read: true });
         break;
       }
       default:
@@ -143,7 +146,6 @@ const MailArea = () => {
 
   return (
     <S.MailArea>
-      <MessageSnackbar {...messageSnackbarProps} />
       <S.ToolsWrapper>
         <Tools />
       </S.ToolsWrapper>

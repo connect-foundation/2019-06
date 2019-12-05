@@ -33,25 +33,35 @@ export const getDialogData = (
         title: '메일함 추가',
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (name, setSnackbarState) => {
+        okBtnHandler: async (name, handleSnackbarState) => {
           if (customCategory.find(category => category.name === name)) {
-            setSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+              ),
             );
             return;
           }
           if (name.length > 20) {
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH));
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH),
+              ),
+            );
             return;
           }
           if (!nameRegex.test(name)) {
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX));
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX),
+              ),
+            );
             return;
           }
           const { isError, data } = await request.post(url, { name });
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
+            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
             return;
           }
           const { name: createdName, no } = data.createdBox;
@@ -59,7 +69,16 @@ export const getDialogData = (
             name: createdName,
             no,
           });
-          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD));
+          dispatch(
+            handleSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD),
+            ),
+          );
+          console.log(
+            handleSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD),
+            ),
+          );
           setDialogOpen(false);
         },
       };
@@ -68,19 +87,29 @@ export const getDialogData = (
         title: `메일함(${customCategory[idx].name}) 변경`,
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (name, setSnackbarState) => {
+        okBtnHandler: async (name, handleSnackbarState) => {
           if (customCategory.find(category => category.name === name)) {
-            setSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DUPLICATE),
+              ),
             );
             return;
           }
           if (name.length > 20) {
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH));
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.LENGTH),
+              ),
+            );
             return;
           }
           if (!nameRegex.test(name)) {
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX));
+            dispatch(
+              handleSnackbarState(
+                getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REGEX),
+              ),
+            );
             return;
           }
           const { isError, data } = await request.patch(url + customCategory[idx].no, {
@@ -89,12 +118,16 @@ export const getDialogData = (
           });
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
+            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
             return;
           }
           customCategory[idx].name = name;
           dispatch(setCustomCategory({ categories: customCategory }));
-          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY));
+          dispatch(
+            handleSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY),
+            ),
+          );
           setDialogOpen(false);
         },
       };
@@ -103,19 +136,23 @@ export const getDialogData = (
         title: `메일함(${customCategory[idx].name}) 삭제`,
         textContents: '정말로 삭제하시겠습니까?',
         needTextField: false,
-        okBtnHandler: async (_, setSnackbarState) => {
+        okBtnHandler: async (_, handleSnackbarState) => {
           const { no, name } = customCategory[idx];
           const query = `?name=${name}`;
           const { isError, data } = await request.delete(url + no + query);
           if (isError) {
             const { message } = errorParser(data);
-            setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message));
+            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
             return;
           }
           dispatch(
             setCustomCategory({ categories: customCategory.filter((_, index) => idx !== index) }),
           );
-          setSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE));
+          dispatch(
+            handleSnackbarState(
+              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
+            ),
+          );
           setDialogOpen(false);
         },
       };
