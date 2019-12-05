@@ -7,11 +7,11 @@ import 'tui-editor/dist/tui-editor.min.css';
 const Viewer = ({ html, text }) => {
   useEffect(() => {
     const editor = new TUIViewer({
-      initialValue: html,
+      initialValue: html || text,
       el: document.getElementById('editor-section'),
       viewer: true,
     });
-  }, [html]);
+  }, [html, text]);
 
   return <div id="editor-section"></div>;
 };
