@@ -44,6 +44,11 @@ const getAttachmentStream = async ({ attachmentNo, email }) => {
     throw new ErrorResponse(ERROR_CODE.PRIVATE_PATH);
   }
 
+  const isImage = mailTemplateAndAttachment.type.split('/')[0] === 'image';
+  if (!isImage) {
+    throw new ErrorResponse(ERROR_CODE.NOT_ALLOWED_PREVIEW_EXTENSION);
+  }
+
   const stream = await getStream(mailTemplateAndAttachment.url);
   stream.mimetype = mailTemplateAndAttachment.type;
   return stream;

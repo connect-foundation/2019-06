@@ -32,6 +32,7 @@ const ERROR_CODE = {
     '가입하지 않은 아이디이거나, 잘못된 비밀번호입니다.',
     'LOGIN001',
   ),
+  NOT_ALLOWED_PREVIEW_EXTENSION: $(400, '미리보기를 지원하지 않는 확장자 입니다.', 'fdq31cd'),
   EMAIL_NOT_FOUND: $(404, '가입된 적 없는 이메일 입니다.', 'COMMON009'),
   LOGIN_ID_OR_EMAIL_NOT_FOUND: $(
     404,
