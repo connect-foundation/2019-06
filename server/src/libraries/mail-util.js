@@ -25,7 +25,7 @@ const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) 
   return {
     from,
     to,
-    subject,
+    subject: subject || '제목없음',
     text,
     html,
     attachments,
