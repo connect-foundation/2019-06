@@ -13,8 +13,6 @@ import { handleMailChecked } from '../../../contexts/reducer';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
-const WASTEBASKET_NAME = '휴지통';
-
 const useStyles = makeStyles(theme => ({
   delete: {
     '&:hover': {
@@ -74,11 +72,11 @@ const MailTemplate = ({ mail, selected, index }) => {
           }
         />
       </div>
-      <S.ImportantButton id={`mark-${index}`}>
+      <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
-          <StarIcon className={classes.star} id={`mark-${index}`} />
+          <StarIcon className={classes.star} id={`star-${index}`} />
         ) : (
-          <StarBorderIcon className={classes.unstar} id={`mark-${index}`} />
+          <StarBorderIcon className={classes.unstar} id={`star-${index}`} />
         )}
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
