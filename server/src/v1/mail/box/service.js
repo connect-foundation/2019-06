@@ -14,6 +14,7 @@ const createBox = async (user, name) => {
     user_no: user.no,
     name,
   });
+
   addMailBox({ user, name });
   return response.get({ plain: true });
 };
@@ -28,7 +29,6 @@ const updateBox = async (user, boxNo, oldName, newName) => {
   boxRow.name = newName;
   await boxRow.save();
   renameMailBox({ user, oldName, newName });
-
   return boxRow;
 };
 
