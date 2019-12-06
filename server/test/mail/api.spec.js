@@ -192,7 +192,9 @@ describe('Mail api test...', () => {
       it('# sort가 datedesc면 받은 시간 역순으로 출력한다. ', done => {
         authenticatedUser.get('/mail?sort=datedesc').end((err, { body }) => {
           const { mails } = body;
-          mails[0].no.should.be.above(mails[1].no);
+          const mail0 = new Date(mails[0].MailTemplate.createdAt).getTime();
+          const mail1 = new Date(mails[1].MailTemplate.createdAt).getTime();
+          mail0.should.be.aboveOrEqual(mail1);
           done();
         });
       });
@@ -200,7 +202,9 @@ describe('Mail api test...', () => {
       it('# sort가 dateasc면 받은 시간순으로 출력한다. ', done => {
         authenticatedUser.get('/mail?sort=dateasc').end((err, { body }) => {
           const { mails } = body;
-          mails[0].no.should.be.below(mails[1].no);
+          const mail0 = new Date(mails[0].MailTemplate.createdAt).getTime();
+          const mail1 = new Date(mails[1].MailTemplate.createdAt).getTime();
+          mail0.should.be.belowOrEqual(mail1);
           done();
         });
       });

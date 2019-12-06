@@ -24,8 +24,8 @@ const DEFAULT_MAIL_QUERY_OPTIONS = {
 };
 
 const SORT_TYPE = {
-  datedesc: [['no', 'DESC']],
-  dateasc: [['no', 'ASC']],
+  datedesc: [[DB.MailTemplate, 'createdAt', 'DESC']],
+  dateasc: [[DB.MailTemplate, 'createdAt', 'ASC']],
   subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
   subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
   fromdesc: [[DB.MailTemplate, 'from', 'DESC']],

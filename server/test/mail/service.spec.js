@@ -78,15 +78,15 @@ describe('Mail Service Test', () => {
     it('# 매개변수 오브젝트에 sort가 dateasc면 no asc 이다...', () => {
       const query = service.getQueryByOptions({ ...data, sort: 'dateasc' });
       const order = query.order.flat();
-      order[0].should.be.equals('no');
-      order[1].should.be.equals('ASC');
+      order[1].should.be.equals('createdAt');
+      order[2].should.be.equals('ASC');
     });
 
     it('# 매개변수 오브젝트에 sort가 datedesc면 no desc 이다...', () => {
       const query = service.getQueryByOptions({ ...data, sort: 'datedesc' });
       const order = query.order.flat();
-      order[0].should.be.equals('no');
-      order[1].should.be.equals('DESC');
+      order[1].should.be.equals('createdAt');
+      order[2].should.be.equals('DESC');
     });
 
     it('# 매개변수 오브젝트에 sort가 유효한 값이 아니면 order는 존재하지 않는다...', () => {
