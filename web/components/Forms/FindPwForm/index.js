@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SmallHeader from '../../SmallHeader';
 import validator from '../../../utils/validator';
-import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
+import { AppDispatchContext } from '../../../contexts';
+import { SUCCESS_EMAIL_SEND_TO_FIND_PASSWORD } from '../../../utils/success-message';
+import { setMessage } from '../../../contexts/reducer';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -34,6 +36,8 @@ const FindPwForm = () => {
   const [values, setValues] = useState(initialInputState);
   const [errors, setErrorMsg] = useState(initialErrorState);
 
+  const { dispatch } = useContext(AppDispatchContext);
+
   const handleInputChange = prop => ({ target }) => {
     setValues({ ...values, [prop]: target.value });
   };
@@ -43,13 +47,13 @@ const FindPwForm = () => {
   };
 
   const findPasswordByIdAndEmail = async () => {
-    try {
-      const body = { id: values.id, email: values.email };
-      await axios.post('/users/search?type=pw', body);
+    const body = { id: values.id, email: values.email };
+    const { isError, data } = await request.post('/users/search?type=pw', body);
+    if (isError) {
+      setSearchErrMsg(data.message);
+    } else {
+      dispatch(setMessage(SUCCESS_EMAIL_SEND_TO_FIND_PASSWORD));
       Router.push('/login');
-    } catch (err) {
-      const message = errorParser(err);
-      setSearchErrMsg(message);
     }
   };
 
