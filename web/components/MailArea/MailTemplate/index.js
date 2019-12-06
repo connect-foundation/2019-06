@@ -40,7 +40,7 @@ const splitMoment = value =>
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
-  const [nowYear, nowDay] = splitMoment();
+  const [nowYear, nowMonth, nowDay] = splitMoment();
   const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
@@ -53,7 +53,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
   const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
   const { from, subject, createdAt } = MailTemplate;
-  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
 
   let category = '';
@@ -90,7 +90,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
       {category}
       <S.Selectable id={`read-${index}`}>
         <S.Title isRead={is_read} id={`read-${index}`}>
-          {subject}
+          {subject || '제목없음'}
         </S.Title>
         <S.Date>
           {getDateOrTime(createdAt)}
