@@ -226,7 +226,7 @@ const Aside = () => {
             disabled={dialogOkButtonDisableState}
             onClick={() =>
               dialogState.okBtnHandler(
-                dialogTextFieldState,
+                dialogTextFieldState.trim(),
                 handleSnackbarState,
                 setDialogOkButtonDisableState,
               )
