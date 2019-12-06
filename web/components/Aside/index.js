@@ -72,6 +72,7 @@ const Aside = () => {
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
+  const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
@@ -110,6 +111,7 @@ const Aside = () => {
       dispatch,
     );
     if (!dialogData) return;
+    setDialogOkButtonDisableState(false);
     setDialogState(dialogData);
     setDialogOpen(true);
   };
@@ -217,7 +219,14 @@ const Aside = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, handleSnackbarState)}
+            disabled={dialogOkButtonDisableState}
+            onClick={() =>
+              dialogState.okBtnHandler(
+                dialogTextFieldState.trim(),
+                handleSnackbarState,
+                setDialogOkButtonDisableState,
+              )
+            }
             color="primary">
             확인
           </Button>
