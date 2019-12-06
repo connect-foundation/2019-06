@@ -70,7 +70,6 @@ describe('attachment validation...', () => {
       try {
         checkAttachment(files);
       } catch (err) {
-        console.log(err);
         const { errorCode, fieldErrors } = err;
         errorCode.status.should.be.equals(400);
         errorCode.message.should.be.equals('INVALID INPUT VALUE');
@@ -105,7 +104,6 @@ describe('attachment validation...', () => {
       try {
         checkAttachment(files);
       } catch (err) {
-        console.log(err);
         const { errorCode, fieldErrors } = err;
         errorCode.status.should.be.equals(400);
         errorCode.message.should.be.equals('INVALID INPUT VALUE');

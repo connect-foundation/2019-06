@@ -40,15 +40,16 @@ MDA(Mail Delivery Agent): POP3, IMTP를 통해 서버에 저장된 이메일을 
 
 ### 메일 리스트
 
-![메일](https://user-images.githubusercontent.com/31912670/69363194-60ce7f80-0cd3-11ea-9d89-19d1bde39eb1.png)
+![메일리스트](https://user-images.githubusercontent.com/33617083/70243807-a781a680-17b6-11ea-8035-fcd66c8f4b7c.PNG)
 
 ### 메일쓰기
 
-![메일쓰기](https://user-images.githubusercontent.com/31912670/69363193-6035e900-0cd3-11ea-939b-95823be1ba9a.png)
+![메일쓰기](https://user-images.githubusercontent.com/33617083/70243577-304c1280-17b6-11ea-9a0f-73207ebff50f.PNG)
 
 ### 메일읽기
 
-![메일읽기](https://user-images.githubusercontent.com/33617083/69391164-44533700-0d15-11ea-96c3-1a1dc3a3b83c.PNG)
+![메일읽기](https://user-images.githubusercontent.com/33617083/70243581-30e4a900-17b6-11ea-9c23-d0461c65598e.PNG)
+
 
 ## Prerequisites
 
