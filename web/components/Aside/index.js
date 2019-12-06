@@ -154,7 +154,7 @@ const Aside = () => {
         button={!selected}
         onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
         <ListItemIcon>
-          <StarBorder className={selected && classes.whiteIcon} />
+          <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>
         <ListItemText>
           <S.EllipsisList style={selected ? { color: 'white' } : {}}>
@@ -163,10 +163,10 @@ const Aside = () => {
         </ListItemText>
         <ListItemSecondaryAction>
           <IconButton edge="end" aria-label="modify" onClick={() => handleDialogOpen(MODIFY, idx)}>
-            <ModifyIcon className={selected && classes.whiteIcon} fontSize={'small'} />
+            <ModifyIcon className={selected ? classes.whiteIcon : ''} fontSize={'small'} />
           </IconButton>
           <IconButton edge="end" aria-label="delete" onClick={() => handleDialogOpen(DELETE, idx)}>
-            <DeleteIcon className={selected && classes.whiteIcon} fontSize={'small'} />
+            <DeleteIcon className={selected ? classes.whiteIcon : ''} fontSize={'small'} />
           </IconButton>
         </ListItemSecondaryAction>
       </ListItem>
