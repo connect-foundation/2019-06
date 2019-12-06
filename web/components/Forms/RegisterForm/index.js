@@ -61,6 +61,20 @@ const RegisterForm = () => {
     }
   };
 
+  const handlePasswordInputBlur = () => {
+    const errMsgs = { password: '', checkPassword: '' };
+
+    errMsgs.password = validator.validateAndGetMsg('password', values.password, true);
+    if (
+      (values.checkPassword !== '' || errors.checkPassword !== '') &&
+      values.password !== values.checkPassword
+    ) {
+      errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
+    }
+
+    setErrorMsg({ ...errors, ...errMsgs });
+  };
+
   const handlePasswordShowClick = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
@@ -150,7 +164,7 @@ const RegisterForm = () => {
           id="password"
           label="비밀번호"
           onChange={handleInputChange('password')}
-          onBlur={handleInputBlur('password')}
+          onBlur={handlePasswordInputBlur}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
