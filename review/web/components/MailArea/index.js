@@ -73,7 +73,7 @@ const updateMail = async (no, props) => {
 };
 
 const handleAction = {
-  [ACTION.STAR]: async (mail, dispatch) => {
+  [ACTION.STAR]: async ({ mail, dispatch }) => {
     try {
       mail.is_important = !mail.is_important;
       const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
@@ -92,7 +92,7 @@ const handleAction = {
       dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
     }
   },
-  [ACTION.DELETE]: async (mail, dispatch, query) => {
+  [ACTION.DELETE]: async ({ mail, dispatch, query, categoryNoByName }) => {
     try {
       const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
       const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
@@ -109,7 +109,7 @@ const handleAction = {
       dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
     }
   },
-  [ACTION.READ]: (mail, dispatch) => {
+  [ACTION.READ]: ({ mail, dispatch }) => {
     const mailToRead = convertMailToRead(mail);
     dispatch(handleMailClick(mailToRead, <ReadMail />));
     updateMail(mail.no, { is_read: true });
@@ -157,7 +157,7 @@ const MailArea = () => {
       </S.NothingMailView>
     );
 
-  const handleMailListAreaClick = async ({ target }) => {
+  const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
       target = target.parentNode;
     }
@@ -169,7 +169,7 @@ const MailArea = () => {
 
     const [action, index] = id.split('-');
     const mail = mails[index];
-    handleAction[action](mail, dispatch, query);
+    handleAction[action]({ mail, dispatch, query, categoryNoByName });
   };
 
   return (
