@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -79,23 +79,17 @@ const MailArea = () => {
   const URL = `/mail?${query}`;
   const fetchingMailData = useFetch(URL);
 
-  useEffect(() => {
-    if (fetchingMailData.data) {
-      dispatch(initCheckerInTools());
-      dispatch(handleMailsChange({ ...fetchingMailData.data }));
-    }
+  useMemo(() => {
+    dispatch(initCheckerInTools());
+    dispatch(handleMailsChange({ ...fetchingMailData.data }));
   }, [dispatch, fetchingMailData.data]);
 
-  if (fetchingMailData.loading) {
+  if (fetchingMailData.loading || !state.mails) {
     return <Loading />;
   }
 
   if (fetchingMailData.error) {
     return errorHandler(fetchingMailData.error);
-  }
-
-  if (!state.mails) {
-    return <Loading />;
   }
 
   const handleAction = {
@@ -145,7 +139,7 @@ const MailArea = () => {
   const { mails, paging, categoryNoByName } = state;
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
-  console.log(mails);
+
   const mailList =
     mails.length > 0 ? (
       mails.map((mail, index) => (

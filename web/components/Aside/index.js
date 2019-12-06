@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -78,22 +78,18 @@ const Aside = () => {
 
   const fetchingCategories = useFetch(URL);
 
-  useEffect(() => {
+  useMemo(() => {
     if (fetchingCategories.data) {
       dispatch(handleCategoriesChange({ ...fetchingCategories.data }));
     }
   }, [dispatch, fetchingCategories.data]);
 
-  if (fetchingCategories.loading) {
+  if (fetchingCategories.loading || !state.categories) {
     return <Loading />;
   }
 
   if (fetchingCategories.error) {
     return errorHandler(fetchingCategories.error);
-  }
-
-  if (!state.categories) {
-    return <Loading />;
   }
 
   const iconOfDefaultCategories = [
