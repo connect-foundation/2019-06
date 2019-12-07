@@ -9,6 +9,16 @@ import { encrypt, aesEncrypt } from '../../libraries/crypto';
 const DEFAULT_CATEGORIES = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 const TEMP_PASSWORD_LENGTH = 15;
 
+const isSubEmailUniqueConstraintError = error => {
+  if (error.errors) {
+    const [{ type, path }] = error.errors;
+    if (type === 'unique violation' && path === 'sub_email') {
+      return true;
+    }
+  }
+  return false;
+};
+
 const createDefaultCategories = async (no, transaction) => {
   const categories = DEFAULT_CATEGORIES.map(name => ({
     user_no: no,
@@ -23,14 +33,21 @@ const register = async ({ id, password, name, sub_email }) => {
   const userData = { id, password, name, sub_email };
   let newUser;
 
-  await DB.sequelize.transaction(async transaction => {
-    const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
-    if (!created) {
-      throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
+  try {
+    await DB.sequelize.transaction(async transaction => {
+      const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
+      if (!created) {
+        throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
+      }
+      newUser = response.get({ plain: true });
+      await createDefaultCategories(newUser.no, transaction);
+    });
+  } catch (error) {
+    if (isSubEmailUniqueConstraintError(error)) {
+      throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
     }
-    newUser = response.get({ plain: true });
-    await createDefaultCategories(newUser.no, transaction);
-  });
+    throw error;
+  }
 
   return newUser;
 };
