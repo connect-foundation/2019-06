@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useMemo } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -72,28 +72,25 @@ const Aside = () => {
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
+  const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
 
   const fetchingCategories = useFetch(URL);
 
-  useEffect(() => {
+  useMemo(() => {
     if (fetchingCategories.data) {
       dispatch(handleCategoriesChange({ ...fetchingCategories.data }));
     }
   }, [dispatch, fetchingCategories.data]);
 
-  if (fetchingCategories.loading) {
+  if (fetchingCategories.loading || !state.categories) {
     return <Loading />;
   }
 
   if (fetchingCategories.error) {
     return errorHandler(fetchingCategories.error);
-  }
-
-  if (!state.categories) {
-    return <Loading />;
   }
 
   const iconOfDefaultCategories = [
@@ -114,6 +111,7 @@ const Aside = () => {
       dispatch,
     );
     if (!dialogData) return;
+    setDialogOkButtonDisableState(false);
     setDialogState(dialogData);
     setDialogOpen(true);
   };
@@ -221,7 +219,14 @@ const Aside = () => {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => dialogState.okBtnHandler(dialogTextFieldState, handleSnackbarState)}
+            disabled={dialogOkButtonDisableState}
+            onClick={() =>
+              dialogState.okBtnHandler(
+                dialogTextFieldState.trim(),
+                handleSnackbarState,
+                setDialogOkButtonDisableState,
+              )
+            }
             color="primary">
             확인
           </Button>

@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -72,6 +72,50 @@ const updateMail = async (no, props) => {
   return request.patch(`/mail/${no}`, { props });
 };
 
+const handleAction = {
+  [ACTION.STAR]: async ({ mail, dispatch }) => {
+    try {
+      mail.is_important = !mail.is_important;
+      const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
+      if (isError) {
+        throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
+      }
+      dispatch(
+        handleSnackbarState(
+          getSnackbarState(
+            SNACKBAR_VARIANT.SUCCESS,
+            mail.is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR,
+          ),
+        ),
+      );
+    } catch (errorMessage) {
+      dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+    }
+  },
+  [ACTION.DELETE]: async ({ mail, dispatch, query, categoryNoByName }) => {
+    try {
+      const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
+      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
+      if (isError) {
+        throw SNACKBAR_MSG.ERROR.DELETE;
+      }
+      loadNewMails(query, dispatch);
+      dispatch(
+        handleSnackbarState(
+          getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
+        ),
+      );
+    } catch (errorMessage) {
+      dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+    }
+  },
+  [ACTION.READ]: ({ mail, dispatch }) => {
+    const mailToRead = convertMailToRead(mail);
+    dispatch(handleMailClick(mailToRead, <ReadMail />));
+    updateMail(mail.no, { is_read: true });
+  },
+};
+
 const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -79,14 +123,12 @@ const MailArea = () => {
   const URL = `/mail?${query}`;
   const fetchingMailData = useFetch(URL);
 
-  useEffect(() => {
-    if (fetchingMailData.data) {
-      dispatch(initCheckerInTools());
-      dispatch(handleMailsChange({ ...fetchingMailData.data }));
-    }
+  useMemo(() => {
+    dispatch(initCheckerInTools());
+    dispatch(handleMailsChange({ ...fetchingMailData.data }));
   }, [dispatch, fetchingMailData.data]);
 
-  if (fetchingMailData.loading) {
+  if (fetchingMailData.loading || !state.mails) {
     return <Loading />;
   }
 
@@ -94,57 +136,10 @@ const MailArea = () => {
     return errorHandler(fetchingMailData.error);
   }
 
-  if (!state.mails) {
-    return <Loading />;
-  }
-
-  const handleAction = {
-    [ACTION.STAR]: async mail => {
-      try {
-        mail.is_important = !mail.is_important;
-        const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
-        if (isError) {
-          throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
-        }
-        dispatch(
-          handleSnackbarState(
-            getSnackbarState(
-              SNACKBAR_VARIANT.SUCCESS,
-              mail.is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR,
-            ),
-          ),
-        );
-      } catch (errorMessage) {
-        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
-      }
-    },
-    [ACTION.DELETE]: async mail => {
-      try {
-        const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
-        const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
-        if (isError) {
-          throw SNACKBAR_MSG.ERROR.DELETE;
-        }
-        loadNewMails(query, dispatch);
-        dispatch(
-          handleSnackbarState(
-            getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
-          ),
-        );
-      } catch (errorMessage) {
-        dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
-      }
-    },
-    [ACTION.READ]: mail => {
-      const mailToRead = convertMailToRead(mail);
-      dispatch(handleMailClick(mailToRead, <ReadMail />));
-      updateMail(mail.no, { is_read: true });
-    },
-  };
-
   const { mails, paging, categoryNoByName } = state;
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
+
   const mailList =
     mails.length > 0 ? (
       mails.map((mail, index) => (
@@ -162,7 +157,7 @@ const MailArea = () => {
       </S.NothingMailView>
     );
 
-  const handleMailListAreaClick = async ({ target }) => {
+  const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
       target = target.parentNode;
     }
@@ -174,7 +169,7 @@ const MailArea = () => {
 
     const [action, index] = id.split('-');
     const mail = mails[index];
-    handleAction[action](mail);
+    handleAction[action]({ mail, dispatch, query, categoryNoByName });
   };
 
   return (
