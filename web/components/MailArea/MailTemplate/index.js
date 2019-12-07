@@ -7,11 +7,14 @@ import StarIcon from '@material-ui/icons/Star';
 import MailIcon from '@material-ui/icons/Mail';
 import DraftsIcon from '@material-ui/icons/Drafts';
 import DeleteIcon from '@material-ui/icons/Delete';
+import LoopIcon from '@material-ui/icons/Loop';
 import { makeStyles } from '@material-ui/core/styles';
-import { red, yellow } from '@material-ui/core/colors';
+import { red, yellow, green } from '@material-ui/core/colors';
 import { handleMailChecked } from '../../../contexts/reducer';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
+
+const WASTEBASKET_NAME = '휴지통';
 
 const useStyles = makeStyles(() => ({
   delete: {
@@ -29,6 +32,11 @@ const useStyles = makeStyles(() => ({
     color: yellow[800],
     '&:hover': {
       color: '#1976d2',
+    },
+  },
+  recycle: {
+    '&:hover': {
+      color: green[800],
     },
   },
 }));
@@ -55,6 +63,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
   const { from, subject, createdAt } = MailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
+  const wastebasketNo = state.categoryNoByName[WASTEBASKET_NAME];
 
   let category = '';
   if (state.category === 0) {
@@ -83,9 +92,15 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
         )}
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
-      <S.DeleteButton id={`delete-${index}`}>
-        <DeleteIcon className={classes.delete} id={`delete-${index}`} />
-      </S.DeleteButton>
+      {state.category === wastebasketNo ? (
+        <S.RecycleButton id={`recycle-${index}`}>
+          <LoopIcon className={classes.recycle} id={`recycle-${index}`} />
+        </S.RecycleButton>
+      ) : (
+        <S.DeleteButton id={`delete-${index}`}>
+          <DeleteIcon className={classes.delete} id={`delete-${index}`} />
+        </S.DeleteButton>
+      )}
       <S.From isRead={is_read}>{from}</S.From>
       {category}
       <S.Selectable id={`read-${index}`}>
