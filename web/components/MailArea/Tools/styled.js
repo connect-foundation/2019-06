@@ -14,4 +14,8 @@ const SortItemView = styled.div`
   align-items: center;
 `;
 
-export default { CheckBox, Filter, SortItemView };
+const ButtonGroup = styled.div`
+  margin-right: 20px;
+`;
+
+export default { CheckBox, Filter, SortItemView, ButtonGroup };

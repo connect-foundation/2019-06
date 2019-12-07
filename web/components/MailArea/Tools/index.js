@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-
 import { makeStyles } from '@material-ui/core/styles';
 import {
   MenuItem,
@@ -9,8 +8,9 @@ import {
   Select,
   ListItemIcon,
   ListItemText,
+  Button,
 } from '@material-ui/core';
-import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
+import { ArrowDownward, ArrowUpward, Email, Send, Delete } from '@material-ui/icons';
 import S from './styled';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
@@ -19,6 +19,9 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     minWidth: 120,
     color: 'white',
+  },
+  button: {
+    margin: theme.spacing(1),
   },
 }));
 
@@ -47,6 +50,21 @@ const sortItems = SORT_TYPES.map(type => (
   </MenuItem>
 ));
 
+const buttons = [
+  {
+    name: '답장',
+    icon: <Email />,
+  },
+  {
+    name: '전달',
+    icon: <Send />,
+  },
+  {
+    name: '삭제',
+    icon: <Delete />,
+  },
+];
+
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
@@ -54,6 +72,17 @@ const Tools = () => {
   const { allMailCheckInTools, mails } = state;
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
+
+  const buttonSet = buttons.map((btn, i) => (
+    <Button
+      variant="contained"
+      color="primary"
+      className={classes.button}
+      startIcon={btn.icon}
+      key={i}>
+      {btn.name}
+    </Button>
+  ));
 
   return (
     <>
@@ -69,6 +98,7 @@ const Tools = () => {
           }
         />
       </S.CheckBox>
+      <S.ButtonGroup>{buttonSet}</S.ButtonGroup>
       <S.Filter>
         <FormControl className={classes.formControl}>
           <Select
