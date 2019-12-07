@@ -14,7 +14,11 @@ const Etc = styled.div`
 
 const Filter = styled.div`
   flex: 0 0 40px;
-  margin-left: 30px;
 `;
 
-export default { CheckBox, Etc, Filter };
+const SortItemView = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export default { CheckBox, Etc, Filter, SortItemView };

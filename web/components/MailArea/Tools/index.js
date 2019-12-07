@@ -1,7 +1,16 @@
 import React, { useContext } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { MenuItem, FormControl, FormControlLabel, Checkbox, Select } from '@material-ui/core';
+import {
+  MenuItem,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  Select,
+  ListItemIcon,
+  ListItemText,
+} from '@material-ui/core';
+import { ArrowDownward, ArrowUpward } from '@material-ui/icons';
 import S from './styled';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
@@ -14,17 +23,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const SORT_TYPES = [
-  { value: 'datedesc', name: '시간 역순정렬' },
-  { value: 'dateasc', name: '시간 순정렬' },
-  { value: 'subjectdesc', name: '제목 역순정렬' },
-  { value: 'subjectasc', name: '제목 순정렬' },
-  { value: 'fromdesc', name: '보낸 이 역순정렬' },
-  { value: 'fromasc', name: '보낸 이 순정렬' },
+  { value: 'datedesc', name: '시간' },
+  { value: 'dateasc', name: '시간' },
+  { value: 'subjectdesc', name: '제목' },
+  { value: 'subjectasc', name: '제목' },
+  { value: 'fromdesc', name: '보낸 이' },
+  { value: 'fromasc', name: '보낸 이' },
 ];
+
+const getArrowDirection = sortValue =>
+  sortValue.includes('asc') ? (
+    <ArrowUpward fontSize={'small'} />
+  ) : (
+    <ArrowDownward fontSize={'small'} />
+  );
 
 const sortItems = SORT_TYPES.map(type => (
   <MenuItem key={type.value} value={type.value}>
-    {type.name}
+    <S.SortItemView>
+      <ListItemText>{type.name}</ListItemText>
+      <ListItemIcon>{getArrowDirection(type.value)}</ListItemIcon>
+    </S.SortItemView>
   </MenuItem>
 ));
 
@@ -33,9 +52,9 @@ const Tools = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails } = state;
-
-  const handleChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
+  const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
+
   return (
     <>
       <S.CheckBox>
@@ -54,7 +73,7 @@ const Tools = () => {
         <FormControl className={classes.formControl}>
           <Select
             value={state.sort}
-            onChange={handleChange}
+            onChange={handleFilterChange}
             displayEmpty
             className={classes.selectEmpty}>
             {sortItems}
