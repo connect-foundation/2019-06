@@ -23,6 +23,16 @@ const FlexRowWrap = styled.div`
   align-items: center;
 `;
 
+const FlexWidthFullWrap = styled.div`
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`;
+
 const FlexCenterWrap = styled(FlexWrap)`
   justify-content: center;
   align-items: center;
@@ -92,4 +102,5 @@ export {
   SmallBoard,
   SmallColumnBoard,
   AlignLeftContainer,
+  FlexWidthFullWrap,
 };
