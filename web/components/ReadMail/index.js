@@ -8,10 +8,10 @@ import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
 import { handleSnackbarState } from '../../contexts/reducer';
 import { AppStateContext, AppDispatchContext } from '../../contexts';
-import ToolGroup from './ToolGroup';
 import FileList from './FileList';
 import request from '../../utils/request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
+import Tools from './Tools';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -92,7 +92,7 @@ const ReadMail = () => {
 
   return (
     <S.Container>
-      <ToolGroup />
+      <Tools />
       <S.ReadArea>
         <S.TitleView>
           <S.Subject>
