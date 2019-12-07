@@ -44,7 +44,7 @@ const ERROR_CODE = {
   INVALID_DATE: $(400, '유효하지 않는 날짜 정보입니다.', 'COMMON013'),
   ID_DUPLICATION: $(409, '이미 사용중인 아이디 입니다.', 'JOIN001'),
   SUB_EMAIL_DUPLICATION: $(409, '이미 가입에 사용한 이메일 입니다.', 'JOIN002'),
-  ID_OR_SUB_EMAIL_DUPLICATION: $(409, '아이디 혹은 이메일을 이미 사용하였습니다.', 'JOIN003'),
+  ID_AND_SUB_EMAIL_DUPLICATION: $(409, '이미 아이디와 이메일을 이미 사용하였습니다.', 'JOIN003'),
 
   FAIL_TO_SEND_MAIL: $(500, '메일 전송에 실패하였습니다.', 'MAIL001'),
   FAIL_TO_SAVE_MAIL: $(500, '메일을 데이터베이스에 저장하는데 실패하였습니다.', 'MAIL002'),

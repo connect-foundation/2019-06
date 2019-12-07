@@ -12,37 +12,22 @@ const TEMP_PASSWORD_LENGTH = 15;
 
 const checkSubEmailUniqueConstraintError = error => {
   if (error.errors) {
-    const [{ type, path, value }] = error.errors;
+    const [{ type, path }] = error.errors;
     if (type === 'unique violation' && path === 'sub_email') {
-      const errorField = new ErrorField('sub_email', value, '이미 가입에 사용한 이메일 입니다.');
-      throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorField);
+      throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
     }
   }
   throw error;
 };
 
-const makeUniqueFieldsError = (response, userData) => {
-  const errorFields = [];
-  let errorField;
-
-  if (response.id === userData.id) {
-    errorField = new ErrorField('id', userData.id, '이미 사용중인 아이디 입니다.');
-    errorFields.push(errorField);
+const throwUniqueFieldsError = ({ isIdUniqueError, isSubEmailUniqueError }) => {
+  if (isIdUniqueError && isSubEmailUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
+  } else if (isIdUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
+  } else if (isSubEmailUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
   }
-  if (response.sub_email === userData.sub_email) {
-    errorField = new ErrorField(
-      'sub_email',
-      userData.sub_email,
-      '이미 가입에 사용한 이메일 입니다.',
-    );
-    errorFields.push(errorField);
-  }
-
-  if (errorFields.length > 0) {
-    throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorFields);
-  }
-
-  return true;
 };
 
 const createDefaultCategories = async (no, transaction) => {
@@ -63,7 +48,10 @@ const register = async ({ id, password, name, sub_email }) => {
     await DB.sequelize.transaction(async transaction => {
       const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
       if (!created) {
-        throw makeUniqueFieldsError(response, userData);
+        throwUniqueFieldsError({
+          isIdUniqueError: response.id === userData.id,
+          isSubEmailUniqueError: response.sub_email === userData.sub_email,
+        });
       }
       newUser = response.get({ plain: true });
       await createDefaultCategories(newUser.no, transaction);
