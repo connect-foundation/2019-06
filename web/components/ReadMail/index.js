@@ -112,7 +112,7 @@ const ReadMail = () => {
         </S.ReadFrame>
         {attachments && <FileList files={attachments} />}
       </S.ReadArea>
-      <PageMoveButtonArea index={index} />
+      <PageMoveButtonArea index={+index} />
     </S.Container>
   );
 };
