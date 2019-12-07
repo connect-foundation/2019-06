@@ -34,7 +34,7 @@ const SORT_TYPES = [
   { value: 'fromasc', name: '보낸 이' },
 ];
 
-const getArrowDirection = sortValue =>
+const getArrowIcon = sortValue =>
   sortValue.includes('asc') ? (
     <ArrowUpward fontSize={'small'} />
   ) : (
@@ -45,7 +45,7 @@ const sortItems = SORT_TYPES.map(type => (
   <MenuItem key={type.value} value={type.value}>
     <S.SortItemView>
       <ListItemText>{type.name}</ListItemText>
-      <ListItemIcon>{getArrowDirection(type.value)}</ListItemIcon>
+      <ListItemIcon>{getArrowIcon(type.value)}</ListItemIcon>
     </S.SortItemView>
   </MenuItem>
 ));
