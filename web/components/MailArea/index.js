@@ -128,12 +128,16 @@ const MailArea = () => {
     dispatch(handleMailsChange({ ...fetchingMailData.data }));
   }, [dispatch, fetchingMailData.data]);
 
-  if (fetchingMailData.loading || !state.mails) {
+  if (fetchingMailData.loading) {
     return <Loading />;
   }
 
   if (fetchingMailData.error) {
     return errorHandler(fetchingMailData.error);
+  }
+
+  if (!state.mails) {
+    return <Loading />;
   }
 
   const { mails, paging, categoryNoByName } = state;
