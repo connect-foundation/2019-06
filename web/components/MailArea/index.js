@@ -43,7 +43,7 @@ const SNACKBAR_MSG = {
 };
 
 const convertMailToRead = mail => {
-  const { is_important, is_read, MailTemplate, no, reservation_time } = mail;
+  const { is_important, is_read, MailTemplate, no, reservation_time, category_no } = mail;
   const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
   return {
     from,
@@ -57,6 +57,7 @@ const convertMailToRead = mail => {
     no,
     mailTemplateNo,
     reservation_time,
+    category_no,
   };
 };
 

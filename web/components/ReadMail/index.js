@@ -85,6 +85,7 @@ const ReadMail = () => {
     if (isError) {
       message = !isImportant ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
       openSnackbar(SNACKBAR_VARIANT.ERROR, message);
+      return;
     }
     message = !isImportant ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
     openSnackbar(SNACKBAR_VARIANT.SUCCESS, message);
