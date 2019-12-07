@@ -55,7 +55,7 @@ describe('user service는...', () => {
 
     it('# 중복된 아이디인 경우 ErrorResponse instance를 반환한다. ', async () => {
       try {
-        newUser = await service.register(user);
+        newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
       } catch (error) {
         error.should.be.instanceOf(ErrorResponse);
       }
@@ -63,7 +63,7 @@ describe('user service는...', () => {
 
     it('# 중복된 아이디인 경우 ERROR_CODE는 ID_DUPLICATION 이다', async () => {
       try {
-        newUser = await service.register(user);
+        newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.ID_DUPLICATION);
@@ -71,6 +71,58 @@ describe('user service는...', () => {
     });
 
     it('# 중복된 아이디인 경우 ErrorFields의 length는 0이다.', async () => {
+      try {
+        newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
+      } catch (error) {
+        const { fieldErrors } = error;
+        fieldErrors.should.have.length(0);
+      }
+    });
+
+    it('# 중복된 서브 이메일인 경우 ErrorResponse instance를 반환한다. ', async () => {
+      try {
+        newUser = await service.register({ ...user, id: 'nanana' });
+      } catch (error) {
+        error.should.be.instanceOf(ErrorResponse);
+      }
+    });
+
+    it('# 중복된 서브 이메일인 경우 ERROR_CODE는 ID_DUPLICATION 이다', async () => {
+      try {
+        newUser = await service.register({ ...user, id: 'nanana' });
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.SUB_EMAIL_DUPLICATION);
+      }
+    });
+
+    it('# 중복된 서브 이메일인 경우 ErrorFields의 length는 0이다.', async () => {
+      try {
+        newUser = await service.register({ ...user, id: 'nanana' });
+      } catch (error) {
+        const { fieldErrors } = error;
+        fieldErrors.should.have.length(0);
+      }
+    });
+
+    it('# 아이디와 서브 이메일 모두 중복될 경우 ErrorResponse instance를 반환한다. ', async () => {
+      try {
+        newUser = await service.register({ ...user, id: 'nanana' });
+      } catch (error) {
+        error.should.be.instanceOf(ErrorResponse);
+      }
+    });
+
+    it('# 아이디와 서브 이메일 모두 중복될 경우  ERROR_CODE는 ID_AND_SUB_EMAIL_DUPLICATION 이다', async () => {
+      try {
+        newUser = await service.register(user);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
+      }
+    });
+
+    it('# 아이디와 서브 이메일 모두 중복될 경우 ErrorFields의 length는 0이다.', async () => {
       try {
         newUser = await service.register(user);
       } catch (error) {
