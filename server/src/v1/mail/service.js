@@ -162,6 +162,7 @@ const updateMail = async (no, props) => {
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
   }
 
+  mail.prev_category_no = mail.category_no;
   Object.keys(props).forEach(key => {
     mail[key] = props[key];
   });
