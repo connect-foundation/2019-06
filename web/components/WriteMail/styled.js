@@ -15,5 +15,6 @@ export const RowWrapper = styled.div`
 `;
 
 export const WriteArea = styled.div`
+  flex: 1 1;
   overflow: scroll;
 `;
