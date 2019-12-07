@@ -45,25 +45,6 @@ const SNACKBAR_MSG = {
   },
 };
 
-const convertMailToRead = mail => {
-  const { is_important, is_read, MailTemplate, no, reservation_time, category_no } = mail;
-  const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
-  return {
-    from,
-    to,
-    subject: subject || '제목없음',
-    text,
-    html,
-    createdAt,
-    is_important,
-    is_read,
-    no,
-    mailTemplateNo,
-    reservation_time,
-    category_no,
-  };
-};
-
 const loadNewMails = async (query, dispatch) => {
   const { isError, data } = await request.get(`/mail/?${query}`);
   if (isError) {
@@ -116,9 +97,9 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.READ]: ({ mail, dispatch }) => {
-    const mailToRead = convertMailToRead(mail);
-    dispatch(handleMailClick(mailToRead, <ReadMail />));
+  [ACTION.READ]: ({ mail, dispatch, index }) => {
+    mail.index = index;
+    dispatch(handleMailClick(mail, <ReadMail />));
     updateMail(mail.no, { is_read: true });
   },
 };
@@ -180,7 +161,7 @@ const MailArea = () => {
     const [action, index] = id.split('-');
     const mail = mails[index];
     if (Object.values(ACTION).includes(action)) {
-      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar });
+      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index });
     }
   };
 

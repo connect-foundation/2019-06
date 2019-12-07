@@ -52,18 +52,8 @@ const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const [attachments, setAttachments] = useState(null);
-  const {
-    to,
-    from,
-    subject,
-    createdAt,
-    text,
-    html,
-    no,
-    mailTemplateNo,
-    reservation_time,
-    is_important,
-  } = state.mail;
+  const { is_important, MailTemplate, no, reservation_time, index } = state.mail;
+  const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
   const [isImportant, setIsImportant] = useState(is_important);
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
@@ -122,7 +112,7 @@ const ReadMail = () => {
         </S.ReadFrame>
         {attachments && <FileList files={attachments} />}
       </S.ReadArea>
-      <PageMoveButtonArea no={no} />
+      <PageMoveButtonArea index={index} />
     </S.Container>
   );
 };
