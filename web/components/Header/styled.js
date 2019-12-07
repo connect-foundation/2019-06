@@ -40,11 +40,12 @@ const SearchInput = styled.input`
 `;
 
 const Header = styled.div`
-  flex: 0 0 50px;
+  flex: 0 0 70px;
   display: flex;
   border-bottom: 2px solid #eceff1;
   flex-direction: row;
   overflow: hidden;
+  box-sizing: border-box;
   padding: 20px 10px;
 `;
 

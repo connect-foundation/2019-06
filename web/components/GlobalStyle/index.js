@@ -68,9 +68,10 @@ const HorizontalLine = styled.hr`
 `;
 
 const Content = styled.div`
-  display: grid;
-  grid-template-columns: 250px 1fr;
-  height: 85%;
+  flex: 1 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 `;
 
 const AlignLeftContainer = styled.div`
