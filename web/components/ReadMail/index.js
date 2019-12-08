@@ -97,7 +97,7 @@ const ReadMail = () => {
             ) : (
               <StarBorder className={classes.unstar} onClick={handleStarClick} />
             )}
-            <h3>{subject}</h3>
+            <h3>{subject || '제목없음'}</h3>
             <div>
               <S.Text>{reservation_time && '예약'}</S.Text>
               <span>{date}</span>

@@ -16,6 +16,7 @@ export const initialState = {
   category: 0,
   page: 1,
   mails: null,
+  mail: null,
   paging: null,
   view: null,
   sort: 'datedesc',
