@@ -29,7 +29,12 @@ const validateNo = no => {
   }
 };
 
-const validateProps = ({ category_no, is_important, is_read }) => {
+const validateProps = props => {
+  if (!props) {
+    const errorField = new ErrorField('props', props, '올바르지 않는 값입니다.');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+  const { category_no, is_important, is_read } = props;
   const errorFields = [];
 
   if (category_no && typeof category_no !== 'number') {
