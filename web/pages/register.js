@@ -2,20 +2,22 @@ import React from 'react';
 
 import RegisterForm from '../components/Forms/RegisterForm';
 import RegisterLogo from '../components/RegisterLogo';
+import BackButton from '../components/BackButton';
 
-import * as S from '../components/GlobalStyle';
+import * as GS from '../components/GlobalStyle';
 
 const RegisterPage = () => (
-  <S.FlexRowCenterWrap>
-    <S.SmallBoard>
-      <S.FlexItem>
+  <GS.FlexRowCenterWrap>
+    <BackButton />
+    <GS.SmallBoard>
+      <GS.FlexItem>
         <RegisterForm />
-      </S.FlexItem>
-      <S.FlexItem>
+      </GS.FlexItem>
+      <GS.FlexItem>
         <RegisterLogo />
-      </S.FlexItem>
-    </S.SmallBoard>
-  </S.FlexRowCenterWrap>
+      </GS.FlexItem>
+    </GS.SmallBoard>
+  </GS.FlexRowCenterWrap>
 );
 
 export default RegisterPage;
