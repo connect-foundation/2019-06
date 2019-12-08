@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 const Container = styled.div`
   width: 400px;
@@ -11,7 +12,8 @@ const Container = styled.div`
 const UserDataContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  flex-direction: column;
+  width: 100%;
   margin-top: 50px;
 `;
 
@@ -20,11 +22,17 @@ const ColumnContainer = styled.div`
   flex-direction: column;
 `;
 
+const RowContainer = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  margin: 10px 0;
+`;
+
 const AlignRightContainer = styled.div`
   display: flex;
   width: 100%;
   justify-content: flex-end;
-  padding-right: 20px;
   padding-top: 20px;
 `;
 
@@ -71,7 +79,31 @@ const Title = styled.span`
 `;
 
 const Text = styled.span`
+  font-size: 1.2rem;
+  width: 100px;
+  margin: 10px;
+`;
+
+const DescText = styled.span`
   font-size: 1rem;
+  width: 100px;
+`;
+
+const EmailText = styled.span`
+  width: 100%;
+  font-size: 1rem;
+`;
+
+const ItemContainer = styled.span`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const RightArrow = styled(ArrowForwardIosIcon)`
+  width: 15px;
+  height: 15px;
 `;
 
 export default {
@@ -80,8 +112,13 @@ export default {
   Button,
   ErrorText,
   ColumnContainer,
+  RowContainer,
   ColumnItem,
   AlignRightContainer,
   Title,
   Text,
+  DescText,
+  EmailText,
+  ItemContainer,
+  RightArrow,
 };

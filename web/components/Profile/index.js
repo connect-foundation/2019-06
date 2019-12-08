@@ -7,6 +7,7 @@ import LogoutButton from '../LogoutButton';
 import storage from '../../utils/storage';
 
 const initialValuState = {
+  email: '',
   name: '',
   sub_email: '',
   loading: true,
@@ -22,45 +23,45 @@ const Profile = () => {
       return;
     }
 
-    const { name, sub_email } = user;
+    const { name, sub_email, email } = user;
     setValues({
       name,
-      email: sub_email,
+      sub_email,
+      email,
       loading: false,
     });
   }, []);
 
-  const { name, email, loading } = values;
+  const { name, email, sub_email, loading } = values;
 
   return !loading ? (
     <S.Container>
       <S.ColumnContainer>
         <S.Title>프로필</S.Title>
-        <S.Text>{email}</S.Text>
+        <S.EmailText>{email}</S.EmailText>
       </S.ColumnContainer>
       <S.UserDataContainer>
-        <S.ColumnContainer>
-          <S.ColumnItem>
-            <S.Text>이름</S.Text>
-          </S.ColumnItem>
-          <S.ColumnItem>
-            <S.Text>비밀번호</S.Text>
-          </S.ColumnItem>
-          <S.ColumnItem>
-            <S.Text>이메일</S.Text>
-          </S.ColumnItem>
-        </S.ColumnContainer>
-        <S.ColumnContainer>
-          <S.ColumnItem>
-            <Button style={{ textTransform: 'none' }}>{name}</Button>
-          </S.ColumnItem>
-          <S.ColumnItem>
-            <Button onClick={() => Router.push('/profile/pwchange')}>********</Button>
-          </S.ColumnItem>
-          <S.ColumnItem>
-            <Button style={{ textTransform: 'none' }}>{email}</Button>
-          </S.ColumnItem>
-        </S.ColumnContainer>
+        <S.RowContainer>
+          <S.DescText>이름</S.DescText>
+          <S.ItemContainer style={{ textTransform: 'none' }}>
+            <S.Text>{name}</S.Text>
+          </S.ItemContainer>
+        </S.RowContainer>
+        <S.RowContainer>
+          <S.DescText>비밀번호</S.DescText>
+          <S.ItemContainer>
+            <S.Text>********</S.Text>
+            <Button variant="outlined" onClick={() => Router.push('/profile/pwchange')}>
+              변경
+            </Button>
+          </S.ItemContainer>
+        </S.RowContainer>
+        <S.RowContainer>
+          <S.DescText>이메일</S.DescText>
+          <S.ItemContainer style={{ textTransform: 'none' }}>
+            <S.Text>{sub_email}</S.Text>
+          </S.ItemContainer>
+        </S.RowContainer>
       </S.UserDataContainer>
       <S.AlignRightContainer>
         <LogoutButton />
