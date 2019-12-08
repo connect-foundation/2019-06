@@ -85,12 +85,16 @@ const Aside = () => {
     }
   }, [dispatch, fetchingCategories.data]);
 
-  if (fetchingCategories.loading || !state.categories) {
+  if (fetchingCategories.loading) {
     return <Loading />;
   }
 
   if (fetchingCategories.error) {
     return errorHandler(fetchingCategories.error);
+  }
+
+  if (!state.categories) {
+    return <Loading />;
   }
 
   const iconOfDefaultCategories = [

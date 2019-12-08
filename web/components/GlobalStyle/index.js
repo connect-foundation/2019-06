@@ -23,6 +23,16 @@ const FlexRowWrap = styled.div`
   align-items: center;
 `;
 
+const FlexWidthFullWrap = styled.div`
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`;
+
 const FlexCenterWrap = styled(FlexWrap)`
   justify-content: center;
   align-items: center;
@@ -68,9 +78,10 @@ const HorizontalLine = styled.hr`
 `;
 
 const Content = styled.div`
+  flex: 1 1;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 250px 1fr;
-  height: 85%;
 `;
 
 const AlignLeftContainer = styled.div`
@@ -91,4 +102,5 @@ export {
   SmallBoard,
   SmallColumnBoard,
   AlignLeftContainer,
+  FlexWidthFullWrap,
 };

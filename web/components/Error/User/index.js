@@ -3,9 +3,9 @@ import * as GS from '../../GlobalStyle';
 
 const UserError = ({ message }) => {
   return (
-    <GS.FlexCenterWrap>
+    <GS.FlexWidthFullWrap>
       <p>{message}</p>
-    </GS.FlexCenterWrap>
+    </GS.FlexWidthFullWrap>
   );
 };
 

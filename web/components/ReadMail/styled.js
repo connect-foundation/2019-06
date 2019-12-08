@@ -1,9 +1,10 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
+  flex: 1 1;
   display: flex;
   flex-direction: column;
-  overflow: scroll;
+  overflow-y: scroll;
 `;
 
 const ReadArea = styled.div`
