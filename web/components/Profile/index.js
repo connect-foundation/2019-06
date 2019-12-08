@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 
 import S from './styled';
@@ -14,12 +14,12 @@ const initialValuState = {
 
 const Profile = () => {
   const [values, setValues] = useState(initialValuState);
-  const router = useRouter();
 
   useEffect(() => {
     const user = storage.getUser();
     if (!user) {
-      router.push('/login');
+      Router.push('/login');
+      return;
     }
 
     const { name, sub_email } = user;
@@ -55,7 +55,7 @@ const Profile = () => {
             <Button style={{ textTransform: 'none' }}>{name}</Button>
           </S.ColumnItem>
           <S.ColumnItem>
-            <Button onClick={() => router.push('/profile/pwchange')}>********</Button>
+            <Button onClick={() => Router.push('/profile/pwchange')}>********</Button>
           </S.ColumnItem>
           <S.ColumnItem>
             <Button style={{ textTransform: 'none' }}>{email}</Button>
