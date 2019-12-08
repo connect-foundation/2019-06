@@ -1,10 +1,8 @@
 import React from 'react';
-import axios from 'axios';
-
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-import * as S from './styled';
+import request from '../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   button: {
@@ -18,14 +16,13 @@ export default () => {
 
   const handleSignOutBtnClick = () => {
     window.sessionStorage.clear();
-    axios.post('/auth/logout');
+    request.post('/auth/logout', {});
+    window.location.href = '/login';
   };
 
   return (
-    <S.ReloadLink href="/">
-      <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
-        로그아웃
-      </Button>
-    </S.ReloadLink>
+    <Button variant="contained" className={classes.button} onClick={handleSignOutBtnClick}>
+      로그아웃
+    </Button>
   );
 };
