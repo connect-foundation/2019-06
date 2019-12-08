@@ -48,6 +48,12 @@ const updateMail = async (no, props) => {
   return request.patch(`/mail/${no}`, { props });
 };
 
+const loadAttachments = async (mailTemplateNo, setAttachments) => {
+  const url = `/mail/template/${mailTemplateNo}/attachments`;
+  const { data } = await request.get(url);
+  setAttachments(data.attachments);
+};
+
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -62,11 +68,9 @@ const ReadMail = () => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   useEffect(() => {
-    const url = `/mail/template/${mailTemplateNo}/attachments`;
-    request.get(url).then(({ data }) => {
-      setAttachments(data.attachments);
-    });
-  }, [mailTemplateNo]);
+    loadAttachments(mailTemplateNo, setAttachments);
+    updateMail(no, { is_read: true });
+  }, [no, mailTemplateNo]);
 
   const handleStarClick = async () => {
     setIsImportant(!isImportant);
