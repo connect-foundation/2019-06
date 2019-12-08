@@ -10,6 +10,7 @@ const MAIL_CHECK = 'MAIL_CHECK';
 const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
+const SET_MAIL = 'SET_MAIL';
 
 export const initialState = {
   categories: null,
@@ -159,6 +160,15 @@ export const setMessage = message => {
   };
 };
 
+export const setMail = mail => {
+  return {
+    type: SET_MAIL,
+    payload: {
+      mail,
+    },
+  };
+};
+
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
@@ -186,6 +196,8 @@ export const reducer = (state = initialState, action) => {
     case SET_MESSAGE:
       return { ...state, ...payload };
     case CHANGE_CATEGORIES_DATA:
+      return { ...state, ...payload };
+    case SET_MAIL:
       return { ...state, ...payload };
     default:
       return { ...state };
