@@ -5,7 +5,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import validator from '../../../utils/validator';
-import { errorParser, registerErrorMessageParser } from '../../../utils/error-parser';
+import { registerErrorMessageParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
@@ -88,7 +88,7 @@ const RegisterForm = () => {
     const body = { id, password, sub_email: email, name: name.trim() };
     const { isError, data } = await request.post('/users', body);
     if (isError) {
-      let { message } = errorParser(data);
+      let { message } = data;
       message = registerErrorMessageParser(message);
       if (message.id || message.email) {
         setErrorMsg({ ...errors, ...message });
