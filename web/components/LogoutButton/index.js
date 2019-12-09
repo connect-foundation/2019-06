@@ -2,12 +2,15 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 
 import request from '../../utils/request';
+import storage from '../../utils/storage';
+import history from '../../utils/history';
 
 export default () => {
   const handleSignOutBtnClick = () => {
-    window.sessionStorage.clear();
+    storage.clear();
+
     request.post('/auth/logout', {});
-    window.location.href = '/login';
+    history.push('/login');
   };
 
   return (
