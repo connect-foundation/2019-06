@@ -2,12 +2,33 @@ import generator from 'generate-password';
 
 import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
+import ErrorField from '../../libraries/exception/error-field';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
 import { encrypt, aesEncrypt } from '../../libraries/crypto';
 
 const DEFAULT_CATEGORIES = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 const TEMP_PASSWORD_LENGTH = 15;
+
+const checkSubEmailUniqueConstraintError = error => {
+  if (error.errors) {
+    const [{ type, path }] = error.errors;
+    if (type === 'unique violation' && path === 'sub_email') {
+      throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
+    }
+  }
+  throw error;
+};
+
+const throwUniqueFieldsError = ({ isIdUniqueError, isSubEmailUniqueError }) => {
+  if (isIdUniqueError && isSubEmailUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
+  } else if (isIdUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
+  } else if (isSubEmailUniqueError) {
+    throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
+  }
+};
 
 const createDefaultCategories = async (no, transaction) => {
   const categories = DEFAULT_CATEGORIES.map(name => ({
@@ -23,14 +44,21 @@ const register = async ({ id, password, name, sub_email }) => {
   const userData = { id, password, name, sub_email };
   let newUser;
 
-  await DB.sequelize.transaction(async transaction => {
-    const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
-    if (!created) {
-      throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
-    }
-    newUser = response.get({ plain: true });
-    await createDefaultCategories(newUser.no, transaction);
-  });
+  try {
+    await DB.sequelize.transaction(async transaction => {
+      const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
+      if (!created) {
+        throwUniqueFieldsError({
+          isIdUniqueError: response.id === userData.id,
+          isSubEmailUniqueError: response.sub_email === userData.sub_email,
+        });
+      }
+      newUser = response.get({ plain: true });
+      await createDefaultCategories(newUser.no, transaction);
+    });
+  } catch (error) {
+    checkSubEmailUniqueConstraintError(error);
+  }
 
   return newUser;
 };
