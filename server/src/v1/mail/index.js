@@ -14,6 +14,7 @@ router.get('/', controller.list);
 router.get('/categories', controller.getCategories);
 router.patch('/:no', controller.update);
 router.post('/', upload.array('attachments', MAIL_FILE_MAX_COUNT), controller.write);
+router.delete('/:no', controller.remove);
 
 router.use('/box', mailBox);
 router.use('/template', mailTemplate);

@@ -93,15 +93,23 @@ const update = async (req, res, next) => {
 };
 
 const getCategories = async (req, res, next) => {
-  let categories;
-
   try {
-    categories = await service.getCategories(req.user.no);
+    const categories = await service.getCategories(req.user.no);
+    return res.json(categories);
   } catch (err) {
     return next(err);
   }
+};
 
-  return res.json(categories);
+const remove = async (req, res, next) => {
+  const { no } = req.params;
+  try {
+    validateNo(no);
+    const isDeleted = await service.removeMail(no);
+    return res.json(isDeleted);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 export default {
@@ -109,4 +117,5 @@ export default {
   write,
   update,
   getCategories,
+  remove,
 };

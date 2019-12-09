@@ -180,6 +180,11 @@ const updateMail = async (no, props) => {
   return mail;
 };
 
+const removeMail = async no => {
+  const deleted = await DB.Mail.deleteByPk(no);
+  return deleted === 1;
+};
+
 export default {
   wroteToMe,
   getMailsByOptions,
@@ -188,4 +193,5 @@ export default {
   saveReservationMail,
   getCategories,
   updateMail,
+  removeMail,
 };

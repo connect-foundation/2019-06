@@ -110,6 +110,14 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Mail.deleteByPk = no => {
+    return Mail.destroy({
+      where: {
+        no,
+      },
+    });
+  };
+
   return Mail;
 };
 
