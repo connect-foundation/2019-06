@@ -36,9 +36,10 @@ const FILEUPLOAD_ERROR = {
 const UNAVAILABLE_EXTENSION_STRING = Object.keys(UNAVAILABLE_EXTENSION).join(', ');
 
 const addFileSize = (a, b) => a + b.size;
+const add = (a, b) => a + b;
 
-const checkOverSize = files => {
-  const sum = files.reduce(addFileSize, 0);
+const checkOverSize = sizes => {
+  const sum = sizes.reduce(add, 0);
   return sum <= FILE_MAX_SIZE;
 };
 
@@ -94,7 +95,8 @@ const DropZone = ({ visible }) => {
       }
 
       const nextFiles = [...files, ...newFiles];
-      if (!checkOverSize(nextFiles)) {
+      const fileSizes = nextFiles.map(file => file.size);
+      if (!checkOverSize(fileSizes)) {
         appDispatch(
           handleSnackbarState(
             getSnackbarState(SNACKBAR_VARIANT.ERROR, FILEUPLOAD_ERROR.OVER_FILE_TOTAL_SIZE),
