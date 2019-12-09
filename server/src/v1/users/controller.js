@@ -44,6 +44,7 @@ const updatePassword = async (req, res, next) => {
   try {
     validation.checkBodyForPasswordUpdate(req.body);
     await service.updatePassword(no, salt, req.body.password);
+    req.user.password = req.body.password;
   } catch (err) {
     return next(err);
   }
