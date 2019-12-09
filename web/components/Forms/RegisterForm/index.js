@@ -5,8 +5,12 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import validator from '../../../utils/validator';
-import { errorParser, registerErrorMessageParser } from '../../../utils/error-parser';
-import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
+import {
+  ERROR_DIFFERENT_PASSWORD,
+  ERROR_ID_AND_SUB_EMAIL_DUPLICATION,
+  ERROR_ID_DUPLICATION,
+  ERROR_SUB_EMAIL_DUPLICATION,
+} from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
 import request from '../../../utils/request';
@@ -37,6 +41,23 @@ const initialErrorState = {
   email: '',
   checkPassword: '',
   register: '',
+};
+
+const registerErrorMessageParser = errorMsg => {
+  const errorMsgs = {};
+
+  if (errorMsg === ERROR_ID_AND_SUB_EMAIL_DUPLICATION) {
+    errorMsgs.id = ERROR_ID_DUPLICATION;
+    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
+  } else if (errorMsg === ERROR_ID_DUPLICATION) {
+    errorMsgs.id = ERROR_ID_DUPLICATION;
+  } else if (errorMsg === ERROR_SUB_EMAIL_DUPLICATION) {
+    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
+  } else {
+    errorMsgs.register = errorMsg;
+  }
+
+  return errorMsgs;
 };
 
 const RegisterForm = () => {
@@ -79,22 +100,14 @@ const RegisterForm = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
-  const handleRegisterErrMsg = msg => {
-    setErrorMsg({ ...initialErrorState, register: msg });
-  };
-
   const signUp = async () => {
     const { id, password, name, email } = values;
     const body = { id, password, sub_email: email, name: name.trim() };
     const { isError, data } = await request.post('/users', body);
     if (isError) {
-      let { message } = errorParser(data);
-      message = registerErrorMessageParser(message);
-      if (message.id || message.email) {
-        setErrorMsg({ ...errors, ...message });
-      } else {
-        handleRegisterErrMsg(message);
-      }
+      const { message } = data;
+      const errMsgs = registerErrorMessageParser(message);
+      setErrorMsg({ ...errors, ...errMsgs });
       return;
     }
     dispatch(setMessage(SUCCESS_REGISTER));

@@ -6,12 +6,10 @@ import BackButton from '../components/BackButton';
 
 const ProfilePage = () => (
   <GS.FlexRowCenterWrap>
-    <GS.SmallColumnBoard>
-      <GS.AlignLeftContainer>
-        <BackButton />
-      </GS.AlignLeftContainer>
+    <BackButton />
+    <GS.TinyBoard>
       <Profile />
-    </GS.SmallColumnBoard>
+    </GS.TinyBoard>
   </GS.FlexRowCenterWrap>
 );
 
