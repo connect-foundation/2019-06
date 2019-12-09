@@ -52,7 +52,8 @@ const register = async ({ id, password, name, sub_email }) => {
       if (users.length !== 0) {
         throwUniqueFieldsError(users, id, sub_email);
       }
-      newUser = await DB.User.create(userData, { transaction, raw: true });
+      newUser = await DB.User.create(userData, { transaction });
+      newUser = newUser.get({ plain: true });
       await createDefaultCategories(newUser.no, transaction);
     });
   } catch (error) {
