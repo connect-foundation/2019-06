@@ -101,9 +101,12 @@ const DropZone = ({ visible }) => {
       <WM_S.RowWrapper>
         <div></div>
         <div>
-          <span>
-            {totalFileSize}/{PRETTY_FILE_MAX_SIZE}
-          </span>
+          <S.FileUploadInfo>
+            파일 업로드 갯수 : {files.length} / {FILE_MAX_COUNT}
+          </S.FileUploadInfo>
+          <S.FileUploadInfo>
+            파일 업로드 용량 : {prettyBytes(totalFileSize)} / {PRETTY_FILE_MAX_SIZE}
+          </S.FileUploadInfo>
           <S.UploadArea {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive

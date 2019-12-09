@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const UploadArea = styled.div`
+const FileUploadInfo = styled.div`
+  text-align: right;
+`;
+
+const UploadArea = styled.div`
   height: 120px;
   display: flex;
   justify-content: center;
@@ -8,3 +12,5 @@ export const UploadArea = styled.div`
   border: 2px solid black;
   border-style: dashed;
 `;
+
+export { UploadArea, FileUploadInfo };
