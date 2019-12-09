@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { Email, Send, Delete } from '@material-ui/icons';
+import { Email, Send, Delete, DeleteForever } from '@material-ui/icons';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSnackbarState, setView } from '../../../contexts/reducer';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
@@ -34,17 +34,20 @@ const buttons = [
     key: 'reply',
     name: '답장',
     icon: <Email />,
+    enable: true,
     onClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
     icon: <Send />,
+    enable: true,
     onClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
+    enable: true,
     icon: <Delete />,
     onClick: async ({ mail, openSnackbar, wastebasketNo, backToMailArea }) => {
       const props = { category_no: wastebasketNo };
@@ -57,7 +60,17 @@ const buttons = [
       backToMailArea();
     },
   },
+  {
+    key: 'forever_delete',
+    name: '영구삭제',
+    icon: <DeleteForever />,
+    enable: true,
+    onClick: () => {},
+  },
 ];
+
+const deleteButton = buttons.find(button => button.key === 'delete');
+const foreverDeleteButton = buttons.find(button => button.key === 'forever_delete');
 
 const Tools = () => {
   const { state } = useContext(AppStateContext);
@@ -69,17 +82,28 @@ const Tools = () => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const backToMailArea = () => dispatch(setView(<MailArea />));
 
-  const buttonSet = buttons.map((btn, i) => (
-    <Button
-      variant="contained"
-      color="primary"
-      className={classes.button}
-      startIcon={btn.icon}
-      onClick={btn.onClick.bind(null, { mail, openSnackbar, wastebasketNo, backToMailArea })}
-      key={btn.key}>
-      {btn.name}
-    </Button>
-  ));
+  if (mail.category_no === wastebasketNo) {
+    deleteButton.enable = false;
+    foreverDeleteButton.enable = true;
+  } else {
+    deleteButton.enable = true;
+    foreverDeleteButton.enable = false;
+  }
+
+  const buttonSet = buttons.map(btn => {
+    if (btn.enable)
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={btn.icon}
+          onClick={btn.onClick.bind(null, { mail, openSnackbar, wastebasketNo, backToMailArea })}
+          key={btn.key}>
+          {btn.name}
+        </Button>
+      );
+  });
 
   return <S.Container>{buttonSet}</S.Container>;
 };

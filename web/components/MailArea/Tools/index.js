@@ -10,10 +10,12 @@ import {
   ListItemText,
   Button,
 } from '@material-ui/core';
-import { ArrowDownward, ArrowUpward, Email, Send, Delete } from '@material-ui/icons';
+import { ArrowDownward, ArrowUpward, Email, Send, Delete, DeleteForever } from '@material-ui/icons';
 import S from './styled';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
+
+const WASTEBASKET_NAME = '휴지통';
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -52,37 +54,65 @@ const sortItems = SORT_TYPES.map(type => (
 
 const buttons = [
   {
+    key: 'reply',
     name: '답장',
+    enable: true,
     icon: <Email />,
   },
   {
+    key: 'send',
     name: '전달',
+    enable: true,
     icon: <Send />,
   },
   {
+    key: 'delete',
     name: '삭제',
+    enable: true,
     icon: <Delete />,
   },
+  {
+    key: 'forever_delete',
+    name: '영구삭제',
+    icon: <DeleteForever />,
+    enable: true,
+    onClick: () => {},
+  },
 ];
+
+const deleteButton = buttons.find(button => button.key === 'delete');
+const foreverDeleteButton = buttons.find(button => button.key === 'forever_delete');
 
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { allMailCheckInTools, mails } = state;
+  const { allMailCheckInTools, mails, category, categoryNoByName } = state;
+  const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
 
-  const buttonSet = buttons.map((btn, i) => (
-    <Button
-      variant="contained"
-      color="primary"
-      className={classes.button}
-      startIcon={btn.icon}
-      key={i}>
-      {btn.name}
-    </Button>
-  ));
+  if (category === wastebasketNo) {
+    deleteButton.enable = false;
+    foreverDeleteButton.enable = true;
+  } else {
+    deleteButton.enable = true;
+    foreverDeleteButton.enable = false;
+  }
+
+  const buttonSet = buttons.map(btn => {
+    if (btn.enable)
+      return (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={btn.icon}
+          key={btn.key}>
+          {btn.name}
+        </Button>
+      );
+  });
 
   return (
     <>
