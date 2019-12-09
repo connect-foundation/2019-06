@@ -96,7 +96,7 @@ const checkExtension = fileNames => {
   }
 
   if (errors.length > 0) {
-    throw errors.join('  ');
+    throw errors.join(' ');
   }
   return true;
 };
