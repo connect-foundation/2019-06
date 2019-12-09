@@ -12,10 +12,12 @@ import request from '../../../utils/request';
 const WASTEBASKET_NAME = '휴지통';
 const SNACKBAR_MSG = {
   ERROR: {
-    DELETE: '메일 삭제를 실패하였습니다.',
+    DELETE: '메일 삭제에 실패하였습니다.',
+    FOREVER_DELETE: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
+    FOREVER_DELETE: '메일을 영구 삭제하였습니다.',
   },
 };
 
@@ -65,7 +67,15 @@ const buttons = [
     name: '영구삭제',
     icon: <DeleteForever />,
     enable: true,
-    onClick: () => {},
+    onClick: async ({ mail, openSnackbar, backToMailArea }) => {
+      const { isError } = await request.delete(`/mail/${mail.no}`);
+      if (isError) {
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.FOREVER_DELETE);
+        return;
+      }
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.FOREVER_DELETE);
+      backToMailArea();
+    },
   },
 ];
 
