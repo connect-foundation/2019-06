@@ -21,6 +21,7 @@ import UNAVAILABLE_EXTENSION from '../../../utils/unavailable-extension';
 import { AppDispatchContext } from '../../../contexts/index';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import { handleSnackbarState } from '../../../contexts/reducer';
+import PopoverPopupState from './PopoverPopupState';
 
 const MB = 1000 ** 2;
 const FILE_MAX_SIZE = 10 * MB;
@@ -31,6 +32,8 @@ const FILEUPLOAD_ERROR = {
   OVER_FILE_TOTAL_SIZE: '업로드 가능한 총 파일크기는 10MB 입니다.',
   UNAVAILABLE_EXTENSION: '허용하지 않는 확장자 입니다.',
 };
+
+const UNAVAILABLE_EXTENSION_STRING = Object.keys(UNAVAILABLE_EXTENSION).join(', ');
 
 const addFileSize = (a, b) => a + b.size;
 
@@ -123,12 +126,22 @@ const DropZone = ({ visible }) => {
       <WM_S.RowWrapper>
         <div></div>
         <div>
-          <S.FileUploadInfo>
-            파일 업로드 갯수 : {files.length} / {FILE_MAX_COUNT}
-          </S.FileUploadInfo>
-          <S.FileUploadInfo>
-            파일 업로드 용량 : {prettyBytes(totalFileSize)} / {PRETTY_FILE_MAX_SIZE}
-          </S.FileUploadInfo>
+          <S.FlexRowWrap>
+            <S.FlexItem>
+              <PopoverPopupState
+                text={'업로드 불가능한 확장자 보기'}
+                hoverText={UNAVAILABLE_EXTENSION_STRING}
+              />
+            </S.FlexItem>
+            <S.FlexItem>
+              <S.FileUploadInfo>
+                파일 업로드 갯수 : {files.length} / {FILE_MAX_COUNT}
+              </S.FileUploadInfo>
+              <S.FileUploadInfo>
+                파일 업로드 용량 : {prettyBytes(totalFileSize)} / {PRETTY_FILE_MAX_SIZE}
+              </S.FileUploadInfo>
+            </S.FlexItem>
+          </S.FlexRowWrap>
           <S.UploadArea {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive

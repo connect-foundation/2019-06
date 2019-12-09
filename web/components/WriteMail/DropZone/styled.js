@@ -13,4 +13,15 @@ const UploadArea = styled.div`
   border-style: dashed;
 `;
 
-export { UploadArea, FileUploadInfo };
+const FlexRowWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 5px;
+  justify-content: space-between;
+`;
+
+const FlexItem = styled.div`
+  height: 100%;
+`;
+
+export { UploadArea, FileUploadInfo, FlexRowWrap, FlexItem };
