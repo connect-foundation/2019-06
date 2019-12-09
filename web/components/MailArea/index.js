@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -112,7 +112,7 @@ const MailArea = () => {
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
-  useMemo(() => {
+  useEffect(() => {
     dispatch(initCheckerInTools());
     dispatch(handleMailsChange({ ...fetchingMailData.data }));
   }, [dispatch, fetchingMailData.data]);
