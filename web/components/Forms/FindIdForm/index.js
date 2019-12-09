@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Router from 'next/router';
-import axios from 'axios';
 import { TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 import SmallHeader from '../../SmallHeader';
 import validator from '../../../utils/validator';
-import { errorParser } from '../../../utils/error-parser';
 import S from './styled';
+import { AppDispatchContext } from '../../../contexts';
+import { SUCCESS_EMAIL_SEND_TO_FIND_ID } from '../../../utils/success-message';
+import { setMessage } from '../../../contexts/reducer';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -23,14 +25,16 @@ const FindIdForm = () => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
+  const { dispatch } = useContext(AppDispatchContext);
+
   const findIdByEmail = async () => {
-    try {
-      const body = { email };
-      await axios.post('/users/search?type=id', body);
+    const body = { email };
+    const { isError, data } = await request.post('/users/search?type=id', body);
+    if (isError) {
+      setError(data.message);
+    } else {
+      dispatch(setMessage(SUCCESS_EMAIL_SEND_TO_FIND_ID));
       Router.push('/login');
-    } catch (err) {
-      const message = errorParser(err);
-      setError(message);
     }
   };
 

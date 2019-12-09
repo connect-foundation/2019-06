@@ -29,6 +29,12 @@ const DeleteButton = styled.div`
   margin-right: 10px;
 `;
 
+const RecycleButton = styled.div`
+  cursor: pointer;
+  flex: 0 0 40px;
+  margin-right: 10px;
+`;
+
 const From = styled.div`
   flex: 0 0 150px;
   text-overflow: ellipsis;
@@ -84,6 +90,7 @@ export {
   Container,
   ImportantButton,
   ReadSign,
+  RecycleButton,
   DeleteButton,
   From,
   Selectable,

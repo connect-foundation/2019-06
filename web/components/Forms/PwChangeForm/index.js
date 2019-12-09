@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
-import axios from 'axios';
 import {
   TextField,
   Button,
@@ -13,9 +12,9 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 
 import validator from '../../../utils/validator';
-import { errorParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import S from './styled';
+import request from '../../../utils/request';
 
 const useStyles = makeStyles(theme => ({
   textField: {
@@ -67,14 +66,13 @@ const PasswordModal = () => {
   };
 
   const updatePassword = async () => {
-    try {
-      const { password } = values;
-      const body = { password };
-      await axios.patch('/users/password', body);
+    const { password } = values;
+    const body = { password };
+    const { isError, data } = await request.patch('/users/password', body);
+    if (isError) {
+      handleChangeErrMsg(data.message);
+    } else {
       handleOpen();
-    } catch (err) {
-      const message = errorParser(err);
-      handleChangeErrMsg(message);
     }
   };
 
