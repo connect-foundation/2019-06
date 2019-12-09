@@ -41,9 +41,9 @@ const DropZone = ({ visible }) => {
         return;
       }
 
-      dispatch({ type: UPDATE_FILES, payload: { files: acceptedFiles } });
+      dispatch({ type: UPDATE_FILES, payload: { files: [...files, ...acceptedFiles] } });
     },
-    [dispatch],
+    [dispatch, files],
   );
 
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
@@ -53,10 +53,10 @@ const DropZone = ({ visible }) => {
     multiple: true,
   });
 
-  const delBtnHandler = file => {
+  const delBtnHandler = number => {
     dispatch({
       type: UPDATE_FILES,
-      payload: { files: files.filter(f => f.lastModified !== file.lastModified) },
+      payload: { files: files.filter((file, index) => index !== number) },
     });
   };
 
@@ -92,7 +92,7 @@ const DropZone = ({ visible }) => {
                         <IconButton
                           edge="end"
                           aria-label="delete"
-                          onClick={() => delBtnHandler(file)}>
+                          onClick={() => delBtnHandler(idx)}>
                           <DeleteIcon />
                         </IconButton>
                       </ListItemSecondaryAction>
