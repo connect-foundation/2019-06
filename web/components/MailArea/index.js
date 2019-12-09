@@ -100,7 +100,6 @@ const handleAction = {
   [ACTION.READ]: ({ mail, dispatch, index }) => {
     mail.index = index;
     dispatch(handleMailClick(mail, <ReadMail />));
-    updateMail(mail.no, { is_read: true });
   },
 };
 

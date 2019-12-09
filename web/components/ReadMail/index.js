@@ -6,7 +6,7 @@ import { yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
-import { handleSnackbarState } from '../../contexts/reducer';
+import { handleSnackbarState, setMail } from '../../contexts/reducer';
 import { AppStateContext, AppDispatchContext } from '../../contexts';
 import FileList from './FileList';
 import request from '../../utils/request';
@@ -48,13 +48,18 @@ const updateMail = async (no, props) => {
   return request.patch(`/mail/${no}`, { props });
 };
 
+const loadAttachments = async (mailTemplateNo, setAttachments) => {
+  const url = `/mail/template/${mailTemplateNo}/attachments`;
+  const { data } = await request.get(url);
+  setAttachments(data.attachments);
+};
+
 const ReadMail = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const [attachments, setAttachments] = useState(null);
   const { is_important, MailTemplate, no, reservation_time, index } = state.mail;
   const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
-  const [isImportant, setIsImportant] = useState(is_important);
   const receivers = to.replace(',', ', ');
   const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
   const classes = useStyles();
@@ -62,23 +67,22 @@ const ReadMail = () => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   useEffect(() => {
-    const url = `/mail/template/${mailTemplateNo}/attachments`;
-    request.get(url).then(({ data }) => {
-      setAttachments(data.attachments);
-    });
-  }, [mailTemplateNo]);
+    loadAttachments(mailTemplateNo, setAttachments);
+    updateMail(no, { is_read: true });
+  }, [no, mailTemplateNo]);
 
   const handleStarClick = async () => {
-    setIsImportant(!isImportant);
-    const { isError } = await updateMail(no, { is_important: !isImportant });
+    const { isError, data } = await updateMail(no, { is_important: !is_important });
     let message;
     if (isError) {
-      message = !isImportant ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
-      setIsImportant(!isImportant);
+      message = !is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
       openSnackbar(SNACKBAR_VARIANT.ERROR, message);
       return;
     }
-    message = !isImportant ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
+    message = !is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
+    data.MailTemplate = MailTemplate;
+    data.index = index;
+    dispatch(setMail(data));
     openSnackbar(SNACKBAR_VARIANT.SUCCESS, message);
   };
 
@@ -88,12 +92,12 @@ const ReadMail = () => {
       <S.ReadArea>
         <S.TitleView>
           <S.Subject>
-            {isImportant ? (
+            {is_important ? (
               <Star className={classes.star} onClick={handleStarClick} />
             ) : (
               <StarBorder className={classes.unstar} onClick={handleStarClick} />
             )}
-            <h3>{subject}</h3>
+            <h3>{subject || '제목없음'}</h3>
             <div>
               <S.Text>{reservation_time && '예약'}</S.Text>
               <span>{date}</span>

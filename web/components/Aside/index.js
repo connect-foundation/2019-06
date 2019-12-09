@@ -27,6 +27,7 @@ import {
   Drafts as DraftsIcon,
   Send as SendIcon,
   Delete as DeleteIcon,
+  ImportContacts,
 } from '@material-ui/icons';
 import S from './styled';
 import MailArea from '../MailArea';
@@ -99,9 +100,9 @@ const Aside = () => {
 
   const iconOfDefaultCategories = [
     selected => <AllInboxIcon className={selected ? classes.whiteIcon : ''} />,
-    selected => <StarBorder className={selected ? classes.whiteIcon : ''} />,
-    selected => <SendIcon className={selected ? classes.whiteIcon : ''} />,
     selected => <DraftsIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <SendIcon className={selected ? classes.whiteIcon : ''} />,
+    selected => <ImportContacts className={selected ? classes.whiteIcon : ''} />,
     selected => <DeleteIcon className={selected ? classes.whiteIcon : ''} />,
   ];
 
