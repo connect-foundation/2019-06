@@ -20,12 +20,14 @@ const checkSubEmailUniqueConstraintError = error => {
   throw error;
 };
 
-const throwUniqueFieldsError = ({ isIdUniqueError, isSubEmailUniqueError }) => {
-  if (isIdUniqueError && isSubEmailUniqueError) {
+const throwUniqueFieldsError = (users, id, sub_email) => {
+  if (users.length >= 2) {
     throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
-  } else if (isIdUniqueError) {
+  } else if (users[0].id === id && users[0].sub_email === sub_email) {
+    throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
+  } else if (users[0].id === id) {
     throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
-  } else if (isSubEmailUniqueError) {
+  } else if (users[0].sub_email === sub_email) {
     throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
   }
 };
@@ -46,14 +48,11 @@ const register = async ({ id, password, name, sub_email }) => {
 
   try {
     await DB.sequelize.transaction(async transaction => {
-      const [response, created] = await DB.User.findOrCreateById(userData, { transaction });
-      if (!created) {
-        throwUniqueFieldsError({
-          isIdUniqueError: response.id === userData.id,
-          isSubEmailUniqueError: response.sub_email === userData.sub_email,
-        });
+      const users = await DB.User.findAllUserByIdAndSubEmail(userData, { transaction });
+      if (users.length !== 0) {
+        throwUniqueFieldsError(users, id, sub_email);
       }
-      newUser = response.get({ plain: true });
+      newUser = await DB.User.create(userData, { transaction, raw: true });
       await createDefaultCategories(newUser.no, transaction);
     });
   } catch (error) {
