@@ -285,4 +285,35 @@ describe('Mail api test...', () => {
         .expect(400, done);
     });
   });
+
+  describe('메일 영구삭제 요청 시...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('# 메일 1번 삭제 시 200', done => {
+      authenticatedUser.delete('/mail/1').expect(200, done);
+    });
+
+    it('# 이미 삭제한 메일 1번 삭제 시 400', done => {
+      authenticatedUser.delete('/mail/1').expect(200, done);
+    });
+
+    it('# 잘못된 번호의 메일 삭제 시 400', done => {
+      authenticatedUser.delete('/mail/-1').expect(400, done);
+    });
+
+    it('# 잘못된 값이 들어오면 400', done => {
+      authenticatedUser.delete('/mail/asd').expect(400, done);
+    });
+  });
 });
