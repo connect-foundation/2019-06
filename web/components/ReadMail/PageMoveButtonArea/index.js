@@ -25,38 +25,41 @@ const PageMoveButtonArea = ({ index }) => {
   const { mails, category, sort, paging, page } = state;
   const mailCount = mails.length;
 
-  const handlePrevBtnClick = async () => {
-    let newMails = mails;
-    if (index === 0) {
-      const query = getQueryByOptions({ category, page: page - 1, sort });
-      newMails = await loadNewMails({ query, dispatch });
-      index = mails.length;
-    }
-    const mail = newMails[index - 1];
-    mail.index = index - 1;
-    dispatch(setMail(mail));
+  const valueToMove = {
+    prev: {
+      move: i => i - 1,
+      isLimit: index === 0,
+      newIndex: mails.length,
+    },
+    next: {
+      move: i => i + 1,
+      isLimit: index === mails.length - 1,
+      newIndex: -1,
+    },
   };
 
-  const handleNextBtnClick = async () => {
+  const handleMoveBtnClick = async ({ move, isLimit, newIndex }) => {
     let newMails = mails;
-    if (index === mails.length - 1) {
-      const query = getQueryByOptions({ category, page: page + 1, sort });
+    if (isLimit) {
+      const query = getQueryByOptions({ category, page: move(page), sort });
       newMails = await loadNewMails({ query, dispatch });
-      index = -1;
+      index = newIndex;
     }
-    const mail = newMails[index + 1];
-    mail.index = index + 1;
+    const mail = newMails[move(index)];
+    mail.index = move(index);
     dispatch(setMail(mail));
   };
 
   return (
     <S.Container>
-      <IconButton disabled={isDisabledPrevBtn(index, paging)} onClick={handlePrevBtnClick}>
+      <IconButton
+        disabled={isDisabledPrevBtn(index, paging)}
+        onClick={handleMoveBtnClick.bind(null, valueToMove.prev)}>
         <ArrowBack />
       </IconButton>
       <IconButton
         disabled={isDisabledNextBtn(index, paging, mailCount)}
-        onClick={handleNextBtnClick}>
+        onClick={handleMoveBtnClick.bind(null, valueToMove.next)}>
         <ArrowForward />
       </IconButton>
     </S.Container>
