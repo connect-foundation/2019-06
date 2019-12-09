@@ -23,4 +23,4 @@ const errorParser = error => {
   return { status: 400, message: errorMessage };
 };
 
-export { errorParser };
+export { isContainedErrorCode, errorParser };

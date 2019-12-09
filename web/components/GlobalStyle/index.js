@@ -56,6 +56,10 @@ const SmallBoard = styled.div`
   width: 800px;
 `;
 
+const TinyBoard = styled(SmallBoard)`
+  width: 650px;
+`;
+
 const SmallColumnBoard = styled.div`
   height: 500px;
   display: flex;
@@ -100,6 +104,7 @@ export {
   Content,
   HorizontalLine,
   SmallBoard,
+  TinyBoard,
   SmallColumnBoard,
   AlignLeftContainer,
   FlexWidthFullWrap,

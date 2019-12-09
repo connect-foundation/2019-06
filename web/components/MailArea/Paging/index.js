@@ -69,7 +69,7 @@ const Paging = ({ paging }) => {
     <GS.FlexRowWrap onClick={handleNumberClick}>
       <Fab
         size="small"
-        color="secondary"
+        color="primary"
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(-1)}
@@ -85,7 +85,7 @@ const Paging = ({ paging }) => {
 
       <Fab
         size="small"
-        color="secondary"
+        color="primary"
         aria-label="add"
         className={classes.margin}
         onClick={() => handleMoveBtnClick(1)}
