@@ -6,8 +6,7 @@ import prettyBytes from 'pretty-bytes';
 import * as GS from '../../GlobalStyle';
 import * as S from './styled';
 import request from '../../../utils/request';
-
-const API_SERVER = 'http://localhost';
+import { API_SERVER } from '../../../config';
 
 const FileList = ({ files }) => {
   const imageList = [];
