@@ -12,36 +12,72 @@ import {
 } from '@material-ui/core';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
+import prettyBytes from 'pretty-bytes';
 import * as WM_S from '../styled';
 import * as S from './styled';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
-import AVAILABLE_EXTENSION from '../../../utils/available-extension';
+import UNAVAILABLE_EXTENSION from '../../../utils/unavailable-extension';
 
 const MB = 1000 ** 2;
 const FILE_MAX_SIZE = 10 * MB;
+const FILE_MAX_COUNT = 5;
+const PRETTY_FILE_MAX_SIZE = prettyBytes(FILE_MAX_SIZE);
+
+const addFileSize = (a, b) => a + b.size;
 
 const checkOverSize = files => {
-  const sum = files.reduce((a, b) => a + b.size, 0);
+  const sum = files.reduce(addFileSize, 0);
   return sum <= FILE_MAX_SIZE;
 };
 
-const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
+const checkExtension = fileNames => {
+  const errors = [];
+  for (const fileName of fileNames) {
+    const splitedFileName = fileName.split('.');
+    let extension = splitedFileName[splitedFileName.length - 1];
+    extension = extension.toLowerCase();
+    if (UNAVAILABLE_EXTENSION[extension]) {
+      errors.push(extension);
+    }
+  }
+  if (errors.length > 0) {
+    throw errors;
+  }
+
+  return true;
+};
 
 const DropZone = ({ visible }) => {
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
+  const totalFileSize = files.reduce(addFileSize, 0);
 
   const onDrop = useCallback(
-    acceptedFiles => {
-      if (!checkOverSize(acceptedFiles)) {
-        return;
-      }
-      if (!checkExtension(acceptedFiles)) {
+    newFiles => {
+      const totalFileCount = files.length + newFiles.length;
+      if (FILE_MAX_COUNT < totalFileCount) {
+        // TODO : 스낵바
         return;
       }
 
-      dispatch({ type: UPDATE_FILES, payload: { files: [...files, ...acceptedFiles] } });
+      const fileNames = newFiles.map(file => file.name);
+
+      try {
+        checkExtension(fileNames);
+      } catch (error) {
+        console.log(error);
+        // TODO 스넥바
+        return;
+      }
+
+      const nextFiles = [...files, ...newFiles];
+      if (!checkOverSize(nextFiles)) {
+        // TODO 스넥바
+        return;
+      }
+
+      dispatch({ type: UPDATE_FILES, payload: { files: nextFiles } });
     },
     [dispatch, files],
   );
@@ -65,6 +101,9 @@ const DropZone = ({ visible }) => {
       <WM_S.RowWrapper>
         <div></div>
         <div>
+          <span>
+            {totalFileSize}/{PRETTY_FILE_MAX_SIZE}
+          </span>
           <S.UploadArea {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive
