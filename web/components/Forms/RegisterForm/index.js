@@ -79,22 +79,14 @@ const RegisterForm = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
 
-  const handleRegisterErrMsg = msg => {
-    setErrorMsg({ ...initialErrorState, register: msg });
-  };
-
   const signUp = async () => {
     const { id, password, name, email } = values;
     const body = { id, password, sub_email: email, name: name.trim() };
     const { isError, data } = await request.post('/users', body);
     if (isError) {
-      let { message } = data;
-      message = registerErrorMessageParser(message);
-      if (message.id || message.email) {
-        setErrorMsg({ ...errors, ...message });
-      } else {
-        handleRegisterErrMsg(message);
-      }
+      const { message } = data;
+      const errMsgs = registerErrorMessageParser(message);
+      setErrorMsg({ ...errors, ...errMsgs });
       return;
     }
     dispatch(setMessage(SUCCESS_REGISTER));

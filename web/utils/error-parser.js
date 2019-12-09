@@ -20,7 +20,7 @@ const registerErrorMessageParser = errorMsg => {
   } else if (errorMsg === ERROR_SUB_EMAIL_DUPLICATION) {
     errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
   } else {
-    return errorMsg;
+    errorMsgs.register = errorMsg;
   }
 
   return errorMsgs;
