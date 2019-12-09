@@ -21,6 +21,10 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: true,
       },
+      prev_category_no: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
+      },
       mail_template_id: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
