@@ -5,7 +5,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import validator from '../../../utils/validator';
-import { errorParser } from '../../../utils/error-parser';
+import { errorParser, registerErrorMessageParser } from '../../../utils/error-parser';
 import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
@@ -61,6 +61,20 @@ const RegisterForm = () => {
     }
   };
 
+  const handlePasswordInputBlur = () => {
+    const errMsgs = { password: '', checkPassword: '' };
+
+    errMsgs.password = validator.validateAndGetMsg('password', values.password, true);
+    if (
+      (values.checkPassword !== '' || errors.checkPassword !== '') &&
+      values.password !== values.checkPassword
+    ) {
+      errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
+    }
+
+    setErrorMsg({ ...errors, ...errMsgs });
+  };
+
   const handlePasswordShowClick = () => {
     setValues({ ...values, showPassword: !values.showPassword });
   };
@@ -74,8 +88,13 @@ const RegisterForm = () => {
     const body = { id, password, sub_email: email, name: name.trim() };
     const { isError, data } = await request.post('/users', body);
     if (isError) {
-      const { message } = errorParser(data);
-      handleRegisterErrMsg(message);
+      let { message } = errorParser(data);
+      message = registerErrorMessageParser(message);
+      if (message.id || message.email) {
+        setErrorMsg({ ...errors, ...message });
+      } else {
+        handleRegisterErrMsg(message);
+      }
       return;
     }
     dispatch(setMessage(SUCCESS_REGISTER));
@@ -150,7 +169,7 @@ const RegisterForm = () => {
           id="password"
           label="비밀번호"
           onChange={handleInputChange('password')}
-          onBlur={handleInputBlur('password')}
+          onBlur={handlePasswordInputBlur}
           className={classes.textField}
           error={errors.password !== ''}
           type={values.showPassword ? 'text' : 'password'}
