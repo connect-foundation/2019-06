@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   List,
@@ -18,11 +18,19 @@ import * as S from './styled';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 import UNAVAILABLE_EXTENSION from '../../../utils/unavailable-extension';
+import { AppDispatchContext } from '../../../contexts/index';
+import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
+import { handleSnackbarState } from '../../../contexts/reducer';
 
 const MB = 1000 ** 2;
 const FILE_MAX_SIZE = 10 * MB;
 const FILE_MAX_COUNT = 5;
 const PRETTY_FILE_MAX_SIZE = prettyBytes(FILE_MAX_SIZE);
+const FILEUPLOAD_ERROR = {
+  OVER_FILE_COUNT: '업로드 가능한 최대 파일의 갯수는 5개 입니다.',
+  OVER_FILE_TOTAL_SIZE: '업로드 가능한 총 파일크기는 10MB 입니다.',
+  UNAVAILABLE_EXTENSION: '허용하지 않는 확장자 입니다.',
+};
 
 const addFileSize = (a, b) => a + b.size;
 
@@ -38,17 +46,18 @@ const checkExtension = fileNames => {
     let extension = splitedFileName[splitedFileName.length - 1];
     extension = extension.toLowerCase();
     if (UNAVAILABLE_EXTENSION[extension]) {
-      errors.push(extension);
+      errors.push(fileName);
     }
   }
   if (errors.length > 0) {
-    throw errors;
+    throw ` ${errors.join('  ')}`;
   }
 
   return true;
 };
 
 const DropZone = ({ visible }) => {
+  const { dispatch: appDispatch } = useContext(AppDispatchContext);
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
   const totalFileSize = files.reduce(addFileSize, 0);
@@ -57,7 +66,11 @@ const DropZone = ({ visible }) => {
     newFiles => {
       const totalFileCount = files.length + newFiles.length;
       if (FILE_MAX_COUNT < totalFileCount) {
-        // TODO : 스낵바
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.ERROR, FILEUPLOAD_ERROR.OVER_FILE_COUNT),
+          ),
+        );
         return;
       }
 
@@ -66,26 +79,35 @@ const DropZone = ({ visible }) => {
       try {
         checkExtension(fileNames);
       } catch (error) {
-        console.log(error);
-        // TODO 스넥바
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(
+              SNACKBAR_VARIANT.ERROR,
+              FILEUPLOAD_ERROR.UNAVAILABLE_EXTENSION + error,
+            ),
+          ),
+        );
         return;
       }
 
       const nextFiles = [...files, ...newFiles];
       if (!checkOverSize(nextFiles)) {
-        // TODO 스넥바
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.ERROR, FILEUPLOAD_ERROR.OVER_FILE_TOTAL_SIZE),
+          ),
+        );
         return;
       }
 
       dispatch({ type: UPDATE_FILES, payload: { files: nextFiles } });
     },
-    [dispatch, files],
+    [appDispatch, dispatch, files],
   );
 
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
     minSize: 0,
-    maxSize: FILE_MAX_SIZE,
     multiple: true,
   });
 
