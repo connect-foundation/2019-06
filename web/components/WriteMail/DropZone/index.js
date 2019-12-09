@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   List,
@@ -12,51 +12,114 @@ import {
 } from '@material-ui/core';
 import AttachmentIcon from '@material-ui/icons/Attachment';
 import DeleteIcon from '@material-ui/icons/Delete';
+import prettyBytes from 'pretty-bytes';
 import * as WM_S from '../styled';
 import * as S from './styled';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
-import AVAILABLE_EXTENSION from '../../../utils/available-extension';
+import UNAVAILABLE_EXTENSION from '../../../utils/unavailable-extension';
+import { AppDispatchContext } from '../../../contexts/index';
+import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
+import { handleSnackbarState } from '../../../contexts/reducer';
+import PopoverPopupState from './PopoverPopupState';
 
-const MB = 1024 * 1024;
+const MB = 1000 ** 2;
 const FILE_MAX_SIZE = 10 * MB;
+const FILE_MAX_COUNT = 5;
+const PRETTY_FILE_MAX_SIZE = prettyBytes(FILE_MAX_SIZE);
+const FILEUPLOAD_ERROR = {
+  OVER_FILE_COUNT: '업로드 가능한 최대 파일의 갯수는 5개 입니다.',
+  OVER_FILE_TOTAL_SIZE: '업로드 가능한 총 파일크기는 10MB 입니다.',
+  UNAVAILABLE_EXTENSION: '허용하지 않는 확장자 입니다.',
+};
 
-const checkOverSize = files => {
-  const sum = files.reduce((a, b) => a + b.size, 0);
+const UNAVAILABLE_EXTENSION_STRING = Object.keys(UNAVAILABLE_EXTENSION).join(', ');
+
+const addFileSize = (a, b) => a + b.size;
+const add = (a, b) => a + b;
+
+const checkOverSize = sizes => {
+  const sum = sizes.reduce(add, 0);
   return sum <= FILE_MAX_SIZE;
 };
 
-const checkExtension = files => files.every(file => AVAILABLE_EXTENSION[file.type]);
+const checkExtension = fileNames => {
+  const errors = [];
+  for (const fileName of fileNames) {
+    const splitedFileName = fileName.split('.');
+    let extension = splitedFileName[splitedFileName.length - 1];
+    extension = extension.toLowerCase();
+    if (UNAVAILABLE_EXTENSION[extension]) {
+      errors.push(fileName);
+    }
+  }
+  if (errors.length > 0) {
+    throw ` ${errors.join('  ')}`;
+  }
+
+  return true;
+};
 
 const DropZone = ({ visible }) => {
+  const { dispatch: appDispatch } = useContext(AppDispatchContext);
   const { files } = useStateForWM();
   const dispatch = useDispatchForWM();
+  const totalFileSize = files.reduce(addFileSize, 0);
 
   const onDrop = useCallback(
-    acceptedFiles => {
-      if (!checkOverSize(acceptedFiles)) {
-        return;
-      }
-      if (!checkExtension(acceptedFiles)) {
+    newFiles => {
+      const totalFileCount = files.length + newFiles.length;
+      if (FILE_MAX_COUNT < totalFileCount) {
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.ERROR, FILEUPLOAD_ERROR.OVER_FILE_COUNT),
+          ),
+        );
         return;
       }
 
-      dispatch({ type: UPDATE_FILES, payload: { files: acceptedFiles } });
+      const fileNames = newFiles.map(file => file.name);
+
+      try {
+        checkExtension(fileNames);
+      } catch (error) {
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(
+              SNACKBAR_VARIANT.ERROR,
+              FILEUPLOAD_ERROR.UNAVAILABLE_EXTENSION + error,
+            ),
+          ),
+        );
+        return;
+      }
+
+      const nextFiles = [...files, ...newFiles];
+      const fileSizes = nextFiles.map(file => file.size);
+      if (!checkOverSize(fileSizes)) {
+        appDispatch(
+          handleSnackbarState(
+            getSnackbarState(SNACKBAR_VARIANT.ERROR, FILEUPLOAD_ERROR.OVER_FILE_TOTAL_SIZE),
+          ),
+        );
+        return;
+      }
+
+      dispatch({ type: UPDATE_FILES, payload: { files: nextFiles } });
     },
-    [dispatch],
+    [appDispatch, dispatch, files],
   );
 
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDrop,
     minSize: 0,
-    maxSize: FILE_MAX_SIZE,
     multiple: true,
   });
 
-  const delBtnHandler = file => {
+  const delBtnHandler = number => {
     dispatch({
       type: UPDATE_FILES,
-      payload: { files: files.filter(f => f.lastModified !== file.lastModified) },
+      payload: { files: files.filter((file, index) => index !== number) },
     });
   };
 
@@ -65,6 +128,22 @@ const DropZone = ({ visible }) => {
       <WM_S.RowWrapper>
         <div></div>
         <div>
+          <S.FlexRowWrap>
+            <S.FlexItem>
+              <PopoverPopupState
+                text={'업로드 불가능한 확장자 보기'}
+                hoverText={UNAVAILABLE_EXTENSION_STRING}
+              />
+            </S.FlexItem>
+            <S.FlexItem>
+              <S.FileUploadInfo>
+                파일 업로드 갯수 : {files.length} / {FILE_MAX_COUNT}
+              </S.FileUploadInfo>
+              <S.FileUploadInfo>
+                파일 업로드 용량 : {prettyBytes(totalFileSize)} / {PRETTY_FILE_MAX_SIZE}
+              </S.FileUploadInfo>
+            </S.FlexItem>
+          </S.FlexRowWrap>
           <S.UploadArea {...getRootProps()}>
             <input {...getInputProps()} />
             {isDragActive
@@ -92,7 +171,7 @@ const DropZone = ({ visible }) => {
                         <IconButton
                           edge="end"
                           aria-label="delete"
-                          onClick={() => delBtnHandler(file)}>
+                          onClick={() => delBtnHandler(idx)}>
                           <DeleteIcon />
                         </IconButton>
                       </ListItemSecondaryAction>

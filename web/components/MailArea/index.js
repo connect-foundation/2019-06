@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -21,7 +21,6 @@ import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
 
 const WASTEBASKET_NAME = '휴지통';
-
 const ACTION = {
   STAR: 'star',
   DELETE: 'delete',
@@ -108,6 +107,7 @@ const MailArea = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
+
   const fetchingMailData = useFetch(URL);
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
