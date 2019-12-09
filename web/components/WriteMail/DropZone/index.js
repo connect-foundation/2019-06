@@ -18,7 +18,7 @@ import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_FILES } from '../ContextProvider/reducer/action-type';
 import AVAILABLE_EXTENSION from '../../../utils/available-extension';
 
-const MB = 1024 * 1024;
+const MB = 1000 ** 2;
 const FILE_MAX_SIZE = 10 * MB;
 
 const checkOverSize = files => {
