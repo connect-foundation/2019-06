@@ -28,7 +28,7 @@ const model = (sequelize, DataTypes) => {
   );
 
   Address.associate = ({ User }) => {
-    Address.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });
+    Address.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no', onDelete: 'cascade' });
   };
 
   Address.findAllByUserNo = userNo => {

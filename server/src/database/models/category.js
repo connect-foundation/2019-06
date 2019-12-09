@@ -60,9 +60,12 @@ const model = (sequelize, DataTypes) => {
   };
 
   Category.associate = ({ User, Mail, ClassificationPattern }) => {
-    Category.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no' });
+    Category.belongsTo(User, { foreignKey: 'user_no', targetKey: 'no', onDelete: 'cascade' });
     Category.hasMany(Mail, { foreignKey: 'category_no', sourceKey: 'no' });
-    Category.hasMany(ClassificationPattern, { foreignKey: 'category_no', sourceKey: 'no' });
+    Category.hasMany(ClassificationPattern, {
+      foreignKey: 'category_no',
+      sourceKey: 'no',
+    });
   };
 
   return Category;

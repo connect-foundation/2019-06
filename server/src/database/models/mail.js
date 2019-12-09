@@ -60,9 +60,9 @@ const model = (sequelize, DataTypes) => {
   );
 
   Mail.associate = ({ User, MailTemplate, Category }) => {
-    Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no' });
+    Mail.belongsTo(User, { foreignKey: 'owner', targetKey: 'no', onDelete: 'cascade' });
     Mail.belongsTo(MailTemplate, { foreignKey: 'mail_template_id', targetKey: 'no' });
-    Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no' });
+    Mail.belongsTo(Category, { foreignKey: 'category_no', targetKey: 'no', onDelete: 'cascade' });
   };
 
   Mail.findAndCountAllFilteredMail = ({

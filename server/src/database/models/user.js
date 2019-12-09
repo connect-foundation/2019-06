@@ -205,6 +205,13 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  User.destroyByNo = no => {
+    return User.destroy({
+      where: { no },
+      cascade: true,
+    });
+  };
+
   return User;
 };
 
