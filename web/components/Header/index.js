@@ -6,16 +6,15 @@ import ProfileLink from '../ProfileLink';
 import { AppDispatchContext } from '../../contexts';
 import { handleCategoryClick } from '../../contexts/reducer';
 import MailArea from '../MailArea';
+import logo from '../../public/logo.png';
 
 const Header = ({ brand }) => {
   const { dispatch } = useContext(AppDispatchContext);
-  const handleAtagClick = () => dispatch(handleCategoryClick(0, <MailArea />));
+  const handleLogoClick = () => dispatch(handleCategoryClick(0, <MailArea />));
   return (
     <S.Header>
       <S.Brand>
-        <S.Center>
-          <S.Atag onClick={handleAtagClick}>{brand}</S.Atag>
-        </S.Center>
+        <S.Logo src={logo} onClick={handleLogoClick} alt={'로고이미지'} />
       </S.Brand>
       <S.Search>
         <button>검색</button>

@@ -6,12 +6,13 @@ import prettyBytes from 'pretty-bytes';
 import * as GS from '../../GlobalStyle';
 import * as S from './styled';
 import request from '../../../utils/request';
+import { API_SERVER } from '../../../config';
 
 const FileList = ({ files }) => {
   const imageList = [];
   const fileList = files.map(file => {
     const isImage = file.type.split('/')[0] === 'image';
-    const src = `http://localhost/mail/attachment/${file.no}/preview`;
+    const src = `${API_SERVER}/mail/attachment/${file.no}/preview`;
     if (isImage) {
       imageList.push(
         <S.ImageColumn key={`image${file.no}`}>

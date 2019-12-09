@@ -23,6 +23,16 @@ const FlexRowWrap = styled.div`
   align-items: center;
 `;
 
+const FlexWidthFullWrap = styled.div`
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+`;
+
 const FlexCenterWrap = styled(FlexWrap)`
   justify-content: center;
   align-items: center;
@@ -44,6 +54,10 @@ const SmallBoard = styled.div`
   border: 1px solid #a4b0be;
   border-radius: 15px;
   width: 800px;
+`;
+
+const TinyBoard = styled(SmallBoard)`
+  width: 650px;
 `;
 
 const SmallColumnBoard = styled.div`
@@ -68,9 +82,10 @@ const HorizontalLine = styled.hr`
 `;
 
 const Content = styled.div`
+  flex: 1 1;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 250px 1fr;
-  height: 85%;
 `;
 
 const AlignLeftContainer = styled.div`
@@ -89,6 +104,8 @@ export {
   Content,
   HorizontalLine,
   SmallBoard,
+  TinyBoard,
   SmallColumnBoard,
   AlignLeftContainer,
+  FlexWidthFullWrap,
 };
