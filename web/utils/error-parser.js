@@ -1,6 +1,29 @@
+import {
+  ERROR_ID_AND_SUB_EMAIL_DUPLICATION,
+  ERROR_ID_DUPLICATION,
+  ERROR_SUB_EMAIL_DUPLICATION,
+} from './error-message';
+
 const isContainedErrorCode = error => {
   const { response } = error;
   return response && response.data && response.data.errorCode;
+};
+
+const registerErrorMessageParser = errorMsg => {
+  const errorMsgs = {};
+
+  if (errorMsg === ERROR_ID_AND_SUB_EMAIL_DUPLICATION) {
+    errorMsgs.id = ERROR_ID_DUPLICATION;
+    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
+  } else if (errorMsg === ERROR_ID_DUPLICATION) {
+    errorMsgs.id = ERROR_ID_DUPLICATION;
+  } else if (errorMsg === ERROR_SUB_EMAIL_DUPLICATION) {
+    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
+  } else {
+    return errorMsg;
+  }
+
+  return errorMsgs;
 };
 
 const errorParser = error => {
@@ -23,4 +46,4 @@ const errorParser = error => {
   return { status: 400, message: errorMessage };
 };
 
-export { errorParser };
+export { isContainedErrorCode, errorParser, registerErrorMessageParser };
