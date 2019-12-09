@@ -1,26 +1,29 @@
 import styled from 'styled-components';
 
+const Header = styled.div`
+  flex: 0 0 70px;
+  display: flex;
+  flex-direction: row;
+  padding: 20px 10px;
+  overflow: hidden;
+  box-sizing: border-box;
+  align-items: center;
+  border-bottom: 2px solid #eceff1;
+`;
+
 const Brand = styled.div`
-  flex: 0 0 350px;
+  flex: 0 0 250px;
+  height: inherit;
   font-size: 3rem;
   font-weight: bold;
+  box-sizing: border-box;
 `;
 
-const Center = styled.div`
-  text-align: center;
-`;
-
-const Atag = styled.a`
-  display: flex;
-  width: 300px;
-  color: black;
-  text-decoration: none;
+const Logo = styled.img`
+  display: block;
   cursor: pointer;
-  background: url('https://avatars2.githubusercontent.com/u/57168983?s=70&v=4') no-repeat;
-  background-size: 17%;
-  justify-content: center;
-  align-items: center;
-  background-position: 15px 0px;
+  height: 60px;
+  margin-left: 10px;
 `;
 
 const Search = styled.div`
@@ -39,13 +42,4 @@ const SearchInput = styled.input`
   width: 600px;
 `;
 
-const Header = styled.div`
-  flex: 0 0 50px;
-  display: flex;
-  border-bottom: 2px solid #eceff1;
-  flex-direction: row;
-  overflow: hidden;
-  padding: 20px 10px;
-`;
-
-export { Brand, Center, Search, SearchInput, Atag, Header };
+export { Brand, Search, SearchInput, Header, Logo };

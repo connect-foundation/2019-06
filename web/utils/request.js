@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { errorParser } from './error-parser';
+import { API_SERVER } from '../config';
 import HTTPResponse from './http-response';
 
 const execute = async fn => {
@@ -18,7 +19,7 @@ const execute = async fn => {
 axios.defaults.withCredentials = true;
 
 const server = axios.create({
-  baseURL: 'http://localhost/',
+  baseURL: API_SERVER,
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
