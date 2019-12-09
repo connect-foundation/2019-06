@@ -2,7 +2,7 @@
 import should from 'should';
 import {
   checkAttachment,
-  checkMimeType,
+  checkExtension,
   getTotalSize,
 } from '../../../src/libraries/validation/attachment';
 
@@ -17,54 +17,64 @@ describe('attachment validation...', () => {
     });
   });
 
-  describe('checkMimeTyep은...', () => {
-    it('사용가능한 mimetype이면 true를 반환한다.', () => {
-      const mimetypes = ['application/vnd.ms-powerpoint', 'image/jpeg', 'application/json'];
-      checkMimeType(mimetypes).should.be.true();
+  describe('checkExtension은.....', () => {
+    it('이용가능한 확장자면 true를 반환한다.', () => {
+      const filenames = ['asd.png', 'dqw.jpg', 'ddqw.md', 'dqw.html'];
+      checkExtension(filenames).should.be.true();
     });
 
-    it('사용 불가능한 mimetype이면 false를 반환한다..', () => {
-      let mimetypes = ['application/vnd.ms-powerpoint2'];
-      checkMimeType(mimetypes).should.be.false();
+    it('이용 불가능한 확장자면 throw을 던진다..', () => {
+      const filenames = ['asd.png', 'dqw.jpg', 'ddqw.md', 'dqw.js'];
+      try {
+        checkExtension(filenames);
+      } catch (error) {
+        error.should.be.equals('dqw.js');
+      }
+    });
 
-      mimetypes = ['md'];
-      checkMimeType(mimetypes).should.be.false();
+    it('이용 불가능한 확장자면 throw을 던진다2..', () => {
+      const filenames = ['asd.ps1', 'dqw.scf', 'ddqw.md', 'dqw.js'];
+      try {
+        checkExtension(filenames);
+      } catch (error) {
+        error.should.be.equals('asd.ps1 dqw.scf dqw.js');
+      }
+    });
 
-      mimetypes = ['application/js'];
-      checkMimeType(mimetypes).should.be.false();
-
-      mimetypes = ['text/js'];
-      checkMimeType(mimetypes).should.be.false();
-
-      mimetypes = ['text/js', 'text/py'];
-      checkMimeType(mimetypes).should.be.false();
+    it('이용 불가능한 확장자면 throw을 던진다3..', () => {
+      const filenames = ['asd.png', 'dqw.bat', 'ddqw.md', 'dqw.js'];
+      try {
+        checkExtension(filenames);
+      } catch (error) {
+        error.should.be.equals('dqw.bat dqw.js');
+      }
     });
   });
 
   describe('checkAttachment은...', () => {
-    const MB = 1024 * 1024;
+    const MB = 1000 * 1000;
 
     it('totalSize가 크면 에러를 반환한다..', () => {
       const files = [
         {
           size: 5 * MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: 5 * MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: 5 * MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: 5 * MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: 5 * MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
       ];
       try {
@@ -78,27 +88,27 @@ describe('attachment validation...', () => {
       }
     });
 
-    it('허용되지 않는 mimetype이 포함된경우 에러를 반환한다', () => {
+    it('허용되지 않는 extension이 포함된경우 에러를 반환한다', () => {
       const files = [
         {
           size: MB,
-          mimetype: 'text/value',
+          originalname: 'tes.bat',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'text/plain',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'text/plain',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'text/plain',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'text/plain',
         },
       ];
       try {
@@ -107,9 +117,8 @@ describe('attachment validation...', () => {
         const { errorCode, fieldErrors } = err;
         errorCode.status.should.be.equals(400);
         errorCode.message.should.be.equals('INVALID INPUT VALUE');
-        fieldErrors[0].field.should.be.equals('mimetype');
-        fieldErrors[0].reason.should.be.equals('허용되지 않는 mimetype이 포함되어 있습니다.');
-        fieldErrors[0].value.should.an.instanceof(Array);
+        fieldErrors[0].field.should.be.equals('file extension');
+        fieldErrors[0].reason.should.be.equals('허용되지 않는 확장자가 포함되어 있습니다.');
       }
     });
 
@@ -117,23 +126,23 @@ describe('attachment validation...', () => {
       const files = [
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
         {
           size: MB,
-          mimetype: 'text/plain',
+          originalname: 'tes.txt',
         },
       ];
       checkAttachment(files).should.be.true();
