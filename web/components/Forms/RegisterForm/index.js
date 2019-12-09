@@ -82,14 +82,15 @@ const RegisterForm = () => {
     }
   };
 
+  const isNotEqualToCheckPassword = (password, checkPassword, checkPasswordError) =>
+    (checkPassword !== '' || checkPasswordError !== '') && // checkPassword가 비어있지 않거나 이전에 error 발생한 에러가 있을 때
+    password !== checkPassword; // password와 checkPassword가 다를 경우 true 반환
+
   const handlePasswordInputBlur = () => {
     const errMsgs = { password: '', checkPassword: '' };
 
     errMsgs.password = validator.validateAndGetMsg('password', values.password, true);
-    if (
-      (values.checkPassword !== '' || errors.checkPassword !== '') &&
-      values.password !== values.checkPassword
-    ) {
+    if (isNotEqualToCheckPassword(values.password, values.checkPassword, errors.checkPassword)) {
       errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
     }
 
