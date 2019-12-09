@@ -197,4 +197,28 @@ describe('Mail Service Test', () => {
       mail.should.be.have.properties(props);
     });
   });
+
+  describe('removeMail 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 2번 메일을 삭제한다.', async () => {
+      const isDeleted = await service.removeMail(2);
+      isDeleted.should.be.eql(true);
+    });
+
+    it('# 이미 삭제한 2번 메일을 삭제한다.', async () => {
+      const isDeleted = await service.removeMail(2);
+      isDeleted.should.be.eql(false);
+    });
+
+    it('# 유효하지 않는 번호의 메일을 삭제한다.', async () => {
+      const isDeleted = await service.removeMail(-1);
+      isDeleted.should.be.eql(false);
+    });
+  });
 });
