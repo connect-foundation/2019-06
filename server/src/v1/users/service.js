@@ -2,7 +2,6 @@ import generator from 'generate-password';
 
 import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
-import ErrorField from '../../libraries/exception/error-field';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
 import { encrypt, aesEncrypt } from '../../libraries/crypto';
