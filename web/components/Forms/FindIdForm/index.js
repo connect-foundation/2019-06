@@ -67,6 +67,7 @@ const FindIdForm = () => {
           label="이메일"
           type="search"
           onChange={({ target: { value } }) => setEmail(value)}
+          onBlur={validateForm}
           className={classes.textField}
           error={error !== ''}
           margin="normal"
