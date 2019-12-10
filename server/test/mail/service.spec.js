@@ -207,17 +207,17 @@ describe('Mail Service Test', () => {
     });
 
     it('# 2번 메일을 삭제한다.', async () => {
-      const isDeleted = await service.removeMail(2);
+      const isDeleted = await service.removeMail(2, 2);
       isDeleted.should.be.eql(true);
     });
 
     it('# 이미 삭제한 2번 메일을 삭제한다.', async () => {
-      const isDeleted = await service.removeMail(2);
+      const isDeleted = await service.removeMail(2, 2);
       isDeleted.should.be.eql(false);
     });
 
     it('# 유효하지 않는 번호의 메일을 삭제한다.', async () => {
-      const isDeleted = await service.removeMail(-1);
+      const isDeleted = await service.removeMail(-1, 2);
       isDeleted.should.be.eql(false);
     });
   });
@@ -240,8 +240,12 @@ describe('Mail Service Test', () => {
     it('# 1,4,-1,10번 메일의 category_no를 3로 변경하면 3개만 변경', async () => {
       const nos = [1, 4, -1, 10];
       const props = { category_no: 3 };
-      const [updated] = await service.updateMails(nos, props, 1);
-      updated.should.be.eql(3);
+      try {
+        await service.updateMails(nos, props, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
     });
 
     it('# 1,1,1,1번 메일의 category_no를 4로 변경하면 1개만 변경', async () => {
