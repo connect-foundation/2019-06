@@ -19,6 +19,7 @@ import {
   handleSnackbarState,
   handleMailsChange,
   initCheckerInTools,
+  handlePageNumberClick,
 } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
 import request from '../../../utils/request';
@@ -67,6 +68,10 @@ const loadNewMails = async (query, dispatch) => {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
   dispatch(handleMailsChange({ ...data }));
+  const { mails, paging } = data;
+  if (mails.length === 0) {
+    dispatch(handlePageNumberClick(paging.page));
+  }
 };
 
 const updateMails = async (nos, props) => {
