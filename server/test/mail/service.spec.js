@@ -266,4 +266,59 @@ describe('Mail Service Test', () => {
       }
     });
   });
+
+  describe('removeMails 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 1,4,7,10번 메일 영구 삭제하면 true', async () => {
+      const nos = [1, 4, 7, 10];
+      const isDeleted = await service.removeMails(nos, 1);
+      isDeleted.should.be.eql(true);
+    });
+
+    it('# 이미 삭제한 1,4,7,10번 메일 영구 삭제하면 MAIL_NOT_FOUND', async () => {
+      const nos = [1, 4, 7, 10];
+      try {
+        await service.removeMails(nos, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
+    });
+
+    it('# 2, 4번 메일 영구 삭제하면 MAIL_NOT_FOUND', async () => {
+      const nos = [2, 4];
+      try {
+        await service.removeMails(nos, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
+    });
+
+    it('# 123123, -1번 메일 영구 삭제하면 MAIL_NOT_FOUND', async () => {
+      const nos = [123123, -1];
+      try {
+        await service.removeMails(nos, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
+    });
+
+    it('# asd, sd, 1번 메일 영구 삭제하면 MAIL_NOT_FOUND', async () => {
+      const nos = ['asd', 'sd', 1];
+      try {
+        await service.removeMails(nos, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
+    });
+  });
 });

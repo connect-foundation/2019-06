@@ -220,7 +220,7 @@ const removeMails = async (nos, userNo) => {
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
   }
   const deleted = await DB.Mail.deleteAllByNosAndUserNo(nos, userNo);
-  return deleted;
+  return deleted === nos.length;
 };
 
 export default {
