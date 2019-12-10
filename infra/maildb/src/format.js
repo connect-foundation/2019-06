@@ -24,15 +24,17 @@ const IDENTIFIER = {
 const VALUE = {
   OWNER: "owner",
   NOW: mysql.raw("now()"),
-  MAILBOX: "받은메일함"
+  MAILBOX: "받은메일함",
+  SENT_MAILBOX: "보낸메일함"
 };
 
-const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
+const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
   const valueOfMailTemplate = {
     from,
     to,
     subject,
     text,
+    html,
     created_at: VALUE.NOW,
     updated_at: VALUE.NOW
   };
@@ -42,20 +44,22 @@ const getQueryToAddMailTemplate = ({ from, to, subject, text }) => {
 
 const getQueryToAddAttachment = ({
   filename,
-  content,
+  url,
   contentType,
-  mail_template_id
+  mail_template_id,
+  size
 }) => {
   const valueOfAttachment = {
     name: filename,
-    content,
+    url,
     type: contentType,
-    mail_template_id
+    mail_template_id,
+    size
   };
   return mysql.format(QUERY.INSERT, [TABLE.ATTACHMENT, valueOfAttachment]);
 };
 
-const getQueryToFindOwnerAndCategoryNo = id => {
+const getQueryToFindOwnerAndCategoryNo = (id, sender = false) => {
   return mysql.format(QUERY.SELECT, [
     IDENTIFIER.USER_NO,
     VALUE.OWNER,
@@ -66,17 +70,23 @@ const getQueryToFindOwnerAndCategoryNo = id => {
     IDENTIFIER.ID,
     id,
     IDENTIFIER.CATEGOTY_NAME,
-    VALUE.MAILBOX
+    sender ? VALUE.SENT_MAILBOX : VALUE.MAILBOX
   ]);
 };
 
-const getQueryToAddMail = ({ owner, category_no, mail_template_id }) => {
+const getQueryToAddMail = ({
+  owner,
+  category_no,
+  mail_template_id,
+  message_id
+}) => {
   const valueOfMail = {
     owner,
     category_no,
     mail_template_id,
     is_important: 0,
-    is_read: 0
+    is_read: 0,
+    message_id
   };
 
   return mysql.format(QUERY.INSERT, [TABLE.MAIL, valueOfMail]);
