@@ -124,7 +124,7 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Mail.updateAll = (nos, props) => {
+  Mail.updateAllByNosAndProps = (nos, props) => {
     return Mail.update(
       {
         ...props,
@@ -144,10 +144,22 @@ const model = (sequelize, DataTypes) => {
     );
   };
 
-  Mail.deleteByPk = no => {
+  Mail.deleteByNoAndUserNo = (no, userNo) => {
     return Mail.destroy({
       where: {
         no,
+        owner: userNo,
+      },
+    });
+  };
+
+  Mail.deleteAllByNosAndUserNo = (nos, userNo) => {
+    return Mail.destroy({
+      where: {
+        no: {
+          [Op.in]: nos,
+        },
+        owner: userNo,
       },
     });
   };
