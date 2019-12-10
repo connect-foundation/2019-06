@@ -1,4 +1,7 @@
 import mimemessage from 'mimemessage';
+import moment from 'moment';
+
+const DATE_RFC2822 = 'ddd, DD MMM YYYY HH:mm:ss ZZ';
 
 const getTextEntity = ({ text }) => {
   const alternateEntity = mimemessage.factory({
@@ -38,7 +41,7 @@ export const makeMimeMessage = ({ messageId, mailContents, date }) => {
   msg.header('Subject', subject);
 
   if (!date) {
-    msg.header('Date', new Date());
+    msg.header('Date', moment().format(DATE_RFC2822));
   } else {
     msg.header('Date', date);
   }
