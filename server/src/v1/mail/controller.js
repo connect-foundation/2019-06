@@ -79,17 +79,31 @@ const write = async (req, res, next) => {
 const update = async (req, res, next) => {
   const { no } = req.params;
   const { props } = req.body;
+  const userNo = req.user.no;
   let mail;
 
   try {
     validateNo(no);
     validateProps(props);
-    mail = await service.updateMail(no, props);
+    mail = await service.updateMail(no, props, userNo);
   } catch (err) {
     return next(err);
   }
 
   return res.json(mail);
+};
+
+const updateAll = async (req, res, next) => {
+  const { nos, props } = req.body;
+  const userNo = req.user.no;
+
+  try {
+    validateProps(props);
+    const mails = await service.updateMails(nos, props, userNo);
+    return res.json(mails);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 const getCategories = async (req, res, next) => {
@@ -103,10 +117,15 @@ const getCategories = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   const { no } = req.params;
+
+  if (no === 'box') {
+    return next('route');
+  }
+
   try {
     validateNo(no);
-    const isDeleted = await service.removeMail(no);
-    return res.json(isDeleted);
+    const result = await service.removeMail(no);
+    return res.json(result);
   } catch (err) {
     return next(err);
   }
@@ -116,6 +135,7 @@ export default {
   list,
   write,
   update,
+  updateAll,
   getCategories,
   remove,
 };

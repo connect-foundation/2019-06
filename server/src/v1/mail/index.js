@@ -13,6 +13,7 @@ const { MAIL_FILE_MAX_COUNT } = process.env;
 router.get('/', controller.list);
 router.get('/categories', controller.getCategories);
 router.patch('/:no', controller.update);
+router.patch('/', controller.updateAll);
 router.post('/', upload.array('attachments', MAIL_FILE_MAX_COUNT), controller.write);
 router.delete('/:no', controller.remove);
 
