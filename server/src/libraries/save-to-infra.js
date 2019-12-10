@@ -31,6 +31,21 @@ const connectImap = ({ email, password }, callback) => {
   imap.connect();
 };
 
+const connectImapWithAsyncCallback = ({ email, password }, callback) => {
+  const imap = getImap({ email, password });
+
+  imap.once('ready', async () => {
+    await callback(imap);
+    imap.end();
+  });
+
+  imap.once('error', err => {});
+
+  imap.once('end', () => {});
+
+  imap.connect();
+};
+
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
   connectImap(user, imap => {
     imap.append(msg.toString(), { mailbox: PREFIX + mailboxName });
@@ -66,6 +81,28 @@ export const deleteMailBox = ({ user, name }) => {
         const errorField = new ErrorField('mailBox', name, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
+    });
+  });
+};
+
+export const deleteMailBoxWithPromise = (imap, name) => {
+  return new Promise(resolve => {
+    imap.delBox(PREFIX + name, () => {
+      resolve(true);
+    });
+  });
+};
+
+export const deleteAllMailBox = ({ user, categories }) => {
+  return new Promise(resolve => {
+    connectImapWithAsyncCallback(user, async imap => {
+      const promises = [];
+      categories.forEach(({ name }) => {
+        promises.push(deleteMailBoxWithPromise(imap, name));
+      });
+      await Promise.all(promises).then(() => {
+        resolve();
+      });
     });
   });
 };
