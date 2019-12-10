@@ -1,7 +1,7 @@
 # <img width="30" src="https://user-images.githubusercontent.com/33617083/68571001-457a9d80-04a5-11ea-9a47-98c0fd36a1d9.png" style="margin:-5px 0px"> Daitnu
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.2-blue.svg?cacheSeconds=2592000" />
+  <img src = 'https://img.shields.io/github/v/release/connect-foundation/2019-06?color=green' />
   <img src="https://img.shields.io/badge/node-10.16.0-blue.svg" />
   <img src="https://img.shields.io/badge/npm-6.9.0-blue.svg" />
   <a href="https://github.com/BuildTheTruth/daitnu#readme" target="_blank">
