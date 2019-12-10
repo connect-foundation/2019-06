@@ -405,3 +405,44 @@ describe('PATCH /users/password는...', () => {
     });
   });
 });
+
+describe('DELETE /users/는...', () => {
+  before(async () => {
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+    await DB.sequelize.sync({ force: true });
+    await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+    await mock();
+  });
+
+  describe('로그인 하지 않은 상태로..', () => {
+    it('탈퇴를 하고자 한다면 하면 401에러를 반환한다', done => {
+      request(app)
+        .delete('/users')
+        .expect(401, done);
+    });
+  });
+
+  describe('로그인 한 상태로..', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(done => {
+      authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('탈퇴를 성공하면 204를 반환하며 다시 로그인 할 수 없다.', async () => {
+      await authenticatedUser.delete('/users').expect(204);
+
+      await authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(401);
+    });
+  });
+});
