@@ -29,6 +29,25 @@ const validateNo = no => {
   }
 };
 
+const validateNos = nos => {
+  if (!nos) {
+    const errorField = new ErrorField('nos', nos, 'nos는 반드시 있어야 하는 값입니다.');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
+  if (!Array.isArray(nos)) {
+    const errorField = new ErrorField('nos', nos, 'nos는 배열이어야합니다.');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
+
+  nos.forEach(no => {
+    if (typeof no !== 'number' || no < 1 || no > MAX_SAFE_INTEGER) {
+      const errorField = new ErrorField('no', no, '올바르지 않는 값입니다.');
+      throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+    }
+  });
+};
+
 const validateProps = props => {
   if (!props) {
     const errorField = new ErrorField('props', props, '올바르지 않는 값입니다.');
@@ -84,4 +103,4 @@ const checkQuery = ({ category, page, sort }) => {
   return true;
 };
 
-export { validateNo, validateProps, checkQuery };
+export { validateNo, validateNos, validateProps, checkQuery };
