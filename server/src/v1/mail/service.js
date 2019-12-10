@@ -135,9 +135,6 @@ const wroteToMe = async (mailContents, user) => {
 const sendMail = async (mailContents, user) => {
   const mailboxName = SENT_MAILBOX_NAME;
   const transporter = nodemailer.createTransport(U.getTransport(user));
-  await DB.sequelize.transaction(
-    async transaction => await saveMail(mailboxName, mailContents, transaction, user.no),
-  );
   const { messageId } = await transporter.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveToMailbox({ user, msg, mailboxName });
