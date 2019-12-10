@@ -84,6 +84,29 @@ const PasswordModal = () => {
     }
   };
 
+  const handleCheckPasswordInputBlur = () => {
+    if (values.password !== values.checkPassword) {
+      setErrorMsg({ ...errors, checkPassword: ERROR_DIFFERENT_PASSWORD });
+    } else {
+      setErrorMsg({ ...errors, checkPassword: '' });
+    }
+  };
+
+  const isNotEqualToCheckPassword = (password, checkPassword, checkPasswordError) =>
+    (checkPassword !== '' || checkPasswordError !== '') && // checkPassword가 비어있지 않거나 이전에 error 발생한 에러가 있을 때
+    password !== checkPassword; // password와 checkPassword가 다를 경우 true 반환
+
+  const handlePasswordInputBlur = () => {
+    const errMsgs = { password: '', checkPassword: '' };
+
+    errMsgs.password = validator.validateAndGetMsg('password', values.password, true);
+    if (isNotEqualToCheckPassword(values.password, values.checkPassword, errors.checkPassword)) {
+      errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
+    }
+
+    setErrorMsg({ ...errors, ...errMsgs });
+  };
+
   const validateForm = () => {
     const errMsgs = { password: '' };
     Object.keys(errMsgs).forEach(key => {
@@ -98,49 +121,48 @@ const PasswordModal = () => {
   };
 
   return (
-    <S.InputForm autoComplete="off">
-      <S.InputContainer>
-        <S.Title>비밀번호 변경</S.Title>
-      </S.InputContainer>
-      <S.InputContainer>
-        <TextField
-          id="password"
-          label="비밀번호 입력"
-          type="password"
-          onChange={handleInputChange('password')}
-          className={classes.textField}
-          error={errors.password !== ''}
-          margin="normal"
-          autoComplete="off"
-        />
-      </S.InputContainer>
-      <S.InputContainer>
-        <S.ErrorText>{errors.password}</S.ErrorText>
-      </S.InputContainer>
-      <S.InputContainer>
-        <TextField
-          id="checkPassword"
-          label="비밀번호 재입력"
-          type="password"
-          onChange={handleInputChange('checkPassword')}
-          className={classes.textField}
-          error={errors.checkPassword !== ''}
-          margin="normal"
-          autoComplete="off"
-        />
-      </S.InputContainer>
-      <S.InputContainer>
-        <S.ErrorText>{errors.checkPassword || errors.change}</S.ErrorText>
-      </S.InputContainer>
-      <S.ButtonContainer>
-        <S.WhiteButton className="submit-btn max-width" onClick={handleCancle}>
-          취소
-        </S.WhiteButton>
-        <S.Button className="submit-btn max-width" onClick={handleSubmit}>
-          확인
-        </S.Button>
-      </S.ButtonContainer>
-
+    <>
+      <S.InputForm autoComplete="off">
+        <S.InputContainer>
+          <S.Title>비밀번호 변경</S.Title>
+        </S.InputContainer>
+        <S.InputContainer>
+          <TextField
+            id="password"
+            label="비밀번호 입력"
+            type="password"
+            onChange={handleInputChange('password')}
+            onBlur={handlePasswordInputBlur}
+            className={classes.textField}
+            error={errors.password !== ''}
+            margin="normal"
+            autoComplete="off"
+          />
+        </S.InputContainer>
+        <S.InputContainer>
+          <S.ErrorText>{errors.password}</S.ErrorText>
+        </S.InputContainer>
+        <S.InputContainer>
+          <TextField
+            id="checkPassword"
+            label="비밀번호 재입력"
+            type="password"
+            onChange={handleInputChange('checkPassword')}
+            onBlur={handleCheckPasswordInputBlur}
+            className={classes.textField}
+            error={errors.checkPassword !== ''}
+            margin="normal"
+            autoComplete="off"
+          />
+        </S.InputContainer>
+        <S.InputContainer>
+          <S.ErrorText>{errors.checkPassword || errors.change}</S.ErrorText>
+        </S.InputContainer>
+        <S.ButtonContainer>
+          <S.WhiteButton onClick={handleCancle}>취소</S.WhiteButton>
+          <S.Button onClick={handleSubmit}>확인</S.Button>
+        </S.ButtonContainer>
+      </S.InputForm>
       <Dialog open={open} aria-labelledby="draggable-dialog-title">
         <DialogTitle id="draggable-dialog-title">알림</DialogTitle>
         <DialogContent>
@@ -152,7 +174,7 @@ const PasswordModal = () => {
           </Button>
         </DialogActions>
       </Dialog>
-    </S.InputForm>
+    </>
   );
 };
 export default PasswordModal;
