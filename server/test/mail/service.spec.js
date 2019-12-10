@@ -162,14 +162,14 @@ describe('Mail Service Test', () => {
 
     it('# 2번 메일의 category_no를 8로 변경한다.', async () => {
       const props = { category_no: 8 };
-      const mail = await service.updateMail(2, props);
+      const mail = await service.updateMail(2, props, 2);
       mail.should.be.have.properties(props);
     });
 
     it('# 2번 메일의 category_no를 없는 번호로 변경하면 ERROR_CODE는 CATEGORY_NOT_FOUND이다.', async () => {
       try {
         const props = { category_no: -1 };
-        const mail = await service.updateMail(2, props);
+        const mail = await service.updateMail(2, props, 2);
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.CATEGORY_NOT_FOUND);
@@ -178,7 +178,7 @@ describe('Mail Service Test', () => {
 
     it('# 존재하지 않는 번호가 들어왔을 때는 ERROR_CODE는 MAIL_NOT_FOUND이다.', async () => {
       try {
-        const mail = await service.updateMail(10001, {});
+        const mail = await service.updateMail(10001, {}, 2);
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
@@ -187,13 +187,13 @@ describe('Mail Service Test', () => {
 
     it('# 5번 메일을 중요 메일로 변경한다.', async () => {
       const props = { is_important: true };
-      const mail = await service.updateMail(5, props);
+      const mail = await service.updateMail(5, props, 2);
       mail.should.be.have.properties(props);
     });
 
     it('# 5번 메일을 읽은 메일로 변경한다.', async () => {
       const props = { is_read: true };
-      const mail = await service.updateMail(5, props);
+      const mail = await service.updateMail(5, props, 2);
       mail.should.be.have.properties(props);
     });
   });
@@ -219,6 +219,47 @@ describe('Mail Service Test', () => {
     it('# 유효하지 않는 번호의 메일을 삭제한다.', async () => {
       const isDeleted = await service.removeMail(-1);
       isDeleted.should.be.eql(false);
+    });
+  });
+
+  describe('updateMails 함수는...', () => {
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    it('# 1,4,7,10번 메일의 category_no를 4로 변경', async () => {
+      const nos = [1, 4, 7, 10];
+      const props = { category_no: 4 };
+      const [updated] = await service.updateMails(nos, props, 1);
+      updated.should.be.eql(4);
+    });
+
+    it('# 1,4,-1,10번 메일의 category_no를 3로 변경하면 3개만 변경', async () => {
+      const nos = [1, 4, -1, 10];
+      const props = { category_no: 3 };
+      const [updated] = await service.updateMails(nos, props, 1);
+      updated.should.be.eql(3);
+    });
+
+    it('# 1,1,1,1번 메일의 category_no를 4로 변경하면 1개만 변경', async () => {
+      const nos = [1, 1, 1, 1];
+      const props = { category_no: 4 };
+      const [updated] = await service.updateMails(nos, props, 1);
+      updated.should.be.eql(1);
+    });
+
+    it('# 99999, 100001번 메일의 category_no를 3로 변경하면 MAIL_NOT_FOUND', async () => {
+      const nos = [99999, 100001];
+      const props = { category_no: 3 };
+      try {
+        await service.updateMails(nos, props, 1);
+      } catch (error) {
+        const { errorCode } = error;
+        errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
+      }
     });
   });
 });
