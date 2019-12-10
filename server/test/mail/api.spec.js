@@ -316,4 +316,75 @@ describe('Mail api test...', () => {
       authenticatedUser.delete('/mail/asd').expect(400, done);
     });
   });
+
+  describe('여러 메일 속성 변경 요청 시...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    before(done => {
+      authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('# 메일 1,4,7,10번의 category_no를 4번으로 변경하면 200', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: [1, 4, 7, 10], props: { category_no: 4 } })
+        .expect(200, done);
+    });
+
+    it('# 메일 1,4,8,10번의 category_no를 4번으로 변경하면 404', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: [1, 4, 8, 10], props: { category_no: 4 } })
+        .expect(404, done);
+    });
+
+    it('# 메일 1,4,-1,10번의 category_no를 4번으로 변경하면 400', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: [1, 4, -1, 10], props: { category_no: 4 } })
+        .expect(400, done);
+    });
+
+    it('# 메일 1,1,1,1번의 category_no를 4번으로 변경하면 200', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: [1, 1, 1, 1], props: { category_no: 4 } })
+        .expect(200, done);
+    });
+
+    it('# 메일 asd, sd, b번의 category_no를 4번으로 변경하면 400', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: ['asd', 'sd', 'b'], props: { category_no: 4 } })
+        .expect(400, done);
+    });
+
+    it('# nos값을 주지 않았을 때 400', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ props: { category_no: 4 } })
+        .expect(400, done);
+    });
+
+    it('# nos값이 배열이 아닐 때 주지 않았을 때 400', done => {
+      authenticatedUser
+        .patch('/mail')
+        .send({ nos: 1, props: { category_no: 4 } })
+        .expect(400, done);
+    });
+  });
 });
