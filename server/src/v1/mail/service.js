@@ -194,24 +194,33 @@ const updateMail = async (no, props, userNo) => {
 const checkOwnerHasMails = async (nos, userNo) => {
   const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
   const promisedMails = await Promise.all(mails);
-  const chckedMails = promisedMails.filter(mail => mail);
-  return chckedMails;
+  return promisedMails.filter(mail => mail);
 };
 
 const updateMails = async (nos, props, userNo) => {
   const mails = await checkOwnerHasMails(nos, userNo);
-  if (mails.length === 0) {
-    const errorField = new ErrorField('mails', mails, '메일들이 존재하지 않습니다.');
+  if (mails.length !== nos.length) {
+    const errorField = new ErrorField('mails', mails, '메일들이 전부 존재하지 않습니다.');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
   }
   setPrevCategoryNoOfMail(mails[0], props);
-  const updated = await DB.Mail.updateAll(nos, props);
+  const updated = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updated;
 };
 
-const removeMail = async no => {
-  const deleted = await DB.Mail.deleteByPk(no);
+const removeMail = async (no, userNo) => {
+  const deleted = await DB.Mail.deleteByNoAndUserNo(no, userNo);
   return deleted === 1;
+};
+
+const removeMails = async (nos, userNo) => {
+  const mails = await checkOwnerHasMails(nos, userNo);
+  if (mails.length !== nos.length) {
+    const errorField = new ErrorField('mails', mails, '메일들이 존재하지 않습니다.');
+    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+  }
+  const deleted = await DB.Mail.deleteAllByNosAndUserNo(nos, userNo);
+  return deleted;
 };
 
 export default {
@@ -224,4 +233,5 @@ export default {
   updateMail,
   updateMails,
   removeMail,
+  removeMails,
 };
