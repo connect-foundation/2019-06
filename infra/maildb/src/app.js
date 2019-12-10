@@ -93,14 +93,8 @@ const setMessageIdOfMail = mail => {
 };
 
 const getSender = from => {
-  let senderId, senderDomain;
-  let sender = EXP_EXTRACT_RECEIVER.exec(from);
-  if (!sender) {
-    [senderId, senderDomain] = from.split("@");
-  } else {
-    [senderId, senderDomain] = sender[0].slice(1, -1).split("@");
-  }
-  return [senderId, senderDomain];
+  const sender = EXP_EXTRACT_RECEIVER.exec(from);
+  return !sender ? from.split("@") : sender[0].slice(1, -1).split("@");
 };
 
 const insertMailToDB = async content => {
