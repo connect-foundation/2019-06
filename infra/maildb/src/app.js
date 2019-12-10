@@ -17,8 +17,7 @@ const RECEIVED_KEY = "received";
 const MESSAGE_ID_KEY = "message-id";
 const NOTITLE = "제목없음";
 const NOTEXT = "";
-const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
-const EXP_EXTRACT_SENDER = /.{3,40}@.{3,40}/;
+const EXP_EXTRACT_EMAIL = /<.{3,40}@.{3,40}>/;
 
 const pool = mysql.createPool({
   user: DB_DEV_USERNAME,
@@ -62,7 +61,7 @@ const addReceiver = (receviers, email) => {
 
 const getReceivers = ({ headers, to }) => {
   const receivedOfHeader = headers.get(RECEIVED_KEY)[0];
-  const realReceiver = EXP_EXTRACT_RECEIVER.exec(receivedOfHeader);
+  const realReceiver = EXP_EXTRACT_EMAIL.exec(receivedOfHeader);
   const receivers = [];
   if (realReceiver) {
     addReceiver(receivers, realReceiver[0].slice(1, -1));
@@ -94,7 +93,7 @@ const setMessageIdOfMail = mail => {
 
 const getSender = from => {
   let senderId, senderDomain;
-  let sender = EXP_EXTRACT_RECEIVER.exec(from);
+  let sender = EXP_EXTRACT_EMAIL.exec(from);
   if (!sender) {
     [senderId, senderDomain] = from.split("@");
   } else {
