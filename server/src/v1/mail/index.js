@@ -16,6 +16,7 @@ router.patch('/:no', controller.update);
 router.patch('/', controller.updateAll);
 router.post('/', upload.array('attachments', MAIL_FILE_MAX_COUNT), controller.write);
 router.delete('/:no', controller.remove);
+router.delete('/', controller.removeAll);
 
 router.use('/box', mailBox);
 router.use('/template', mailTemplate);

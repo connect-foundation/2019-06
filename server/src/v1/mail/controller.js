@@ -5,7 +5,12 @@ import { validate } from '../../libraries/validation/common';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
-import { checkQuery, validateNo, validateProps } from '../../libraries/validation/mail';
+import {
+  checkQuery,
+  validateNo,
+  validateNos,
+  validateProps,
+} from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
 import { strToDate } from '../../libraries/date-parser';
 import { checkAttachment } from '../../libraries/validation/attachment';
@@ -98,9 +103,10 @@ const updateAll = async (req, res, next) => {
   const userNo = req.user.no;
 
   try {
+    validateNos(nos);
     validateProps(props);
-    const mails = await service.updateMails(nos, props, userNo);
-    return res.json(mails);
+    const result = await service.updateMails(nos, props, userNo);
+    return res.json(result);
   } catch (err) {
     return next(err);
   }
@@ -117,6 +123,7 @@ const getCategories = async (req, res, next) => {
 
 const remove = async (req, res, next) => {
   const { no } = req.params;
+  const userNo = req.user.no;
 
   if (no === 'box') {
     return next('route');
@@ -124,7 +131,20 @@ const remove = async (req, res, next) => {
 
   try {
     validateNo(no);
-    const result = await service.removeMail(no);
+    const result = await service.removeMail(no, userNo);
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
+};
+
+const removeAll = async (req, res, next) => {
+  const { nos } = req.body;
+  const userNo = req.user.no;
+
+  try {
+    validateNos(nos);
+    const result = await service.removeMails(nos, userNo);
     return res.json(result);
   } catch (err) {
     return next(err);
@@ -138,4 +158,5 @@ export default {
   updateAll,
   getCategories,
   remove,
+  removeAll,
 };
