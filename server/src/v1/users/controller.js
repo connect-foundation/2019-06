@@ -52,4 +52,14 @@ const updatePassword = async (req, res, next) => {
   return res.status(status.NO_CONTENT).end();
 };
 
-export default { registerUser, updatePassword, search };
+const removeUser = async (req, res, next) => {
+  try {
+    await service.destroy(req.user);
+  } catch (err) {
+    return next(err);
+  }
+
+  return res.status(status.NO_CONTENT).end();
+};
+
+export default { registerUser, updatePassword, search, removeUser };

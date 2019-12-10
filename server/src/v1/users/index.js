@@ -9,6 +9,7 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', ctrl.registerUser);
+router.delete('/', isAuth, ctrl.removeUser);
 router.post('/search', ctrl.search);
 router.patch('/password', isAuth, ctrl.updatePassword);
 

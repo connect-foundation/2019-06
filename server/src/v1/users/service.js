@@ -5,6 +5,7 @@ import ErrorResponse from '../../libraries/exception/error-response';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
 import { encrypt, aesEncrypt } from '../../libraries/crypto';
+import { deleteAllMailBox } from '../../libraries/save-to-infra';
 
 const DEFAULT_CATEGORIES = ['받은메일함', '보낸메일함', '내게쓴메일함', '휴지통'];
 const TEMP_PASSWORD_LENGTH = 15;
@@ -104,8 +105,19 @@ const sendUserPasswordToEmail = async (id, email) => {
   return true;
 };
 
+const destroy = async user => {
+  /*
+    TODO - Delete IMAP Mail Box
+    subscriptions 파일에 적힌 메일함은 삭제됨. "받은메일함"은 삭제가 되지 않음
+    const categories = await DB.Category.findAllByUserNo(user.no);
+    await deleteAllMailBox({ user, categories });
+  */
+  await DB.User.destroyByNo(user.no);
+};
+
 export default {
   register,
+  destroy,
   updatePassword,
   createDefaultCategories,
   sendUserIdToEmail,
