@@ -155,29 +155,61 @@ const getCategories = async no => {
   return { categories };
 };
 
-const updateMail = async (no, props) => {
-  const mail = await DB.Mail.findByPk(no);
+const findMailOfUser = async (no, userNo) => {
+  const mail = await DB.Mail.findOneByNoAndUserNo(no, userNo);
   if (!mail) {
     const errorField = new ErrorField('mail', mail, '존재하지 않는 메일입니다');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
   }
+  return mail;
+};
 
-  if (props.hasOwnProperty('category_no')) {
-    mail.prev_category_no = mail.category_no;
-  }
-
-  Object.keys(props).forEach(key => {
-    mail[key] = props[key];
-  });
-
+const findCategoryOfUser = async mail => {
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
     throw new ErrorResponse(ERROR_CODE.CATEGORY_NOT_FOUND, errorField);
   }
+  return category;
+};
 
+const setPrevCategoryNoOfMail = (mail, props) => {
+  if (props.hasOwnProperty('category_no')) {
+    props.prev_category_no = mail.category_no;
+  }
+};
+
+const setPropsOfMail = (mail, props) => {
+  Object.keys(props).forEach(key => {
+    mail[key] = props[key];
+  });
+};
+
+const updateMail = async (no, props, userNo) => {
+  const mail = await findMailOfUser(no, userNo);
+  setPrevCategoryNoOfMail(mail, props);
+  setPropsOfMail(mail, props);
+  await findCategoryOfUser(mail);
   await mail.save();
   return mail;
+};
+
+const checkOwnerHasMails = async (nos, userNo) => {
+  const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
+  const promisedMails = await Promise.all(mails);
+  const chckedMails = promisedMails.filter(mail => mail);
+  return chckedMails;
+};
+
+const updateMails = async (nos, props, userNo) => {
+  const mails = await checkOwnerHasMails(nos, userNo);
+  if (mails.length === 0) {
+    const errorField = new ErrorField('mails', mails, '메일들이 존재하지 않습니다.');
+    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+  }
+  setPrevCategoryNoOfMail(mails[0], props);
+  const updated = await DB.Mail.updateAll(nos, props);
+  return updated;
 };
 
 const removeMail = async no => {
@@ -193,5 +225,6 @@ export default {
   saveReservationMail,
   getCategories,
   updateMail,
+  updateMails,
   removeMail,
 };
