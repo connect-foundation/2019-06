@@ -2,14 +2,9 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import StarIcon from '@material-ui/icons/Star';
-import MailIcon from '@material-ui/icons/Mail';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import DeleteIcon from '@material-ui/icons/Delete';
-import LoopIcon from '@material-ui/icons/Loop';
+import { StarBorder, Star, Mail, Drafts, Delete, DeleteForever } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
-import { red, yellow, green } from '@material-ui/core/colors';
+import { red, yellow } from '@material-ui/core/colors';
 import { handleMailChecked } from '../../../contexts/reducer';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
@@ -32,11 +27,6 @@ const useStyles = makeStyles(() => ({
     color: yellow[800],
     '&:hover': {
       color: '#1976d2',
-    },
-  },
-  recycle: {
-    '&:hover': {
-      color: green[800],
     },
   },
 }));
@@ -86,19 +76,19 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
       </div>
       <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
-          <StarIcon className={classes.star} id={`star-${index}`} />
+          <Star className={classes.star} id={`star-${index}`} />
         ) : (
-          <StarBorderIcon className={classes.unstar} id={`star-${index}`} />
+          <StarBorder className={classes.unstar} id={`star-${index}`} />
         )}
       </S.ImportantButton>
-      <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
+      <S.ReadSign>{is_read ? <Drafts /> : <Mail />}</S.ReadSign>
       {state.category === wastebasketNo ? (
-        <S.RecycleButton id={`recycle-${index}`}>
-          <LoopIcon className={classes.recycle} id={`recycle-${index}`} />
-        </S.RecycleButton>
+        <S.ForeverDeleteButton id={`foreverDelete-${index}`}>
+          <DeleteForever className={classes.delete} id={`foreverDelete-${index}`} />
+        </S.ForeverDeleteButton>
       ) : (
         <S.DeleteButton id={`delete-${index}`}>
-          <DeleteIcon className={classes.delete} id={`delete-${index}`} />
+          <Delete className={classes.delete} id={`delete-${index}`} />
         </S.DeleteButton>
       )}
       <S.From isRead={is_read}>{from}</S.From>
