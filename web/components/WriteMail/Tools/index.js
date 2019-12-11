@@ -135,9 +135,11 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
         <S.RowContainer>
           <ButtonGroup variant="outlined" color="default" ref={anchorRef}>
             <Button onClick={handleClick}>보내기</Button>
-            <Button color="default" size="small" onClick={handleToggle}>
-              <ArrowDropDownIcon />
-            </Button>
+            {!writeToMe && (
+              <Button color="default" size="small" onClick={handleToggle}>
+                <ArrowDropDownIcon />
+              </Button>
+            )}
           </ButtonGroup>
           <ReservationDateText />
           <ChangeWriteAreaButton writeToMe={writeToMe} />
