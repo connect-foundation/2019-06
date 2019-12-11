@@ -6,7 +6,6 @@ import ErrorResponse from '../exception/error-response';
 const { MAX_SAFE_INTEGER } = Number;
 const PAGE_NUMBER_RANGE = { min: 1, max: MAX_SAFE_INTEGER };
 const CATEGORY_NUMBER_RANGE = { min: 0, max: MAX_SAFE_INTEGER };
-const NO_NUMBER_RANGE = { min: 1, max: MAX_SAFE_INTEGER };
 
 const SORTING_CRITERIA = {
   datedesc: true,
@@ -15,18 +14,6 @@ const SORTING_CRITERIA = {
   subjectasc: true,
   fromdesc: true,
   fromasc: true,
-};
-
-const validateNo = no => {
-  if (!no) {
-    const errorField = new ErrorField('no', no, 'no는 반드시 있어야 하는 값입니다.');
-    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
-  }
-
-  if (!isInt(no, NO_NUMBER_RANGE)) {
-    const errorField = new ErrorField('no', no, '올바르지 않는 값입니다.');
-    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
-  }
 };
 
 const validateNos = nos => {
@@ -40,12 +27,10 @@ const validateNos = nos => {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
   }
 
-  nos.forEach(no => {
-    if (typeof no !== 'number' || no < 1 || no > MAX_SAFE_INTEGER) {
-      const errorField = new ErrorField('no', no, '올바르지 않는 값입니다.');
-      throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
-    }
-  });
+  if (nos.some(no => typeof no !== 'number' || no < 1 || no > MAX_SAFE_INTEGER)) {
+    const errorField = new ErrorField('no', nos, 'nos에 유효하지 않는 값이 포함되어 있습니다.');
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorField);
+  }
 };
 
 const validateProps = props => {
@@ -103,4 +88,4 @@ const checkQuery = ({ category, page, sort }) => {
   return true;
 };
 
-export { validateNo, validateNos, validateProps, checkQuery };
+export { validateNos, validateProps, checkQuery };
