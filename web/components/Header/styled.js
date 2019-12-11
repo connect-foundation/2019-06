@@ -4,7 +4,6 @@ const Header = styled.div`
   flex: 0 0 70px;
   display: flex;
   flex-direction: row;
-  padding: 20px 10px;
   overflow: hidden;
   box-sizing: border-box;
   align-items: center;
