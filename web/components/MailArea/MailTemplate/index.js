@@ -2,7 +2,14 @@
 import React, { useContext } from 'react';
 import moment from 'moment';
 import { FormControlLabel, Checkbox } from '@material-ui/core';
-import { StarBorder, Star, Mail, Drafts, Delete, DeleteForever } from '@material-ui/icons';
+import {
+  StarBorder as StarBorderIcon,
+  Star as StarIcon,
+  Mail as MailIcon,
+  Drafts as DraftsIcon,
+  Delete as DeleteIcon,
+  DeleteForever as DeleteForeverIcon,
+} from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 import { red, yellow } from '@material-ui/core/colors';
 import { handleMailChecked } from '../../../contexts/reducer';
@@ -76,19 +83,19 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
       </div>
       <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
-          <Star className={classes.star} id={`star-${index}`} />
+          <StarIcon className={classes.star} id={`star-${index}`} />
         ) : (
-          <StarBorder className={classes.unstar} id={`star-${index}`} />
+          <StarBorderIcon className={classes.unstar} id={`star-${index}`} />
         )}
       </S.ImportantButton>
-      <S.ReadSign>{is_read ? <Drafts /> : <Mail />}</S.ReadSign>
+      <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
       {state.category === wastebasketNo ? (
         <S.ForeverDeleteButton id={`foreverDelete-${index}`}>
-          <DeleteForever className={classes.delete} id={`foreverDelete-${index}`} />
+          <DeleteForeverIcon className={classes.delete} id={`foreverDelete-${index}`} />
         </S.ForeverDeleteButton>
       ) : (
         <S.DeleteButton id={`delete-${index}`}>
-          <Delete className={classes.delete} id={`delete-${index}`} />
+          <DeleteIcon className={classes.delete} id={`delete-${index}`} />
         </S.DeleteButton>
       )}
       <S.From isRead={is_read}>{from}</S.From>

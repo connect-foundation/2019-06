@@ -192,13 +192,15 @@ const Tools = () => {
           className={classes.button}
           startIcon={btn.icon}
           disabled={!selectedMails.length}
-          onClick={btn.onClick.bind(null, {
-            selectedMails,
-            dispatch,
-            query,
-            openSnackbar,
-            wastebasketNo,
-          })}
+          onClick={() =>
+            btn.onClick({
+              selectedMails,
+              dispatch,
+              query,
+              openSnackbar,
+              wastebasketNo,
+            })
+          }
           key={btn.key}>
           {btn.name}
         </Button>

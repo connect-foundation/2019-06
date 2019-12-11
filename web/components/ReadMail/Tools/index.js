@@ -1,9 +1,15 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
-import { Email, Send, Delete, DeleteForever } from '@material-ui/icons';
+import {
+  Email as EmailIcon,
+  Send as SendIcon,
+  Delete as DeleteIcon,
+  Loop as LoopIcon,
+  DeleteForever as DeleteForeverIcon,
+} from '@material-ui/icons';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
-import { handleSnackbarState, setView, handleCategoryClick } from '../../../contexts/reducer';
+import { handleSnackbarState, setView } from '../../../contexts/reducer';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import S from './styled';
 import MailArea from '../../MailArea';
@@ -45,14 +51,14 @@ const buttons = [
   {
     key: 'reply',
     name: '답장',
-    icon: <Email />,
+    icon: <EmailIcon />,
     enable: true,
     onClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
-    icon: <Send />,
+    icon: <SendIcon />,
     enable: true,
     onClick: () => {},
   },
@@ -60,7 +66,7 @@ const buttons = [
     key: 'delete',
     name: '삭제',
     enable: true,
-    icon: <Delete />,
+    icon: <DeleteIcon />,
     onClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
       const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
       if (isError) {
@@ -75,7 +81,7 @@ const buttons = [
     key: 'recycle',
     name: '복구',
     enable: true,
-    icon: <Delete />,
+    icon: <LoopIcon />,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await updateMail(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
@@ -89,7 +95,7 @@ const buttons = [
   {
     key: 'forever_delete',
     name: '영구삭제',
-    icon: <DeleteForever />,
+    icon: <DeleteForeverIcon />,
     enable: true,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await removeMail(mail.no);
@@ -134,7 +140,9 @@ const Tools = () => {
           color="primary"
           className={classes.button}
           startIcon={btn.icon}
-          onClick={btn.onClick.bind(null, { mail, openSnackbar, wastebasketNo, dispatch })}
+          onClick={() => {
+            btn.onClick({ mail, openSnackbar, wastebasketNo, dispatch });
+          }}
           key={btn.key}>
           {btn.name}
         </Button>

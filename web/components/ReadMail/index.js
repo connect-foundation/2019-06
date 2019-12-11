@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
-import { StarBorder, Star } from '@material-ui/icons';
+import { StarBorder as StarBorderIcon, Star as StarIcon } from '@material-ui/icons';
 import { yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 import * as S from './styled';
@@ -93,9 +93,9 @@ const ReadMail = () => {
         <S.TitleView>
           <S.Subject>
             {is_important ? (
-              <Star className={classes.star} onClick={handleStarClick} />
+              <StarIcon className={classes.star} onClick={handleStarClick} />
             ) : (
-              <StarBorder className={classes.unstar} onClick={handleStarClick} />
+              <StarBorderIcon className={classes.unstar} onClick={handleStarClick} />
             )}
             <h3>{subject || '제목없음'}</h3>
             <div>
