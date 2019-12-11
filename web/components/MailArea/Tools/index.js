@@ -32,11 +32,11 @@ const WASTEBASKET_NAME = '휴지통';
 const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제를 실패하였습니다.',
-    FOREVER_DELETE: '메일 영구 삭제에 실패하였습니다.',
+    DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: count => `${count}개의 메일을 삭제하였습니다.`,
-    FOREVER_DELETE: count => `${count}개의 메일을 영구 삭제하였습니다.`,
+    DELETE_FOREVER: count => `${count}개의 메일을 영구 삭제하였습니다.`,
   },
 };
 
@@ -133,7 +133,7 @@ const buttons = [
     },
   },
   {
-    key: 'forever_delete',
+    key: 'DELETE_FOREVER',
     name: '영구삭제',
     enable: true,
     icon: <DeleteForever />,
@@ -142,12 +142,12 @@ const buttons = [
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await removeMails(nos);
         if (isError) {
-          throw SNACKBAR_MSG.ERROR.FOREVER_DELETE;
+          throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
         }
         await loadNewMails(query, dispatch);
         openSnackbar(
           SNACKBAR_VARIANT.SUCCESS,
-          SNACKBAR_MSG.SUCCESS.FOREVER_DELETE(selectedMails.length),
+          SNACKBAR_MSG.SUCCESS.DELETE_FOREVER(selectedMails.length),
         );
       } catch (errorMessage) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
@@ -160,7 +160,7 @@ const buttons = [
 ];
 
 const deleteButton = buttons.find(button => button.key === 'delete');
-const foreverDeleteButton = buttons.find(button => button.key === 'forever_delete');
+const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
 
 const Tools = () => {
   const classes = useStyles();
@@ -177,10 +177,10 @@ const Tools = () => {
 
   if (category === wastebasketNo) {
     deleteButton.enable = false;
-    foreverDeleteButton.enable = true;
+    deleteForeverButton.enable = true;
   } else {
     deleteButton.enable = true;
-    foreverDeleteButton.enable = false;
+    deleteForeverButton.enable = false;
   }
 
   const buttonSet = buttons.map(btn => {

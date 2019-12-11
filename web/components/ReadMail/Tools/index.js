@@ -20,12 +20,12 @@ const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제에 실패하였습니다.',
     RECYLCE: '메일 복구에 실패하였습니다.',
-    FOREVER_DELETE: '메일 영구 삭제에 실패하였습니다.',
+    DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
     RECYLCE: '메일을 복구하였습니다.',
-    FOREVER_DELETE: '메일을 영구 삭제하였습니다.',
+    DELETE_FOREVER: '메일을 영구 삭제하였습니다.',
   },
 };
 
@@ -93,24 +93,24 @@ const buttons = [
     },
   },
   {
-    key: 'forever_delete',
+    key: 'DELETE_FOREVER',
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
     enable: true,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await removeMail(mail.no);
       if (isError) {
-        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.FOREVER_DELETE);
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE_FOREVER);
         return;
       }
-      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.FOREVER_DELETE);
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
       dispatch(setView(<MailArea />));
     },
   },
 ];
 
 const deleteButton = buttons.find(button => button.key === 'delete');
-const foreverDeleteButton = buttons.find(button => button.key === 'forever_delete');
+const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
 const recylceButton = buttons.find(button => button.key === 'recycle');
 
 const Tools = () => {
@@ -124,11 +124,11 @@ const Tools = () => {
 
   if (mail.category_no === wastebasketNo) {
     deleteButton.enable = false;
-    foreverDeleteButton.enable = true;
+    deleteForeverButton.enable = true;
     recylceButton.enable = true;
   } else {
     deleteButton.enable = true;
-    foreverDeleteButton.enable = false;
+    deleteForeverButton.enable = false;
     recylceButton.enable = false;
   }
 

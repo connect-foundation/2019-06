@@ -90,9 +90,9 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
       {state.category === wastebasketNo ? (
-        <S.ForeverDeleteButton id={`foreverDelete-${index}`}>
-          <DeleteForeverIcon className={classes.delete} id={`foreverDelete-${index}`} />
-        </S.ForeverDeleteButton>
+        <S.DeleteForeverButton id={`deleteForever-${index}`}>
+          <DeleteForeverIcon className={classes.delete} id={`deleteForever-${index}`} />
+        </S.DeleteForeverButton>
       ) : (
         <S.DeleteButton id={`delete-${index}`}>
           <DeleteIcon className={classes.delete} id={`delete-${index}`} />

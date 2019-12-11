@@ -25,7 +25,7 @@ const ACTION = {
   STAR: 'star',
   DELETE: 'delete',
   READ: 'read',
-  FOREVER_DELETE: 'foreverDelete',
+  DELETE_FOREVER: 'deleteForever',
 };
 
 const SNACKBAR_MSG = {
@@ -34,13 +34,13 @@ const SNACKBAR_MSG = {
     STAR: '메일 중요표시에 실패하였습니다.',
     UNSTAR: '메일 중요표시 해제에 실패하였습니다.',
     LOAD: '메일 불러오기에 실패하였습니다.',
-    FOREVER_DELETE: '메일 영구 삭제에 실패하였습니다.',
+    DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
     STAR: '메일 중요표시를 하였습니다.',
     UNSTAR: '메일 중요표시를 해제하였습니다.',
-    FOREVER_DELETE: '메일을 영구 삭제하였습니다.',
+    DELETE_FOREVER: '메일을 영구 삭제하였습니다.',
   },
 };
 
@@ -82,14 +82,14 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.FOREVER_DELETE]: async ({ mail, dispatch, query, openSnackbar }) => {
+  [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, query, openSnackbar }) => {
     try {
       const { isError } = await request.delete(`/mail/${mail.no}`);
       if (isError) {
-        throw SNACKBAR_MSG.ERROR.FOREVER_DELETE;
+        throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
       }
       await loadNewMails(query, dispatch);
-      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.FOREVER_DELETE);
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
     } catch (errorMessage) {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
