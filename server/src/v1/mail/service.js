@@ -152,75 +152,44 @@ const getCategories = async no => {
   return { categories };
 };
 
-const findMailOfUser = async (no, userNo) => {
-  const mail = await DB.Mail.findOneByNoAndUserNo(no, userNo);
-  if (!mail) {
-    const errorField = new ErrorField('mail', mail, '존재하지 않는 메일입니다');
-    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+const checkCategoryOfMail = async (mail, props) => {
+  if (!props.hasOwnProperty('category_no')) {
+    return;
   }
-  return mail;
-};
-
-const findCategoryOfMail = async mail => {
+  props.prev_category_no = mail.category_no; // 카테고리 변경 시 이전 카테고리 저장
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
     throw new ErrorResponse(ERROR_CODE.CATEGORY_NOT_FOUND, errorField);
   }
-  return category;
-};
-
-const setPrevCategoryNoOfMail = (mail, props) => {
-  if (props.hasOwnProperty('category_no')) {
-    props.prev_category_no = mail.category_no;
-  }
-};
-
-const setPropsOfMail = (mail, props) => {
-  Object.keys(props).forEach(key => {
-    mail[key] = props[key];
-  });
-};
-
-const updateMail = async (no, props, userNo) => {
-  const mail = await findMailOfUser(no, userNo);
-  setPrevCategoryNoOfMail(mail, props);
-  setPropsOfMail(mail, props);
-  await findCategoryOfMail(mail);
-  await mail.save();
-  return mail;
 };
 
 const checkOwnerHasMails = async (nos, userNo) => {
   const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
   const promisedMails = await Promise.all(mails);
-  return promisedMails.filter(mail => mail);
-};
-
-const updateMails = async (nos, props, userNo) => {
-  const mails = await checkOwnerHasMails(nos, userNo);
-  if (mails.length !== nos.length) {
-    const errorField = new ErrorField('mails', mails, '메일들이 전부 존재하지 않습니다.');
+  const validMails = promisedMails.filter(mail => mail);
+  if (validMails.length !== nos.length) {
+    const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
   }
-  setPrevCategoryNoOfMail(mails[0], props);
-  const updated = await DB.Mail.updateAllByNosAndProps(nos, props);
-  return updated;
+  return validMails;
 };
 
-const removeMail = async (no, userNo) => {
-  const deleted = await DB.Mail.deleteByNoAndUserNo(no, userNo);
-  return deleted === 1;
+const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
+
+const updateMails = async (nos, props, userNo) => {
+  nos = removeDuplicatedNo(nos);
+  const mails = await checkOwnerHasMails(nos, userNo);
+  checkCategoryOfMail(mails[0], props);
+  const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
+  return updatedCount === nos.length;
 };
 
 const removeMails = async (nos, userNo) => {
+  nos = removeDuplicatedNo(nos);
   const mails = await checkOwnerHasMails(nos, userNo);
-  if (mails.length !== nos.length) {
-    const errorField = new ErrorField('mails', mails, '메일들이 존재하지 않습니다.');
-    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
-  }
-  const deleted = await DB.Mail.deleteAllByNosAndUserNo(nos, userNo);
-  return deleted === nos.length;
+  const deletedCount = await DB.Mail.deleteAllByNosAndUserNo(nos, userNo);
+  return deletedCount === nos.length;
 };
 
 export default {
@@ -230,8 +199,6 @@ export default {
   getQueryByOptions,
   saveReservationMail,
   getCategories,
-  updateMail,
   updateMails,
-  removeMail,
   removeMails,
 };
