@@ -387,4 +387,68 @@ describe('Mail api test...', () => {
         .expect(400, done);
     });
   });
+
+  describe('여러 메일 영구삭제 요청 시...', () => {
+    const userCredentials = {
+      id: 'rooot',
+      password: '12345678',
+    };
+    const authenticatedUser = request.agent(app);
+
+    before(async () => {
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 0');
+      await DB.sequelize.sync({ force: true });
+      await DB.sequelize.query('SET FOREIGN_KEY_CHECKS = 1');
+      await mock();
+    });
+
+    before(done => {
+      authenticatedUser
+        .post('/auth/login')
+        .send(userCredentials)
+        .expect(200, done);
+    });
+
+    it('# 메일 1,4,7 번을 영구 삭제하면 200', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: [1, 4, 7] })
+        .expect(200, done);
+    });
+
+    it('# 이미 삭제한 메일 1,4 번을 영구 삭제하면 404', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: [1, 4] })
+        .expect(404, done);
+    });
+
+    it('# 다른 유저의 2번을 영구 삭제하면 404', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: [2] })
+        .expect(404, done);
+    });
+
+    it('# 메일 -1번을 영구 삭제하면 400', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: [-1] })
+        .expect(400, done);
+    });
+
+    it('# nos가 배열이 아닌 경우 400', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: 10 })
+        .expect(400, done);
+    });
+
+    it('# nos에 숫자가 아닌 값이 포함된 경우 400', done => {
+      authenticatedUser
+        .delete('/mail')
+        .send({ nos: [10, 'asd'] })
+        .expect(400, done);
+    });
+  });
 });

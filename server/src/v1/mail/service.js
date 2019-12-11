@@ -161,7 +161,7 @@ const findMailOfUser = async (no, userNo) => {
   return mail;
 };
 
-const findCategoryOfUser = async mail => {
+const findCategoryOfMail = async mail => {
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
@@ -186,7 +186,7 @@ const updateMail = async (no, props, userNo) => {
   const mail = await findMailOfUser(no, userNo);
   setPrevCategoryNoOfMail(mail, props);
   setPropsOfMail(mail, props);
-  await findCategoryOfUser(mail);
+  await findCategoryOfMail(mail);
   await mail.save();
   return mail;
 };
