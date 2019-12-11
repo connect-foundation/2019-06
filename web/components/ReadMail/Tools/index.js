@@ -33,6 +33,14 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+const updateMail = async (no, props) => {
+  return request.patch(`/mail/${no}`, { props });
+};
+
+const removeMail = async no => {
+  return request.delete(`/mail/${no}`);
+};
+
 const buttons = [
   {
     key: 'reply',
@@ -54,8 +62,7 @@ const buttons = [
     enable: true,
     icon: <Delete />,
     onClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
-      const props = { category_no: wastebasketNo };
-      const { isError } = await request.patch(`/mail/${mail.no}`, { props });
+      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE);
         return;
@@ -70,14 +77,13 @@ const buttons = [
     enable: true,
     icon: <Delete />,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
-      const props = { category_no: mail.prev_category_no };
-      const { isError } = await request.patch(`/mail/${mail.no}`, { props });
+      const { isError } = await updateMail(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.RECYLCE);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.RECYLCE);
-      dispatch(handleCategoryClick(mail.prev_category_no, <MailArea />));
+      dispatch(setView(<MailArea />));
     },
   },
   {
@@ -86,7 +92,7 @@ const buttons = [
     icon: <DeleteForever />,
     enable: true,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
-      const { isError } = await request.delete(`/mail/${mail.no}`);
+      const { isError } = await removeMail(mail.no);
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.FOREVER_DELETE);
         return;

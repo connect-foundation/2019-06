@@ -125,7 +125,7 @@ const buttons = [
         await loadNewMails(query, dispatch);
         openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE(selectedMails.length));
       } catch (errorMessage) {
-        openSnackbar(SNACKBAR_VsARIANT.ERROR, errorMessage);
+        openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
         dispatch(handleCheckAllMails(true, selectedMails));
       } finally {
         dispatch(initCheckerInTools());
