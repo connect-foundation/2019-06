@@ -21,8 +21,22 @@ const Input = styled.input`
   }
 `;
 
+const DatePickerWrap = styled.div`
+  padding: 3px 2px;
+  display: flex;
+  flex-direction: row;
+`;
+
+const DatePickerItem = styled.div`
+  & + & {
+    margin-left: 16px;
+  }
+`;
+
 export default {
   FlexRowWrap,
   Label,
   Input,
+  DatePickerWrap,
+  DatePickerItem,
 };
