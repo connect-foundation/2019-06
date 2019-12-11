@@ -45,7 +45,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const updateMail = async (no, props) => {
-  return request.patch(`/mail/${no}`, { props });
+  return request.patch('/mail', { nos: [no], props });
 };
 
 const loadAttachments = async (mailTemplateNo, setAttachments) => {
@@ -72,7 +72,7 @@ const ReadMail = () => {
   }, [no, mailTemplateNo]);
 
   const handleStarClick = async () => {
-    const { isError, data } = await updateMail(no, { is_important: !is_important });
+    const { isError } = await updateMail(no, { is_important: !is_important });
     let message;
     if (isError) {
       message = !is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
@@ -80,9 +80,8 @@ const ReadMail = () => {
       return;
     }
     message = !is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
-    data.MailTemplate = MailTemplate;
-    data.index = index;
-    dispatch(setMail(data));
+    state.mail.is_important = !is_important;
+    dispatch(setMail(state.mail));
     openSnackbar(SNACKBAR_VARIANT.SUCCESS, message);
   };
 

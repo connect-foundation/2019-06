@@ -44,6 +44,14 @@ const SNACKBAR_MSG = {
   },
 };
 
+const updateMail = async (no, props) => {
+  return request.patch('/mail', { nos: [no], props });
+};
+
+const removeMail = async no => {
+  return request.delete('/mail', { nos: [no] });
+};
+
 const loadNewMails = async (query, dispatch) => {
   const { isError, data } = await request.get(`/mail/?${query}`);
   if (isError) {
@@ -56,8 +64,7 @@ const handleAction = {
   [ACTION.STAR]: async ({ mail, openSnackbar }) => {
     try {
       mail.is_important = !mail.is_important;
-      const props = { is_important: mail.is_important };
-      const { isError } = await request.patch(`/mail/${mail.no}`, { props });
+      const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
       if (isError) {
         throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
       }
@@ -71,8 +78,7 @@ const handleAction = {
   },
   [ACTION.DELETE]: async ({ mail, dispatch, query, wastebasketNo, openSnackbar }) => {
     try {
-      const props = { category_no: wastebasketNo };
-      const { isError } = await request.patch(`/mail/${mail.no}`, { props });
+      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE;
       }
@@ -84,7 +90,7 @@ const handleAction = {
   },
   [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, query, openSnackbar }) => {
     try {
-      const { isError } = await request.delete(`/mail/${mail.no}`);
+      const { isError } = await removeMail(mail.no);
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
       }

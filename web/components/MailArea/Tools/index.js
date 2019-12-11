@@ -79,11 +79,11 @@ const loadNewMails = async (query, dispatch) => {
 };
 
 const updateMails = async (nos, props) => {
-  return request.patch(`/mail`, { nos, props });
+  return request.patch('/mail', { nos, props });
 };
 
 const removeMails = async nos => {
-  return request.delete(`/mail`, { nos });
+  return request.delete('/mail', { nos });
 };
 
 const sortItems = SORT_TYPES.map(type => (

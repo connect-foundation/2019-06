@@ -40,11 +40,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const updateMail = async (no, props) => {
-  return request.patch(`/mail/${no}`, { props });
+  return request.patch('/mail', { nos: [no], props });
 };
 
 const removeMail = async no => {
-  return request.delete(`/mail/${no}`);
+  return request.delete('/mail', { nos: [no] });
 };
 
 const buttons = [
