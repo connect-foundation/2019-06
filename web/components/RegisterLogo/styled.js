@@ -14,6 +14,7 @@ const Logo = styled.img`
   margin: 20px;
   width: 190px;
   height: 190px;
+  cursor: pointer;
 `;
 
 export { DescText, Logo };
