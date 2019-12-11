@@ -26,6 +26,7 @@ const Subject = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  cursor: pointer;
 
   h3 {
     margin-left: 10px;

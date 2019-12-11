@@ -87,8 +87,7 @@ const RegisterForm = () => {
 
     errMsgs.password = validator.validateAndGetMsg('password', values.password, true);
     if (
-      (values.checkPassword !== '' || errors.checkPassword !== '') &&
-      values.password !== values.checkPassword
+      validator.validateCheckPassword(values.password, values.checkPassword, errors.checkPassword)
     ) {
       errMsgs.checkPassword = ERROR_DIFFERENT_PASSWORD;
     }

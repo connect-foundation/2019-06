@@ -64,9 +64,19 @@ const isAfterDate = date => {
   return curDate < date;
 };
 
+const areChackPasswordOrErrorNotEmpty = (checkPassword, checkPasswordError) =>
+  checkPassword !== '' || checkPasswordError !== '';
+
+const isEqual = (a, b) => a === b;
+
+const validateCheckPassword = (password, checkPassword, checkPasswordError) =>
+  areChackPasswordOrErrorNotEmpty(checkPassword, checkPasswordError) &&
+  !isEqual(password, checkPassword);
+
 export default {
   validate,
   validateAndGetMsg,
+  validateCheckPassword,
   checkUser,
   isAfterDate,
 };

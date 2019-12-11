@@ -29,7 +29,7 @@ const DeleteButton = styled.div`
   margin-right: 10px;
 `;
 
-const RecycleButton = styled.div`
+const DeleteForeverButton = styled.div`
   cursor: pointer;
   flex: 0 0 40px;
   margin-right: 10px;
@@ -90,7 +90,7 @@ export {
   Container,
   ImportantButton,
   ReadSign,
-  RecycleButton,
+  DeleteForeverButton,
   DeleteButton,
   From,
   Selectable,
