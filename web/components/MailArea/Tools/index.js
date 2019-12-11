@@ -20,10 +20,9 @@ import {
   handleMailsChange,
   initCheckerInTools,
   handlePageNumberClick,
-  handleCategoryClick,
 } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
-import request from '../../../utils/request';
+import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import MailArea from '..';
 
@@ -67,7 +66,7 @@ const getArrowIcon = sortValue =>
   );
 
 const loadNewMails = async (query, dispatch) => {
-  const { isError, data } = await request.get(`/mail/?${query}`);
+  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
@@ -76,14 +75,6 @@ const loadNewMails = async (query, dispatch) => {
   if (mails.length === 0) {
     dispatch(handlePageNumberClick(paging.page));
   }
-};
-
-const updateMails = async (nos, props) => {
-  return request.patch('/mail', { nos, props });
-};
-
-const removeMails = async nos => {
-  return request.delete('/mail', { nos });
 };
 
 const sortItems = SORT_TYPES.map(type => (
@@ -118,7 +109,7 @@ const buttons = [
     onClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
-        const { isError } = await updateMails(nos, { category_no: wastebasketNo });
+        const { isError } = await mailRequest.update(nos, { category_no: wastebasketNo });
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
@@ -140,7 +131,7 @@ const buttons = [
     onClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
-        const { isError } = await removeMails(nos);
+        const { isError } = await mailRequest.remove(nos);
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
         }

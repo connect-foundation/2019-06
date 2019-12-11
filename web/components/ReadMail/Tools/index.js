@@ -13,7 +13,7 @@ import { handleSnackbarState, setView } from '../../../contexts/reducer';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import S from './styled';
 import MailArea from '../../MailArea';
-import request from '../../../utils/request';
+import mailRequest from '../../../utils/mail-request';
 
 const WASTEBASKET_NAME = '휴지통';
 const SNACKBAR_MSG = {
@@ -39,14 +39,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const updateMail = async (no, props) => {
-  return request.patch('/mail', { nos: [no], props });
-};
-
-const removeMail = async no => {
-  return request.delete('/mail', { nos: [no] });
-};
-
 const buttons = [
   {
     key: 'reply',
@@ -68,7 +60,7 @@ const buttons = [
     enable: true,
     icon: <DeleteIcon />,
     onClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
-      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
+      const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE);
         return;
@@ -83,7 +75,7 @@ const buttons = [
     enable: true,
     icon: <LoopIcon />,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
-      const { isError } = await updateMail(mail.no, { category_no: mail.prev_category_no });
+      const { isError } = await mailRequest.update(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.RECYLCE);
         return;
@@ -98,7 +90,7 @@ const buttons = [
     icon: <DeleteForeverIcon />,
     enable: true,
     onClick: async ({ mail, openSnackbar, dispatch }) => {
-      const { isError } = await removeMail(mail.no);
+      const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE_FOREVER);
         return;

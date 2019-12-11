@@ -15,7 +15,7 @@ import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import ReadMail from '../ReadMail';
-import request from '../../utils/request';
+import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
@@ -44,16 +44,8 @@ const SNACKBAR_MSG = {
   },
 };
 
-const updateMail = async (no, props) => {
-  return request.patch('/mail', { nos: [no], props });
-};
-
-const removeMail = async no => {
-  return request.delete('/mail', { nos: [no] });
-};
-
 const loadNewMails = async (query, dispatch) => {
-  const { isError, data } = await request.get(`/mail/?${query}`);
+  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
@@ -64,7 +56,7 @@ const handleAction = {
   [ACTION.STAR]: async ({ mail, openSnackbar }) => {
     try {
       mail.is_important = !mail.is_important;
-      const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
+      const { isError } = await mailRequest.update(mail.no, { is_important: mail.is_important });
       if (isError) {
         throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
       }
@@ -78,7 +70,7 @@ const handleAction = {
   },
   [ACTION.DELETE]: async ({ mail, dispatch, query, wastebasketNo, openSnackbar }) => {
     try {
-      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
+      const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE;
       }
@@ -90,7 +82,7 @@ const handleAction = {
   },
   [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, query, openSnackbar }) => {
     try {
-      const { isError } = await removeMail(mail.no);
+      const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
       }

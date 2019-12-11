@@ -9,7 +9,7 @@ import PageMoveButtonArea from './PageMoveButtonArea';
 import { handleSnackbarState, setMail } from '../../contexts/reducer';
 import { AppStateContext, AppDispatchContext } from '../../contexts';
 import FileList from './FileList';
-import request from '../../utils/request';
+import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import Tools from './Tools';
 
@@ -44,13 +44,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const updateMail = async (no, props) => {
-  return request.patch('/mail', { nos: [no], props });
-};
-
 const loadAttachments = async (mailTemplateNo, setAttachments) => {
   const url = `/mail/template/${mailTemplateNo}/attachments`;
-  const { data } = await request.get(url);
+  const { data } = await mailRequest.get(url);
   setAttachments(data.attachments);
 };
 
@@ -68,11 +64,11 @@ const ReadMail = () => {
 
   useEffect(() => {
     loadAttachments(mailTemplateNo, setAttachments);
-    updateMail(no, { is_read: true });
+    mailRequest.update(no, { is_read: true });
   }, [no, mailTemplateNo]);
 
   const handleStarClick = async () => {
-    const { isError } = await updateMail(no, { is_important: !is_important });
+    const { isError } = await mailRequest.update(no, { is_important: !is_important });
     let message;
     if (isError) {
       message = !is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
