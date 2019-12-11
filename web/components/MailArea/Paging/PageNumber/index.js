@@ -1,20 +1,8 @@
 import React from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
+import S from './styled';
 
-const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
-
-export const PageNumber = ({ value, onActive }) => {
-  const classes = useStyles();
-  const color = onActive ? 'secondary' : 'default';
-
-  return (
-    <IconButton aria-label="delete" className={classes.margin} color={color} id={value}>
-      <span id={value}>{value}</span>
-    </IconButton>
-  );
-};
+export const PageNumber = ({ value, onActive }) => (
+  <S.NumberSpan id={value} active={onActive}>
+    {value}
+  </S.NumberSpan>
+);
