@@ -46,8 +46,8 @@ export default {
     return response;
   },
 
-  async delete(url, options = {}) {
-    const fn = () => server.delete(url, { ...options });
+  async delete(url, body, options = {}) {
+    const fn = () => server.delete(url, { data: body, headers: { ...options } });
     const response = await execute(fn);
     return response;
   },

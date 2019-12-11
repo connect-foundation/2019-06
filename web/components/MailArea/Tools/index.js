@@ -20,19 +20,23 @@ import {
   handleMailsChange,
   initCheckerInTools,
   handlePageNumberClick,
+  handleCategoryClick,
 } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
 import request from '../../../utils/request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
+import MailArea from '..';
 
 const WASTEBASKET_NAME = '휴지통';
 
 const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제를 실패하였습니다.',
+    FOREVER_DELETE: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: count => `${count}개의 메일을 삭제하였습니다.`,
+    FOREVER_DELETE: count => `${count}개의 메일을 영구 삭제하였습니다.`,
   },
 };
 
@@ -78,6 +82,10 @@ const updateMails = async (nos, props) => {
   return request.patch(`/mail`, { nos, props });
 };
 
+const removeMails = async nos => {
+  return request.delete(`/mail`, { nos });
+};
+
 const sortItems = SORT_TYPES.map(type => (
   <MenuItem key={type.value} value={type.value}>
     <S.SortItemView>
@@ -107,21 +115,18 @@ const buttons = [
     name: '삭제',
     enable: true,
     icon: <Delete />,
-    onClick: async ({ mails, dispatch, query, wastebasketNo, openSnackbar }) => {
+    onClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
       try {
-        const nos = mails.filter(({ selected }) => selected).map(({ no }) => no);
-        const deletedCount = nos.length;
-        if (deletedCount === 0) {
-          return;
-        }
+        const nos = selectedMails.map(({ no }) => no);
         const { isError } = await updateMails(nos, { category_no: wastebasketNo });
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
         await loadNewMails(query, dispatch);
-        openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE(deletedCount));
+        openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE(selectedMails.length));
       } catch (errorMessage) {
-        openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
+        openSnackbar(SNACKBAR_VsARIANT.ERROR, errorMessage);
+        dispatch(handleCheckAllMails(true, selectedMails));
       } finally {
         dispatch(initCheckerInTools());
       }
@@ -132,7 +137,25 @@ const buttons = [
     name: '영구삭제',
     enable: true,
     icon: <DeleteForever />,
-    onClick: () => {},
+    onClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
+      try {
+        const nos = selectedMails.map(({ no }) => no);
+        const { isError } = await removeMails(nos);
+        if (isError) {
+          throw SNACKBAR_MSG.ERROR.FOREVER_DELETE;
+        }
+        await loadNewMails(query, dispatch);
+        openSnackbar(
+          SNACKBAR_VARIANT.SUCCESS,
+          SNACKBAR_MSG.SUCCESS.FOREVER_DELETE(selectedMails.length),
+        );
+      } catch (errorMessage) {
+        openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
+        dispatch(handleCheckAllMails(true, selectedMails));
+      } finally {
+        dispatch(initCheckerInTools());
+      }
+    },
   },
 ];
 
@@ -150,6 +173,7 @@ const Tools = () => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
+  const selectedMails = mails.filter(({ selected }) => selected);
 
   if (category === wastebasketNo) {
     deleteButton.enable = false;
@@ -167,7 +191,14 @@ const Tools = () => {
           color="primary"
           className={classes.button}
           startIcon={btn.icon}
-          onClick={btn.onClick.bind(null, { mails, dispatch, query, openSnackbar, wastebasketNo })}
+          disabled={!selectedMails.length}
+          onClick={btn.onClick.bind(null, {
+            selectedMails,
+            dispatch,
+            query,
+            openSnackbar,
+            wastebasketNo,
+          })}
           key={btn.key}>
           {btn.name}
         </Button>
