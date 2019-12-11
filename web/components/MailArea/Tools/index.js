@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import { ArrowDownward, ArrowUpward, Email, Send, Delete } from '@material-ui/icons';
 import S from './styled';
+import * as GS from '../../GlobalStyle';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSortSelect, handleCheckAllMails } from '../../../contexts/reducer';
 
@@ -77,6 +78,7 @@ const Tools = () => {
     <Button
       variant="contained"
       color="primary"
+      size="small"
       className={classes.button}
       startIcon={btn.icon}
       key={i}>
@@ -86,20 +88,22 @@ const Tools = () => {
 
   return (
     <>
-      <S.CheckBox>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={allMailCheckInTools}
-              onChange={handleCheckAllChange}
-              color="primary"
-              size="small"
-            />
-          }
-        />
-      </S.CheckBox>
-      <S.ButtonGroup>{buttonSet}</S.ButtonGroup>
-      <S.Filter>
+      <S.FlexLeft>
+        <S.CheckBox>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={allMailCheckInTools}
+                onChange={handleCheckAllChange}
+                color="primary"
+                size="small"
+              />
+            }
+          />
+        </S.CheckBox>
+        <S.ButtonGroup>{buttonSet}</S.ButtonGroup>
+      </S.FlexLeft>
+      <S.Sort>
         <FormControl className={classes.formControl}>
           <Select
             value={state.sort}
@@ -109,7 +113,7 @@ const Tools = () => {
             {sortItems}
           </Select>
         </FormControl>
-      </S.Filter>
+      </S.Sort>
     </>
   );
 };
