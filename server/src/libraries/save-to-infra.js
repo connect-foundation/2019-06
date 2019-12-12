@@ -62,6 +62,44 @@ const makeSearchArgs = array => {
   return [result];
 };
 
+export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
+  if (originBoxName === '받은메일함') {
+    originBoxName = 'INBOX';
+  }
+  connectImap(user, imap => {
+    imap.openBox(originBoxName, true, openErr => {
+      if (openErr) {
+        const errorField = new ErrorField(
+          'mail box not found',
+          originBoxName,
+          '존재하지 않는 메일함입니다',
+        );
+        throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
+      }
+      imap.search(makeSearchArgs(searchArgs), (searchErr, results) => {
+        if (searchErr) {
+          const errorField = new ErrorField(
+            'message search failed',
+            searchArgs,
+            '메일 검색에 실패하였습니다',
+          );
+          throw new ErrorResponse(ERROR_CODE.FAIL_TO_SEARCH_MAIL, errorField);
+        }
+        imap.move(results, targetBoxName, moveErr => {
+          if (moveErr) {
+            const errorField = new ErrorField(
+              'mail move',
+              targetBoxName,
+              '메일 이동에 실패하였습니다',
+            );
+            throw new ErrorResponse(ERROR_CODE.FAIL_TO_MOVE_MAIL, errorField);
+          }
+        });
+      });
+    });
+  });
+};
+
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
   connectImap(user, imap => {
     imap.append(msg.toString(), { mailbox: PREFIX + mailboxName });
