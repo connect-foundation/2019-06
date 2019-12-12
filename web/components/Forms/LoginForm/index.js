@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Router from 'next/router';
 import useForm from 'react-hook-form';
 
@@ -19,13 +19,15 @@ const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
   const { dispatch } = useContext(AppDispatchContext);
 
-  const handleRouteChange = url => {
-    if (url !== '/login') {
-      dispatch(setMessage(''));
-    }
-  };
-
-  Router.events.on('routeChangeStart', handleRouteChange);
+  useEffect(() => {
+    const handleRouteChange = url => {
+      if (url !== '/login') {
+        dispatch(setMessage(''));
+        Router.events.off('routeChangeStart', handleRouteChange);
+      }
+    };
+    Router.events.on('routeChangeStart', handleRouteChange);
+  }, [dispatch]);
 
   const onSubmit = (data, e) => {
     const { userId, password } = data;
