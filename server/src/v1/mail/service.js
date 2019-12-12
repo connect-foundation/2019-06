@@ -152,26 +152,44 @@ const getCategories = async no => {
   return { categories };
 };
 
-const updateMail = async (no, props) => {
-  const mail = await DB.Mail.findByPk(no);
-  if (!mail) {
-    const errorField = new ErrorField('mail', mail, '존재하지 않는 메일입니다');
-    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+const checkCategoryOfMail = async (mail, props) => {
+  if (!props.hasOwnProperty('category_no')) {
+    return;
   }
-
-  mail.prev_category_no = mail.category_no;
-  Object.keys(props).forEach(key => {
-    mail[key] = props[key];
-  });
-
+  props.prev_category_no = mail.category_no; // 카테고리 변경 시 이전 카테고리 저장
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
     throw new ErrorResponse(ERROR_CODE.CATEGORY_NOT_FOUND, errorField);
   }
+};
 
-  await mail.save();
-  return mail;
+const checkOwnerHasMails = async (nos, userNo) => {
+  const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
+  const promisedMails = await Promise.all(mails);
+  const validMails = promisedMails.filter(mail => mail);
+  if (validMails.length !== nos.length) {
+    const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
+    throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+  }
+  return validMails;
+};
+
+const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
+
+const updateMails = async (nos, props, userNo) => {
+  nos = removeDuplicatedNo(nos);
+  const mails = await checkOwnerHasMails(nos, userNo);
+  checkCategoryOfMail(mails[0], props);
+  const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
+  return updatedCount === nos.length;
+};
+
+const removeMails = async (nos, userNo) => {
+  nos = removeDuplicatedNo(nos);
+  const mails = await checkOwnerHasMails(nos, userNo);
+  const deletedCount = await DB.Mail.deleteAllByNosAndUserNo(nos, userNo);
+  return deletedCount === nos.length;
 };
 
 export default {
@@ -181,5 +199,6 @@ export default {
   getQueryByOptions,
   saveReservationMail,
   getCategories,
-  updateMail,
+  updateMails,
+  removeMails,
 };
