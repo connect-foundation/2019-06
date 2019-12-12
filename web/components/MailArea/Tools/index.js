@@ -21,10 +21,9 @@ import {
   handleMailsChange,
   initCheckerInTools,
   handlePageNumberClick,
-  handleCategoryClick,
 } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
-import request from '../../../utils/request';
+import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import MailArea from '..';
 
@@ -68,7 +67,7 @@ const getArrowIcon = sortValue =>
   );
 
 const loadNewMails = async (query, dispatch) => {
-  const { isError, data } = await request.get(`/mail/?${query}`);
+  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
@@ -77,14 +76,6 @@ const loadNewMails = async (query, dispatch) => {
   if (mails.length === 0) {
     dispatch(handlePageNumberClick(paging.page));
   }
-};
-
-const updateMails = async (nos, props) => {
-  return request.patch(`/mail`, { nos, props });
-};
-
-const removeMails = async nos => {
-  return request.delete(`/mail`, { nos });
 };
 
 const sortItems = SORT_TYPES.map(type => (
@@ -100,26 +91,26 @@ const buttons = [
   {
     key: 'reply',
     name: '답장',
-    enable: true,
+    visible: true,
     icon: <Email />,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
-    enable: true,
+    visible: true,
     icon: <Send />,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
-    enable: true,
+    visible: true,
     icon: <Delete />,
-    onClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
-        const { isError } = await updateMails(nos, { category_no: wastebasketNo });
+        const { isError } = await mailRequest.update(nos, { category_no: wastebasketNo });
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
@@ -136,12 +127,12 @@ const buttons = [
   {
     key: 'DELETE_FOREVER',
     name: '영구삭제',
-    enable: true,
+    visible: true,
     icon: <DeleteForever />,
-    onClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
-        const { isError } = await removeMails(nos);
+        const { isError } = await mailRequest.remove(nos);
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
         }
@@ -163,6 +154,16 @@ const buttons = [
 const deleteButton = buttons.find(button => button.key === 'delete');
 const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
 
+const swapButtonSetView = (categoryNo, wastebasketNo) => {
+  if (categoryNo === wastebasketNo) {
+    deleteButton.enable = false;
+    deleteForeverButton.enable = true;
+  } else {
+    deleteButton.enable = true;
+    deleteForeverButton.enable = false;
+  }
+};
+
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
@@ -172,40 +173,33 @@ const Tools = () => {
   const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
+  const selectedMails = mails.filter(({ selected }) => selected);
+  const paramsToClick = {
+    selectedMails,
+    dispatch,
+    query,
+    openSnackbar,
+    wastebasketNo,
+  };
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
-  const selectedMails = mails.filter(({ selected }) => selected);
-
-  if (category === wastebasketNo) {
-    deleteButton.enable = false;
-    deleteForeverButton.enable = true;
-  } else {
-    deleteButton.enable = true;
-    deleteForeverButton.enable = false;
-  }
+  swapButtonSetView(category, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    if (btn.enable)
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={btn.icon}
-          disabled={!selectedMails.length}
-          onClick={() =>
-            btn.onClick({
-              selectedMails,
-              dispatch,
-              query,
-              openSnackbar,
-              wastebasketNo,
-            })
-          }
-          key={btn.key}>
-          {btn.name}
-        </Button>
-      );
+    return btn.visible ? (
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={btn.icon}
+        disabled={!selectedMails.length}
+        onClick={btn.handleClick.bind(null, paramsToClick)}
+        key={btn.key}>
+        {btn.name}
+      </Button>
+    ) : (
+      ''
+    );
   });
 
   return (
