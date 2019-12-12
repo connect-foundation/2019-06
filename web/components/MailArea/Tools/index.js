@@ -156,11 +156,11 @@ const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVE
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {
   if (categoryNo === wastebasketNo) {
-    deleteButton.enable = false;
-    deleteForeverButton.enable = true;
+    deleteButton.visible = false;
+    deleteForeverButton.visible = true;
   } else {
-    deleteButton.enable = true;
-    deleteForeverButton.enable = false;
+    deleteButton.visible = true;
+    deleteForeverButton.visible = false;
   }
 };
 
