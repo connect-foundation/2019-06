@@ -2,7 +2,7 @@ import React from 'react';
 
 import PwChangeForm from '../../components/Forms/PwChangeForm';
 import * as GS from '../../components/GlobalStyle';
-import { withAuthentication } from '../../hoc/with-authentication';
+import { withAuthentication } from '../../higher-order-component/with-authentication';
 
 const PwChangePage = () => {
   return (
