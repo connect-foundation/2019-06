@@ -15,7 +15,7 @@ export default () => {
 
     request.post('/auth/logout', {});
     dispatch(initState());
-    Router.push('/');
+    Router.push('/login');
   };
 
   return (
