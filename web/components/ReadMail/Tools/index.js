@@ -14,6 +14,8 @@ import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import S from './styled';
 import MailArea from '../../MailArea';
 import mailRequest from '../../../utils/mail-request';
+import WriteMail from '../../WriteMail';
+import sessionStorage from '../../../utils/storage';
 
 const TRASH_MAILBOX = '휴지통';
 const SNACKBAR_MSG = {
@@ -21,6 +23,7 @@ const SNACKBAR_MSG = {
     DELETE: '메일 삭제에 실패하였습니다.',
     RECYLCE: '메일 복구에 실패하였습니다.',
     DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
+    REPLY_SELF: '자신의 메일에는 답장할 수 없습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
@@ -45,14 +48,13 @@ const buttons = [
     name: '답장',
     icon: <EmailIcon />,
     visible: true,
-    handleClick: () => {},
-  },
-  {
-    key: 'send',
-    name: '전달',
-    icon: <SendIcon />,
-    visible: true,
-    handleClick: () => {},
+    handleClick: async ({ mail, openSnackbar, dispatch }) => {
+      if (mail.MailTemplate.from === sessionStorage.getUser().email) {
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
+        return;
+      }
+      dispatch(setView(<WriteMail mailToReply={mail} />));
+    },
   },
   {
     key: 'delete',

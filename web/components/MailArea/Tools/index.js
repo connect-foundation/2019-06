@@ -20,18 +20,22 @@ import {
   handleMailsChange,
   initCheckerInTools,
   handlePageNumberClick,
+  setView,
 } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
 import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
-import MailArea from '..';
+import WriteMail from '../../WriteMail';
+import sessionStorage from '../../../utils/storage';
 
-const WASTEBASKET_NAME = '휴지통';
+const TRASH_MAILBOX = '휴지통';
 
 const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제를 실패하였습니다.',
     DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
+    ONLY_ONE: '1개의 메일을 선택해주세요.',
+    REPLY_SELF: '자신의 메일에는 답장할 수 없습니다.',
   },
   SUCCESS: {
     DELETE: count => `${count}개의 메일을 삭제하였습니다.`,
@@ -92,14 +96,18 @@ const buttons = [
     name: '답장',
     visible: true,
     icon: <Email />,
-    handleClick: () => {},
-  },
-  {
-    key: 'send',
-    name: '전달',
-    visible: true,
-    icon: <Send />,
-    handleClick: () => {},
+    handleClick: async ({ selectedMails, dispatch, openSnackbar }) => {
+      if (selectedMails.length !== 1) {
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.ONLY_ONE);
+        return;
+      }
+      const mail = selectedMails[0];
+      if (mail.MailTemplate.from === sessionStorage.getUser().email) {
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
+        return;
+      }
+      dispatch(setView(<WriteMail mailToReply={mail} />));
+    },
   },
   {
     key: 'delete',
@@ -169,7 +177,7 @@ const Tools = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails, category, categoryNoByName } = state;
   const query = getQueryByOptions(state);
-  const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
+  const wastebasketNo = categoryNoByName[TRASH_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const selectedMails = mails.filter(({ selected }) => selected);
