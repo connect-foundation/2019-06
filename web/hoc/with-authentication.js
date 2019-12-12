@@ -1,35 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import Router from 'next/router';
-
-import storage from '../utils/storage';
+import React from 'react';
 import Loading from '../components/Loading';
+import { useAuthentication } from '../hook/use-authentication';
 
 const withAuthentication = WrappedComponent => {
-  const initialValueState = {
-    email: '',
-    name: '',
-    sub_email: '',
-    loading: true,
-  };
-
   const containerComponent = () => {
-    const [userAndLoading, setUserAndLoading] = useState(initialValueState);
-
-    useEffect(() => {
-      const user = storage.getUser();
-      if (!user) {
-        Router.push('/login');
-        return;
-      }
-
-      const { name, sub_email, email } = user;
-      setUserAndLoading({
-        name,
-        sub_email,
-        email,
-        loading: false,
-      });
-    }, []);
+    const userAndLoading = useAuthentication();
 
     const { name, sub_email, email, loading } = userAndLoading;
 
