@@ -37,7 +37,6 @@ const Paging = ({ paging }) => {
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppDispatchContext);
-  console.dir(paging);
   const classes = useStyles();
 
   const pagingNumber = getPagingNumbers(startPage, endPage, page);
