@@ -32,7 +32,9 @@ const MailListArea = styled.div`
 
 const MailPagingArea = styled.div`
   flex: 0 0 50px;
+  height: 50px;
   display: flex;
+  box-sizing: border-box;
   border-top: 2px solid #e9ecef;
   text-align: center;
   justify-content: center;
