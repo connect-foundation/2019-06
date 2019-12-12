@@ -5,7 +5,7 @@ import storage from './storage';
 import Loading from '../components/Loading';
 
 const withAuthentication = WrappedComponent => {
-  const initialValuState = {
+  const initialValueState = {
     email: '',
     name: '',
     sub_email: '',
@@ -13,7 +13,7 @@ const withAuthentication = WrappedComponent => {
   };
 
   const containerComponent = () => {
-    const [values, setValues] = useState(initialValuState);
+    const [userAndLoading, setUserAndLoading] = useState(initialValueState);
 
     useEffect(() => {
       const user = storage.getUser();
@@ -22,8 +22,8 @@ const withAuthentication = WrappedComponent => {
         return;
       }
 
-      const { name, sub_email, email } = user;
-      setValues({
+      const { name, sub_email, email } = userAndLoading;
+      setUserAndLoading({
         name,
         sub_email,
         email,
@@ -31,12 +31,12 @@ const withAuthentication = WrappedComponent => {
       });
     }, []);
 
-    const { name, sub_email, email, loading } = values;
+    const { name, sub_email, email, loading } = userAndLoading;
 
-    return !loading ? (
-      <WrappedComponent name={name} sub_email={sub_email} email={email} />
-    ) : (
+    return loading ? (
       <Loading full={true} />
+    ) : (
+      <WrappedComponent name={name} sub_email={sub_email} email={email} />
     );
   };
 
