@@ -2,6 +2,7 @@ import Imap from 'imap';
 import ErrorField from './exception/error-field';
 import ErrorResponse from './exception/error-response';
 import ERROR_CODE from './exception/error-code';
+import U from './mail-util';
 
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 const PREFIX = '';
@@ -36,38 +37,6 @@ const connectImap = ({ email, password }, callback) => {
   imap.connect();
 };
 
-const makeArg = val => ['HEADER', 'MESSAGE-ID', val];
-
-const makeSearchArgs = array => {
-  if (!Array.isArray(array)) {
-    throw new Error('argument must be array');
-  }
-  if (array.length === 0) {
-    return [];
-  }
-  if (array.length === 1) {
-    return [makeArg(array[0])];
-  }
-
-  let result = [],
-    cur,
-    prev;
-
-  for (let i = 0; i < array.length; i++) {
-    if (i === 0) {
-      result.push(makeArg(array[i]));
-    } else if (i === 1) {
-      result.unshift('OR', makeArg(array[i]));
-      prev = result;
-    } else {
-      cur = ['OR', prev[2], makeArg(array[i])];
-      prev[2] = cur;
-      prev = prev[2];
-    }
-  }
-  return [result];
-};
-
 export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
   if (originBoxName === '받은메일함') {
     originBoxName = 'INBOX';
@@ -78,7 +47,7 @@ export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => 
         const errorField = new ErrorField('mailBox', originBoxName, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
-      imap.search(makeSearchArgs(searchArgs), (searchErr, results) => {
+      imap.search(U.makeSearchArgs(searchArgs), (searchErr, results) => {
         if (searchErr) {
           const errorField = new ErrorField('message-id', searchArgs, '메일 검색에 실패하였습니다');
           throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
