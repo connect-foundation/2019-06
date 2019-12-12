@@ -25,13 +25,8 @@ const connectImap = ({ email, password }, callback) => {
     imap.end();
   });
 
-  imap.once('error', () => {
-    const errorField = new ErrorField(
-      'fail to imap connection',
-      '',
-      'imap 서버와 연결하는데 실패하였습니다',
-    );
-    throw new ErrorResponse(ERROR_CODE.FAIL_TO_CONNECT_TO_IMAP, errorField);
+  imap.once('error', err => {
+    throw err;
   });
 
   imap.connect();

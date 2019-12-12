@@ -51,8 +51,6 @@ const ERROR_CODE = {
   MAIL_NOT_FOUND: $(404, '존재하지 않는 메일 입니다.', 'MAIL003'),
   FAIL_TO_MOVE_MAIL: $(400, '메일 이동에 실패하였습니다', 'MAIL004'),
 
-  FAIL_TO_CONNECT_TO_IMAP: $(500, 'IMAP 연결에 실패하였습니다', 'IMAP001'),
-
   CATEGORY_NOT_FOUND: $(404, '존재하지 않는 카테고리 입니다.', 'CATEGORY001'),
 
   IS_NOT_ALLOW_EXTENSION: $(400, '허용하지 않는 확장자입니다.', 'UPLOAD001'),

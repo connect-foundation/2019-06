@@ -117,7 +117,7 @@ const makeArg = val => ['HEADER', 'MESSAGE-ID', val];
 
 const makeSearchArgs = array => {
   if (!Array.isArray(array)) {
-    throw new Error('argument must be array');
+    array = [array];
   }
   if (array.length === 0) {
     return [];
@@ -126,9 +126,9 @@ const makeSearchArgs = array => {
     return [makeArg(array[0])];
   }
 
-  let result = [],
-    cur,
-    prev;
+  const result = [];
+  let cur;
+  let prev;
 
   for (let i = 0; i < array.length; i++) {
     if (i === 0) {
