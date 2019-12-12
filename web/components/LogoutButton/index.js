@@ -10,7 +10,7 @@ export default () => {
     storage.clear();
 
     request.post('/auth/logout', {});
-    history.push('/login');
+    history.push('/');
   };
 
   return (
