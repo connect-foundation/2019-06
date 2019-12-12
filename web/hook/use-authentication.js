@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-
+import Router from 'next/router';
 import storage from '../utils/storage';
-import history from '../utils/history';
 
 const useAuthentication = () => {
   const [user, setUser] = useState(null);
@@ -9,7 +8,7 @@ const useAuthentication = () => {
   useEffect(() => {
     const userData = storage.getUser();
     if (!userData) {
-      history.push('/');
+      Router.push('/login');
       return;
     }
 
