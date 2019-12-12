@@ -20,6 +20,7 @@ import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
 import { changeUrlWithoutRunning } from '../../utils/url/change-query';
+import HeadTitle from '../HeadTitle';
 
 const WASTEBASKET_NAME = '휴지통';
 const ACTION = {
@@ -129,7 +130,7 @@ const MailArea = () => {
     return <Loading />;
   }
 
-  const { mails, paging, categoryNoByName } = state;
+  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
   const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
@@ -168,8 +169,11 @@ const MailArea = () => {
     }
   };
 
+  const categoryName = category === 0 ? '전체메일함' : categoryNameByNo[category];
+  const title = `${categoryName} (${paging.totalCount}) - 다잇누`;
   return (
     <S.MailArea>
+      <HeadTitle title={title} />
       <S.ToolsWrapper>
         <Tools />
       </S.ToolsWrapper>

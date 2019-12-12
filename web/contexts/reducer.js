@@ -24,6 +24,7 @@ export const initialState = {
   message: '',
   allMailCheckInTools: false,
   categoryNoByName: null,
+  categoryNameByNo: null,
   snackbarOpen: false,
   snackbarVariant: 'error',
   snackbarContent: '',
@@ -80,11 +81,18 @@ export const handleCategoriesChange = ({ categories }) => {
     total[category.name] = category.no;
     return total;
   }, {});
+
+  const categoryNameByNo = categories.reduce((total, category) => {
+    total[category.no] = category.name;
+    return total;
+  }, {});
+
   return {
     type: CHANGE_CATEGORIES_DATA,
     payload: {
       categories,
       categoryNoByName,
+      categoryNameByNo,
     },
   };
 };

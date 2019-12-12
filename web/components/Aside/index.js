@@ -42,6 +42,7 @@ import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
 import { changeView, VIEW_STRING, changeCategory } from '../../utils/url/change-query';
+import HeadTitle from '../HeadTitle';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -183,6 +184,8 @@ const Aside = () => {
 
   return (
     <S.Aside>
+      <HeadTitle title={''} />
+
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE)}>메일쓰기</S.WrtieButton>

@@ -6,6 +6,7 @@ import InputSubject from './InputSubject';
 import Tools from './Tools';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
+import HeadTitle from '../HeadTitle';
 
 const InputBody = dynamic(import('./InputBody'), { ssr: false });
 
@@ -14,6 +15,7 @@ const WriteMail = () => {
 
   return (
     <WriteMailContextProvider>
+      <HeadTitle title="메일쓰기" />
       <S.WriteArea>
         <Tools dropZoneVisible={dropZoneVisible} setDropZoneVisible={setDropZoneVisible} />
         <InputReceiver />

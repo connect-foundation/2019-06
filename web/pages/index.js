@@ -5,6 +5,7 @@ import MailArea from '../components/MailArea';
 import WriteMailToMe from '../components/WriteMailToMe';
 import WriteMail from '../components/WriteMail';
 import ReadMail from '../components/ReadMail';
+import HeadTitle from '../components/HeadTitle';
 
 const VIEW_COMPONENT = {
   'WRITE-TO-ME': <WriteMailToMe />,
@@ -21,7 +22,12 @@ const IndexPage = () => {
   }
   const renderView = VIEW_COMPONENT[view] || <MailArea />;
 
-  return <Layout>{renderView}</Layout>;
+  return (
+    <>
+      <HeadTitle title="다잇누 메일서비스" />
+      <Layout>{renderView}</Layout>
+    </>
+  );
 };
 
 export default IndexPage;
