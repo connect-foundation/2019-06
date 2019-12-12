@@ -29,15 +29,11 @@ import {
   Delete as DeleteIcon,
   ImportContacts,
 } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import S from './styled';
-import MailArea from '../MailArea';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import {
-  handleCategoryClick,
-  handleCategoriesChange,
-  handleSnackbarState,
-} from '../../contexts/reducer';
+import { handleCategoriesChange, handleSnackbarState } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
@@ -70,12 +66,14 @@ const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
-  const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDispatchContext);
   const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
+  const router = useRouter();
+  const queryCategory = Number(router.query.category) || 0;
 
   const fetchingCategories = useFetch(URL);
 
@@ -134,19 +132,14 @@ const Aside = () => {
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const customCategories = categories.filter(category => !category.is_default);
 
-  const handleCategoryClick2 = categoryNo => {
-    changeCategory(categoryNo);
-    dispatch(handleCategoryClick(categoryNo));
-  };
-
   const defaultCards = defaultCategories.map((category, idx) => {
-    const selected = state.category === category.no;
+    const selected = queryCategory === category.no;
     return (
       <ListItem
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         key={idx}
-        onClick={() => handleCategoryClick2(category.no)}>
+        onClick={() => changeCategory(category.no)}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
         <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
       </ListItem>
@@ -154,14 +147,14 @@ const Aside = () => {
   });
 
   const customCategoryCards = customCategories.map((category, idx) => {
-    const selected = state.category === category.no;
+    const selected = queryCategory === category.no;
     return (
       <ListItem
         key={idx}
         className={classes.nested}
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
-        onClick={() => handleCategoryClick2(category.no)}>
+        onClick={() => changeCategory(category.no)}>
         <ListItemIcon>
           <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>

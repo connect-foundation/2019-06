@@ -6,8 +6,7 @@ import * as S from './styled';
 import request from '../../../utils/request';
 import { AppStateContext, AppDispatchContext } from '../../../contexts';
 import { setMail, handleMailsChange } from '../../../contexts/reducer';
-import getQueryByOptions from '../../../utils/query';
-import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
+import { getQueryByOptions, changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const funcToMove = {
   prev: {

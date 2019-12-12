@@ -11,21 +11,19 @@ import {
   Button,
 } from '@material-ui/core';
 import { ArrowDownward, ArrowUpward, Email, Send, Delete, DeleteForever } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import S from './styled';
-import * as GS from '../../GlobalStyle';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import {
-  handleSortSelect,
   handleCheckAllMails,
   handleSnackbarState,
   handleMailsChange,
   initCheckerInTools,
   handlePageNumberClick,
 } from '../../../contexts/reducer';
-import getQueryByOptions from '../../../utils/query';
+import { getQueryByOptions, changeUrlWithoutRunning } from '../../../utils/url/change-query';
 import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
-import MailArea from '..';
 
 const WASTEBASKET_NAME = '휴지통';
 
@@ -50,7 +48,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const SORT_TYPES = [
+const SORTING_CRITERIA = [
   { value: 'datedesc', name: '시간' },
   { value: 'dateasc', name: '시간' },
   { value: 'subjectdesc', name: '제목' },
@@ -78,7 +76,7 @@ const loadNewMails = async (query, dispatch) => {
   }
 };
 
-const sortItems = SORT_TYPES.map(type => (
+const sortItems = SORTING_CRITERIA.map(type => (
   <MenuItem key={type.value} value={type.value}>
     <S.SortItemView>
       <ListItemText>{type.name}</ListItemText>
@@ -169,6 +167,7 @@ const Tools = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails, category, categoryNoByName } = state;
+  const { query: urlQuery } = useRouter();
   const query = getQueryByOptions(state);
   const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const openSnackbar = (variant, message) =>
@@ -181,7 +180,8 @@ const Tools = () => {
     openSnackbar,
     wastebasketNo,
   };
-  const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
+  const handleSortChange = ({ target: { value } }) =>
+    changeUrlWithoutRunning({ ...urlQuery, sort: value });
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
   swapButtonSetView(category, wastebasketNo);
 
@@ -222,8 +222,8 @@ const Tools = () => {
       <S.Sort>
         <FormControl className={classes.formControl}>
           <Select
-            value={state.sort}
-            onChange={handleFilterChange}
+            value={urlQuery.sort || 'datedesc'}
+            onChange={handleSortChange}
             displayEmpty
             className={classes.selectEmpty}>
             {sortItems}

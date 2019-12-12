@@ -1,3 +1,6 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable indent */
 /* eslint-disable camelcase */
 import React, { useContext, useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -13,13 +16,12 @@ import {
   handleSnackbarState,
 } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
-import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
-import { changeUrlWithoutRunning } from '../../utils/url/change-query';
+import { changeUrlWithoutRunning, getQueryByOptions } from '../../utils/url/change-query';
 import HeadTitle from '../HeadTitle';
 
 const WASTEBASKET_NAME = '휴지통';
@@ -106,7 +108,7 @@ const MailArea = () => {
   const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const query = getQueryByOptions(state);
+  const query = getQueryByOptions(urlQuery).join('&');
   const URL = `/mail?${query}`;
 
   const fetchingMailData = useFetch(URL);
