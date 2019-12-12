@@ -42,16 +42,16 @@ const makeSearchArgs = array => {
   if (!Array.isArray(array)) {
     throw new Error('argument must be array');
   }
-  if (array.length === 0) return [];
+  if (array.length === 0) {
+    return [];
+  }
+  if (array.length === 1) {
+    return [makeArg(array[0])];
+  }
 
   let result = [],
     cur,
     prev;
-
-  if (array.length === 1) {
-    result.push(makeArg(array[0]));
-    return result;
-  }
 
   for (let i = 0; i < array.length; i++) {
     if (i === 0) {
