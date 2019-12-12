@@ -15,18 +15,22 @@ import request from '../../../utils/request';
 import { setMessage } from '../../../contexts/reducer';
 import { AppDispatchContext } from '../../../contexts';
 
+const subscribeRouteChangeStartFunction = dispatch => {
+  const handleRouteChange = url => {
+    if (url !== '/login') {
+      dispatch(setMessage(''));
+      Router.events.off('routeChangeStart', handleRouteChange);
+    }
+  };
+  Router.events.on('routeChangeStart', handleRouteChange);
+};
+
 const LoignForm = () => {
   const { register, handleSubmit, errors, setError, clearError } = useForm();
   const { dispatch } = useContext(AppDispatchContext);
 
   useEffect(() => {
-    const handleRouteChange = url => {
-      if (url !== '/login') {
-        dispatch(setMessage(''));
-        Router.events.off('routeChangeStart', handleRouteChange);
-      }
-    };
-    Router.events.on('routeChangeStart', handleRouteChange);
+    subscribeRouteChangeStartFunction(dispatch);
   }, [dispatch]);
 
   const onSubmit = (data, e) => {
