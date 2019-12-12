@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
 import IconButton from '@material-ui/core/IconButton';
-import { ArrowBack, ArrowForward, CompassCalibrationOutlined } from '@material-ui/icons';
+import { ArrowBack, ArrowForward } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import * as S from './styled';
 import request from '../../../utils/request';
 import { AppStateContext, AppDispatchContext } from '../../../contexts';
 import { setMail, handleMailsChange } from '../../../contexts/reducer';
 import getQueryByOptions from '../../../utils/query';
+import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const funcToMove = {
   prev: {
@@ -33,6 +35,7 @@ const isDisabledNextBtn = (index, paging, mailCount) =>
   index === mailCount - 1 && paging.page === paging.totalPage;
 
 const PageMoveButtonArea = ({ index }) => {
+  const { query: urlQuery } = useRouter();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { mails, category, sort, paging } = state;
@@ -48,6 +51,7 @@ const PageMoveButtonArea = ({ index }) => {
     const mail = newMails[move(index)];
     mail.index = move(index);
     dispatch(setMail(mail));
+    changeUrlWithoutRunning({ ...urlQuery, mailNo: mail.no });
   };
 
   return (

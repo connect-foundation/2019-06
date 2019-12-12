@@ -5,11 +5,13 @@ import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 
 import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
 import { AppDispatchContext } from '../../../contexts';
 import { handlePageNumberClick } from '../../../contexts/reducer';
+import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const useStyles = makeStyles(theme => ({
   margin: {
@@ -34,10 +36,13 @@ const getPagingNumbers = (start, end, page) => {
 };
 
 const Paging = ({ paging }) => {
+  const router = useRouter();
+  const {
+    query: { category },
+  } = router;
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppDispatchContext);
-  console.dir(paging);
   const classes = useStyles();
 
   const pagingNumber = getPagingNumbers(startPage, endPage, page);
@@ -46,6 +51,8 @@ const Paging = ({ paging }) => {
     const newIndex = currentIndex + value;
     const newPageNumber = getPageStartNumber(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
+
+    changeUrlWithoutRunning({ category, page: newPageNumber });
   };
 
   const handleNumberClick = e => {
@@ -62,6 +69,7 @@ const Paging = ({ paging }) => {
     }
 
     dispatch(handlePageNumberClick(id));
+    changeUrlWithoutRunning({ category, page: id });
   };
 
   return (

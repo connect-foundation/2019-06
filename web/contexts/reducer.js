@@ -64,14 +64,13 @@ export const handleCheckAllMails = (allMailCheckInTools, mails) => {
   };
 };
 
-export const handleCategoryClick = (no, view) => {
+export const handleCategoryClick = no => {
   return {
     type: CATEGORY_CLICK,
     payload: {
       category: no,
       page: 1,
       sort: 'datedesc',
-      view,
     },
   };
 };
@@ -132,12 +131,11 @@ export const handlePageNumberClick = page => {
   };
 };
 
-export const handleMailClick = (mail, view) => {
+export const handleMailClick = mail => {
   return {
     type: MAIL_CLICK,
     payload: {
       mail,
-      view,
     },
   };
 };

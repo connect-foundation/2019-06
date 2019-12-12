@@ -1,20 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Button } from '@material-ui/core';
 import { Loop as LoopIcon } from '@material-ui/icons';
-import { setView } from '../../../../contexts/reducer';
-import { AppDispatchContext } from '../../../../contexts';
-import WriteMail from '../../../WriteMail';
-import WriteMailToMe from '../../../WriteMailToMe';
+import { changeUrlWithoutRunning } from '../../../../utils/url/change-query';
 
 const ChangeWriteAreaButton = ({ writeToMe }) => {
-  const { dispatch } = useContext(AppDispatchContext);
+  const handleToggleClick = () => {
+    const view = writeToMe ? 'write' : 'write-to-me';
+    changeUrlWithoutRunning({ view });
+  };
 
   return (
-    <Button
-      variant="outlined"
-      onClick={() => dispatch(setView(writeToMe ? <WriteMail /> : <WriteMailToMe />))}>
+    <Button variant="outlined" onClick={handleToggleClick}>
       <LoopIcon fontSize="small" />
-      {writeToMe ? '편지쓰기' : '내게쓰기'}
+      {writeToMe ? '메일쓰기' : '내게쓰기'}
     </Button>
   );
 };

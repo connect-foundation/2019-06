@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -14,11 +15,11 @@ import {
 import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
-import ReadMail from '../ReadMail';
 import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
+import { changeUrlWithoutRunning } from '../../utils/url/change-query';
 
 const WASTEBASKET_NAME = '휴지통';
 const ACTION = {
@@ -92,13 +93,16 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.READ]: ({ mail, dispatch, index }) => {
+  [ACTION.READ]: ({ mail, dispatch, index, urlQuery }) => {
     mail.index = index;
-    dispatch(handleMailClick(mail, <ReadMail />));
+    dispatch(handleMailClick(mail));
+    changeUrlWithoutRunning({ ...urlQuery, view: 'read', mailNo: mail.no });
   },
 };
 
 const MailArea = () => {
+  const router = useRouter();
+  const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const query = getQueryByOptions(state);
@@ -160,7 +164,7 @@ const MailArea = () => {
     const [action, index] = id.split('-');
     const mail = mails[index];
     if (Object.values(ACTION).includes(action)) {
-      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index });
+      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index, urlQuery });
     }
   };
 

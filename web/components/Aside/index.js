@@ -31,19 +31,17 @@ import {
 } from '@material-ui/icons';
 import S from './styled';
 import MailArea from '../MailArea';
-import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
 import {
   handleCategoryClick,
-  setView,
   handleCategoriesChange,
   handleSnackbarState,
 } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
-import WriteMailToMe from '../WriteMailToMe';
+import { changeView, VIEW_STRING, changeCategory } from '../../utils/url/change-query';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -135,6 +133,11 @@ const Aside = () => {
   const defaultCategories = [{ name: ENTIRE_MAILBOX, no: 0 }, ...filteredDefaultCategories];
   const customCategories = categories.filter(category => !category.is_default);
 
+  const handleCategoryClick2 = categoryNo => {
+    changeCategory(categoryNo);
+    dispatch(handleCategoryClick(categoryNo));
+  };
+
   const defaultCards = defaultCategories.map((category, idx) => {
     const selected = state.category === category.no;
     return (
@@ -142,7 +145,7 @@ const Aside = () => {
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         key={idx}
-        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        onClick={() => handleCategoryClick2(category.no)}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
         <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
       </ListItem>
@@ -157,7 +160,7 @@ const Aside = () => {
         className={classes.nested}
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
-        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        onClick={() => handleCategoryClick2(category.no)}>
         <ListItemIcon>
           <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>
@@ -182,8 +185,8 @@ const Aside = () => {
     <S.Aside>
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
-          <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
-          <S.WrtieButton onClick={() => dispatch(setView(<WriteMailToMe />))}>
+          <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE)}>메일쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => changeView(VIEW_STRING['WRITE-TO-ME'])}>
             내게쓰기
           </S.WrtieButton>
         </ListItem>
