@@ -28,7 +28,7 @@ import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import WriteMail from '../../WriteMail';
 import sessionStorage from '../../../utils/storage';
 
-const TRASH_MAILBOX = '휴지통';
+const WASTEBASKET_MAILBOX = '휴지통';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -177,7 +177,7 @@ const Tools = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails, category, categoryNoByName } = state;
   const query = getQueryByOptions(state);
-  const wastebasketNo = categoryNoByName[TRASH_MAILBOX];
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const selectedMails = mails.filter(({ selected }) => selected);

@@ -16,7 +16,7 @@ import { handleMailChecked } from '../../../contexts/reducer';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import * as S from './styled';
 
-const TRASH_MAILBOX = '휴지통';
+const WASTEBASKET_MAILBOX = '휴지통';
 const SEND_MAILBOX = '보낸메일함';
 
 const useStyles = makeStyles(() => ({
@@ -61,7 +61,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
   const { from, to, subject, createdAt } = MailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
-  const wastebasketNo = state.categoryNoByName[TRASH_MAILBOX];
+  const wastebasketNo = state.categoryNoByName[WASTEBASKET_MAILBOX];
   const sendMailboxNo = state.categoryNoByName[SEND_MAILBOX];
 
   let category = '';

@@ -36,15 +36,11 @@ const DeleteForeverButton = styled.div`
 `;
 
 const FromOrTo = styled.div`
-  flex: 0 0 150px;
+  flex: 0 0 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-  cursor: pointer;
   color: ${props => (props.isRead ? 'grey' : '#0459C1')};
-  &:hover {
-    text-decoration: underline;
-  }
 `;
 
 const Selectable = styled.div`

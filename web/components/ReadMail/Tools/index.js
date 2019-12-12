@@ -17,7 +17,7 @@ import mailRequest from '../../../utils/mail-request';
 import WriteMail from '../../WriteMail';
 import sessionStorage from '../../../utils/storage';
 
-const TRASH_MAILBOX = '휴지통';
+const WASTEBASKET_MAILBOX = '휴지통';
 const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제에 실패하였습니다.',
@@ -124,7 +124,7 @@ const Tools = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const classes = useStyles();
   const { mail, categoryNoByName } = state;
-  const wastebasketNo = categoryNoByName[TRASH_MAILBOX];
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch };

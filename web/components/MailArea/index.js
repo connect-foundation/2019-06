@@ -20,7 +20,7 @@ import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
 
-const TRASH_MAILBOX = '휴지통';
+const WASTEBASKET_MAILBOX = '휴지통';
 const ACTION = {
   STAR: 'star',
   DELETE: 'delete',
@@ -126,7 +126,7 @@ const MailArea = () => {
   }
 
   const { mails, paging, categoryNoByName } = state;
-  const wastebasketNo = categoryNoByName[TRASH_MAILBOX];
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
 
