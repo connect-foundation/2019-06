@@ -7,7 +7,7 @@ const withAuthentication = WrappedComponent => {
     const user = useAuthentication();
 
     return !user ? (
-      <Loading full={true} />
+      <></>
     ) : (
       <WrappedComponent name={user.name} sub_email={user.sub_email} email={user.email} />
     );
