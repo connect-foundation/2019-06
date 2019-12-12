@@ -107,13 +107,13 @@ const recylceButton = buttons.find(button => button.key === 'recycle');
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {
   if (categoryNo === wastebasketNo) {
-    deleteButton.enable = false;
-    deleteForeverButton.enable = true;
-    recylceButton.enable = true;
+    deleteButton.visible = false;
+    deleteForeverButton.visible = true;
+    recylceButton.visible = true;
   } else {
-    deleteButton.enable = true;
-    deleteForeverButton.enable = false;
-    recylceButton.enable = false;
+    deleteButton.visible = true;
+    deleteForeverButton.visible = false;
+    recylceButton.visible = false;
   }
 };
 
