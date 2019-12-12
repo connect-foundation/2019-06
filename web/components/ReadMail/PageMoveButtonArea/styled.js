@@ -8,4 +8,9 @@ const Container = styled.div`
   height: 50px;
 `;
 
-export { Container };
+const PageNumberView = styled.div`
+  width: 50px;
+  text-align: center;
+`;
+
+export { Container, PageNumberView };

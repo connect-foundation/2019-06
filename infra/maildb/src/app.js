@@ -2,6 +2,7 @@ const simpleParser = require("mailparser").simpleParser;
 const mysql = require("mysql2/promise");
 const format = require("./format");
 const { multipartUpload } = require("./ncloud");
+const fs = require("fs");
 
 const {
   DB_DEV_USERNAME,
@@ -17,6 +18,7 @@ const MESSAGE_ID_KEY = "message-id";
 const NOTITLE = "제목없음";
 const NOTEXT = "";
 const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
+const EXP_EXTRACT_SENDER = /.{3,40}@.{3,40}/;
 
 const pool = mysql.createPool({
   user: DB_DEV_USERNAME,
@@ -90,9 +92,15 @@ const setMessageIdOfMail = mail => {
   mail.message_id = messageId.slice(1, -1);
 };
 
+const getSender = from => {
+  const sender = EXP_EXTRACT_RECEIVER.exec(from);
+  return !sender ? from.split("@") : sender[0].slice(1, -1).split("@");
+};
+
 const insertMailToDB = async content => {
   const mail = await parseMailContent(content);
   const receivers = getReceivers(mail);
+  const [senderId, senderDomain] = getSender(mail.from);
   setMessageIdOfMail(mail);
   const connection = await pool.getConnection(async conn => conn);
   let queryFormat;
@@ -121,6 +129,18 @@ const insertMailToDB = async content => {
       return connection.execute(queryFormat);
     });
 
+    if (senderDomain === MY_DOMAIN) {
+      // sender가 daitnu면 sender id의 보낸메일함에 DB 저장
+      queryFormat = format.getQueryToFindOwnerAndCategoryNo(senderId, true);
+      const [[{ owner, no }]] = await connection.query(queryFormat);
+      mail.mail_template_id = insertId;
+      mail.owner = owner;
+      mail.category_no = no;
+      queryFormat = format.getQueryToAddMail(mail);
+      recordLog(mail);
+      insertingMails.push(connection.execute(queryFormat));
+    }
+
     await Promise.all(insertingAttachments);
     await Promise.all(insertingMails);
     await connection.commit();
@@ -132,6 +152,13 @@ const insertMailToDB = async content => {
   } finally {
     pool.end();
   }
+
+  return mail;
 };
 
-insertMailToDB(MAIL_CONTENT);
+fs.readFile(MAIL_CONTENT, "utf8", async (err, data) => {
+  if (err) {
+    throw err;
+  }
+  await insertMailToDB(data);
+});

@@ -9,15 +9,15 @@ import DropZone from './DropZone';
 
 const InputBody = dynamic(import('./InputBody'), { ssr: false });
 
-const WriteMail = () => {
+const WriteMail = ({ mailToReply }) => {
   const [dropZoneVisible, setDropZoneVisible] = useState(false);
 
   return (
     <WriteMailContextProvider>
       <S.WriteArea>
         <Tools dropZoneVisible={dropZoneVisible} setDropZoneVisible={setDropZoneVisible} />
-        <InputReceiver />
-        <InputSubject />
+        <InputReceiver defaultReceiver={mailToReply ? mailToReply.MailTemplate.from : null} />
+        <InputSubject defaultSubject={mailToReply ? mailToReply.MailTemplate.subject : null} />
         <DropZone visible={dropZoneVisible} />
         <InputBody />
       </S.WriteArea>

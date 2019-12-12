@@ -24,7 +24,8 @@ const IDENTIFIER = {
 const VALUE = {
   OWNER: "owner",
   NOW: mysql.raw("now()"),
-  MAILBOX: "받은메일함"
+  MAILBOX: "받은메일함",
+  SENT_MAILBOX: "보낸메일함"
 };
 
 const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
@@ -58,7 +59,7 @@ const getQueryToAddAttachment = ({
   return mysql.format(QUERY.INSERT, [TABLE.ATTACHMENT, valueOfAttachment]);
 };
 
-const getQueryToFindOwnerAndCategoryNo = id => {
+const getQueryToFindOwnerAndCategoryNo = (id, sender = false) => {
   return mysql.format(QUERY.SELECT, [
     IDENTIFIER.USER_NO,
     VALUE.OWNER,
@@ -69,7 +70,7 @@ const getQueryToFindOwnerAndCategoryNo = id => {
     IDENTIFIER.ID,
     id,
     IDENTIFIER.CATEGOTY_NAME,
-    VALUE.MAILBOX
+    sender ? VALUE.SENT_MAILBOX : VALUE.MAILBOX
   ]);
 };
 

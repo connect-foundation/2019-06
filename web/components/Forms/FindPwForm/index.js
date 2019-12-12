@@ -65,6 +65,11 @@ const FindPwForm = () => {
     }
   };
 
+  const handleInputBlur = prop => () => {
+    const errMsg = validator.validateAndGetMsg(prop, values[prop], true);
+    setErrorMsg({ ...errors, [prop]: errMsg });
+  };
+
   const validateForm = () => {
     const errMsgs = { id: '', email: '' };
     Object.keys(errMsgs).forEach(key => {
@@ -90,6 +95,7 @@ const FindPwForm = () => {
           label="아이디"
           type="search"
           onChange={handleInputChange('id')}
+          onBlur={handleInputBlur('id')}
           className={classes.textField}
           error={errors.id !== ''}
           margin="normal"
@@ -105,6 +111,7 @@ const FindPwForm = () => {
           label="이메일"
           type="search"
           onChange={handleInputChange('email')}
+          onBlur={handleInputBlur('email')}
           className={classes.textField}
           error={errors.email !== ''}
           margin="normal"

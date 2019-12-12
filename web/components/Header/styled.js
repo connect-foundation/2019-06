@@ -4,7 +4,6 @@ const Header = styled.div`
   flex: 0 0 70px;
   display: flex;
   flex-direction: row;
-  padding: 20px 10px;
   overflow: hidden;
   box-sizing: border-box;
   align-items: center;
@@ -28,18 +27,6 @@ const Logo = styled.img`
 
 const Search = styled.div`
   flex: 1 1;
-  display: flex;
-  align-items: center;
-  & > * {
-    height: 40px;
-    box-sizing: border-box;
-    border: none;
-    background: #f1f3f4;
-  }
 `;
 
-const SearchInput = styled.input`
-  width: 600px;
-`;
-
-export { Brand, Search, SearchInput, Header, Logo };
+export { Brand, Search, Header, Logo };

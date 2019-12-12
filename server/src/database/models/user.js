@@ -3,6 +3,8 @@
 /* eslint-disable no-await-in-loop */
 import { createSalt, encrypt, aesEncrypt, aesDecrypt } from '../../libraries/crypto';
 
+import { Op } from 'sequelize';
+
 const { DEFAULT_DOMAIN_NAME } = process.env;
 
 const convertToUserModel = async instance => {
@@ -182,6 +184,27 @@ const model = (sequelize, DataTypes) => {
       },
     });
   };
+
+  User.findAllUserByIdAndSubEmail = ({ id, sub_email }) => {
+    return User.findAll({
+      where: {
+        [Op.or]: [
+          {
+            id: {
+              [Op.eq]: id,
+            },
+          },
+          {
+            sub_email: {
+              [Op.eq]: sub_email,
+            },
+          },
+        ],
+      },
+      raw: true,
+    });
+  };
+
   return User;
 };
 

@@ -5,7 +5,7 @@ import { validate } from '../../libraries/validation/common';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
-import { checkQuery, validateNo, validateProps } from '../../libraries/validation/mail';
+import { checkQuery, validateNos, validateProps } from '../../libraries/validation/mail';
 import dateValidator from '../../libraries/validation/date';
 import { strToDate } from '../../libraries/date-parser';
 import { checkAttachment } from '../../libraries/validation/attachment';
@@ -77,31 +77,39 @@ const write = async (req, res, next) => {
 };
 
 const update = async (req, res, next) => {
-  const { no } = req.params;
-  const { props } = req.body;
-  let mail;
+  const { nos, props } = req.body;
+  const userNo = req.user.no;
 
   try {
-    validateNo(no);
+    validateNos(nos);
     validateProps(props);
-    mail = await service.updateMail(no, props);
+    const result = await service.updateMails(nos, props, userNo);
+    return res.json(result);
   } catch (err) {
     return next(err);
   }
-
-  return res.json(mail);
 };
 
 const getCategories = async (req, res, next) => {
-  let categories;
-
   try {
-    categories = await service.getCategories(req.user.no);
+    const categories = await service.getCategories(req.user.no);
+    return res.json(categories);
   } catch (err) {
     return next(err);
   }
+};
 
-  return res.json(categories);
+const remove = async (req, res, next) => {
+  const { nos } = req.body;
+  const userNo = req.user.no;
+
+  try {
+    validateNos(nos);
+    const result = await service.removeMails(nos, userNo);
+    return res.json(result);
+  } catch (err) {
+    return next(err);
+  }
 };
 
 export default {
@@ -109,4 +117,5 @@ export default {
   write,
   update,
   getCategories,
+  remove,
 };
