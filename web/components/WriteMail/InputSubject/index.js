@@ -20,7 +20,10 @@ const InputSubject = ({ defaultSubject }) => {
   };
 
   useEffect(() => {
-    dispatch({ type: UPDATE_SUBJECT, payload: { subject: `RE: ${defaultSubject}` } });
+    dispatch({
+      type: UPDATE_SUBJECT,
+      payload: { subject: defaultSubject ? `RE: ${defaultSubject}` : '' },
+    });
   }, []);
 
   return (
