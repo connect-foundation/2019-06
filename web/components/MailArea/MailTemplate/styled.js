@@ -35,7 +35,7 @@ const DeleteForeverButton = styled.div`
   margin-right: 10px;
 `;
 
-const From = styled.div`
+const FromOrTo = styled.div`
   flex: 0 0 150px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -92,7 +92,7 @@ export {
   ReadSign,
   DeleteForeverButton,
   DeleteButton,
-  From,
+  FromOrTo,
   Selectable,
   Title,
   Date,
