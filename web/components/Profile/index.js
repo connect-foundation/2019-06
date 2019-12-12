@@ -1,40 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 
 import S from './styled';
 import LogoutButton from '../LogoutButton';
-import storage from '../../utils/storage';
 
-const initialValuState = {
-  email: '',
-  name: '',
-  sub_email: '',
-  loading: true,
-};
-
-const Profile = () => {
-  const [values, setValues] = useState(initialValuState);
-
-  useEffect(() => {
-    const user = storage.getUser();
-    if (!user) {
-      Router.push('/login');
-      return;
-    }
-
-    const { name, sub_email, email } = user;
-    setValues({
-      name,
-      sub_email,
-      email,
-      loading: false,
-    });
-  }, []);
-
-  const { name, email, sub_email, loading } = values;
-
-  return !loading ? (
+const Profile = ({ name, sub_email, email }) => {
+  return (
     <S.Container>
       <S.ColumnContainer>
         <S.Title>프로필</S.Title>
@@ -67,8 +39,6 @@ const Profile = () => {
         <LogoutButton />
       </S.AlignRightContainer>
     </S.Container>
-  ) : (
-    <></>
   );
 };
 export default Profile;
