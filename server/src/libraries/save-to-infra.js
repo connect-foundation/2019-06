@@ -42,6 +42,7 @@ const makeSearchArgs = array => {
   if (!Array.isArray(array)) {
     throw new Error('argument must be array');
   }
+  if (array.length === 0) return;
 
   let result = [],
     cur,
