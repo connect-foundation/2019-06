@@ -45,21 +45,21 @@ const buttons = [
     name: '답장',
     icon: <EmailIcon />,
     enable: true,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
     icon: <SendIcon />,
     enable: true,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
     enable: true,
     icon: <DeleteIcon />,
-    onClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE);
@@ -74,7 +74,7 @@ const buttons = [
     name: '복구',
     enable: true,
     icon: <LoopIcon />,
-    onClick: async ({ mail, openSnackbar, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.RECYLCE);
@@ -89,7 +89,7 @@ const buttons = [
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
     enable: true,
-    onClick: async ({ mail, openSnackbar, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE_FOREVER);
@@ -113,6 +113,7 @@ const Tools = () => {
   const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
+  const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch };
 
   if (mail.category_no === wastebasketNo) {
     deleteButton.enable = false;
@@ -125,20 +126,19 @@ const Tools = () => {
   }
 
   const buttonSet = buttons.map(btn => {
-    if (btn.enable)
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={btn.icon}
-          onClick={() => {
-            btn.onClick({ mail, openSnackbar, wastebasketNo, dispatch });
-          }}
-          key={btn.key}>
-          {btn.name}
-        </Button>
-      );
+    return btn.enable ? (
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={btn.icon}
+        onClick={btn.handleClick.bind(null, paramsToClick)}
+        key={btn.key}>
+        {btn.name}
+      </Button>
+    ) : (
+      ''
+    );
   });
 
   return <S.Container>{buttonSet}</S.Container>;

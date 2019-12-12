@@ -92,21 +92,21 @@ const buttons = [
     name: '답장',
     enable: true,
     icon: <Email />,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
     enable: true,
     icon: <Send />,
-    onClick: () => {},
+    handleClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
     enable: true,
     icon: <Delete />,
-    onClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.update(nos, { category_no: wastebasketNo });
@@ -128,7 +128,7 @@ const buttons = [
     name: '영구삭제',
     enable: true,
     icon: <DeleteForever />,
-    onClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.remove(nos);
@@ -162,9 +162,16 @@ const Tools = () => {
   const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
+  const selectedMails = mails.filter(({ selected }) => selected);
+  const paramsToClick = {
+    selectedMails,
+    dispatch,
+    query,
+    openSnackbar,
+    wastebasketNo,
+  };
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
-  const selectedMails = mails.filter(({ selected }) => selected);
 
   if (category === wastebasketNo) {
     deleteButton.enable = false;
@@ -175,27 +182,20 @@ const Tools = () => {
   }
 
   const buttonSet = buttons.map(btn => {
-    if (btn.enable)
-      return (
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={btn.icon}
-          disabled={!selectedMails.length}
-          onClick={() =>
-            btn.onClick({
-              selectedMails,
-              dispatch,
-              query,
-              openSnackbar,
-              wastebasketNo,
-            })
-          }
-          key={btn.key}>
-          {btn.name}
-        </Button>
-      );
+    return btn.enable ? (
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={btn.icon}
+        disabled={!selectedMails.length}
+        onClick={btn.handleClick.bind(null, paramsToClick)}
+        key={btn.key}>
+        {btn.name}
+      </Button>
+    ) : (
+      ''
+    );
   });
 
   return (
