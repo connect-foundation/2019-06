@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Router from 'next/router';
 
-import storage from './storage';
+import storage from '../utils/storage';
 import Loading from '../components/Loading';
 
 const withAuthentication = WrappedComponent => {
@@ -22,7 +22,7 @@ const withAuthentication = WrappedComponent => {
         return;
       }
 
-      const { name, sub_email, email } = userAndLoading;
+      const { name, sub_email, email } = user;
       setUserAndLoading({
         name,
         sub_email,

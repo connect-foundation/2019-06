@@ -3,7 +3,7 @@ import React from 'react';
 import Profile from '../components/Profile';
 import * as GS from '../components/GlobalStyle';
 import BackButton from '../components/BackButton';
-import { withAuthentication } from '../utils/with-authentication';
+import { withAuthentication } from '../hoc/with-authentication';
 
 const ProfilePage = ({ name, sub_email, email }) => {
   return (
