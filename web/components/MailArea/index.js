@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useState, useContext, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -15,18 +15,17 @@ import useFetch from '../../utils/use-fetch';
 import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
 import ReadMail from '../ReadMail';
-import request from '../../utils/request';
+import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
 
-const WASTEBASKET_NAME = '휴지통';
-
+const WASTEBASKET_MAILBOX = '휴지통';
 const ACTION = {
   STAR: 'star',
   DELETE: 'delete',
   READ: 'read',
-  RECYCLE: 'recycle',
+  DELETE_FOREVER: 'deleteForever',
 };
 
 const SNACKBAR_MSG = {
@@ -35,33 +34,29 @@ const SNACKBAR_MSG = {
     STAR: '메일 중요표시에 실패하였습니다.',
     UNSTAR: '메일 중요표시 해제에 실패하였습니다.',
     LOAD: '메일 불러오기에 실패하였습니다.',
-    RECYCLE: '메일 복구를 실패하였습니다.',
+    DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
     STAR: '메일 중요표시를 하였습니다.',
     UNSTAR: '메일 중요표시를 해제하였습니다.',
-    RECYCLE: '메일을 복구하였습니다.',
+    DELETE_FOREVER: '메일을 영구 삭제하였습니다.',
   },
 };
 
 const loadNewMails = async (query, dispatch) => {
-  const { isError, data } = await request.get(`/mail/?${query}`);
+  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
   dispatch(handleMailsChange({ ...data }));
 };
 
-const updateMail = async (no, props) => {
-  return request.patch(`/mail/${no}`, { props });
-};
-
 const handleAction = {
   [ACTION.STAR]: async ({ mail, openSnackbar }) => {
     try {
       mail.is_important = !mail.is_important;
-      const { isError } = await updateMail(mail.no, { is_important: mail.is_important });
+      const { isError } = await mailRequest.update(mail.no, { is_important: mail.is_important });
       if (isError) {
         throw mail.is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
       }
@@ -75,7 +70,7 @@ const handleAction = {
   },
   [ACTION.DELETE]: async ({ mail, dispatch, query, wastebasketNo, openSnackbar }) => {
     try {
-      const { isError } = await updateMail(mail.no, { category_no: wastebasketNo });
+      const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE;
       }
@@ -85,14 +80,14 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.RECYCLE]: async ({ mail, dispatch, query, openSnackbar }) => {
+  [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, query, openSnackbar }) => {
     try {
-      const { isError } = await updateMail(mail.no, { category_no: mail.prev_category_no });
+      const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
-        throw SNACKBAR_MSG.ERROR.RECYCLE;
+        throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
       }
       await loadNewMails(query, dispatch);
-      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.RECYCLE);
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
     } catch (errorMessage) {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
@@ -108,11 +103,12 @@ const MailArea = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const query = getQueryByOptions(state);
   const URL = `/mail?${query}`;
+
   const fetchingMailData = useFetch(URL);
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
-  useMemo(() => {
+  useEffect(() => {
     dispatch(initCheckerInTools());
     dispatch(handleMailsChange({ ...fetchingMailData.data }));
   }, [dispatch, fetchingMailData.data]);
@@ -130,7 +126,7 @@ const MailArea = () => {
   }
 
   const { mails, paging, categoryNoByName } = state;
-  const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
 

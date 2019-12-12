@@ -36,9 +36,8 @@ const getPagingNumbers = (start, end, page) => {
 const Paging = ({ paging }) => {
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
-  const lastIndex = Math.floor(totalPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppDispatchContext);
-
+  console.dir(paging);
   const classes = useStyles();
 
   const pagingNumber = getPagingNumbers(startPage, endPage, page);
@@ -92,7 +91,7 @@ const Paging = ({ paging }) => {
         style={{
           width: '35px',
           height: '10px ',
-          display: currentIndex === lastIndex ? 'none' : '',
+          display: totalPage === endPage ? 'none' : '',
         }}>
         <ArrowForwardIcon />
       </Fab>

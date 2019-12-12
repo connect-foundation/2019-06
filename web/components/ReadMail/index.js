@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
-import { StarBorder, Star } from '@material-ui/icons';
+import { StarBorder as StarBorderIcon, Star as StarIcon } from '@material-ui/icons';
 import { yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 import * as S from './styled';
@@ -9,7 +9,7 @@ import PageMoveButtonArea from './PageMoveButtonArea';
 import { handleSnackbarState, setMail } from '../../contexts/reducer';
 import { AppStateContext, AppDispatchContext } from '../../contexts';
 import FileList from './FileList';
-import request from '../../utils/request';
+import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import Tools from './Tools';
 
@@ -44,13 +44,9 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const updateMail = async (no, props) => {
-  return request.patch(`/mail/${no}`, { props });
-};
-
 const loadAttachments = async (mailTemplateNo, setAttachments) => {
   const url = `/mail/template/${mailTemplateNo}/attachments`;
-  const { data } = await request.get(url);
+  const { data } = await mailRequest.get(url);
   setAttachments(data.attachments);
 };
 
@@ -68,11 +64,11 @@ const ReadMail = () => {
 
   useEffect(() => {
     loadAttachments(mailTemplateNo, setAttachments);
-    updateMail(no, { is_read: true });
+    mailRequest.update(no, { is_read: true });
   }, [no, mailTemplateNo]);
 
   const handleStarClick = async () => {
-    const { isError, data } = await updateMail(no, { is_important: !is_important });
+    const { isError } = await mailRequest.update(no, { is_important: !is_important });
     let message;
     if (isError) {
       message = !is_important ? SNACKBAR_MSG.ERROR.UNSTAR : SNACKBAR_MSG.ERROR.STAR;
@@ -80,9 +76,8 @@ const ReadMail = () => {
       return;
     }
     message = !is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
-    data.MailTemplate = MailTemplate;
-    data.index = index;
-    dispatch(setMail(data));
+    state.mail.is_important = !is_important;
+    dispatch(setMail(state.mail));
     openSnackbar(SNACKBAR_VARIANT.SUCCESS, message);
   };
 
@@ -93,9 +88,9 @@ const ReadMail = () => {
         <S.TitleView>
           <S.Subject>
             {is_important ? (
-              <Star className={classes.star} onClick={handleStarClick} />
+              <StarIcon className={classes.star} onClick={handleStarClick} />
             ) : (
-              <StarBorder className={classes.unstar} onClick={handleStarClick} />
+              <StarBorderIcon className={classes.unstar} onClick={handleStarClick} />
             )}
             <h3>{subject || '제목없음'}</h3>
             <div>

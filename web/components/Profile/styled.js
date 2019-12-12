@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 const Container = styled.div`
-  width: 400px;
+  width: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,7 +80,7 @@ const Title = styled.span`
 
 const Text = styled.span`
   font-size: 1.2rem;
-  width: 100px;
+  width: 200px;
   margin: 10px;
 `;
 

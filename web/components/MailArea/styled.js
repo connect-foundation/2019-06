@@ -9,9 +9,11 @@ const Section = styled.section`
 
 const ToolsWrapper = styled.div`
   flex: 0 0 50px;
+  height: 50px;
   border-bottom: 2px solid #e9ecef;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `;
 
 const MailArea = styled.div`
@@ -30,7 +32,9 @@ const MailListArea = styled.div`
 
 const MailPagingArea = styled.div`
   flex: 0 0 50px;
+  height: 50px;
   display: flex;
+  box-sizing: border-box;
   border-top: 2px solid #e9ecef;
   text-align: center;
   justify-content: center;
