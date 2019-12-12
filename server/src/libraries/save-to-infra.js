@@ -24,8 +24,13 @@ const connectImap = ({ email, password }, callback) => {
     imap.end();
   });
 
-  imap.once('error', err => {
-    throw err;
+  imap.once('error', () => {
+    const errorField = new ErrorField(
+      'fail to imap connection',
+      '',
+      'imap 서버와 연결하는데 실패하였습니다',
+    );
+    throw new ErrorResponse(ERROR_CODE.FAIL_TO_CONNECT_TO_IMAP, errorField);
   });
 
   imap.connect();
@@ -69,26 +74,18 @@ export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => 
   connectImap(user, imap => {
     imap.openBox(originBoxName, true, openErr => {
       if (openErr) {
-        const errorField = new ErrorField(
-          'mail box not found',
-          originBoxName,
-          '존재하지 않는 메일함입니다',
-        );
+        const errorField = new ErrorField('mailBox', originBoxName, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
       imap.search(makeSearchArgs(searchArgs), (searchErr, results) => {
         if (searchErr) {
-          const errorField = new ErrorField(
-            'message search failed',
-            searchArgs,
-            '메일 검색에 실패하였습니다',
-          );
-          throw new ErrorResponse(ERROR_CODE.FAIL_TO_SEARCH_MAIL, errorField);
+          const errorField = new ErrorField('message-id', searchArgs, '메일 검색에 실패하였습니다');
+          throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
         }
         imap.move(results, targetBoxName, moveErr => {
           if (moveErr) {
             const errorField = new ErrorField(
-              'mail move',
+              'mailBox',
               targetBoxName,
               '메일 이동에 실패하였습니다',
             );
