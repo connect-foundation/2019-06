@@ -9,20 +9,23 @@ import smtplib
 import traceback
 
 # please input below blank
-FROM_PORT = 0 # number
-TO_PORT = 0 # number
+TO_PORT = 10026
 SHELL_PATH = '/path/to/script ' # string
+FROM_PORT = 10025
 
 class CustomSMTPServer(smtpd.SMTPServer):
 	def process_message(self, peer, mailfrom, rcpttos, data):
 		mailfrom.replace('\'', '')
 		mailfrom.replace('\"', '')
-		
+
 		for recipient in rcpttos:
 			recipient.replace('\'', '')
 			recipient.replace('\"', '')
 
-		os.system('echo "' + data + '" | ' + SHELL_PATH)
+		f = open("path/to/your/mail/file", 'w')
+		f.write(data)
+		f.close()
+		os.system(SHELL_PATH + "path/to/your/mail/file ")
 
 		try:
 			toserver = smtplib.SMTP('127.0.0.1', TO_PORT)
@@ -61,6 +64,5 @@ class CustomSMTPServer(smtpd.SMTPServer):
 
 		return
 		
-server = CustomSMTPServer(('127.0.0.1', FROM_PORT), None)
-
+server = CustomSMTPServer(('127.0.0.1', FROM_PORT), None, 0)
 asyncore.loop()

@@ -3,6 +3,8 @@ module.exports = {
   DB_DEV_PW: "",
   DB_DEV_SCHEMA: "",
   DB_DEV_HOST: "",
+  IMAP_PORT: 0,
+  IMAP_HOST: "",
   STORAGE_END_POINT: "",
   STORAGE_REGION: "",
   STORAGE_BUCKET: "",
