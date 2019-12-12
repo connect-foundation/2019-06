@@ -20,6 +20,7 @@ passport.use(
       let user;
       try {
         user = await authService.localLogin({ id, password });
+        delete user.imap_password;
         user.password = password;
       } catch (err) {
         return done(err);

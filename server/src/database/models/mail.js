@@ -110,6 +110,60 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Mail.findOneByNoAndUserNo = (no, userNo) => {
+    return Mail.findOne({
+      where: {
+        owner: userNo,
+        no,
+      },
+      include: [
+        {
+          model: sequelize.models.MailTemplate,
+        },
+      ],
+    });
+  };
+
+  Mail.updateAllByNosAndProps = (nos, props) => {
+    return Mail.update(
+      {
+        ...props,
+      },
+      {
+        where: {
+          no: {
+            [Op.in]: nos,
+          },
+        },
+        include: [
+          {
+            model: sequelize.models.MailTemplate,
+          },
+        ],
+      },
+    );
+  };
+
+  Mail.deleteByNoAndUserNo = (no, userNo) => {
+    return Mail.destroy({
+      where: {
+        no,
+        owner: userNo,
+      },
+    });
+  };
+
+  Mail.deleteAllByNosAndUserNo = (nos, userNo) => {
+    return Mail.destroy({
+      where: {
+        no: {
+          [Op.in]: nos,
+        },
+        owner: userNo,
+      },
+    });
+  };
+
   return Mail;
 };
 

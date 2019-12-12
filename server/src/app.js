@@ -63,7 +63,6 @@ app.use((err, req, res, next) => {
     const copiedUser = { ...req.user };
     delete copiedUser.password;
     delete copiedUser.salt;
-    delete copiedUser.imap_password;
     who = `${JSON.stringify(copiedUser)}\n`;
   }
   log.error(who + err.stack);
