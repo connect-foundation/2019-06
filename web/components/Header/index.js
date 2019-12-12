@@ -7,6 +7,7 @@ import { AppDispatchContext } from '../../contexts';
 import { handleCategoryClick } from '../../contexts/reducer';
 import MailArea from '../MailArea';
 import logo from '../../public/logo.png';
+import Search from './Search';
 
 const Header = ({ brand }) => {
   const { dispatch } = useContext(AppDispatchContext);
@@ -17,9 +18,7 @@ const Header = ({ brand }) => {
         <S.Logo src={logo} onClick={handleLogoClick} alt={'로고이미지'} />
       </S.Brand>
       <S.Search>
-        <button>검색</button>
-        <S.SearchInput placeholder="메일 검색" type="text" />
-        <button>필터</button>
+        <Search />
       </S.Search>
       <ProfileLink />
     </S.Header>
