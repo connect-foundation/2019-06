@@ -85,7 +85,7 @@ const buttons = [
     },
   },
   {
-    key: 'DELETE_FOREVER',
+    key: 'delete_forever',
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
     visible: true,
@@ -102,7 +102,7 @@ const buttons = [
 ];
 
 const deleteButton = buttons.find(button => button.key === 'delete');
-const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
+const deleteForeverButton = buttons.find(button => button.key === 'delete_forever');
 const recylceButton = buttons.find(button => button.key === 'recycle');
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {

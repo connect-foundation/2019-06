@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { ArrowDownward, ArrowUpward, Email, Send, Delete, DeleteForever } from '@material-ui/icons';
 import S from './styled';
-import * as GS from '../../GlobalStyle';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import {
   handleSortSelect,
@@ -125,7 +124,7 @@ const buttons = [
     },
   },
   {
-    key: 'DELETE_FOREVER',
+    key: 'delete_forever',
     name: '영구삭제',
     visible: true,
     icon: <DeleteForever />,
@@ -152,7 +151,7 @@ const buttons = [
 ];
 
 const deleteButton = buttons.find(button => button.key === 'delete');
-const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
+const deleteForeverButton = buttons.find(button => button.key === 'delete_forever');
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {
   if (categoryNo === wastebasketNo) {
