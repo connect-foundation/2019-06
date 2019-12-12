@@ -44,20 +44,20 @@ const buttons = [
     key: 'reply',
     name: '답장',
     icon: <EmailIcon />,
-    enable: true,
+    visible: true,
     handleClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
     icon: <SendIcon />,
-    enable: true,
+    visible: true,
     handleClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
-    enable: true,
+    visible: true,
     icon: <DeleteIcon />,
     handleClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
@@ -72,7 +72,7 @@ const buttons = [
   {
     key: 'recycle',
     name: '복구',
-    enable: true,
+    visible: true,
     icon: <LoopIcon />,
     handleClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: mail.prev_category_no });
@@ -88,7 +88,7 @@ const buttons = [
     key: 'DELETE_FOREVER',
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
-    enable: true,
+    visible: true,
     handleClick: async ({ mail, openSnackbar, dispatch }) => {
       const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
@@ -105,6 +105,18 @@ const deleteButton = buttons.find(button => button.key === 'delete');
 const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
 const recylceButton = buttons.find(button => button.key === 'recycle');
 
+const swapButtonSetView = (categoryNo, wastebasketNo) => {
+  if (categoryNo === wastebasketNo) {
+    deleteButton.enable = false;
+    deleteForeverButton.enable = true;
+    recylceButton.enable = true;
+  } else {
+    deleteButton.enable = true;
+    deleteForeverButton.enable = false;
+    recylceButton.enable = false;
+  }
+};
+
 const Tools = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -114,19 +126,10 @@ const Tools = () => {
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch };
-
-  if (mail.category_no === wastebasketNo) {
-    deleteButton.enable = false;
-    deleteForeverButton.enable = true;
-    recylceButton.enable = true;
-  } else {
-    deleteButton.enable = true;
-    deleteForeverButton.enable = false;
-    recylceButton.enable = false;
-  }
+  swapButtonSetView(mail.category_no, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    return btn.enable ? (
+    return btn.visible ? (
       <Button
         variant="contained"
         color="primary"

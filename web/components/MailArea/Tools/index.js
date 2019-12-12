@@ -90,21 +90,21 @@ const buttons = [
   {
     key: 'reply',
     name: '답장',
-    enable: true,
+    visible: true,
     icon: <Email />,
     handleClick: () => {},
   },
   {
     key: 'send',
     name: '전달',
-    enable: true,
+    visible: true,
     icon: <Send />,
     handleClick: () => {},
   },
   {
     key: 'delete',
     name: '삭제',
-    enable: true,
+    visible: true,
     icon: <Delete />,
     handleClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
       try {
@@ -126,7 +126,7 @@ const buttons = [
   {
     key: 'DELETE_FOREVER',
     name: '영구삭제',
-    enable: true,
+    visible: true,
     icon: <DeleteForever />,
     handleClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
       try {
@@ -153,6 +153,16 @@ const buttons = [
 const deleteButton = buttons.find(button => button.key === 'delete');
 const deleteForeverButton = buttons.find(button => button.key === 'DELETE_FOREVER');
 
+const swapButtonSetView = (categoryNo, wastebasketNo) => {
+  if (categoryNo === wastebasketNo) {
+    deleteButton.enable = false;
+    deleteForeverButton.enable = true;
+  } else {
+    deleteButton.enable = true;
+    deleteForeverButton.enable = false;
+  }
+};
+
 const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
@@ -172,17 +182,10 @@ const Tools = () => {
   };
   const handleFilterChange = ({ target: { value } }) => dispatch(handleSortSelect(value));
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
-
-  if (category === wastebasketNo) {
-    deleteButton.enable = false;
-    deleteForeverButton.enable = true;
-  } else {
-    deleteButton.enable = true;
-    deleteForeverButton.enable = false;
-  }
+  swapButtonSetView(category, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    return btn.enable ? (
+    return btn.visible ? (
       <Button
         variant="contained"
         color="primary"
