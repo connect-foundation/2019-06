@@ -2,6 +2,7 @@ import Imap from 'imap';
 import ErrorField from './exception/error-field';
 import ErrorResponse from './exception/error-response';
 import ERROR_CODE from './exception/error-code';
+import U from './mail-util';
 
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
 const PREFIX = '';
@@ -29,6 +30,36 @@ const connectImap = ({ email, password }, callback) => {
   });
 
   imap.connect();
+};
+
+export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
+  if (originBoxName === '받은메일함') {
+    originBoxName = 'INBOX';
+  }
+  connectImap(user, imap => {
+    imap.openBox(originBoxName, true, openErr => {
+      if (openErr) {
+        const errorField = new ErrorField('mailBox', originBoxName, '존재하지 않는 메일함입니다');
+        throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
+      }
+      imap.search(U.makeSearchArgs(searchArgs), (searchErr, results) => {
+        if (searchErr) {
+          const errorField = new ErrorField('message-id', searchArgs, '메일 검색에 실패하였습니다');
+          throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+        }
+        imap.move(results, targetBoxName, moveErr => {
+          if (moveErr) {
+            const errorField = new ErrorField(
+              'mailBox',
+              targetBoxName,
+              '메일 이동에 실패하였습니다',
+            );
+            throw new ErrorResponse(ERROR_CODE.FAIL_TO_MOVE_MAIL, errorField);
+          }
+        });
+      });
+    });
+  });
 };
 
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
