@@ -4,14 +4,12 @@ import { useAuthentication } from '../hook/use-authentication';
 
 const withAuthentication = WrappedComponent => {
   const containerComponent = () => {
-    const userAndLoading = useAuthentication();
+    const user = useAuthentication();
 
-    const { name, sub_email, email, loading } = userAndLoading;
-
-    return loading ? (
+    return !user ? (
       <Loading full={true} />
     ) : (
-      <WrappedComponent name={name} sub_email={sub_email} email={email} />
+      <WrappedComponent name={user.name} sub_email={user.sub_email} email={user.email} />
     );
   };
 

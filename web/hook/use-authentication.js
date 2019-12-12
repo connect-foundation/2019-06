@@ -3,33 +3,20 @@ import Router from 'next/router';
 
 import storage from '../utils/storage';
 
-const initialValueState = {
-  email: '',
-  name: '',
-  sub_email: '',
-  loading: true,
-};
-
 const useAuthentication = () => {
-  const [userAndLoading, setUserAndLoading] = useState(initialValueState);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const user = storage.getUser();
-    if (!user) {
+    const userData = storage.getUser();
+    if (!userData) {
       Router.push('/login');
       return;
     }
 
-    const { name, sub_email, email } = user;
-    setUserAndLoading({
-      name,
-      sub_email,
-      email,
-      loading: false,
-    });
+    setUser(userData);
   }, []);
 
-  return userAndLoading;
+  return user;
 };
 
 export { useAuthentication };
