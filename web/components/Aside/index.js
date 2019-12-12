@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   List,
@@ -80,7 +80,7 @@ const Aside = () => {
 
   const fetchingCategories = useFetch(URL);
 
-  useMemo(() => {
+  useEffect(() => {
     if (fetchingCategories.data) {
       dispatch(handleCategoriesChange({ ...fetchingCategories.data }));
     }
