@@ -1,16 +1,21 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import Router from 'next/router';
 import Button from '@material-ui/core/Button';
 
 import request from '../../utils/request';
 import storage from '../../utils/storage';
-import history from '../../utils/history';
+import { AppDispatchContext } from '../../contexts';
+import { initState } from '../../contexts/reducer';
 
 export default () => {
+  const { dispatch } = useContext(AppDispatchContext);
+
   const handleSignOutBtnClick = () => {
     storage.clear();
 
     request.post('/auth/logout', {});
-    history.push('/');
+    dispatch(initState());
+    Router.push('/');
   };
 
   return (
