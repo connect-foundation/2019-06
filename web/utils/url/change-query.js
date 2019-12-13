@@ -4,6 +4,7 @@ const VIEW_STRING = {
   WRITE: 'write',
   'WRITE-TO-ME': 'write-to-me',
   READ: 'read',
+  SEARCH: 'search',
 };
 
 const SORTING_CRITERIA = {
@@ -56,15 +57,16 @@ const getQueryByOptions = ({ category, page, view, mailNo, sort }) => {
  * @param {String} options.view
  * @param {Number} options.mailNo
  * @param {String} options.sort
+ * @param {String} path
  */
-const changeUrlWithoutRunning = options => {
+const changeUrlWithoutRunning = (options, path = '/') => {
   const queries = getQueryByOptions(options);
   if (queries.length === 0) {
-    return Router.push('/', '/', { shallow: true });
+    return Router.push(path, path, { shallow: true });
   }
 
   const nextUrl = queries.join('&');
-  const href = `/?${nextUrl}`;
+  const href = `${path}?${nextUrl}`;
   const as = href;
   return Router.push(href, as, { shallow: true });
 };

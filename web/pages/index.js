@@ -10,8 +10,9 @@ const VIEW_COMPONENT = {
   'WRITE-TO-ME': <WriteMailToMe />,
   WRITE: <WriteMail />,
   READ: <ReadMail />,
+  SEARCH: <MailArea />,
+  LIST: <MailArea />,
 };
-
 const IndexPage = () => {
   const router = useRouter();
   const { query } = router;
@@ -22,11 +23,7 @@ const IndexPage = () => {
   }
   const renderView = VIEW_COMPONENT[view] || <MailArea />;
 
-  return (
-    <>
-      <Layout>{renderView}</Layout>
-    </>
-  );
+  return <Layout>{renderView}</Layout>;
 };
 
 export default IndexPage;
