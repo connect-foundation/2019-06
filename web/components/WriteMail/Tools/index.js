@@ -16,8 +16,7 @@ import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useStateForWM } from '../ContextProvider';
 import { AppDispatchContext } from '../../../contexts';
-import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
-import MailArea from '../../MailArea';
+import { handleSnackbarState } from '../../../contexts/reducer';
 import ChangeWriteAreaButton from './ChangeWriteAreaButton';
 import SwitchDropzone from './SwitchDropzone';
 import validator from '../../../utils/validator';
@@ -26,6 +25,7 @@ import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
 import { SNACKBAR_VARIANT, getSnackbarState } from '../../Snackbar';
+import { changeView, VIEW_STRING } from '../../../utils/url/change-query';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -104,7 +104,7 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
       pageDispatch(
         handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
       );
-      pageDispatch(handleCategoryClick(0, <MailArea />));
+      changeView(VIEW_STRING.LIST);
     }
   };
 
