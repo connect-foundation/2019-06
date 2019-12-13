@@ -108,9 +108,10 @@ const MailArea = () => {
   const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
+  const { view } = urlQuery;
   const query = getQueryByOptions(urlQuery).join('&');
-  const URL = `/mail?${query}`;
-
+  const isSearch = view === 'search';
+  const URL = isSearch ? `/mail/search?${query}` : `/mail?${query}`;
   const fetchingMailData = useFetch(URL);
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));

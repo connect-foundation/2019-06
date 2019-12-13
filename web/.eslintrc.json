@@ -24,6 +24,7 @@
     "max-len": ["error", 100],
     "arrow-parens": 0,
     "import/prefer-default-export": 0,
-    "arrow-body-style": 0
+    "arrow-body-style": 0,
+    "guard-for-in": 0
   }
 }
