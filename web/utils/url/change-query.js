@@ -24,7 +24,7 @@ const changeCategory = categoryNo => {
   changeUrlWithoutRunning({ category: categoryNo });
 };
 
-const getQueryByOptions = ({ category, page, view, mailNo, sort }) => {
+const getQueryByOptions = ({ category, page, view, mailNo, sort, search }) => {
   const queries = [];
 
   if (category > 0) {
@@ -41,6 +41,8 @@ const getQueryByOptions = ({ category, page, view, mailNo, sort }) => {
 
   if (view === VIEW_STRING.READ) {
     queries.push(`mailNo=${mailNo}`);
+  } else if (view === 'search') {
+    queries.push(`search=${search}`);
   }
 
   if (SORTING_CRITERIA[sort]) {
@@ -57,6 +59,7 @@ const getQueryByOptions = ({ category, page, view, mailNo, sort }) => {
  * @param {String} options.view
  * @param {Number} options.mailNo
  * @param {String} options.sort
+ * @param {String} options.search
  * @param {String} path
  */
 const changeUrlWithoutRunning = (options, path = '/') => {
@@ -67,7 +70,7 @@ const changeUrlWithoutRunning = (options, path = '/') => {
 
   const nextUrl = queries.join('&');
   const href = `${path}?${nextUrl}`;
-  const as = href;
+  const as = `/?${nextUrl}`;
   return Router.push(href, as, { shallow: true });
 };
 

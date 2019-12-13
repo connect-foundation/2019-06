@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, useReducer } from 'react';
+import React, { useState, useRef, useEffect, useReducer, useContext } from 'react';
 import SearchIcon from '@material-ui/icons/Search';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
@@ -7,29 +7,28 @@ import S from './styled';
 import SearchInputRow from './Input';
 import InputDate from './Input/InputDate';
 import { initialState, reducer } from './context';
+import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const inputLabels = ['제목', '내용', '보낸사람', '받는사람'];
 
 const Search = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [toggle, setToggle] = useState(false);
   const searchWrapRef = useRef(null);
+  const [toggle, setToggle] = useState(false);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    document.addEventListener(
-      'click',
-      event => {
-        if (searchWrapRef.current && !searchWrapRef.current.contains(event.target)) {
-          setToggle(false);
-        }
-      },
-      true,
-    );
+    const handleOutsiderClick = event => {
+      if (searchWrapRef.current && !searchWrapRef.current.contains(event.target)) {
+        setToggle(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsiderClick, true);
   }, []);
 
-  const handleSearchClick = event => {
-    console.log('search click');
+  const handleSearchClick = () => {
+    changeUrlWithoutRunning({ view: 'search', search: searchText });
   };
 
   const handleDetailSearchClick = () => {
@@ -43,13 +42,13 @@ const Search = () => {
       }
     }
 
-    setSearchText(searchTexts.join(' '));
-  };
+    if (searchTexts.length === 0) {
+      return;
+    }
 
-  console.log('재랜더링2');
-  const searchInputs = inputLabels.map((inputLabel, i) => (
-    <SearchInputRow key={`searchInput-${i}`} label={inputLabel} dispatch={dispatch} />
-  ));
+    setSearchText(searchTexts.join(' '));
+    handleSearchClick();
+  };
 
   return (
     <S.Wrap ref={searchWrapRef}>
@@ -68,7 +67,9 @@ const Search = () => {
         </S.SearchButton>
       </S.SearchBar>
       <S.SearchDetailWrap visible={toggle}>
-        {[...searchInputs]}
+        {inputLabels.map((inputLabel, i) => (
+          <SearchInputRow key={`searchInput-${i}`} label={inputLabel} dispatch={dispatch} />
+        ))}
         <InputDate label="기간" dispatch={dispatch} />
         <S.TextRight>
           <Button variant="contained" color="primary" onClick={handleDetailSearchClick}>
