@@ -11,6 +11,7 @@ const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
 const SET_MAIL = 'SET_MAIL';
+const SET_MAIL_TO_REPLY = 'SET_MAIL_TO_REPLY';
 const INIT_STATE = 'INIT_STATE';
 
 export const initialState = {
@@ -19,6 +20,7 @@ export const initialState = {
   page: 1,
   mails: null,
   mail: null,
+  mailToReply: null,
   paging: null,
   view: null,
   sort: 'datedesc',
@@ -176,6 +178,15 @@ export const setMail = mail => {
   };
 };
 
+export const setMailToReply = mailToReply => {
+  return {
+    type: SET_MAIL_TO_REPLY,
+    payload: {
+      mailToReply,
+    },
+  };
+};
+
 export const initState = () => {
   return {
     type: INIT_STATE,
@@ -213,6 +224,8 @@ export const reducer = (state = initialState, action) => {
     case CHANGE_CATEGORIES_DATA:
       return { ...state, ...payload };
     case SET_MAIL:
+      return { ...state, ...payload };
+    case SET_MAIL_TO_REPLY:
       return { ...state, ...payload };
     default:
       return { ...state };
