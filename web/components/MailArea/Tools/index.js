@@ -72,7 +72,8 @@ const getArrowIcon = sortValue =>
     <ArrowDownward fontSize={'small'} />
   );
 
-const loadNewMails = async (query, dispatch) => {
+const loadNewMails = async (urlQuery, dispatch) => {
+  const query = getQueryByOptions(urlQuery).join('&');
   const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
@@ -80,7 +81,8 @@ const loadNewMails = async (query, dispatch) => {
   dispatch(handleMailsChange({ ...data }));
   const { mails, paging } = data;
   if (mails.length === 0 && paging.page !== 1) {
-    changeUrlWithoutRunning({ page: paging.page });
+    const { category } = urlQuery;
+    changeUrlWithoutRunning({ category, page: paging.page });
   }
 };
 
@@ -118,14 +120,14 @@ const buttons = [
     name: '삭제',
     visible: true,
     icon: <Delete />,
-    handleClick: async ({ selectedMails, dispatch, query, wastebasketNo, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, wastebasketNo, openSnackbar, urlQuery }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.update(nos, { category_no: wastebasketNo });
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
-        await loadNewMails(query, dispatch);
+        await loadNewMails(urlQuery, dispatch);
         openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE(selectedMails.length));
       } catch (errorMessage) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
@@ -140,14 +142,14 @@ const buttons = [
     name: '영구삭제',
     visible: true,
     icon: <DeleteForever />,
-    handleClick: async ({ selectedMails, dispatch, query, openSnackbar }) => {
+    handleClick: async ({ selectedMails, dispatch, openSnackbar, urlQuery }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.remove(nos);
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
         }
-        await loadNewMails(query, dispatch);
+        await loadNewMails(urlQuery, dispatch);
         openSnackbar(
           SNACKBAR_VARIANT.SUCCESS,
           SNACKBAR_MSG.SUCCESS.DELETE_FOREVER(selectedMails.length),
@@ -181,7 +183,6 @@ const Tools = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails, category, categoryNoByName } = state;
   const { query: urlQuery } = useRouter();
-  const query = getQueryByOptions(urlQuery).join('&');
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
@@ -189,7 +190,6 @@ const Tools = () => {
   const paramsToClick = {
     selectedMails,
     dispatch,
-    query,
     openSnackbar,
     wastebasketNo,
     urlQuery,
