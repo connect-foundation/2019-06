@@ -28,7 +28,6 @@ const Search = () => {
   }, []);
 
   const handleSearchClick = () => {
-    console.log('handle search');
     changeUrlWithoutRunning({ view: 'search', search: searchText });
   };
 
@@ -47,8 +46,9 @@ const Search = () => {
       return;
     }
 
-    setSearchText(searchTexts.join(' '));
-    handleSearchClick();
+    const nextSearchText = searchTexts.join(' ');
+    setSearchText(nextSearchText);
+    changeUrlWithoutRunning({ view: 'search', search: nextSearchText });
   };
 
   const handleSearchInputKeyPress = event => {
