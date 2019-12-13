@@ -30,6 +30,8 @@ const getQueryByOptions = ({
   content,
   from,
   to,
+  startDate,
+  endDate,
 }) => {
   const query = {
     userNo,
@@ -45,7 +47,9 @@ const getQueryByOptions = ({
         [Op.ne]: wastebasketNo,
       },
     },
-    mailTemplateFilter: {},
+    mailTemplateFilter: {
+      createdAt: {},
+    },
   };
 
   if (SORT_TYPE[sort]) {
@@ -76,6 +80,24 @@ const getQueryByOptions = ({
     };
   }
 
+  if (startDate) {
+    const date = new Date(...startDate.split('/'));
+    date.setMonth(date.getMonth() - 1);
+    query.mailTemplateFilter.createdAt = {
+      [Op.gte]: date,
+    };
+  }
+
+  if (endDate) {
+    const date = new Date(...endDate.split('/'));
+    date.setMonth(date.getMonth() - 1);
+    date.setDate(date.getDate() + 1);
+    query.mailTemplateFilter.createdAt = {
+      ...query.mailTemplateFilter.createdAt,
+      [Op.lt]: date,
+    };
+  }
+
   return query;
 };
 
@@ -88,7 +110,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort } = queryOptions;
   let { page, perPageNum } = queryOptions;
-  const { subject, content, from, to } = queryOptions;
+  const { subject, content, from, to, startDate, endDate } = queryOptions;
 
   page = +page;
   perPageNum = +perPageNum;
@@ -103,6 +125,8 @@ const getMailsByOptions = async (userNo, options = {}) => {
     content,
     from,
     to,
+    startDate,
+    endDate,
   });
 
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
