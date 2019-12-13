@@ -100,16 +100,16 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
           <DeleteIcon className={classes.delete} id={`delete-${index}`} />
         </S.DeleteButton>
       )}
-      <S.FromOrTo isRead={is_read}>{state.category === sendMailboxNo ? to : from}</S.FromOrTo>
+      <S.AddressText isRead={is_read}>{state.category === sendMailboxNo ? to : from}</S.AddressText>
       {category}
       <S.Selectable id={`read-${index}`}>
-        <S.Title isRead={is_read} id={`read-${index}`}>
+        <S.SubjectText isRead={is_read} id={`read-${index}`}>
           {subject || '제목없음'}
-        </S.Title>
-        <S.Date>
+        </S.SubjectText>
+        <S.DateText>
           {getDateOrTime(createdAt)}
-          <S.Text>{reservation_time && '예약'}</S.Text>
-        </S.Date>
+          <S.ReservationText>{reservation_time && '예약'}</S.ReservationText>
+        </S.DateText>
       </S.Selectable>
     </S.Container>
   );

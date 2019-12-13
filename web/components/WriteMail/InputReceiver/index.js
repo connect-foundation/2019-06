@@ -6,6 +6,11 @@ import * as SC from '../../../utils/special-characters';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
+const extractAddress = data => {
+  const address = /<.{3,40}@.{3,40}>/.exec(data);
+  return address ? address[0].slice(1, -1) : data;
+};
+
 const ListOfReceivers = ({ defaultReceiver }) => {
   const { receivers } = useStateForWM();
   const dispatch = useDispatchForWM();
@@ -22,7 +27,7 @@ const ListOfReceivers = ({ defaultReceiver }) => {
     if (defaultReceiver) {
       dispatch({
         type: UPDATE_RECEIVERS,
-        payload: { receivers: [defaultReceiver] },
+        payload: { receivers: [extractAddress(defaultReceiver)] },
       });
     }
   }, [defaultReceiver]);
