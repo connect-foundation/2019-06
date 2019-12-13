@@ -48,7 +48,6 @@ const Search = () => {
       return;
     }
 
-    console.log({ ...searchQueries });
     setSearchText(searchTexts.join(' '));
     changeUrlWithoutRunning({ view: 'search', ...searchQueries });
   };

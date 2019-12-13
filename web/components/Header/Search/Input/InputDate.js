@@ -13,7 +13,7 @@ const DateInput = ({ label, dispatch }) => {
   const [endDate, setEndDate] = useState(null);
 
   const handleDataChange = (date, isStart = true) => {
-    const formatDate = date ? moment(date).format('YYYYMMDD') : '';
+    const formatDate = date ? moment(date).format('YYYY/MM/DD') : '';
     if (isStart) {
       setStartDate(date);
       return dispatch({ type: START_DATE, payload: formatDate });
