@@ -5,13 +5,16 @@ import * as S from './styled';
 import ProfileLink from '../ProfileLink';
 import { AppDispatchContext } from '../../contexts';
 import { handleCategoryClick } from '../../contexts/reducer';
-import MailArea from '../MailArea';
 import logo from '../../public/logo.png';
 import Search from './Search';
+import { changeUrlWithoutRunning } from '../../utils/url/change-query';
 
-const Header = ({ brand }) => {
+const Header = () => {
   const { dispatch } = useContext(AppDispatchContext);
-  const handleLogoClick = () => dispatch(handleCategoryClick(0, <MailArea />));
+  const handleLogoClick = () => {
+    dispatch(handleCategoryClick(0));
+    changeUrlWithoutRunning('');
+  };
   return (
     <S.Header>
       <S.Brand>

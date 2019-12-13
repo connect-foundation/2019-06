@@ -25,6 +25,7 @@ export const initialState = {
   message: '',
   allMailCheckInTools: false,
   categoryNoByName: null,
+  categoryNameByNo: null,
   snackbarOpen: false,
   snackbarVariant: 'error',
   snackbarContent: '',
@@ -65,14 +66,13 @@ export const handleCheckAllMails = (allMailCheckInTools, mails) => {
   };
 };
 
-export const handleCategoryClick = (no, view) => {
+export const handleCategoryClick = no => {
   return {
     type: CATEGORY_CLICK,
     payload: {
       category: no,
       page: 1,
       sort: 'datedesc',
-      view,
     },
   };
 };
@@ -82,11 +82,18 @@ export const handleCategoriesChange = ({ categories }) => {
     total[category.name] = category.no;
     return total;
   }, {});
+
+  const categoryNameByNo = categories.reduce((total, category) => {
+    total[category.no] = category.name;
+    return total;
+  }, {});
+
   return {
     type: CHANGE_CATEGORIES_DATA,
     payload: {
       categories,
       categoryNoByName,
+      categoryNameByNo,
     },
   };
 };
@@ -133,12 +140,11 @@ export const handlePageNumberClick = page => {
   };
 };
 
-export const handleMailClick = (mail, view) => {
+export const handleMailClick = mail => {
   return {
     type: MAIL_CLICK,
     payload: {
       mail,
-      view,
     },
   };
 };

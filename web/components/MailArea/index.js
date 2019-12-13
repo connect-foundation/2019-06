@@ -1,5 +1,9 @@
+/* eslint-disable no-return-assign */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable indent */
 /* eslint-disable camelcase */
 import React, { useContext, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import MailTemplate from './MailTemplate';
 import S from './styled';
 import Paging from './Paging';
@@ -12,13 +16,13 @@ import {
   handleSnackbarState,
 } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
-import getQueryByOptions from '../../utils/query';
 import Tools from './Tools';
-import ReadMail from '../ReadMail';
 import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
+import { changeUrlWithoutRunning, getQueryByOptions } from '../../utils/url/change-query';
+import HeadTitle from '../HeadTitle';
 
 const WASTEBASKET_MAILBOX = '휴지통';
 const ACTION = {
@@ -92,16 +96,19 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.READ]: ({ mail, dispatch, index }) => {
+  [ACTION.READ]: ({ mail, dispatch, index, urlQuery }) => {
     mail.index = index;
-    dispatch(handleMailClick(mail, <ReadMail />));
+    dispatch(handleMailClick(mail));
+    changeUrlWithoutRunning({ ...urlQuery, view: 'read', mailNo: mail.no });
   },
 };
 
 const MailArea = () => {
+  const router = useRouter();
+  const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const query = getQueryByOptions(state);
+  const query = getQueryByOptions(urlQuery).join('&');
   const URL = `/mail?${query}`;
 
   const fetchingMailData = useFetch(URL);
@@ -125,7 +132,7 @@ const MailArea = () => {
     return <Loading />;
   }
 
-  const { mails, paging, categoryNoByName } = state;
+  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
@@ -160,12 +167,15 @@ const MailArea = () => {
     const [action, index] = id.split('-');
     const mail = mails[index];
     if (Object.values(ACTION).includes(action)) {
-      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index });
+      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index, urlQuery });
     }
   };
 
+  const categoryName = category === 0 ? '전체메일함' : categoryNameByNo[category];
+  const title = `${categoryName} (${paging.totalCount}) - 다잇누`;
   return (
     <S.MailArea>
+      <HeadTitle title={title} />
       <S.ToolsWrapper>
         <Tools />
       </S.ToolsWrapper>
