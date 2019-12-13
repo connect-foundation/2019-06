@@ -2,7 +2,7 @@ import Router from 'next/router';
 
 const VIEW_STRING = {
   WRITE: 'write',
-  'WRITE-TO-ME': 'write-to-me',
+  WRITE_TO_ME: 'write-to-me',
   READ: 'read',
 };
 

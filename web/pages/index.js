@@ -7,19 +7,15 @@ import WriteMail from '../components/WriteMail';
 import ReadMail from '../components/ReadMail';
 
 const VIEW_COMPONENT = {
-  'WRITE-TO-ME': <WriteMailToMe />,
-  WRITE: <WriteMail />,
-  READ: <ReadMail />,
+  'write-to-me': <WriteMailToMe />,
+  write: <WriteMail />,
+  read: <ReadMail />,
 };
 
 const IndexPage = () => {
   const router = useRouter();
   const { query } = router;
-  let { view } = query;
-
-  if (view) {
-    view = view.toUpperCase();
-  }
+  const { view } = query;
   const renderView = VIEW_COMPONENT[view] || <MailArea />;
 
   return (
