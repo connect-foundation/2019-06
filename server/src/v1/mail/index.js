@@ -4,6 +4,7 @@ import controller from './controller';
 import mailBox from './box';
 import mailTemplate from './template';
 import attachment from './attachment';
+import search from './search';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -19,5 +20,6 @@ router.delete('/', controller.remove);
 router.use('/box', mailBox);
 router.use('/template', mailTemplate);
 router.use('/attachment', attachment);
+router.use('/search', search);
 
 export default router;

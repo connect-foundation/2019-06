@@ -88,4 +88,38 @@ const checkQuery = ({ category, page, sort }) => {
   return true;
 };
 
-export { validateNos, validateProps, checkQuery };
+const checkSearchQuery = ({ page, sort, from, to, content, subject }) => {
+  const errorFields = [];
+
+  if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
+    const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
+    errorFields.push(errorField);
+  }
+
+  if (sort && !SORTING_CRITERIA[sort]) {
+    const errorField = new ErrorField('sort', sort, '유효하지 않은 정렬기준 입니다.');
+    errorFields.push(errorField);
+  }
+
+  const lengthCheckTargets = {
+    from,
+    to,
+    content,
+    subject,
+  };
+
+  for (const [key, value] of Object.entries(lengthCheckTargets)) {
+    if (value && value.length > 100) {
+      const errorField = new ErrorField(key, value, `${key}의 길이는 100이상일수 없습니다.`);
+      errorFields.push(errorField);
+    }
+  }
+
+  if (errorFields.length > 0) {
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
+  }
+
+  return true;
+};
+
+export { validateNos, validateProps, checkQuery, checkSearchQuery };
