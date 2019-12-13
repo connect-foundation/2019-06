@@ -15,11 +15,6 @@ const Search = () => {
   const [toggle, setToggle] = useState(false);
   const ref = useRef(null);
 
-  const reverseToggle = event => {
-    event.preventDefault();
-    setToggle(!toggle);
-  };
-
   const handleOutsideClick = event => {
     if (ref.current && !ref.current.contains(event.target)) {
       setToggle(false);
@@ -27,12 +22,10 @@ const Search = () => {
   };
 
   const handleSearchClick = event => {
-    event.preventDefault();
     console.log('search click');
   };
 
   const handleDetailSearchClick = event => {
-    event.preventDefault();
     setToggle(false);
     console.log('search detail');
   };
@@ -47,12 +40,12 @@ const Search = () => {
 
   return (
     <S.Wrap ref={ref}>
-      <S.SearchBar onClick={handleSearchClick}>
-        <S.SearchButton>
+      <S.SearchBar>
+        <S.SearchButton onClick={handleSearchClick}>
           <SearchIcon />
         </S.SearchButton>
         <S.SearchInput placeholder="메일 검색" type="text" />
-        <S.SearchButton onClick={reverseToggle}>
+        <S.SearchButton onClick={() => setToggle(!toggle)}>
           {toggle ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </S.SearchButton>
       </S.SearchBar>
