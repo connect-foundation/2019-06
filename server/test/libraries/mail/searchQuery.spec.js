@@ -1,8 +1,50 @@
 /* eslint-disable no-undef */
 import should from 'should';
-import { checkSearchQuery } from '../../../src/libraries/validation/mail';
+import { checkSearchQuery, isValidYYYYMMDDFormat } from '../../../src/libraries/validation/mail';
 
-describe.only('checkSearchQuery...', () => {
+describe('checkSearchQuery...', () => {
+  describe('isValidYYYYMMDDFormat..', () => {
+    it('YYYY/MM/DD format이면 true를 반환한다.', () => {
+      isValidYYYYMMDDFormat('2019/11/11').should.be.true();
+      isValidYYYYMMDDFormat('2019/2/3').should.be.true();
+      isValidYYYYMMDDFormat('2019/3/31').should.be.true();
+      isValidYYYYMMDDFormat('2019/2/31').should.be.true();
+    });
+
+    it('YYYY/MM/DD format아니면 false를 반환한다.', () => {
+      isValidYYYYMMDDFormat('201911/11').should.be.false();
+      isValidYYYYMMDDFormat('20191111').should.be.false();
+      isValidYYYYMMDDFormat('2019/11/1/1').should.be.false();
+    });
+
+    it('year이 1000보다 작으면 false를 반환한다..', () => {
+      isValidYYYYMMDDFormat('999/11/11').should.be.false();
+      isValidYYYYMMDDFormat('111/11/11').should.be.false();
+      isValidYYYYMMDDFormat('333/11/11').should.be.false();
+    });
+
+    it('year이 9999보다 크면 false를 반환한다..', () => {
+      isValidYYYYMMDDFormat('10000/11/11').should.be.false();
+      isValidYYYYMMDDFormat('99999/11/11').should.be.false();
+      isValidYYYYMMDDFormat('11111/11/11').should.be.false();
+      isValidYYYYMMDDFormat('33333/11/11').should.be.false();
+    });
+
+    it('month가 12보다 크면 false를 반환한다..', () => {
+      isValidYYYYMMDDFormat('2019/13/11').should.be.false();
+      isValidYYYYMMDDFormat('2019/14/11').should.be.false();
+      isValidYYYYMMDDFormat('2019/15/11').should.be.false();
+      isValidYYYYMMDDFormat('2019/16/11').should.be.false();
+    });
+
+    it('day가 31보다 크면 false를 반환한다..', () => {
+      isValidYYYYMMDDFormat('2019/12/32').should.be.false();
+      isValidYYYYMMDDFormat('2019/12/33').should.be.false();
+      isValidYYYYMMDDFormat('2019/12/34').should.be.false();
+      isValidYYYYMMDDFormat('2019/12/35').should.be.false();
+    });
+  });
+
   it('from의 길이가 100이상이면 ', () => {
     const from = '*'.repeat(101);
     try {
@@ -88,18 +130,5 @@ describe.only('checkSearchQuery...', () => {
     checkSearchQuery({ from }).should.be.true();
     from = '*'.repeat(0);
     checkSearchQuery({ from }).should.be.true();
-  });
-
-  it('content의 길이가 100이하면 true를 반환한다. ', () => {
-    let content = '*'.repeat(12);
-    checkSearchQuery({ content }).should.be.true();
-    content = '*'.repeat(99);
-    checkSearchQuery({ content }).should.be.true();
-    content = '*'.repeat(100);
-    checkSearchQuery({ content }).should.be.true();
-    content = '*'.repeat(1);
-    checkSearchQuery({ content }).should.be.true();
-    content = '*'.repeat(0);
-    checkSearchQuery({ content }).should.be.true();
   });
 });
