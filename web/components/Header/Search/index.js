@@ -14,13 +14,13 @@ const inputLabels = ['제목', '내용', '보낸사람', '받는사람'];
 const Search = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchWrapRef = useRef(null);
-  const [toggle, setToggle] = useState(false);
+  const [detailToggleBtn, setDetailToggleBtn] = useState(false);
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     const handleOutsiderClick = event => {
       if (searchWrapRef.current && !searchWrapRef.current.contains(event.target)) {
-        setToggle(false);
+        setDetailToggleBtn(false);
       }
     };
 
@@ -28,11 +28,12 @@ const Search = () => {
   }, []);
 
   const handleSearchClick = () => {
+    console.log('handle search');
     changeUrlWithoutRunning({ view: 'search', search: searchText });
   };
 
   const handleDetailSearchClick = () => {
-    setToggle(false);
+    setDetailToggleBtn(false);
 
     const searchTexts = [];
 
@@ -69,11 +70,11 @@ const Search = () => {
           onChange={({ target: { value } }) => setSearchText(value)}
           onKeyPress={handleSearchInputKeyPress}
         />
-        <S.SearchButton onClick={() => setToggle(!toggle)}>
-          {toggle ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
+        <S.SearchButton onClick={() => setDetailToggleBtn(!detailToggleBtn)}>
+          {detailToggleBtn ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
         </S.SearchButton>
       </S.SearchBar>
-      <S.SearchDetailWrap visible={toggle}>
+      <S.SearchDetailWrap visible={detailToggleBtn}>
         {inputLabels.map((inputLabel, i) => (
           <SearchInputRow key={`searchInput-${i}`} label={inputLabel} dispatch={dispatch} />
         ))}
