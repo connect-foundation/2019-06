@@ -24,7 +24,7 @@ import errorHandler from '../../utils/error-handler';
 import { changeUrlWithoutRunning, getQueryByOptions } from '../../utils/url/change-query';
 import HeadTitle from '../HeadTitle';
 
-const WASTEBASKET_NAME = '휴지통';
+const WASTEBASKET_MAILBOX = '휴지통';
 const ACTION = {
   STAR: 'star',
   DELETE: 'delete',
@@ -133,7 +133,7 @@ const MailArea = () => {
   }
 
   const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
-  const wastebasketNo = categoryNoByName[WASTEBASKET_NAME];
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
 

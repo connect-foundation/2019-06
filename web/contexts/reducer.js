@@ -11,6 +11,7 @@ const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
 const SET_MAIL = 'SET_MAIL';
+const INIT_STATE = 'INIT_STATE';
 
 export const initialState = {
   categories: null,
@@ -175,10 +176,18 @@ export const setMail = mail => {
   };
 };
 
+export const initState = () => {
+  return {
+    type: INIT_STATE,
+  };
+};
+
 export const reducer = (state = initialState, action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case INIT_STATE:
+      return { ...initialState };
     case SET_SNACKBAR_STATE:
       return { ...state, ...payload };
     case INIT_CHECKER_IN_TOOLS:

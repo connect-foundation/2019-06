@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as S from './styled';
 import * as WM_S from '../styled';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_SUBJECT } from '../ContextProvider/reducer/action-type';
 
-const InputSubject = () => {
+const InputSubject = ({ defaultSubject }) => {
   const { subject } = useStateForWM();
   const dispatch = useDispatchForWM();
 
@@ -18,6 +18,13 @@ const InputSubject = () => {
   const focusHandler = _ => {
     setFlag(!flag);
   };
+
+  useEffect(() => {
+    dispatch({
+      type: UPDATE_SUBJECT,
+      payload: { subject: defaultSubject ? `Re: ${defaultSubject}` : '' },
+    });
+  }, []);
 
   return (
     <WM_S.RowWrapper>
