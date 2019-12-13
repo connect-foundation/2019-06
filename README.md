@@ -26,7 +26,7 @@
 
 MUA(Mail User Agent): 메일을 읽고 보낼 때 클라이언트가 이용하는 프로그램  
 MTA(Mail Transfer Agent): 메일을 SMTP를 통해 다른 메일 서버로 전달하는 프로그램  
-MDA(Mail Delivery Agent): POP3, IMTP를 통해 서버에 저장된 이메일을 사용자에게 전달하는 프로그램
+MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 사용자에게 전달하는 프로그램
 
 ## View
 
@@ -63,6 +63,7 @@ MDA(Mail Delivery Agent): POP3, IMTP를 통해 서버에 저장된 이메일을 
 ```sh
 cd web
 npm install
+npm run build
 npm start
 ```
 
