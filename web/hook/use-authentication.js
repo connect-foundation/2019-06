@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Router from 'next/router';
-
 import storage from '../utils/storage';
 
 const useAuthentication = () => {

@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import S from './styled';
-import './date.css';
 
 const DateInput = ({ label }) => {
   const [today] = useState(new Date());
