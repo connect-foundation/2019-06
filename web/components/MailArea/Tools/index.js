@@ -10,7 +10,7 @@ import {
   ListItemText,
   Button,
 } from '@material-ui/core';
-import { ArrowDownward, ArrowUpward, Email, Send, Delete, DeleteForever } from '@material-ui/icons';
+import { ArrowDownward, ArrowUpward, Email, Delete, DeleteForever } from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import S from './styled';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
@@ -19,13 +19,16 @@ import {
   handleSnackbarState,
   handleMailsChange,
   initCheckerInTools,
-  handlePageNumberClick,
-  setView,
+  setMailToReply,
 } from '../../../contexts/reducer';
-import { getQueryByOptions, changeUrlWithoutRunning } from '../../../utils/url/change-query';
+import {
+  getQueryByOptions,
+  changeUrlWithoutRunning,
+  changeView,
+  VIEW_STRING,
+} from '../../../utils/url/change-query';
 import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
-import WriteMail from '../../WriteMail';
 import sessionStorage from '../../../utils/storage';
 
 const WASTEBASKET_MAILBOX = '휴지통';
@@ -76,8 +79,8 @@ const loadNewMails = async (query, dispatch) => {
   }
   dispatch(handleMailsChange({ ...data }));
   const { mails, paging } = data;
-  if (mails.length === 0) {
-    dispatch(handlePageNumberClick(paging.page));
+  if (mails.length === 0 && paging.page !== 1) {
+    changeUrlWithoutRunning({ page: paging.page });
   }
 };
 
@@ -106,7 +109,8 @@ const buttons = [
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
         return;
       }
-      dispatch(setView(<WriteMail mailToReply={mail} />));
+      changeView(VIEW_STRING.WRITE);
+      dispatch(setMailToReply(mail));
     },
   },
   {
@@ -177,7 +181,7 @@ const Tools = () => {
   const { dispatch } = useContext(AppDispatchContext);
   const { allMailCheckInTools, mails, category, categoryNoByName } = state;
   const { query: urlQuery } = useRouter();
-  const query = getQueryByOptions(state);
+  const query = getQueryByOptions(urlQuery).join('&');
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
@@ -188,7 +192,9 @@ const Tools = () => {
     query,
     openSnackbar,
     wastebasketNo,
+    urlQuery,
   };
+
   const handleSortChange = ({ target: { value } }) =>
     changeUrlWithoutRunning({ ...urlQuery, sort: value });
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));

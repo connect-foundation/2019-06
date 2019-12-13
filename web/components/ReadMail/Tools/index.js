@@ -1,23 +1,23 @@
 import React, { useContext } from 'react';
+import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core';
 import {
   Email as EmailIcon,
-  Send as SendIcon,
   Delete as DeleteIcon,
   Loop as LoopIcon,
   DeleteForever as DeleteForeverIcon,
 } from '@material-ui/icons';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
-import { handleSnackbarState, setView } from '../../../contexts/reducer';
+import { handleSnackbarState, setMailToReply } from '../../../contexts/reducer';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import S from './styled';
-import MailArea from '../../MailArea';
 import mailRequest from '../../../utils/mail-request';
-import WriteMail from '../../WriteMail';
 import sessionStorage from '../../../utils/storage';
+import { changeView, VIEW_STRING, changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const WASTEBASKET_MAILBOX = '휴지통';
+
 const SNACKBAR_MSG = {
   ERROR: {
     DELETE: '메일 삭제에 실패하였습니다.',
@@ -53,7 +53,8 @@ const buttons = [
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
         return;
       }
-      dispatch(setView(<WriteMail mailToReply={mail} />));
+      changeView(VIEW_STRING.WRITE);
+      dispatch(setMailToReply(mail));
     },
   },
   {
@@ -61,14 +62,14 @@ const buttons = [
     name: '삭제',
     visible: true,
     icon: <DeleteIcon />,
-    handleClick: async ({ mail, openSnackbar, wastebasketNo, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, wastebasketNo, urlQuery }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
-      dispatch(setView(<MailArea />));
+      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
     },
   },
   {
@@ -76,14 +77,14 @@ const buttons = [
     name: '복구',
     visible: true,
     icon: <LoopIcon />,
-    handleClick: async ({ mail, openSnackbar, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, urlQuery }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.RECYLCE);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.RECYLCE);
-      dispatch(setView(<MailArea />));
+      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
     },
   },
   {
@@ -91,14 +92,14 @@ const buttons = [
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
     visible: true,
-    handleClick: async ({ mail, openSnackbar, dispatch }) => {
+    handleClick: async ({ mail, openSnackbar, urlQuery }) => {
       const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE_FOREVER);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
-      dispatch(setView(<MailArea />));
+      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
     },
   },
 ];
@@ -120,14 +121,16 @@ const swapButtonSetView = (categoryNo, wastebasketNo) => {
 };
 
 const Tools = () => {
+  const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const classes = useStyles();
   const { mail, categoryNoByName } = state;
+  const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
-  const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch };
+  const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch, urlQuery };
+
   swapButtonSetView(mail.category_no, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
@@ -137,7 +140,7 @@ const Tools = () => {
         color="primary"
         className={classes.button}
         startIcon={btn.icon}
-        onClick={btn.handleClick.bind(null, paramsToClick)}
+        onClick={() => btn.handleClick(paramsToClick)}
         key={btn.key}>
         {btn.name}
       </Button>
