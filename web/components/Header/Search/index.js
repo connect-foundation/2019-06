@@ -50,6 +50,12 @@ const Search = () => {
     handleSearchClick();
   };
 
+  const handleSearchInputKeyPress = event => {
+    if (event.key === 'Enter' && searchText !== '') {
+      handleSearchClick();
+    }
+  };
+
   return (
     <S.Wrap ref={searchWrapRef}>
       <S.SearchBar>
@@ -61,6 +67,7 @@ const Search = () => {
           type="text"
           value={searchText}
           onChange={({ target: { value } }) => setSearchText(value)}
+          onKeyPress={handleSearchInputKeyPress}
         />
         <S.SearchButton onClick={() => setToggle(!toggle)}>
           {toggle ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
