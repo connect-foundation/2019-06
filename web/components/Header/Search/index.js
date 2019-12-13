@@ -35,10 +35,12 @@ const Search = () => {
     setDetailToggleBtn(false);
 
     const searchTexts = [];
+    const searchQueries = {};
 
     for (const [key, value] of Object.entries(state)) {
       if (value) {
         searchTexts.push(`${key}:${value}`);
+        searchQueries[key] = value;
       }
     }
 
@@ -46,9 +48,9 @@ const Search = () => {
       return;
     }
 
-    const nextSearchText = searchTexts.join(' ');
-    setSearchText(nextSearchText);
-    changeUrlWithoutRunning({ view: 'search', search: nextSearchText });
+    console.log({ ...searchQueries });
+    setSearchText(searchTexts.join(' '));
+    changeUrlWithoutRunning({ view: 'search', ...searchQueries });
   };
 
   const handleSearchInputKeyPress = event => {
