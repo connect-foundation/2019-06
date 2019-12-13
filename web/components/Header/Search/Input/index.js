@@ -13,10 +13,10 @@ const SearchInputRow = ({ label, dispatch }) => {
   const actionType = getActionTypeByLabel[label];
 
   const handleInputBlur = ({ target: { value } }) => {
-    if (value && value != '') {
+    if (value && value !== '') {
       value = value.trim();
-      dispatch({ type: actionType, payload: value });
     }
+    dispatch({ type: actionType, payload: value });
   };
 
   return (

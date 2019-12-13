@@ -17,6 +17,7 @@ const Search = () => {
   const [detailToggleBtn, setDetailToggleBtn] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  console.log(state);
   useEffect(() => {
     const handleOutsiderClick = event => {
       if (searchWrapRef.current && !searchWrapRef.current.contains(event.target)) {
