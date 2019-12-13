@@ -3,8 +3,8 @@ export const initialState = {
   content: '',
   from: '',
   to: '',
-  startDate: '',
-  endDate: '',
+  startDate: null,
+  endDate: null,
 };
 
 export const BLUR_EVENTS = {
