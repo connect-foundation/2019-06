@@ -29,21 +29,16 @@ import {
   Delete as DeleteIcon,
   ImportContacts,
 } from '@material-ui/icons';
+import { useRouter } from 'next/router';
 import S from './styled';
-import MailArea from '../MailArea';
-import WriteMail from '../WriteMail';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import {
-  handleCategoryClick,
-  setView,
-  handleCategoriesChange,
-  handleSnackbarState,
-} from '../../contexts/reducer';
+import { handleCategoriesChange, handleSnackbarState } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
-import WriteMailToMe from '../WriteMailToMe';
+import { changeView, VIEW_STRING, changeCategory } from '../../utils/url/change-query';
+import HeadTitle from '../HeadTitle';
 
 const URL = '/mail/categories';
 const ENTIRE_MAILBOX = '전체메일함';
@@ -71,12 +66,14 @@ const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const Aside = () => {
   const classes = useStyles();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
-  const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDispatchContext);
   const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [dialogState, setDialogState] = useState(getDialogData(0));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
+  const router = useRouter();
+  const queryCategory = Number(router.query.category) || 0;
 
   const fetchingCategories = useFetch(URL);
 
@@ -136,13 +133,13 @@ const Aside = () => {
   const customCategories = categories.filter(category => !category.is_default);
 
   const defaultCards = defaultCategories.map((category, idx) => {
-    const selected = state.category === category.no;
+    const selected = queryCategory === category.no;
     return (
       <ListItem
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         key={idx}
-        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        onClick={() => changeCategory(category.no)}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
         <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
       </ListItem>
@@ -150,14 +147,14 @@ const Aside = () => {
   });
 
   const customCategoryCards = customCategories.map((category, idx) => {
-    const selected = state.category === category.no;
+    const selected = queryCategory === category.no;
     return (
       <ListItem
         key={idx}
         className={classes.nested}
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
-        onClick={() => dispatch(handleCategoryClick(category.no, <MailArea />))}>
+        onClick={() => changeCategory(category.no)}>
         <ListItemIcon>
           <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>
@@ -180,10 +177,12 @@ const Aside = () => {
 
   return (
     <S.Aside>
+      <HeadTitle title={''} />
+
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
-          <S.WrtieButton onClick={() => dispatch(setView(<WriteMail />))}>편지쓰기</S.WrtieButton>
-          <S.WrtieButton onClick={() => dispatch(setView(<WriteMailToMe />))}>
+          <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE)}>메일쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => changeView(VIEW_STRING['WRITE-TO-ME'])}>
             내게쓰기
           </S.WrtieButton>
         </ListItem>

@@ -7,6 +7,7 @@ import Tools from '../WriteMail/Tools';
 import { WriteMailContextProvider } from '../WriteMail/ContextProvider';
 import DropZone from '../WriteMail/DropZone';
 import sessionStorage from '../../utils/storage';
+import HeadTitle from '../HeadTitle';
 
 const InputBody = dynamic(import('../WriteMail/InputBody'), { ssr: false });
 
@@ -15,6 +16,7 @@ const WriteMailToMe = () => {
 
   return (
     <WriteMailContextProvider>
+      <HeadTitle title="내게쓰기" />
       <S.WriteArea>
         <Tools
           writeToMe={!!sessionStorage.getUser().email}

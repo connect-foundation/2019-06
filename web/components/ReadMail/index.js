@@ -12,6 +12,7 @@ import FileList from './FileList';
 import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import Tools from './Tools';
+import HeadTitle from '../HeadTitle';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -83,6 +84,7 @@ const ReadMail = () => {
 
   return (
     <S.Container>
+      <HeadTitle title={subject || '제목없음'} />
       <Tools />
       <S.ReadArea>
         <S.TitleView>
