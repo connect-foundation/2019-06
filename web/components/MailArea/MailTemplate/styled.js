@@ -35,7 +35,7 @@ const DeleteForeverButton = styled.div`
   margin-right: 10px;
 `;
 
-const FromOrTo = styled.div`
+const AddressText = styled.div`
   flex: 0 0 200px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -51,7 +51,7 @@ const Selectable = styled.div`
   flex: 1 1;
 `;
 
-const Title = styled.div`
+const SubjectText = styled.div`
   flex: 1 1;
   margin-left: 15px;
   text-overflow: ellipsis;
@@ -64,14 +64,14 @@ const Title = styled.div`
   }
 `;
 
-const Date = styled.div`
+const DateText = styled.div`
   display: flex;
   font-weight: 600;
   margin: 0 10px;
   color: grey;
 `;
 
-const Text = styled.span`
+const ReservationText = styled.span`
   width: 35px;
   color: #0066ff;
   margin-left: 15px;
@@ -88,10 +88,10 @@ export {
   ReadSign,
   DeleteForeverButton,
   DeleteButton,
-  FromOrTo,
+  AddressText,
   Selectable,
-  Title,
-  Date,
-  Text,
+  SubjectText,
+  DateText,
+  ReservationText,
   CategoryName,
 };
