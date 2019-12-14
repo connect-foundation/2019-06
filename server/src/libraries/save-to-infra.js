@@ -5,6 +5,7 @@ import ERROR_CODE from './exception/error-code';
 import U from './mail-util';
 
 const { DEFAULT_DOMAIN_NAME, IMAP_PORT } = process.env;
+const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
 const PREFIX = '';
 
 const getImap = ({ email, password }) => {
@@ -22,7 +23,6 @@ const connectImap = ({ email, password }, callback) => {
 
   imap.once('ready', () => {
     callback(imap);
-    imap.end();
   });
 
   imap.once('error', err => {
@@ -39,6 +39,63 @@ const getRawBoxes = imap =>
       resolve(Object.keys(box));
     });
   });
+
+export const getImapMessageIds = ({ user }) => {
+  const { email, password } = user;
+  const messages = {};
+  connectImap({ email, password }, async imap => {
+    const imapBoxes = await getRawBoxes(imap);
+    const gatheringMessageIds = (boxes, i) =>
+      new Promise((resolve, reject) => {
+        if (boxes.length === i) {
+          return resolve(messages);
+        }
+
+        imap.openBox(boxes[i], true, (openErr, box) => {
+          if (openErr) reject(openErr);
+          messages[boxes[i]] = [];
+          if (box.messages.total === 0) {
+            return resolve(gatheringMessageIds(boxes, i + 1));
+          }
+          const f = imap.seq.fetch('1:*', {
+            bodies: 'HEADER.FIELDS (MESSAGE-ID)',
+            struct: true,
+          });
+          f.on('message', msg => {
+            msg.on('body', stream => {
+              let buffer = '';
+              stream.on('data', chunk => {
+                buffer += chunk.toString('utf8');
+              });
+              stream.once('end', () => {
+                const messageIdValue = buffer
+                  .trim()
+                  .split(':')[1]
+                  .trim();
+                const realId = EXP_EXTRACT_RECEIVER.exec(messageIdValue);
+                if (realId) {
+                  messages[boxes[i]].push(realId[0].slice(1, -1));
+                } else {
+                  messages[boxes[i]].push(messageIdValue);
+                }
+              });
+            });
+          });
+          f.once('error', fetchErr => {
+            console.log(`Fetch error: ${fetchErr}`);
+            reject(fetchErr);
+          });
+          f.once('end', () => {
+            return resolve(gatheringMessageIds(boxes, i + 1));
+          });
+        });
+      });
+    const messageIds = await gatheringMessageIds(imapBoxes, 0);
+    console.log(messageIds);
+    console.log(imapBoxes);
+    imap.end();
+  });
+};
 
 export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
   if (originBoxName === '받은메일함') {
@@ -64,6 +121,7 @@ export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => 
             );
             throw new ErrorResponse(ERROR_CODE.FAIL_TO_MOVE_MAIL, errorField);
           }
+          imap.end();
         });
       });
     });
@@ -72,7 +130,13 @@ export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => 
 
 export const saveToMailbox = ({ user, msg, mailboxName }) => {
   connectImap(user, imap => {
-    imap.append(msg.toString(), { mailbox: PREFIX + mailboxName });
+    imap.append(msg.toString(), { mailbox: PREFIX + mailboxName }, err => {
+      if (err) {
+        const errorField = new ErrorField('mailBox', mailboxName, '존재하지 않는 메일함입니다');
+        throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
+      }
+      imap.end();
+    });
   });
 };
 
@@ -83,6 +147,7 @@ export const addMailBox = ({ user, name }) => {
         const errorField = new ErrorField('mailBox', name, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
+      imap.end();
     });
   });
 };
@@ -94,6 +159,7 @@ export const renameMailBox = ({ user, oldName, newName }) => {
         const errorField = new ErrorField('mailBox', oldName, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
+      imap.end();
     });
   });
 };
@@ -105,6 +171,7 @@ export const deleteMailBox = ({ user, name }) => {
         const errorField = new ErrorField('mailBox', name, '존재하지 않는 메일함입니다');
         throw new ErrorResponse(ERROR_CODE.MAILBOX_NOT_FOUND, errorField);
       }
+      imap.end();
     });
   });
 };
