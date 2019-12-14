@@ -73,7 +73,7 @@ const getArrowIcon = sortValue =>
   );
 
 const loadNewMails = async (urlQuery, dispatch) => {
-  const query = getQueryByOptions(urlQuery).join('&');
+  const query = getQueryByOptions(urlQuery);
   const { isError, data } = await mailRequest.get(`/mail/?${query}`);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
@@ -208,7 +208,7 @@ const Tools = () => {
         className={classes.button}
         startIcon={btn.icon}
         disabled={!selectedMails.length}
-        onClick={btn.handleClick.bind(null, paramsToClick)}
+        onClick={() => btn.handleClick(paramsToClick)}
         key={btn.key}>
         {btn.name}
       </Button>

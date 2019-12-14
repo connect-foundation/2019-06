@@ -109,7 +109,7 @@ const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { view } = urlQuery;
-  const query = getQueryByOptions(urlQuery).join('&');
+  const query = getQueryByOptions(urlQuery);
   const isSearch = view === 'search';
   const URL = isSearch ? `/mail/search?${query}` : `/mail?${query}`;
   const fetchingMailData = useFetch(URL);
