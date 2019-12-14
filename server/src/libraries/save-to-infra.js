@@ -32,6 +32,14 @@ const connectImap = ({ email, password }, callback) => {
   imap.connect();
 };
 
+const getRawBoxes = imap =>
+  new Promise((resolve, reject) => {
+    imap.getBoxes((err, box) => {
+      if (err) reject(err);
+      resolve(Object.keys(box));
+    });
+  });
+
 export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
   if (originBoxName === '받은메일함') {
     originBoxName = 'INBOX';
