@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {
+  Menu,
   MenuItem,
   FormControl,
   FormControlLabel,
@@ -10,7 +11,14 @@ import {
   ListItemText,
   Button,
 } from '@material-ui/core';
-import { ArrowDownward, ArrowUpward, Email, Delete, DeleteForever } from '@material-ui/icons';
+import {
+  ArrowDownward as ArrowDownwardIcon,
+  ArrowUpward as ArrowUpwardIcon,
+  Email as EmailIcon,
+  Delete as DeleteIcon,
+  DeleteForever as DeleteForeverIcon,
+  Archive as ArchiveIcon,
+} from '@material-ui/icons';
 import { useRouter } from 'next/router';
 import S from './styled';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
@@ -35,14 +43,16 @@ const WASTEBASKET_MAILBOX = '휴지통';
 
 const SNACKBAR_MSG = {
   ERROR: {
-    DELETE: '메일 삭제를 실패하였습니다.',
+    DELETE: '메일 삭제에 실패하였습니다.',
     DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
     ONLY_ONE: '1개의 메일을 선택해주세요.',
     REPLY_SELF: '자신의 메일에는 답장할 수 없습니다.',
+    MOVE: '메일 이동에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: count => `${count}개의 메일을 삭제하였습니다.`,
     DELETE_FOREVER: count => `${count}개의 메일을 영구 삭제하였습니다.`,
+    MOVE: (count, name) => `${count}개 메일을 [${name}]으로 이동하였습니다.`,
   },
 };
 
@@ -67,9 +77,9 @@ const SORTING_CRITERIA = [
 
 const getArrowIcon = sortValue =>
   sortValue.includes('asc') ? (
-    <ArrowUpward fontSize={'small'} />
+    <ArrowUpwardIcon fontSize={'small'} />
   ) : (
-    <ArrowDownward fontSize={'small'} />
+    <ArrowDownwardIcon fontSize={'small'} />
   );
 
 const loadNewMails = async (urlQuery, dispatch) => {
@@ -100,7 +110,7 @@ const buttons = [
     key: 'reply',
     name: '답장',
     visible: true,
-    icon: <Email />,
+    icon: <EmailIcon />,
     handleClick: async ({ selectedMails, dispatch, openSnackbar }) => {
       if (selectedMails.length !== 1) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.ONLY_ONE);
@@ -119,7 +129,7 @@ const buttons = [
     key: 'delete',
     name: '삭제',
     visible: true,
-    icon: <Delete />,
+    icon: <DeleteIcon />,
     handleClick: async ({ selectedMails, dispatch, wastebasketNo, openSnackbar, urlQuery }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
@@ -141,7 +151,7 @@ const buttons = [
     key: 'delete_forever',
     name: '영구삭제',
     visible: true,
-    icon: <DeleteForever />,
+    icon: <DeleteForeverIcon />,
     handleClick: async ({ selectedMails, dispatch, openSnackbar, urlQuery }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
@@ -181,7 +191,15 @@ const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { allMailCheckInTools, mails, category, categoryNoByName } = state;
+  const [categoryMenu, setCategoryMenu] = useState(null);
+  const {
+    allMailCheckInTools,
+    mails,
+    category,
+    categoryNoByName,
+    categories,
+    categoryNameByNo,
+  } = state;
   const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
@@ -198,6 +216,28 @@ const Tools = () => {
   const handleSortChange = ({ target: { value } }) =>
     changeUrlWithoutRunning({ ...urlQuery, sort: value });
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
+  const handleCategoryMenuItemClick = async e => {
+    try {
+      const categoryNoToMove = e.currentTarget.value;
+      const nos = selectedMails.map(({ no }) => no);
+      const { isError } = await mailRequest.update(nos, { category_no: categoryNoToMove });
+      if (isError) {
+        throw SNACKBAR_MSG.ERROR.MOVE;
+      }
+      await loadNewMails(urlQuery, dispatch);
+      openSnackbar(
+        SNACKBAR_VARIANT.SUCCESS,
+        SNACKBAR_MSG.SUCCESS.MOVE(selectedMails.length, categoryNameByNo[categoryNoToMove]),
+      );
+    } catch (errorMessage) {
+      openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
+      dispatch(handleCheckAllMails(true, selectedMails));
+    } finally {
+      dispatch(initCheckerInTools());
+      setCategoryMenu(null);
+    }
+  };
+
   swapButtonSetView(category, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
@@ -217,8 +257,14 @@ const Tools = () => {
     );
   });
 
+  const categoryItems = categories.map(ctgr => (
+    <MenuItem key={ctgr.no} value={ctgr.no} onClick={handleCategoryMenuItemClick}>
+      {ctgr.name}
+    </MenuItem>
+  ));
+
   return (
-    <>
+    <S.Container>
       <S.FlexLeft>
         <S.CheckBox>
           <FormControlLabel
@@ -232,20 +278,34 @@ const Tools = () => {
             }
           />
         </S.CheckBox>
-        <S.ButtonGroup>{buttonSet}</S.ButtonGroup>
+        <S.ButtonGroup>
+          {buttonSet}
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<ArchiveIcon />}
+            disabled={!selectedMails.length}
+            onClick={e => setCategoryMenu(e.currentTarget)}>
+            이동
+          </Button>
+          <Menu
+            anchorEl={categoryMenu}
+            keepMounted
+            open={Boolean(categoryMenu)}
+            onClose={() => setCategoryMenu(null)}>
+            {categoryItems}
+          </Menu>
+        </S.ButtonGroup>
       </S.FlexLeft>
-      <S.Sort>
+      <S.SortSelector>
         <FormControl className={classes.formControl}>
-          <Select
-            value={urlQuery.sort || 'datedesc'}
-            onChange={handleSortChange}
-            displayEmpty
-            className={classes.selectEmpty}>
+          <Select value={urlQuery.sort || 'datedesc'} onChange={handleSortChange} displayEmpty>
             {sortItems}
           </Select>
         </FormControl>
-      </S.Sort>
-    </>
+      </S.SortSelector>
+    </S.Container>
   );
 };
 
