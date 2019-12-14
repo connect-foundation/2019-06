@@ -129,11 +129,11 @@ const MailArea = () => {
     return errorHandler(fetchingMailData.error);
   }
 
-  if (!state.mails) {
+  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
+  if (!categoryNoByName || !mails) {
     return <Loading />;
   }
 
-  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
@@ -173,7 +173,7 @@ const MailArea = () => {
   };
 
   const categoryName = category === 0 ? '전체메일함' : categoryNameByNo[category];
-  const title = `${categoryName} (${paging.totalCount}) - 다잇누`;
+  const title = `${categoryName} (${paging.page})`;
   return (
     <S.MailArea>
       <HeadTitle title={title} />

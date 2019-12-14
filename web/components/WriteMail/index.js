@@ -7,8 +7,7 @@ import Tools from './Tools';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
 import HeadTitle from '../HeadTitle';
-import { AppStateContext } from '../../contexts';
-import { AppDispatchContext } from '../../contexts';
+import { AppStateContext, AppDispatchContext } from '../../contexts';
 import { setMailToReply } from '../../contexts/reducer';
 
 const InputBody = dynamic(import('./InputBody'), { ssr: false });
