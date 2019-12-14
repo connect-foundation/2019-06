@@ -18,19 +18,20 @@ const getImap = ({ email, password }) => {
   });
 };
 
-const connectImap = ({ email, password }, callback) => {
-  const imap = getImap({ email, password });
+const connectImap = ({ email, password }, callback) =>
+  new Promise((resolve, reject) => {
+    const imap = getImap({ email, password });
 
-  imap.once('ready', () => {
-    callback(imap);
+    imap.once('ready', () => {
+      resolve(callback(imap));
+    });
+
+    imap.once('error', err => {
+      reject(err);
+    });
+
+    imap.connect();
   });
-
-  imap.once('error', err => {
-    throw err;
-  });
-
-  imap.connect();
-};
 
 const getRawBoxes = imap =>
   new Promise((resolve, reject) => {
@@ -40,10 +41,10 @@ const getRawBoxes = imap =>
     });
   });
 
-export const getImapMessageIds = ({ user }) => {
+export const getImapMessageIds = async ({ user }) => {
   const { email, password } = user;
   const messages = {};
-  connectImap({ email, password }, async imap => {
+  await connectImap({ email, password }, async imap => {
     const imapBoxes = await getRawBoxes(imap);
     const gatheringMessageIds = (boxes, i) =>
       new Promise((resolve, reject) => {
@@ -90,11 +91,10 @@ export const getImapMessageIds = ({ user }) => {
           });
         });
       });
-    const messageIds = await gatheringMessageIds(imapBoxes, 0);
-    console.log(messageIds);
-    console.log(imapBoxes);
+    await gatheringMessageIds(imapBoxes, 0);
     imap.end();
   });
+  return messages;
 };
 
 export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
