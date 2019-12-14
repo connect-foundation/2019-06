@@ -144,6 +144,27 @@ const model = (sequelize, DataTypes) => {
     );
   };
 
+  Mail.findAllMessasgeIds = (userNo, messsageIds, category_name) => {
+    return Mail.findAll({
+      where: {
+        owner: userNo,
+        message_id: {
+          [Op.or]: messsageIds,
+        },
+      },
+      include: [
+        {
+          model: sequelize.models.Category,
+          where: {
+            user_no: userNo,
+            name: category_name,
+          },
+        },
+      ],
+      raw: true,
+    });
+  };
+
   Mail.deleteByNoAndUserNo = (no, userNo) => {
     return Mail.destroy({
       where: {
