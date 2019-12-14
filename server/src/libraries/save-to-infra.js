@@ -41,6 +41,19 @@ const getRawBoxes = imap =>
     });
   });
 
+const insertMesssageId = (mailBox, value) => {
+  const messageIdValue = value
+    .trim()
+    .split(':')[1]
+    .trim();
+  const realId = EXP_EXTRACT_RECEIVER.exec(messageIdValue);
+  if (realId) {
+    mailBox.push(realId[0].slice(1, -1));
+  } else {
+    mailBox.push(messageIdValue);
+  }
+};
+
 export const getImapMessageIds = async ({ user }) => {
   const { email, password } = user;
   const messages = {};
@@ -64,26 +77,16 @@ export const getImapMessageIds = async ({ user }) => {
           });
           f.on('message', msg => {
             msg.on('body', stream => {
-              let buffer = '';
+              let messageId = '';
               stream.on('data', chunk => {
-                buffer += chunk.toString('utf8');
+                messageId += chunk.toString('utf8');
               });
               stream.once('end', () => {
-                const messageIdValue = buffer
-                  .trim()
-                  .split(':')[1]
-                  .trim();
-                const realId = EXP_EXTRACT_RECEIVER.exec(messageIdValue);
-                if (realId) {
-                  messages[boxes[i]].push(realId[0].slice(1, -1));
-                } else {
-                  messages[boxes[i]].push(messageIdValue);
-                }
+                insertMesssageId(messages[boxes[i]], messageId);
               });
             });
           });
           f.once('error', fetchErr => {
-            console.log(`Fetch error: ${fetchErr}`);
             reject(fetchErr);
           });
           f.once('end', () => {
