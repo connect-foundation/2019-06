@@ -177,9 +177,7 @@ const MailArea = () => {
   return (
     <S.MailArea>
       <HeadTitle title={title} />
-      <S.ToolsWrapper>
-        <Tools />
-      </S.ToolsWrapper>
+      <Tools />
       <S.MailListArea onClick={handleMailListAreaClick}>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />
