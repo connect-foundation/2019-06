@@ -1,12 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useRouter } from 'next/router';
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, MenuItem, Menu } from '@material-ui/core';
 import {
   Email as EmailIcon,
   Delete as DeleteIcon,
   Loop as LoopIcon,
   DeleteForever as DeleteForeverIcon,
+  Archive as ArchiveIcon,
 } from '@material-ui/icons';
 import { AppDispatchContext, AppStateContext } from '../../../contexts';
 import { handleSnackbarState, setMailToReply } from '../../../contexts/reducer';
@@ -24,11 +25,13 @@ const SNACKBAR_MSG = {
     RECYLCE: '메일 복구에 실패하였습니다.',
     DELETE_FOREVER: '메일 영구 삭제에 실패하였습니다.',
     REPLY_SELF: '자신의 메일에는 답장할 수 없습니다.',
+    MOVE: '메일 이동에 실패하였습니다.',
   },
   SUCCESS: {
     DELETE: '메일을 삭제하였습니다.',
     RECYLCE: '메일을 복구하였습니다.',
     DELETE_FOREVER: '메일을 영구 삭제하였습니다.',
+    MOVE: name => `메일을 [${name}]으로 이동하였습니다.`,
   },
 };
 
@@ -124,12 +127,27 @@ const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { mail, categoryNoByName } = state;
+  const [categoryMenu, setCategoryMenu] = useState(null);
+  const { mail, categoryNoByName, categoryNameByNo, categories } = state;
   const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch, urlQuery };
+
+  const handleCategoryMenuItemClick = async e => {
+    const categoryNoToMove = e.currentTarget.value;
+    const { isError } = await mailRequest.update(mail.no, { category_no: categoryNoToMove });
+    if (isError) {
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.MOVE);
+      return;
+    }
+    openSnackbar(
+      SNACKBAR_VARIANT.SUCCESS,
+      SNACKBAR_MSG.SUCCESS.MOVE(categoryNameByNo[categoryNoToMove]),
+    );
+    changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
+  };
 
   swapButtonSetView(mail.category_no, wastebasketNo);
 
@@ -149,7 +167,32 @@ const Tools = () => {
     );
   });
 
-  return <S.Container>{buttonSet}</S.Container>;
+  const categoryItems = categories.map(ctgr => (
+    <MenuItem key={ctgr.no} value={ctgr.no} onClick={handleCategoryMenuItemClick}>
+      {ctgr.name}
+    </MenuItem>
+  ));
+
+  return (
+    <S.Container>
+      {buttonSet}
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
+        startIcon={<ArchiveIcon />}
+        onClick={e => setCategoryMenu(e.currentTarget)}>
+        이동
+      </Button>
+      <Menu
+        anchorEl={categoryMenu}
+        keepMounted
+        open={Boolean(categoryMenu)}
+        onClose={() => setCategoryMenu(null)}>
+        {categoryItems}
+      </Menu>
+    </S.Container>
+  );
 };
 
 export default Tools;
