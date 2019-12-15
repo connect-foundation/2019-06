@@ -6,7 +6,6 @@ import ErrorResponse from '../exception/error-response';
 const { MAX_SAFE_INTEGER } = Number;
 const PAGE_NUMBER_RANGE = { min: 1, max: MAX_SAFE_INTEGER };
 const CATEGORY_NUMBER_RANGE = { min: 0, max: MAX_SAFE_INTEGER };
-const DATE_RANGE = { min: 10000000, max: 99991231 };
 
 const SORTING_CRITERIA = {
   datedesc: true,
@@ -112,7 +111,16 @@ const isValidYYYYMMDDFormat = format => {
   return true;
 };
 
-const checkSearchQuery = ({ page, sort, from, to, content, subject, startDate, endDate }) => {
+const checkAdvancedSearchQuery = ({
+  page,
+  sort,
+  from,
+  to,
+  content,
+  subject,
+  startDate,
+  endDate,
+}) => {
   const errorFields = [];
 
   if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
@@ -158,4 +166,4 @@ const checkSearchQuery = ({ page, sort, from, to, content, subject, startDate, e
   return true;
 };
 
-export { validateNos, validateProps, checkQuery, checkSearchQuery, isValidYYYYMMDDFormat };
+export { validateNos, validateProps, checkQuery, checkAdvancedSearchQuery, isValidYYYYMMDDFormat };
