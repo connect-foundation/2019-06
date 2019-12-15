@@ -160,6 +160,7 @@ const model = (sequelize, DataTypes) => {
 
   Mail.findAllMessasgeIds = (userNo, messsageIds, category_name) => {
     return Mail.findAll({
+      attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
       where: {
         owner: userNo,
         message_id: {
@@ -168,6 +169,7 @@ const model = (sequelize, DataTypes) => {
       },
       include: [
         {
+          attributes: [],
           model: sequelize.models.Category,
           where: {
             user_no: userNo,
