@@ -58,11 +58,11 @@ const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
       if (mailboxName !== dbMails[messageIds[i]]['Category.name']) {
         if (mailboxName !== '휴지통') {
           updateMethods.push(
-            DB.Mail.updateByMessageId(messageIds[i], { category_no: categories[mailboxName] }),
+            DB.Mail.updateByMessageId(4, messageIds[i], { category_no: categories[mailboxName] }),
           );
         } else {
           updateMethods.push(
-            DB.Mail.updateByMessageId(messageIds[i], {
+            DB.Mail.updateByMessageId(4, messageIds[i], {
               category_no: categories[mailboxName],
               prev_category_no: dbMails[messageIds[i]].category_no,
             }),

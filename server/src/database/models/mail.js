@@ -124,14 +124,15 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Mail.updateByMessageId = (messageId, props) => {
+  Mail.updateByMessageId = (owner, message_id, props) => {
     return Mail.update(
       {
         ...props,
       },
       {
         where: {
-          message_id: messageId,
+          message_id,
+          owner,
         },
       },
     );
@@ -175,6 +176,15 @@ const model = (sequelize, DataTypes) => {
         },
       ],
       raw: true,
+    });
+  };
+
+  Mail.deleteByMesssasgeId = (owner, message_id) => {
+    return Mail.destroy({
+      where: {
+        message_id,
+        owner,
+      },
     });
   };
 
