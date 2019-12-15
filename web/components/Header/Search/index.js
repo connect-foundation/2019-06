@@ -29,7 +29,7 @@ const Search = () => {
   }, []);
 
   const handleSearchClick = () => {
-    changeUrlWithoutRunning({ view: 'search', search: searchText });
+    changeUrlWithoutRunning({ view: 'search', searchWord: searchText, searchLevel: 'general' });
   };
 
   const handleDetailSearchClick = () => {
@@ -55,7 +55,7 @@ const Search = () => {
     }
 
     setSearchText(searchTexts.join(' '));
-    changeUrlWithoutRunning({ view: 'search', ...searchQueries });
+    changeUrlWithoutRunning({ view: 'search', searchLevel: 'advanced', ...searchQueries });
   };
 
   const handleSearchInputKeyPress = event => {

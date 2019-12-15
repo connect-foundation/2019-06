@@ -27,6 +27,8 @@ const getQueryByOptions = ({
   endDate,
   from,
   to,
+  searchLevel,
+  searchWord,
 }) => {
   const queries = [];
   const setQueries = (key, value) => {
@@ -38,6 +40,8 @@ const getQueryByOptions = ({
   setQueries('category', category);
   setQueries('page', page);
   setQueries('view', view);
+  setQueries('searchLevel', searchLevel);
+  setQueries('searchWord', searchWord);
   setQueries('mailNo', mailNo);
   setQueries('from', from);
   setQueries('to', to);
@@ -62,6 +66,7 @@ const getQueryByOptions = ({
  * @param {String} options.to
  * @param {String} options.startDate
  * @param {String} options.endDate
+ * @param {String} options.searchLevel
  * @param {String} path
  */
 const changeUrlWithoutRunning = (options, path = '/') => {
