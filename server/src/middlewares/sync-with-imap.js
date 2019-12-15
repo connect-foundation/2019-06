@@ -14,10 +14,9 @@ const getDbMails = async imapMessageIds => {
       imapMessageIds[mailBoxNames[i]],
       mailBoxNames[i],
     );
-    dbMails[mailBoxNames[i]] = {};
     userMails.forEach(userMail => {
-      dbMails[mailBoxNames[i]][userMail.message_id] = userMail;
-      delete dbMails[mailBoxNames[i]][userMail.message_id].message_id;
+      dbMails[userMail.message_id] = userMail;
+      delete dbMails[userMail.message_id].message_id;
     });
   }
   return dbMails;
@@ -29,6 +28,11 @@ const syncWithImap = async (req, res, next) => {
   });
   const categories = await DB.Category.findAllByUserNo(4);
   const dbMails = await getDbMails(imapMessageIds);
+
+  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
+    messageIds.forEach(messageId => {});
+  }
+
   res.send({ imapMessageIds, dbMails, categories });
 };
 
