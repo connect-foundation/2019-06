@@ -2,18 +2,9 @@ import Router from 'next/router';
 
 const VIEW_STRING = {
   WRITE: 'write',
-  'WRITE-TO-ME': 'write-to-me',
+  WRITE_TO_ME: 'write-to-me',
   READ: 'read',
   SEARCH: 'search',
-};
-
-const SORTING_CRITERIA = {
-  datedesc: 'sort=datedesc',
-  dateasc: 'sort=dateasc',
-  subjectdesc: 'sort=subjectdesc',
-  subjectasc: 'sort=subjectasc',
-  fromdesc: 'sort=fromdesc',
-  fromasc: 'sort=fromasc',
 };
 
 const changeView = view => {
@@ -38,47 +29,24 @@ const getQueryByOptions = ({
   to,
 }) => {
   const queries = [];
-
-  if (category > 0) {
-    queries.push(`category=${category}`);
-  }
-
-  if (page > 0) {
-    queries.push(`page=${page}`);
-  }
-
-  if (view) {
-    queries.push(`view=${view}`);
-  }
-
-  if (view === VIEW_STRING.READ) {
-    queries.push(`mailNo=${mailNo}`);
-  } else if (view === 'search') {
-    if (from) {
-      queries.push(`from=${from}`);
+  const setQueries = (key, value) => {
+    if (value) {
+      queries.push(`${key}=${value}`);
     }
-    if (to) {
-      queries.push(`to=${to}`);
-    }
-    if (subject) {
-      queries.push(`subject=${subject}`);
-    }
-    if (content) {
-      queries.push(`content=${content}`);
-    }
-    if (startDate) {
-      queries.push(`startDate=${startDate}`);
-    }
-    if (endDate) {
-      queries.push(`endDate=${endDate}`);
-    }
-  }
+  };
 
-  if (SORTING_CRITERIA[sort]) {
-    queries.push(SORTING_CRITERIA[sort]);
-  }
-
-  return queries;
+  setQueries('category', category);
+  setQueries('page', page);
+  setQueries('view', view);
+  setQueries('mailNo', mailNo);
+  setQueries('from', from);
+  setQueries('to', to);
+  setQueries('subject', subject);
+  setQueries('content', content);
+  setQueries('startDate', startDate);
+  setQueries('endDate', endDate);
+  setQueries('sort', sort);
+  return queries.join('&');
 };
 
 /**
@@ -102,9 +70,8 @@ const changeUrlWithoutRunning = (options, path = '/') => {
     return Router.push(path, path, { shallow: true });
   }
 
-  const nextUrl = queries.join('&');
-  const href = `${path}?${nextUrl}`;
-  const as = `/?${nextUrl}`;
+  const href = `${path}?${queries}`;
+  const as = `/?${queries}`;
   return Router.push(href, as, { shallow: true });
 };
 
