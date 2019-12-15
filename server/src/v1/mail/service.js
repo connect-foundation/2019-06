@@ -81,6 +81,7 @@ const getMailsByOptions = async (userNo, options = {}) => {
     perPageNum,
   };
   const pagingResult = getPaging(totalCount, pagingOptions);
+  pagingResult.totalCount = totalCount;
 
   return {
     paging: pagingResult,

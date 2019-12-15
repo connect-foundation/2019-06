@@ -6,6 +6,7 @@ import ErrorResponse from '../exception/error-response';
 const { MAX_SAFE_INTEGER } = Number;
 const PAGE_NUMBER_RANGE = { min: 1, max: MAX_SAFE_INTEGER };
 const CATEGORY_NUMBER_RANGE = { min: 0, max: MAX_SAFE_INTEGER };
+const DATE_RANGE = { min: 10000000, max: 99991231 };
 
 const SORTING_CRITERIA = {
   datedesc: true,
@@ -88,4 +89,73 @@ const checkQuery = ({ category, page, sort }) => {
   return true;
 };
 
-export { validateNos, validateProps, checkQuery };
+const isValidYYYYMMDDFormat = format => {
+  const splitedDate = format.split('/');
+
+  if (splitedDate.length !== 3) {
+    return false;
+  }
+  const [year, month, date] = [...splitedDate];
+
+  if (!isInt(year, { min: 1000, max: 9999 })) {
+    return false;
+  }
+
+  if (!isInt(month, { min: 1, max: 12 })) {
+    return false;
+  }
+
+  if (!isInt(date, { min: 1, max: 31 })) {
+    return false;
+  }
+
+  return true;
+};
+
+const checkSearchQuery = ({ page, sort, from, to, content, subject, startDate, endDate }) => {
+  const errorFields = [];
+
+  if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
+    const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
+    errorFields.push(errorField);
+  }
+
+  if (sort && !SORTING_CRITERIA[sort]) {
+    const errorField = new ErrorField('sort', sort, '유효하지 않은 정렬기준 입니다.');
+    errorFields.push(errorField);
+  }
+
+  const lengthCheckTargets = {
+    from,
+    to,
+    content,
+    subject,
+  };
+
+  for (const [key, value] of Object.entries(lengthCheckTargets)) {
+    if (value && value.length > 100) {
+      const errorField = new ErrorField(key, value, `${key}의 길이는 100이상일수 없습니다.`);
+      errorFields.push(errorField);
+    }
+  }
+
+  const dateCheckTargets = {
+    startDate,
+    endDate,
+  };
+
+  for (const [key, value] of Object.entries(dateCheckTargets)) {
+    if (value && !isValidYYYYMMDDFormat(value)) {
+      const errorField = new ErrorField(key, value, '유효하지 않은 날짜입니다.');
+      errorFields.push(errorField);
+    }
+  }
+
+  if (errorFields.length > 0) {
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
+  }
+
+  return true;
+};
+
+export { validateNos, validateProps, checkQuery, checkSearchQuery, isValidYYYYMMDDFormat };
