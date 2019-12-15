@@ -1,9 +1,9 @@
 import ERROR_CODE from '../exception/error-code';
 import ErrorResponse from '../exception/error-response';
 import ErrorField from '../exception/error-field';
+import { MAILBOX_NAME_LENGTH_LIMIT } from '../../const/mail';
 
 const BLANK = '';
-const MAILBOX_NAME_LENGTH_LIMIT = 20;
 const nameRegex = /^[0-9a-zA-Z가-힣 ]{1,20}$/;
 
 const validateBoxName = val => {

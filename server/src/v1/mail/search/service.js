@@ -1,24 +1,7 @@
 import { Op } from 'sequelize';
 import DB from '../../../database/index';
 import getPaging from '../../../libraries/paging';
-
-const WASTEBASKET_NAME = '휴지통';
-
-const DEFAULT_MAIL_QUERY_OPTIONS = {
-  category: 0,
-  page: 1,
-  perPageNum: 100,
-  sort: 'datedesc',
-};
-
-const SORT_TYPE = {
-  datedesc: [[DB.MailTemplate, 'createdAt', 'DESC']],
-  dateasc: [[DB.MailTemplate, 'createdAt', 'ASC']],
-  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
-  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
-  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
-  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
-};
+import { DEFAULT_MAIL_QUERY_OPTIONS, WASTEBASKET_NAME, SORT_TYPE } from '../../../const/mail';
 
 const getQueryByOptions = ({
   userNo,

@@ -5,11 +5,10 @@ import mailBox from './box';
 import mailTemplate from './template';
 import attachment from './attachment';
 import search from './search';
+import { MAIL_FILE_MAX_COUNT } from '../../const/mail';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
-
-const { MAIL_FILE_MAX_COUNT } = process.env;
 
 router.get('/', controller.list);
 router.get('/categories', controller.getCategories);

@@ -2,11 +2,9 @@
 import uuidv4 from 'uuid';
 import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
+import { FILE_MAX_SIZE } from '../../const/mail';
 
 dotenv.config();
-
-const MB = 1000 ** 2;
-const FILE_LIMIT_SIZE = 10 * MB;
 
 const {
   STORAGE_END_POINT,
@@ -31,7 +29,7 @@ const S3 = new AWS.S3({
 });
 
 const options = {
-  partSize: FILE_LIMIT_SIZE,
+  partSize: FILE_MAX_SIZE,
 };
 
 const rename = originalname => {
