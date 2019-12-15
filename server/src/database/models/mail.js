@@ -124,6 +124,19 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Mail.updateByMessageId = (messageId, props) => {
+    return Mail.update(
+      {
+        ...props,
+      },
+      {
+        where: {
+          message_id: messageId,
+        },
+      },
+    );
+  };
+
   Mail.updateAllByNosAndProps = (nos, props) => {
     return Mail.update(
       {
