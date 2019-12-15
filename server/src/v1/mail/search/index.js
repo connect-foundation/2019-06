@@ -3,6 +3,6 @@ import controller from './controller';
 
 const router = Router();
 
-router.get('/', controller.list);
+router.get('/advanced', controller.advanced);
 
 export default router;
