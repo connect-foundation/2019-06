@@ -14,9 +14,10 @@ const getDbMails = async imapMessageIds => {
       imapMessageIds[mailBoxNames[i]],
       mailBoxNames[i],
     );
+    dbMails[mailBoxNames[i]] = {};
     userMails.forEach(userMail => {
-      dbMails[userMail.message_id] = userMail;
-      delete dbMails[userMail.message_id].message_id;
+      dbMails[mailBoxNames[i]][userMail.message_id] = userMail;
+      delete dbMails[mailBoxNames[i]][userMail.message_id].message_id;
     });
   }
   return dbMails;
