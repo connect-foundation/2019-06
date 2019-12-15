@@ -6,11 +6,7 @@ const getDBMails = async imapMessageIds => {
   const mailBoxNames = Object.keys(imapMessageIds);
   for (let i = 0; i < mailBoxNames.length; i++) {
     // eslint-disable-next-line no-await-in-loop
-    const userMails = await DB.Mail.findAllMessasgeIds(
-      4,
-      imapMessageIds[mailBoxNames[i]],
-      mailBoxNames[i],
-    );
+    const userMails = await DB.Mail.findAllMessasgeIds(4, mailBoxNames[i]);
     userMails.forEach(userMail => {
       dbMails[userMail.message_id] = userMail;
       delete dbMails[userMail.message_id].message_id;
@@ -33,7 +29,7 @@ const getNotMatchedImapMailWithDB = (dbMails, imapMessageIds) => {
   for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
     notMatchedImapMailWithDB[mailboxName] = [];
     messageIds.forEach(messageId => {
-      if (!dbMails[messageId]) {
+      if (dbMails[messageId] && mailboxName !== dbMails[messageId].name) {
         notMatchedImapMailWithDB[mailboxName].push(messageId);
       }
     });
@@ -55,7 +51,7 @@ const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
   const updateMethods = [];
   for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
     for (let i = 0; i < messageIds.length; i++) {
-      if (mailboxName !== dbMails[messageIds[i]]['Category.name']) {
+      if (dbMails[messageIds[i]] && mailboxName !== dbMails[messageIds[i]].name) {
         if (mailboxName !== '휴지통') {
           updateMethods.push(
             DB.Mail.updateByMessageId(4, messageIds[i], { category_no: categories[mailboxName] }),
@@ -74,6 +70,23 @@ const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
   await Promise.all(updateMethods);
 };
 
+const deleteNoneExistMailsInDB = async (onlyImapMessageIds, onlyDBMessageIds) => {
+  const onlyImapMessageIdsObject = {};
+  const promisedDelete = [];
+
+  onlyImapMessageIds.forEach(id => {
+    onlyImapMessageIdsObject[id] = true;
+  });
+
+  for (let i = 0; i < onlyDBMessageIds.length; i++) {
+    if (!onlyImapMessageIdsObject[onlyDBMessageIds[i]]) {
+      promisedDelete.push(DB.Mail.deleteByMesssasgeId(4, onlyDBMessageIds[i]));
+    }
+  }
+
+  await Promise.all(promisedDelete);
+};
+
 const syncWithImap = async (req, res, next) => {
   const imapMessageIds = await getImapMessageIds({
     user: { email: 'yaahoo@daitnu.com', password: '12345678' },
@@ -90,6 +103,7 @@ const syncWithImap = async (req, res, next) => {
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
 
   await updateMails(categories, dbMails, notMatchedImapMailWithDB);
+  await deleteNoneExistMailsInDB(Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   res.send({
     imapMessageIds,
