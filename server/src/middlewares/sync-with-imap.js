@@ -11,16 +11,15 @@ const getDBMails = async imapMessageIds => {
       imapMessageIds[mailBoxNames[i]],
       mailBoxNames[i],
     );
-    dbMails[mailBoxNames[i]] = {};
     userMails.forEach(userMail => {
-      dbMails[mailBoxNames[i]][userMail.message_id] = userMail;
-      delete dbMails[mailBoxNames[i]][userMail.message_id].message_id;
+      dbMails[userMail.message_id] = userMail;
+      delete dbMails[userMail.message_id].message_id;
     });
   }
   return dbMails;
 };
 
-const getDBCategory = async userNo => {
+const getRefinedCategory = async userNo => {
   const dbCategories = await DB.Category.findAllByUserNo(userNo);
   const refinedCategories = {};
   dbCategories.forEach(dbCategory => {
@@ -30,11 +29,11 @@ const getDBCategory = async userNo => {
 };
 
 const getNotMatchedImapMailWithDB = (dbMails, imapMessageIds) => {
-  const notMatchedImapMailWithDB = {}; // IMAP과 DB의 데이터가 일치하지 않거나 없는 메일함별 메일 ID 배열객체
+  const notMatchedImapMailWithDB = {}; // IMAP과 DB의 데이터가 일치하지 않거나 DB에 없는 메일함별 메일 ID 배열객체
   for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
     notMatchedImapMailWithDB[mailboxName] = [];
     messageIds.forEach(messageId => {
-      if (!dbMails[mailboxName][messageId]) {
+      if (!dbMails[messageId]) {
         notMatchedImapMailWithDB[mailboxName].push(messageId);
       }
     });
@@ -59,20 +58,38 @@ const syncWithImap = async (req, res, next) => {
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
-  const imapMessageIdsReverse = getImapMessageIdsReverse(imapMessageIds);
+  const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
 
-  const categories = await getDBCategory(4);
+  const categories = await getRefinedCategory(4);
   const dbMails = await getDBMails(imapMessageIds);
+
+  // IMAP에만 존재하는 메일
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
-  // TODO: notMatchedImapMailWithDB 여기에 들어있는 것들을 imap에 맞게 업데이트 시켜주면 됨
-  const mailIdsToUpdate = {};
+
+  const updateMethods = [];
   for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
-    messageIds.forEach(messageId => {});
+    for (let i = 0; i < messageIds.length; i++) {
+      if (mailboxName !== dbMails[messageIds[i]]['Category.name']) {
+        if (mailboxName !== '휴지통') {
+          updateMethods.push(
+            DB.Mail.updateByMessageId(messageIds[i], { category_no: categories[mailboxName] }),
+          );
+        } else {
+          updateMethods.push(
+            DB.Mail.updateByMessageId(messageIds[i], {
+              category_no: categories[mailboxName],
+              prev_category_no: dbMails[messageIds[i]].category_no,
+            }),
+          );
+        }
+      }
+    }
   }
+  await Promise.all(updateMethods);
 
   res.send({
     imapMessageIds,
-    imapMessageIdsReverse,
+    getBoxNameByMessageId,
     dbMails,
     categories,
     notMatchedImapMailWithDB,
