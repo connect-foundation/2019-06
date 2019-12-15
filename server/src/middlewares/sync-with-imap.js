@@ -5,9 +5,6 @@ const getDBMails = async imapMessageIds => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
   for (let i = 0; i < mailBoxNames.length; i++) {
-    if (mailBoxNames[i] === 'INBOX') {
-      mailBoxNames[i] = '받은메일함';
-    }
     // eslint-disable-next-line no-await-in-loop
     const userMails = await DB.Mail.findAllMessasgeIds(
       4,
@@ -36,16 +33,22 @@ const syncWithImap = async (req, res, next) => {
   const imapMessageIds = await getImapMessageIds({
     user: { email: 'yaahoo@daitnu.com', password: '12345678' },
   });
+  imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
+  delete imapMessageIds.INBOX;
+
   const categories = await getDBCategory(4);
   const dbMails = await getDBMails(imapMessageIds);
+  const notFoundImapMailInDB = {}; // IMAP과 DB의 데이터가 일치하지 않는 메일 객체
+  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
+    notFoundImapMailInDB[mailboxName] = [];
+    messageIds.forEach(messageId => {
+      if (!dbMails[mailboxName][messageId]) {
+        notFoundImapMailInDB[mailboxName].push(messageId);
+      }
+    });
+  }
 
-  // for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
-  //   messageIds.forEach(messageId => {
-  //     dbMails[mailboxName][messageId];
-  //   });
-  // }
-
-  res.send({ imapMessageIds, dbMails, categories });
+  res.send({ imapMessageIds, dbMails, categories, notFoundImapMailInDB });
 };
 
 export default syncWithImap;
