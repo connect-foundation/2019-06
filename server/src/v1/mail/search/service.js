@@ -144,6 +144,46 @@ const getMailsByOptions = async (userNo, options = {}) => {
   };
 };
 
+const generalSearch = async (userNo, options = {}) => {
+  const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  const { sort, searchWord } = queryOptions;
+  let { page, perPageNum } = queryOptions;
+
+  page = +page;
+  perPageNum = +perPageNum;
+
+  const wastebasketNo = await getWastebasketCategoryNo(userNo);
+  const query = getQueryByOptions({
+    userNo,
+    perPageNum,
+    page,
+    sort,
+    wastebasketNo,
+  });
+
+  query.mailTemplateFilter = {
+    [Op.or]: [
+      { subject: { [Op.substring]: searchWord } },
+      { text: { [Op.substring]: searchWord } },
+    ],
+  };
+
+  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
+  const pagingOptions = {
+    page,
+    perPageNum,
+  };
+
+  const pagingResult = getPaging(totalCount, pagingOptions);
+  pagingResult.totalCount = totalCount;
+
+  return {
+    paging: pagingResult,
+    mails,
+  };
+};
+
 export default {
   getMailsByOptions,
+  generalSearch,
 };
