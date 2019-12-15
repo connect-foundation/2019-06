@@ -1,7 +1,7 @@
 import { getImapMessageIds } from '../libraries/imap';
 import DB from '../database';
 
-const getDbMails = async imapMessageIds => {
+const getDBMails = async imapMessageIds => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
   for (let i = 0; i < mailBoxNames.length; i++) {
@@ -23,16 +23,27 @@ const getDbMails = async imapMessageIds => {
   return dbMails;
 };
 
+const getDBCategory = async userNo => {
+  const dbCategories = await DB.Category.findAllByUserNo(userNo);
+  const refinedCategories = {};
+  dbCategories.forEach(dbCategory => {
+    refinedCategories[dbCategory.name] = dbCategory.no;
+  });
+  return refinedCategories;
+};
+
 const syncWithImap = async (req, res, next) => {
   const imapMessageIds = await getImapMessageIds({
     user: { email: 'yaahoo@daitnu.com', password: '12345678' },
   });
-  const categories = await DB.Category.findAllByUserNo(4);
-  const dbMails = await getDbMails(imapMessageIds);
+  const categories = await getDBCategory(4);
+  const dbMails = await getDBMails(imapMessageIds);
 
-  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
-    messageIds.forEach(messageId => {});
-  }
+  // for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
+  //   messageIds.forEach(messageId => {
+  //     dbMails[mailboxName][messageId];
+  //   });
+  // }
 
   res.send({ imapMessageIds, dbMails, categories });
 };
