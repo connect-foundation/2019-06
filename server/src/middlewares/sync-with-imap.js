@@ -29,7 +29,7 @@ const getRefinedCategory = async userNo => {
 };
 
 const getNotMatchedImapMailWithDB = (dbMails, imapMessageIds) => {
-  const notMatchedImapMailWithDB = {}; // IMAP과 DB의 데이터가 일치하지 않거나 DB에 없는 메일함별 메일 ID 배열객체
+  const notMatchedImapMailWithDB = {}; // DB에는 없고 IMAP 서버에만 존재하는 메일(메일이 이동되었거나 삭제된 경우)
   for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
     notMatchedImapMailWithDB[mailboxName] = [];
     messageIds.forEach(messageId => {
@@ -51,21 +51,7 @@ const getImapMessageIdsReverse = imapMessageIds => {
   return imapMessageIdsReverse;
 };
 
-const syncWithImap = async (req, res, next) => {
-  const imapMessageIds = await getImapMessageIds({
-    user: { email: 'yaahoo@daitnu.com', password: '12345678' },
-  });
-  imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
-  delete imapMessageIds.INBOX;
-
-  const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
-
-  const categories = await getRefinedCategory(4);
-  const dbMails = await getDBMails(imapMessageIds);
-
-  // IMAP에만 존재하는 메일
-  const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
-
+const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
   const updateMethods = [];
   for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
     for (let i = 0; i < messageIds.length; i++) {
@@ -86,6 +72,24 @@ const syncWithImap = async (req, res, next) => {
     }
   }
   await Promise.all(updateMethods);
+};
+
+const syncWithImap = async (req, res, next) => {
+  const imapMessageIds = await getImapMessageIds({
+    user: { email: 'yaahoo@daitnu.com', password: '12345678' },
+  });
+  imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
+  delete imapMessageIds.INBOX;
+
+  const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
+
+  const categories = await getRefinedCategory(4);
+  const dbMails = await getDBMails(imapMessageIds);
+
+  // DB에는 없고 IMAP 서버에만 존재하는 메일(메일이 이동되었거나 삭제된 경우)
+  const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
+
+  await updateMails(categories, dbMails, notMatchedImapMailWithDB);
 
   res.send({
     imapMessageIds,
