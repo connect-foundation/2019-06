@@ -3,6 +3,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
 import { Button } from '@material-ui/core';
+import moment from 'moment';
 import S from './styled';
 import SearchInputRow from './Input';
 import InputDate from './Input/InputDate';
@@ -38,18 +39,22 @@ const Search = () => {
     const searchTexts = [];
     const searchQueries = {};
 
-    for (const [key, value] of Object.entries(state)) {
-      if (value) {
-        searchTexts.push(`${key}:${value}`);
-        searchQueries[key] = value;
+    for (let [key, value] of Object.entries(state)) {
+      if (!value) {
+        continue;
       }
+
+      if (key === 'startDate' || key === 'endDate') {
+        value = moment(value).format('YYYY/MM/DD');
+      }
+      searchTexts.push(`${key}:${value}`);
+      searchQueries[key] = value;
     }
 
     if (searchTexts.length === 0) {
       return;
     }
 
-    console.log({ ...searchQueries });
     setSearchText(searchTexts.join(' '));
     changeUrlWithoutRunning({ view: 'search', ...searchQueries });
   };
@@ -81,7 +86,12 @@ const Search = () => {
         {inputLabels.map((inputLabel, i) => (
           <SearchInputRow key={`searchInput-${i}`} label={inputLabel} dispatch={dispatch} />
         ))}
-        <InputDate label="기간" dispatch={dispatch} />
+        <InputDate
+          label="기간"
+          dispatch={dispatch}
+          startDate={state.startDate}
+          endDate={state.endDate}
+        />
         <S.TextRight>
           <Button variant="contained" color="primary" onClick={handleDetailSearchClick}>
             검색하기
