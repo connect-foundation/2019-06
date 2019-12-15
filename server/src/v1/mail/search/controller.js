@@ -5,9 +5,10 @@ const advanced = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
   let mails;
+
   try {
     checkAdvancedSearchQuery(query);
-    mails = await service.getMailsByOptions(userNo, query);
+    mails = await service.advancedSearch(userNo, query);
   } catch (error) {
     return next(error);
   }

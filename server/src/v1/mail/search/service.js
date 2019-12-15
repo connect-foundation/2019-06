@@ -106,11 +106,10 @@ const getWastebasketCategoryNo = async userNo => {
   return no;
 };
 
-const getMailsByOptions = async (userNo, options = {}) => {
+const advancedSearch = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
-  const { sort } = queryOptions;
+  const { sort, subject, content, from, to, startDate, endDate } = queryOptions;
   let { page, perPageNum } = queryOptions;
-  const { subject, content, from, to, startDate, endDate } = queryOptions;
 
   page = +page;
   perPageNum = +perPageNum;
@@ -184,6 +183,6 @@ const generalSearch = async (userNo, options = {}) => {
 };
 
 export default {
-  getMailsByOptions,
+  advancedSearch,
   generalSearch,
 };
