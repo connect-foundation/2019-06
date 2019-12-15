@@ -145,7 +145,7 @@ const checkSearchQuery = ({ page, sort, from, to, content, subject, startDate, e
   };
 
   for (const [key, value] of Object.entries(dateCheckTargets)) {
-    if (value && !isValidYYYYMMDDFormat(value, DATE_RANGE)) {
+    if (value && !isValidYYYYMMDDFormat(value)) {
       const errorField = new ErrorField(key, value, '유효하지 않은 날짜입니다.');
       errorFields.push(errorField);
     }
