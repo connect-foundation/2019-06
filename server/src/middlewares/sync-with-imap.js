@@ -29,6 +29,19 @@ const getDBCategory = async userNo => {
   return refinedCategories;
 };
 
+const getNotMatchedImapMailWithDB = (dbMails, imapMessageIds) => {
+  const notMatchedImapMailWithDB = {}; // IMAP과 DB의 데이터가 일치하지 않거나 없는 메일함별 메일 ID 배열객체
+  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
+    notMatchedImapMailWithDB[mailboxName] = [];
+    messageIds.forEach(messageId => {
+      if (!dbMails[mailboxName][messageId]) {
+        notMatchedImapMailWithDB[mailboxName].push(messageId);
+      }
+    });
+  }
+  return notMatchedImapMailWithDB;
+};
+
 const syncWithImap = async (req, res, next) => {
   const imapMessageIds = await getImapMessageIds({
     user: { email: 'yaahoo@daitnu.com', password: '12345678' },
@@ -38,17 +51,9 @@ const syncWithImap = async (req, res, next) => {
 
   const categories = await getDBCategory(4);
   const dbMails = await getDBMails(imapMessageIds);
-  const notFoundImapMailInDB = {}; // IMAP과 DB의 데이터가 일치하지 않는 메일 객체
-  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
-    notFoundImapMailInDB[mailboxName] = [];
-    messageIds.forEach(messageId => {
-      if (!dbMails[mailboxName][messageId]) {
-        notFoundImapMailInDB[mailboxName].push(messageId);
-      }
-    });
-  }
+  const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
 
-  res.send({ imapMessageIds, dbMails, categories, notFoundImapMailInDB });
+  res.send({ imapMessageIds, dbMails, categories, notMatchedImapMailWithDB });
 };
 
 export default syncWithImap;
