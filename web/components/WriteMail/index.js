@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import * as S from './styled';
 import InputReceiver from './InputReceiver';
@@ -7,11 +7,20 @@ import Tools from './Tools';
 import { WriteMailContextProvider } from './ContextProvider';
 import DropZone from './DropZone';
 import HeadTitle from '../HeadTitle';
+import { AppStateContext, AppDispatchContext } from '../../contexts';
+import { setMailToReply } from '../../contexts/reducer';
 
 const InputBody = dynamic(import('./InputBody'), { ssr: false });
 
-const WriteMail = ({ mailToReply }) => {
+const WriteMail = () => {
   const [dropZoneVisible, setDropZoneVisible] = useState(false);
+  const { state } = useContext(AppStateContext);
+  const { dispatch } = useContext(AppDispatchContext);
+  const { mailToReply } = state;
+
+  useEffect(() => {
+    dispatch(setMailToReply(null));
+  }, []);
 
   return (
     <WriteMailContextProvider>

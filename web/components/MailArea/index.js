@@ -109,7 +109,7 @@ const MailArea = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const { view } = urlQuery;
-  const query = getQueryByOptions(urlQuery).join('&');
+  const query = getQueryByOptions(urlQuery);
   const isSearch = view === 'search';
   const URL = isSearch ? `/mail/search?${query}` : `/mail?${query}`;
   const fetchingMailData = useFetch(URL);
@@ -129,11 +129,11 @@ const MailArea = () => {
     return errorHandler(fetchingMailData.error);
   }
 
-  if (!state.mails) {
+  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
+  if (!categoryNoByName || !mails) {
     return <Loading />;
   }
 
-  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const categories = {};
   Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
@@ -173,13 +173,11 @@ const MailArea = () => {
   };
 
   const categoryName = category === 0 ? '전체메일함' : categoryNameByNo[category];
-  const title = `${categoryName} (${paging.totalCount}) - 다잇누`;
+  const title = `${categoryName} (${paging.page})`;
   return (
     <S.MailArea>
       <HeadTitle title={title} />
-      <S.ToolsWrapper>
-        <Tools />
-      </S.ToolsWrapper>
+      <Tools />
       <S.MailListArea onClick={handleMailListAreaClick}>{mailList}</S.MailListArea>
       <S.MailPagingArea>
         <Paging paging={paging} />

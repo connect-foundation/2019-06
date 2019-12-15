@@ -33,7 +33,11 @@ import { useRouter } from 'next/router';
 import S from './styled';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import { handleCategoriesChange, handleSnackbarState } from '../../contexts/reducer';
+import {
+  handleCategoriesChange,
+  handleSnackbarState,
+  handleCategoryClick,
+} from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
@@ -139,7 +143,10 @@ const Aside = () => {
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         key={idx}
-        onClick={() => changeCategory(category.no)}>
+        onClick={() => {
+          changeCategory(category.no);
+          dispatch(handleCategoryClick(category.no));
+        }}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
         <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
       </ListItem>
@@ -154,7 +161,10 @@ const Aside = () => {
         className={classes.nested}
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
-        onClick={() => changeCategory(category.no)}>
+        onClick={() => {
+          changeCategory(category.no);
+          dispatch(handleCategoryClick(category.no));
+        }}>
         <ListItemIcon>
           <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>
@@ -182,7 +192,7 @@ const Aside = () => {
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
           <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE)}>메일쓰기</S.WrtieButton>
-          <S.WrtieButton onClick={() => changeView(VIEW_STRING['WRITE-TO-ME'])}>
+          <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE_TO_ME)}>
             내게쓰기
           </S.WrtieButton>
         </ListItem>
