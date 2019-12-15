@@ -42,6 +42,16 @@ const getNotMatchedImapMailWithDB = (dbMails, imapMessageIds) => {
   return notMatchedImapMailWithDB;
 };
 
+const getImapMessageIdsReverse = imapMessageIds => {
+  const imapMessageIdsReverse = {};
+  for (const [mailboxName, messageIds] of Object.entries(imapMessageIds)) {
+    messageIds.forEach(messageId => {
+      imapMessageIdsReverse[messageId] = mailboxName;
+    });
+  }
+  return imapMessageIdsReverse;
+};
+
 const syncWithImap = async (req, res, next) => {
   const imapMessageIds = await getImapMessageIds({
     user: { email: 'yaahoo@daitnu.com', password: '12345678' },
@@ -49,11 +59,24 @@ const syncWithImap = async (req, res, next) => {
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
+  const imapMessageIdsReverse = getImapMessageIdsReverse(imapMessageIds);
+
   const categories = await getDBCategory(4);
   const dbMails = await getDBMails(imapMessageIds);
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
+  // TODO: notMatchedImapMailWithDB 여기에 들어있는 것들을 imap에 맞게 업데이트 시켜주면 됨
+  const mailIdsToUpdate = {};
+  for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
+    messageIds.forEach(messageId => {});
+  }
 
-  res.send({ imapMessageIds, dbMails, categories, notMatchedImapMailWithDB });
+  res.send({
+    imapMessageIds,
+    imapMessageIdsReverse,
+    dbMails,
+    categories,
+    notMatchedImapMailWithDB,
+  });
 };
 
 export default syncWithImap;
