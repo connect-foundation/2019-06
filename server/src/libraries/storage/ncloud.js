@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const MB = 1024 * 1024;
+const MB = 1000 ** 2;
 const FILE_LIMIT_SIZE = 10 * MB;
 
 const {
