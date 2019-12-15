@@ -101,6 +101,22 @@ const getQueryByOptions = ({
   return query;
 };
 
+const getPagingInfoAndMails = async ({ page, perPageNum, query }) => {
+  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
+
+  const pagingOptions = {
+    page,
+    perPageNum,
+  };
+  const pagingResult = getPaging(totalCount, pagingOptions);
+  pagingResult.totalCount = totalCount;
+
+  return {
+    paging: pagingResult,
+    mails,
+  };
+};
+
 const getWastebasketCategoryNo = async userNo => {
   const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
   return no;
@@ -128,19 +144,8 @@ const advancedSearch = async (userNo, options = {}) => {
     endDate,
   });
 
-  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
-
-  const pagingOptions = {
-    page,
-    perPageNum,
-  };
-  const pagingResult = getPaging(totalCount, pagingOptions);
-  pagingResult.totalCount = totalCount;
-
-  return {
-    paging: pagingResult,
-    mails,
-  };
+  const pagingAndMails = await getPagingInfoAndMails({ page, perPageNum, query });
+  return pagingAndMails;
 };
 
 const generalSearch = async (userNo, options = {}) => {
@@ -167,19 +172,8 @@ const generalSearch = async (userNo, options = {}) => {
     ],
   };
 
-  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
-  const pagingOptions = {
-    page,
-    perPageNum,
-  };
-
-  const pagingResult = getPaging(totalCount, pagingOptions);
-  pagingResult.totalCount = totalCount;
-
-  return {
-    paging: pagingResult,
-    mails,
-  };
+  const pagingAndMails = await getPagingInfoAndMails({ page, perPageNum, query });
+  return pagingAndMails;
 };
 
 export default {

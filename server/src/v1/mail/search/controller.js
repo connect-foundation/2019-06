@@ -20,6 +20,7 @@ const general = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
   let mails;
+
   try {
     mails = await service.generalSearch(userNo, query);
   } catch (error) {
