@@ -89,7 +89,7 @@ const deleteNonExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessage
   await Promise.all(promisedDelete);
 };
 
-const makeMailboxNonExistInDB = async (imapMessageIds, userNo) => {
+const makeMailboxNonExistedInDB = async (imapMessageIds, userNo) => {
   const categories = await getRefinedCategory(userNo);
 
   // IMAP에는 존재하지만 DB에는 존재하지 않을 경우
@@ -107,7 +107,7 @@ const syncWithImap = async (req, res, next) => {
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
-  await makeMailboxNonExistInDB(imapMessageIds, userNo);
+  await makeMailboxNonExistedInDB(imapMessageIds, userNo);
 
   const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
   const [categories, dbMails] = await Promise.all([
