@@ -1,7 +1,8 @@
 import ErrorResponse from '../libraries/exception/error-response';
 import ErrorCode from '../libraries/exception/error-code';
 
-const { ADMIN_KEY } = process.env;
+const { ADMIN_KEY, WHITELIST } = process.env;
+const whitelist = WHITELIST.split(',');
 
 const isAuth = (req, res, next) => {
   if (!req.user) {
@@ -18,4 +19,12 @@ const isAdmin = (req, res, next) => {
   return next();
 };
 
-export { isAuth, isAdmin };
+const isWhitelistIp = (req, res, next) => {
+  if (!whitelist.some(ip => ip === req.connection.remoteAddress)) {
+    return next(new ErrorResponse(ErrorCode.PRIVATE_PATH));
+  }
+
+  return next();
+};
+
+export { isAuth, isAdmin, isWhitelistIp };
