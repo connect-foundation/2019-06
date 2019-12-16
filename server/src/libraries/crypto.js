@@ -1,5 +1,5 @@
-import DB from '../database';
 import crypto from 'crypto';
+import DB from '../database';
 
 const { ENCRYPTION_KEY } = process.env;
 
