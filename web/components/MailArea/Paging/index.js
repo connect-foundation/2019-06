@@ -37,9 +37,7 @@ const getPagingNumbers = (start, end, page) => {
 
 const Paging = ({ paging }) => {
   const router = useRouter();
-  const {
-    query: { category },
-  } = router;
+  const { query } = router;
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
   const { dispatch } = useContext(AppDispatchContext);
@@ -52,7 +50,7 @@ const Paging = ({ paging }) => {
     const newPageNumber = getPageStartNumber(newIndex);
     dispatch(handlePageNumberClick(newPageNumber));
 
-    changeUrlWithoutRunning({ category, page: newPageNumber });
+    changeUrlWithoutRunning({ ...query, page: newPageNumber });
   };
 
   const handleNumberClick = e => {
@@ -69,7 +67,7 @@ const Paging = ({ paging }) => {
     }
 
     dispatch(handlePageNumberClick(id));
-    changeUrlWithoutRunning({ category, page: id });
+    changeUrlWithoutRunning({ ...query, page: id });
   };
 
   return (

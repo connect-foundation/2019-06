@@ -37,12 +37,12 @@ const getQueryByOptions = ({
     }
   };
 
-  setQueries('category', category);
-  setQueries('page', page);
   setQueries('view', view);
   setQueries('searchLevel', searchLevel);
   setQueries('searchWord', searchWord);
   setQueries('mailNo', mailNo);
+  setQueries('category', category);
+  setQueries('page', page);
   setQueries('from', from);
   setQueries('to', to);
   setQueries('subject', subject);
