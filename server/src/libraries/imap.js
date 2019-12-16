@@ -37,7 +37,20 @@ const getRawBoxes = imap =>
   new Promise((resolve, reject) => {
     imap.getBoxes((err, box) => {
       if (err) reject(err);
-      resolve(Object.keys(box));
+      const boxes = [];
+      const recursive = (mailbox, parentName) => {
+        for (const [mailboxName, mailboxAttributes] of Object.entries(mailbox)) {
+          if (parentName !== '') {
+            boxes.push(`${parentName}.${mailboxName}`);
+          } else {
+            boxes.push(mailboxName);
+          }
+          if (mailboxAttributes.children) {
+            recursive(mailboxAttributes.children, mailboxName);
+          }
+        }
+      };
+      resolve((recursive(box, ''), boxes));
     });
   });
 
@@ -68,7 +81,7 @@ export const getImapMessageIds = async ({ user }) => {
         imap.openBox(boxes[i], true, (openErr, box) => {
           if (openErr) reject(openErr);
           messages[boxes[i]] = [];
-          if (box.messages.total === 0) {
+          if (!box || box.messages.total === 0) {
             return resolve(gatheringMessageIds(boxes, i + 1));
           }
           const f = imap.seq.fetch('1:*', {
