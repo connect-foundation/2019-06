@@ -6,7 +6,7 @@ import DB from '../../../database/index';
 import { aesDecrypt } from '../../../libraries/crypto';
 import U from '../../../libraries/mail-util';
 import { makeMimeMessage } from '../../../libraries/mimemessage';
-import { saveToMailbox } from '../../../libraries/save-to-infra';
+import { saveToMailbox } from '../../../libraries/imap';
 import { getStream } from '../../../libraries/storage/ncloud';
 
 const ALLOWED_TIME = 10;
