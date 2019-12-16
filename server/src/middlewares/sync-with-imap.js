@@ -90,7 +90,7 @@ const deleteNonExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessage
 };
 
 const makeMailboxNonExistInDB = async (imapMessageIds, userNo) => {
-  let categories = await getRefinedCategory(userNo);
+  const categories = await getRefinedCategory(userNo);
 
   // IMAP에는 존재하지만 DB에는 존재하지 않을 경우
   const mailboxesToInsertToDB = Object.keys(imapMessageIds)
@@ -98,18 +98,18 @@ const makeMailboxNonExistInDB = async (imapMessageIds, userNo) => {
     .map(mailboxName => ({ user_no: userNo, name: mailboxName }));
 
   await DB.Category.bulkCreate(mailboxesToInsertToDB);
-  categories = await getRefinedCategory(userNo);
-  return categories;
 };
 
 const syncWithImap = async (req, res, next) => {
   const { no: userNo } = req;
   const { user } = req;
-  const imapMessageIds = await getImapMessageIds(user);
+  const imapMessageIds = await getImapMessageIds({ user });
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
-  const categories = await makeMailboxNonExistInDB(imapMessageIds, userNo);
+  await makeMailboxNonExistInDB(imapMessageIds, userNo);
+
+  const categories = await getRefinedCategory(userNo);
   const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
   const dbMails = await getDBMails(imapMessageIds, userNo);
 
@@ -119,7 +119,12 @@ const syncWithImap = async (req, res, next) => {
   await deleteNonExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   // DB에는 존재하지만 IMAP에는 존재하지 않을 경우
-  const mailboxNumbersToDeleteOnDB = categories.filter(category => !imapMessageIds[category]);
+  const mailboxNumbersToDeleteOnDB = [];
+  for (const [categoryName, categoryNo] of Object.entries(categories)) {
+    if (!imapMessageIds[categoryName]) {
+      mailboxNumbersToDeleteOnDB.push(categoryNo);
+    }
+  }
   await DB.Category.destroy({ where: { no: Object.values(mailboxNumbersToDeleteOnDB) } });
 
   res.send({
