@@ -4,9 +4,9 @@ import DB from '../database';
 const getDBMails = async (imapMessageIds, userNo) => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
-  for (let i = 0; i < mailBoxNames.length; i++) {
+  for (const mailBoxName of mailBoxNames) {
     // eslint-disable-next-line no-await-in-loop
-    const userMails = await DB.Mail.findAllMessasgeIds(userNo, mailBoxNames[i]);
+    const userMails = await DB.Mail.findAllMessasgeIds(userNo, mailBoxName);
     userMails.forEach(userMail => {
       dbMails[userMail.message_id] = userMail;
       delete dbMails[userMail.message_id].message_id;
@@ -50,29 +50,29 @@ const getImapMessageIdsReverse = imapMessageIds => {
 const updateMails = async (userNo, categories, dbMails, notMatchedImapMailWithDB) => {
   const updateMethods = [];
   for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
-    for (let i = 0; i < messageIds.length; i++) {
-      if (dbMails[messageIds[i]] && mailboxName !== dbMails[messageIds[i]].name) {
+    messageIds.forEach(messageId => {
+      if (dbMails[messageId] && mailboxName !== dbMails[messageId].name) {
         if (mailboxName !== '휴지통') {
           updateMethods.push(
-            DB.Mail.updateByMessageId(userNo, messageIds[i], {
+            DB.Mail.updateByMessageId(userNo, messageId, {
               category_no: categories[mailboxName],
             }),
           );
         } else {
           updateMethods.push(
-            DB.Mail.updateByMessageId(userNo, messageIds[i], {
+            DB.Mail.updateByMessageId(userNo, messageId, {
               category_no: categories[mailboxName],
-              prev_category_no: dbMails[messageIds[i]].category_no,
+              prev_category_no: dbMails[messageId].category_no,
             }),
           );
         }
       }
-    }
+    });
   }
   await Promise.all(updateMethods);
 };
 
-const deleteNoneExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessageIds) => {
+const deleteNonExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessageIds) => {
   const onlyImapMessageIdsObject = {};
   const promisedDelete = [];
 
@@ -80,11 +80,11 @@ const deleteNoneExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessag
     onlyImapMessageIdsObject[id] = true;
   });
 
-  for (let i = 0; i < onlyDBMessageIds.length; i++) {
-    if (!onlyImapMessageIdsObject[onlyDBMessageIds[i]]) {
-      promisedDelete.push(DB.Mail.deleteByMesssasgeId(userNo, onlyDBMessageIds[i]));
+  onlyDBMessageIds.forEach(messageId => {
+    if (!onlyImapMessageIdsObject[messageId]) {
+      promisedDelete.push(DB.Mail.deleteByMesssasgeId(userNo, messageId));
     }
-  }
+  });
 
   await Promise.all(promisedDelete);
 };
@@ -116,7 +116,7 @@ const syncWithImap = async (req, res, next) => {
   // DB에는 없고 IMAP 서버에만 존재하는 메일(메일이 이동되었거나 삭제된 경우)
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
   await updateMails(userNo, categories, dbMails, notMatchedImapMailWithDB);
-  await deleteNoneExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
+  await deleteNonExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   // DB에는 존재하지만 IMAP에는 존재하지 않을 경우
   const mailboxNumbersToDeleteOnDB = categories.filter(category => !imapMessageIds[category]);
