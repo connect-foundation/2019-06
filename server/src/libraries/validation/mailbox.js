@@ -1,7 +1,7 @@
 import ERROR_CODE from '../exception/error-code';
 import ErrorResponse from '../exception/error-response';
 import ErrorField from '../exception/error-field';
-import { MAILBOX_NAME_LENGTH_LIMIT } from '../../const/mail';
+import { MAILBOX_NAME_LENGTH_LIMIT } from '../../constant/mail';
 
 const BLANK = '';
 const nameRegex = /^[0-9a-zA-Z가-힣 ]{1,20}$/;

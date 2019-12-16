@@ -2,7 +2,7 @@
 import uuidv4 from 'uuid';
 import AWS from 'aws-sdk';
 import dotenv from 'dotenv';
-import { FILE_MAX_SIZE } from '../../const/mail';
+import { FILE_MAX_SIZE } from '../../constant/mail';
 
 dotenv.config();
 

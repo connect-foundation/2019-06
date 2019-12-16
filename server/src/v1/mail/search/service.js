@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import DB from '../../../database/index';
 import getPaging from '../../../libraries/paging';
-import { DEFAULT_MAIL_QUERY_OPTIONS, WASTEBASKET_NAME, SORT_TYPE } from '../../../const/mail';
+import { DEFAULT_MAIL_QUERY_OPTIONS, WASTEBASKET_NAME, SORT_TYPE } from '../../../constant/mail';
 
 const getQueryByOptions = ({
   userNo,

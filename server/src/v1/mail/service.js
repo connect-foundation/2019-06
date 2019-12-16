@@ -17,7 +17,7 @@ import {
   WROTE_TO_ME_MAILBOX_NAME,
   DEFAULT_MAIL_QUERY_OPTIONS,
   SORT_TYPE,
-} from '../../const/mail';
+} from '../../constant/mail';
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {

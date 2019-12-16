@@ -1,7 +1,7 @@
 import ERROR_CODE from '../exception/error-code';
 import ErrorField from '../exception/error-field';
 import ErrorResponse from '../exception/error-response';
-import { FILE_MAX_SIZE, UNAVAILABLE_EXTENSION } from '../../const/mail';
+import { FILE_MAX_SIZE, UNAVAILABLE_EXTENSION } from '../../constant/mail';
 
 const add = (a, b) => a + b;
 

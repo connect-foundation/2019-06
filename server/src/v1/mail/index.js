@@ -5,7 +5,7 @@ import mailBox from './box';
 import mailTemplate from './template';
 import attachment from './attachment';
 import search from './search';
-import { MAIL_FILE_MAX_COUNT } from '../../const/mail';
+import { MAIL_FILE_MAX_COUNT } from '../../constant/mail';
 
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
