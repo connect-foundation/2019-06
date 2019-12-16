@@ -22,14 +22,14 @@ const checkSubEmailUniqueConstraintError = error => {
 };
 
 const throwUniqueFieldsError = (users, id, sub_email) => {
-  const errorFields = users.reduce((acc, user) => {
+  const errorFields = users.reduce((errorFields, user) => {
     if (user.id === id) {
-      acc.push(new ErrorField('id', id, '이미 사용중인 아이디 입니다.'));
+      errorFields.push(new ErrorField('id', id, '이미 사용중인 아이디 입니다.'));
     }
     if (user.sub_email === sub_email) {
-      acc.push(new ErrorField('email', sub_email, '이미 가입에 사용한 이메일 입니다.'));
+      errorFields.push(new ErrorField('email', sub_email, '이미 가입에 사용한 이메일 입니다.'));
     }
-    return acc;
+    return errorFields;
   }, []);
 
   throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorFields);
