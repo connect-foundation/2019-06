@@ -41,12 +41,12 @@ const getRawBoxes = imap =>
       const pushBoxNames = (mailbox, parentName) => {
         for (const [mailboxName, mailboxAttributes] of Object.entries(mailbox)) {
           if (parentName !== '') {
-            boxes.push(`${parentName}.${mailboxName}`);
+            boxes.push(parentName + mailboxName);
           } else {
             boxes.push(mailboxName);
           }
           if (mailboxAttributes.children) {
-            pushBoxNames(mailboxAttributes.children, mailboxName);
+            pushBoxNames(mailboxAttributes.children, `${parentName}${mailboxName}.`);
           }
         }
       };
