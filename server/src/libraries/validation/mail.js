@@ -63,14 +63,7 @@ const validateProps = props => {
   return true;
 };
 
-const checkQuery = ({ category, page, sort }) => {
-  const errorFields = [];
-
-  if (category && !isInt(category, CATEGORY_NUMBER_RANGE)) {
-    const errorField = new ErrorField('category', category, '유효하지 않은 값입니다.');
-    errorFields.push(errorField);
-  }
-
+const checkPageAndSort = ({ page, sort }, errorFields) => {
   if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
     const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
     errorFields.push(errorField);
@@ -80,6 +73,18 @@ const checkQuery = ({ category, page, sort }) => {
     const errorField = new ErrorField('sort', sort, '유효하지 않은 정렬기준 입니다.');
     errorFields.push(errorField);
   }
+  return errorFields;
+};
+
+const checkQuery = ({ category, page, sort }) => {
+  const errorFields = [];
+
+  if (category && !isInt(category, CATEGORY_NUMBER_RANGE)) {
+    const errorField = new ErrorField('category', category, '유효하지 않은 값입니다.');
+    errorFields.push(errorField);
+  }
+
+  checkPageAndSort({ page, sort }, errorFields);
 
   if (errorFields.length > 0) {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
@@ -122,16 +127,7 @@ const checkAdvancedSearchQuery = ({
   endDate,
 }) => {
   const errorFields = [];
-
-  if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
-    const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
-    errorFields.push(errorField);
-  }
-
-  if (sort && !SORTING_CRITERIA[sort]) {
-    const errorField = new ErrorField('sort', sort, '유효하지 않은 정렬기준 입니다.');
-    errorFields.push(errorField);
-  }
+  checkPageAndSort({ page, sort }, errorFields);
 
   const lengthCheckTargets = {
     from,
@@ -162,8 +158,30 @@ const checkAdvancedSearchQuery = ({
   if (errorFields.length > 0) {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
   }
-
   return true;
 };
 
-export { validateNos, validateProps, checkQuery, checkAdvancedSearchQuery, isValidYYYYMMDDFormat };
+const checkGeneralSearchQuery = ({ page, sort, searchWord }) => {
+  const errorFields = [];
+
+  checkPageAndSort({ page, sort }, errorFields);
+
+  if (!searchWord || !searchWord.trim()) {
+    const errorField = new ErrorField('searchWord', searchWord, 'searchWord를 입력해주세요.');
+    errorFields.push(errorField);
+  }
+
+  if (errorFields.length > 0) {
+    throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
+  }
+  return true;
+};
+
+export {
+  validateNos,
+  validateProps,
+  checkQuery,
+  checkAdvancedSearchQuery,
+  checkGeneralSearchQuery,
+  isValidYYYYMMDDFormat,
+};
