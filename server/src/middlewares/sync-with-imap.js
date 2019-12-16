@@ -9,7 +9,6 @@ const getDBMails = async (imapMessageIds, userNo) => {
     const userMails = await DB.Mail.findAllMessasgeIds(userNo, mailBoxName);
     userMails.forEach(userMail => {
       dbMails[userMail.message_id] = userMail;
-      delete dbMails[userMail.message_id].message_id;
     });
   }
   return dbMails;
@@ -105,6 +104,7 @@ const syncWithImap = async (req, res, next) => {
   const { no: userNo } = user;
   const imapMessageIds = await getImapMessageIds({ user });
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
+  delete imapMessageIds.INBOX;
 
   await makeMailboxNonExistedInDB(imapMessageIds, userNo);
 
