@@ -1,7 +1,7 @@
 import { Op } from 'sequelize';
 import DB from '../../../database/index';
 import getPaging from '../../../libraries/paging';
-import { DEFAULT_MAIL_QUERY_OPTIONS, WASTEBASKET_NAME, SORT_TYPE } from '../../../constant/mail';
+import { DEFAULT_MAIL_QUERY_OPTIONS, SORT_TYPE } from '../../../constant/mail';
 
 const getQueryByOptions = ({
   userNo,
@@ -97,19 +97,16 @@ const getPagingInfoAndMails = async ({ page, perPageNum, query }) => {
   };
 };
 
-const getWastebasketCategoryNo = async userNo => {
-  const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
-  return no;
-};
-
-const getAdvancedSearchResults = async (userNo, options = {}) => {
+const getAdvancedSearchResults = async (
+  { no: userNo, waste_basket_no: wastebasketNo },
+  options = {},
+) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort, subject, content, from, to, startDate, endDate } = queryOptions;
   let { page, perPageNum } = queryOptions;
 
   page = +page;
   perPageNum = +perPageNum;
-  const wastebasketNo = await getWastebasketCategoryNo(userNo);
   const query = getQueryByOptions({
     userNo,
     perPageNum,
@@ -128,7 +125,10 @@ const getAdvancedSearchResults = async (userNo, options = {}) => {
   return pagingAndMails;
 };
 
-const getGeneralSearchResults = async (userNo, options = {}) => {
+const getGeneralSearchResults = async (
+  { no: userNo, waste_basket_no: wastebasketNo },
+  options = {},
+) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort, searchWord } = queryOptions;
   let { page, perPageNum } = queryOptions;
@@ -136,7 +136,6 @@ const getGeneralSearchResults = async (userNo, options = {}) => {
   page = +page;
   perPageNum = +perPageNum;
 
-  const wastebasketNo = await getWastebasketCategoryNo(userNo);
   const query = getQueryByOptions({
     userNo,
     perPageNum,

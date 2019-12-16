@@ -13,7 +13,6 @@ import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
 import {
   SENT_MAILBOX_NAME,
-  WASTEBASKET_NAME,
   WROTE_TO_ME_MAILBOX_NAME,
   DEFAULT_MAIL_QUERY_OPTIONS,
   SORT_TYPE,
@@ -47,19 +46,13 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebask
   return query;
 };
 
-const getWastebasketCategoryNo = async userNo => {
-  const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
-  return no;
-};
-
-const getMailsByOptions = async (userNo, options = {}) => {
+const getMailsByOptions = async ({ no: userNo, waste_basket_no: wastebasketNo }, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
   category = +category;
   page = +page;
   perPageNum = +perPageNum;
-  const wastebasketNo = await getWastebasketCategoryNo(userNo);
   const query = getQueryByOptions({ userNo, category, perPageNum, page, sort, wastebasketNo });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
