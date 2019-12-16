@@ -14,6 +14,5 @@ router.use('/users', users);
 router.use('/auth', auth);
 router.use('/mail', isAuth, mail);
 router.use('/admin', isAdmin, admin);
-router.get('/', syncWithImap);
 
 export default router;

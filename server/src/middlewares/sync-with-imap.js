@@ -101,7 +101,9 @@ const makeMailboxNonExistInDB = async (imapMessageIds, userNo) => {
 };
 
 const syncWithImap = async (req, res, next) => {
-  const { no: userNo } = req;
+  const {
+    user: { no: userNo },
+  } = req;
   const { user } = req;
   const imapMessageIds = await getImapMessageIds({ user });
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
@@ -127,13 +129,7 @@ const syncWithImap = async (req, res, next) => {
   }
   await DB.Category.destroy({ where: { no: Object.values(mailboxNumbersToDeleteOnDB) } });
 
-  res.send({
-    imapMessageIds,
-    getBoxNameByMessageId,
-    dbMails,
-    categories,
-    notMatchedImapMailWithDB,
-  });
+  next();
 };
 
 export default syncWithImap;
