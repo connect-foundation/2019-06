@@ -11,26 +11,13 @@ import { saveToMailbox } from '../../libraries/imap';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
-
-const SENT_MAILBOX_NAME = '보낸메일함';
-const WASTEBASKET_NAME = '휴지통';
-const WROTE_TO_ME_MAILBOX_NAME = '내게쓴메일함';
-
-const DEFAULT_MAIL_QUERY_OPTIONS = {
-  category: 0,
-  page: 1,
-  perPageNum: 100,
-  sort: 'datedesc',
-};
-
-const SORT_TYPE = {
-  datedesc: [[DB.MailTemplate, 'createdAt', 'DESC']],
-  dateasc: [[DB.MailTemplate, 'createdAt', 'ASC']],
-  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
-  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
-  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
-  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
-};
+import {
+  SENT_MAILBOX_NAME,
+  WASTEBASKET_NAME,
+  WROTE_TO_ME_MAILBOX_NAME,
+  DEFAULT_MAIL_QUERY_OPTIONS,
+  SORT_TYPE,
+} from '../../constant/mail';
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {

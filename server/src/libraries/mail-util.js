@@ -3,6 +3,19 @@ import uuidv4 from 'uuid/v4';
 import replace from './replace';
 
 const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
+const MAX_CONNECTIONS = 1000;
+
+const transporter = nodemailer.createTransport({
+  pool: true,
+  maxConnections: MAX_CONNECTIONS,
+  host: `mail.${DEFAULT_DOMAIN_NAME}`,
+  port: SMTP_PORT,
+  secure: true,
+  auth: {
+    user: MAIL_AUTH_USER,
+    pass: MAIL_AUTH_PASS,
+  },
+});
 
 const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
@@ -80,9 +93,6 @@ const createMailTemplateToFindPassword = password => {
 };
 
 const sendMail = data => {
-  const transport = getTransport();
-  const transporter = nodemailer.createTransport(transport);
-
   transporter.sendMail(data);
 };
 
