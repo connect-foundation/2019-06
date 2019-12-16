@@ -119,7 +119,8 @@ const syncWithImap = async (req, res, next) => {
   await deleteNoneExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   // DB에는 존재하지만 IMAP에는 존재하지 않을 경우
-  // const mailboxesToDeleteOnDB =
+  const mailboxNumbersToDeleteOnDB = categories.filter(category => !imapMessageIds[category]);
+  await DB.Category.destroy({ where: { no: Object.values(mailboxNumbersToDeleteOnDB) } });
 
   res.send({
     imapMessageIds,
