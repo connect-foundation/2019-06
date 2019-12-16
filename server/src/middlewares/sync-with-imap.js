@@ -105,7 +105,6 @@ const syncWithImap = async (req, res, next) => {
   const { no: userNo } = user;
   const imapMessageIds = await getImapMessageIds({ user });
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
-  delete imapMessageIds.INBOX;
 
   await makeMailboxNonExistedInDB(imapMessageIds, userNo);
 
