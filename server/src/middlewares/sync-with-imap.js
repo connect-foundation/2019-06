@@ -101,24 +101,22 @@ const makeMailboxNonExistInDB = async (imapMessageIds, userNo) => {
 };
 
 const syncWithImap = async (req, res, next) => {
-  const {
-    user: { no: userNo },
-  } = req;
   const { user } = req;
+  const { no: userNo } = user;
   const imapMessageIds = await getImapMessageIds({ user });
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
   await makeMailboxNonExistInDB(imapMessageIds, userNo);
 
-  const categories = await getRefinedCategory(userNo);
   const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
-  const dbMails = await getDBMails(imapMessageIds, userNo);
+  const [categories, dbMails] = await Promise.all([
+    getRefinedCategory(userNo),
+    getDBMails(imapMessageIds, userNo),
+  ]);
 
   // DB에는 없고 IMAP 서버에만 존재하는 메일(메일이 이동되었거나 삭제된 경우)
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
-  await updateMails(userNo, categories, dbMails, notMatchedImapMailWithDB);
-  await deleteNonExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   // DB에는 존재하지만 IMAP에는 존재하지 않을 경우
   const mailboxNumbersToDeleteOnDB = [];
@@ -127,6 +125,9 @@ const syncWithImap = async (req, res, next) => {
       mailboxNumbersToDeleteOnDB.push(categoryNo);
     }
   }
+
+  await updateMails(userNo, categories, dbMails, notMatchedImapMailWithDB);
+  await deleteNonExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
   await DB.Category.destroy({ where: { no: Object.values(mailboxNumbersToDeleteOnDB) } });
 
   next();
