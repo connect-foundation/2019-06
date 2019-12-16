@@ -30,9 +30,7 @@ const getQueryByOptions = ({
         [Op.ne]: wastebasketNo,
       },
     },
-    mailTemplateFilter: {
-      createdAt: {},
-    },
+    mailTemplateFilter: {},
   };
 
   if (SORT_TYPE[sort]) {
@@ -92,7 +90,6 @@ const getPagingInfoAndMails = async ({ page, perPageNum, query }) => {
     perPageNum,
   };
   const pagingResult = getPaging(totalCount, pagingOptions);
-  pagingResult.totalCount = totalCount;
 
   return {
     paging: pagingResult,
