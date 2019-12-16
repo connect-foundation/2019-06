@@ -1,18 +1,26 @@
 import React from 'react';
 import S from './styled';
-import { BLUR_EVENTS } from '../context';
+import { CHANGE_EVENT } from '../context';
 
-const getActionTypeByLabel = {
-  제목: BLUR_EVENTS.SUBJECT,
-  내용: BLUR_EVENTS.CONTENT,
-  보낸사람: BLUR_EVENTS.FROM,
-  받는사람: BLUR_EVENTS.TO,
+const ACTION_TYPE = {
+  제목: CHANGE_EVENT.INPUT.SUBJECT,
+  내용: CHANGE_EVENT.INPUT.CONTENT,
+  보낸사람: CHANGE_EVENT.INPUT.FROM,
+  받는사람: CHANGE_EVENT.INPUT.TO,
 };
 
-const SearchInputRow = ({ label, dispatch }) => {
-  const actionType = getActionTypeByLabel[label];
+const STATE_VALUE = {
+  제목: 'subject',
+  내용: 'content',
+  보낸사람: 'from',
+  받는사람: 'to',
+};
 
-  const handleInputBlur = ({ target: { value } }) => {
+const SearchInputRow = ({ label, dispatch, state }) => {
+  const actionType = ACTION_TYPE[label];
+  const stateValue = STATE_VALUE[label];
+
+  const handleInputChange = ({ target: { value } }) => {
     if (value && value !== '') {
       value = value.trim();
     }
@@ -22,7 +30,7 @@ const SearchInputRow = ({ label, dispatch }) => {
   return (
     <S.FlexRowWrap>
       <S.Label>{label}</S.Label>
-      <S.Input onBlur={handleInputBlur} />
+      <S.Input onChange={handleInputChange} value={state[stateValue]} />
     </S.FlexRowWrap>
   );
 };
