@@ -38,7 +38,7 @@ const getRawBoxes = imap =>
     imap.getBoxes((err, box) => {
       if (err) reject(err);
       const boxes = [];
-      const recursive = (mailbox, parentName) => {
+      const pushBoxNames = (mailbox, parentName) => {
         for (const [mailboxName, mailboxAttributes] of Object.entries(mailbox)) {
           if (parentName !== '') {
             boxes.push(`${parentName}.${mailboxName}`);
@@ -46,11 +46,11 @@ const getRawBoxes = imap =>
             boxes.push(mailboxName);
           }
           if (mailboxAttributes.children) {
-            recursive(mailboxAttributes.children, mailboxName);
+            pushBoxNames(mailboxAttributes.children, mailboxName);
           }
         }
       };
-      resolve((recursive(box, ''), boxes));
+      resolve((pushBoxNames(box, ''), boxes));
     });
   });
 

@@ -1,12 +1,12 @@
 import { getImapMessageIds } from '../libraries/imap';
 import DB from '../database';
 
-const getDBMails = async imapMessageIds => {
+const getDBMails = async (imapMessageIds, userNo) => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
   for (let i = 0; i < mailBoxNames.length; i++) {
     // eslint-disable-next-line no-await-in-loop
-    const userMails = await DB.Mail.findAllMessasgeIds(4, mailBoxNames[i]);
+    const userMails = await DB.Mail.findAllMessasgeIds(userNo, mailBoxNames[i]);
     userMails.forEach(userMail => {
       dbMails[userMail.message_id] = userMail;
       delete dbMails[userMail.message_id].message_id;
@@ -47,18 +47,20 @@ const getImapMessageIdsReverse = imapMessageIds => {
   return imapMessageIdsReverse;
 };
 
-const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
+const updateMails = async (userNo, categories, dbMails, notMatchedImapMailWithDB) => {
   const updateMethods = [];
   for (const [mailboxName, messageIds] of Object.entries(notMatchedImapMailWithDB)) {
     for (let i = 0; i < messageIds.length; i++) {
       if (dbMails[messageIds[i]] && mailboxName !== dbMails[messageIds[i]].name) {
         if (mailboxName !== '휴지통') {
           updateMethods.push(
-            DB.Mail.updateByMessageId(4, messageIds[i], { category_no: categories[mailboxName] }),
+            DB.Mail.updateByMessageId(userNo, messageIds[i], {
+              category_no: categories[mailboxName],
+            }),
           );
         } else {
           updateMethods.push(
-            DB.Mail.updateByMessageId(4, messageIds[i], {
+            DB.Mail.updateByMessageId(userNo, messageIds[i], {
               category_no: categories[mailboxName],
               prev_category_no: dbMails[messageIds[i]].category_no,
             }),
@@ -70,7 +72,7 @@ const updateMails = async (categories, dbMails, notMatchedImapMailWithDB) => {
   await Promise.all(updateMethods);
 };
 
-const deleteNoneExistMailsInDB = async (onlyImapMessageIds, onlyDBMessageIds) => {
+const deleteNoneExistMailsInDB = async (userNo, onlyImapMessageIds, onlyDBMessageIds) => {
   const onlyImapMessageIdsObject = {};
   const promisedDelete = [];
 
@@ -80,7 +82,7 @@ const deleteNoneExistMailsInDB = async (onlyImapMessageIds, onlyDBMessageIds) =>
 
   for (let i = 0; i < onlyDBMessageIds.length; i++) {
     if (!onlyImapMessageIdsObject[onlyDBMessageIds[i]]) {
-      promisedDelete.push(DB.Mail.deleteByMesssasgeId(4, onlyDBMessageIds[i]));
+      promisedDelete.push(DB.Mail.deleteByMesssasgeId(userNo, onlyDBMessageIds[i]));
     }
   }
 
@@ -88,22 +90,22 @@ const deleteNoneExistMailsInDB = async (onlyImapMessageIds, onlyDBMessageIds) =>
 };
 
 const syncWithImap = async (req, res, next) => {
-  const imapMessageIds = await getImapMessageIds({
-    user: { email: 'yaahoo@daitnu.com', password: '12345678' },
-  });
+  const { no: userNo } = req;
+  const { user } = req;
+  const imapMessageIds = await getImapMessageIds(user);
   imapMessageIds['받은메일함'] = imapMessageIds.INBOX;
   delete imapMessageIds.INBOX;
 
   const getBoxNameByMessageId = getImapMessageIdsReverse(imapMessageIds);
 
-  const categories = await getRefinedCategory(4);
-  const dbMails = await getDBMails(imapMessageIds);
+  const categories = await getRefinedCategory(userNo);
+  const dbMails = await getDBMails(imapMessageIds, userNo);
 
   // DB에는 없고 IMAP 서버에만 존재하는 메일(메일이 이동되었거나 삭제된 경우)
   const notMatchedImapMailWithDB = getNotMatchedImapMailWithDB(dbMails, imapMessageIds);
 
-  await updateMails(categories, dbMails, notMatchedImapMailWithDB);
-  await deleteNoneExistMailsInDB(Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
+  await updateMails(userNo, categories, dbMails, notMatchedImapMailWithDB);
+  await deleteNoneExistMailsInDB(userNo, Object.keys(getBoxNameByMessageId), Object.keys(dbMails));
 
   res.send({
     imapMessageIds,
