@@ -6,7 +6,6 @@ import auth from './auth';
 import admin from './admin';
 
 import { isAuth, isAdmin } from '../middlewares/auth';
-import syncWithImap from '../middlewares/sync-with-imap';
 
 const router = Router();
 

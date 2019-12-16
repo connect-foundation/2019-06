@@ -113,11 +113,11 @@ export const getImapMessageIds = async ({ user }) => {
   return messages;
 };
 
-export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => {
+export const moveMail = async ({ user, originBoxName, targetBoxName, searchArgs }) => {
   if (originBoxName === '받은메일함') {
     originBoxName = 'INBOX';
   }
-  connectImap(user, imap => {
+  await connectImap(user, imap => {
     imap.openBox(originBoxName, true, openErr => {
       if (openErr) {
         const errorField = new ErrorField('mailBox', originBoxName, '존재하지 않는 메일함입니다');
@@ -144,8 +144,8 @@ export const moveMail = ({ user, originBoxName, targetBoxName, searchArgs }) => 
   });
 };
 
-export const saveToMailbox = ({ user, msg, mailboxName }) => {
-  connectImap(user, imap => {
+export const saveToMailbox = async ({ user, msg, mailboxName }) => {
+  await connectImap(user, imap => {
     imap.append(msg.toString(), { mailbox: PREFIX + mailboxName }, err => {
       if (err) {
         const errorField = new ErrorField('mailBox', mailboxName, '존재하지 않는 메일함입니다');
@@ -156,8 +156,8 @@ export const saveToMailbox = ({ user, msg, mailboxName }) => {
   });
 };
 
-export const addMailBox = ({ user, name }) => {
-  connectImap(user, imap => {
+export const addMailBox = async ({ user, name }) => {
+  await connectImap(user, imap => {
     imap.addBox(PREFIX + name, err => {
       if (err) {
         const errorField = new ErrorField('mailBox', name, '존재하지 않는 메일함입니다');
@@ -168,8 +168,8 @@ export const addMailBox = ({ user, name }) => {
   });
 };
 
-export const renameMailBox = ({ user, oldName, newName }) => {
-  connectImap(user, imap => {
+export const renameMailBox = async ({ user, oldName, newName }) => {
+  await connectImap(user, imap => {
     imap.renameBox(PREFIX + oldName, PREFIX + newName, err => {
       if (err) {
         const errorField = new ErrorField('mailBox', oldName, '존재하지 않는 메일함입니다');
@@ -180,8 +180,8 @@ export const renameMailBox = ({ user, oldName, newName }) => {
   });
 };
 
-export const deleteMailBox = ({ user, name }) => {
-  connectImap(user, imap => {
+export const deleteMailBox = async ({ user, name }) => {
+  await connectImap(user, imap => {
     imap.delBox(PREFIX + name, err => {
       if (err) {
         const errorField = new ErrorField('mailBox', name, '존재하지 않는 메일함입니다');
