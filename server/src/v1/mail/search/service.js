@@ -1,24 +1,7 @@
 import { Op } from 'sequelize';
 import DB from '../../../database/index';
 import getPaging from '../../../libraries/paging';
-
-const WASTEBASKET_NAME = '휴지통';
-
-const DEFAULT_MAIL_QUERY_OPTIONS = {
-  category: 0,
-  page: 1,
-  perPageNum: 100,
-  sort: 'datedesc',
-};
-
-const SORT_TYPE = {
-  datedesc: [[DB.MailTemplate, 'createdAt', 'DESC']],
-  dateasc: [[DB.MailTemplate, 'createdAt', 'ASC']],
-  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
-  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
-  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
-  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
-};
+import { DEFAULT_MAIL_QUERY_OPTIONS, WASTEBASKET_NAME, SORT_TYPE } from '../../../constant/mail';
 
 const getQueryByOptions = ({
   userNo,
@@ -101,16 +84,31 @@ const getQueryByOptions = ({
   return query;
 };
 
+const getPagingInfoAndMails = async ({ page, perPageNum, query }) => {
+  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
+
+  const pagingOptions = {
+    page,
+    perPageNum,
+  };
+  const pagingResult = getPaging(totalCount, pagingOptions);
+  pagingResult.totalCount = totalCount;
+
+  return {
+    paging: pagingResult,
+    mails,
+  };
+};
+
 const getWastebasketCategoryNo = async userNo => {
   const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
   return no;
 };
 
-const getMailsByOptions = async (userNo, options = {}) => {
+const advancedSearch = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
-  const { sort } = queryOptions;
+  const { sort, subject, content, from, to, startDate, endDate } = queryOptions;
   let { page, perPageNum } = queryOptions;
-  const { subject, content, from, to, startDate, endDate } = queryOptions;
 
   page = +page;
   perPageNum = +perPageNum;
@@ -129,21 +127,39 @@ const getMailsByOptions = async (userNo, options = {}) => {
     endDate,
   });
 
-  const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
+  const pagingAndMails = await getPagingInfoAndMails({ page, perPageNum, query });
+  return pagingAndMails;
+};
 
-  const pagingOptions = {
-    page,
+const generalSearch = async (userNo, options = {}) => {
+  const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
+  const { sort, searchWord } = queryOptions;
+  let { page, perPageNum } = queryOptions;
+
+  page = +page;
+  perPageNum = +perPageNum;
+
+  const wastebasketNo = await getWastebasketCategoryNo(userNo);
+  const query = getQueryByOptions({
+    userNo,
     perPageNum,
-  };
-  const pagingResult = getPaging(totalCount, pagingOptions);
-  pagingResult.totalCount = totalCount;
+    page,
+    sort,
+    wastebasketNo,
+  });
 
-  return {
-    paging: pagingResult,
-    mails,
+  query.mailTemplateFilter = {
+    [Op.or]: [
+      { subject: { [Op.substring]: searchWord } },
+      { text: { [Op.substring]: searchWord } },
+    ],
   };
+
+  const pagingAndMails = await getPagingInfoAndMails({ page, perPageNum, query });
+  return pagingAndMails;
 };
 
 export default {
-  getMailsByOptions,
+  advancedSearch,
+  generalSearch,
 };
