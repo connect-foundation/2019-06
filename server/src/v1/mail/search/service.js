@@ -102,7 +102,7 @@ const getWastebasketCategoryNo = async userNo => {
   return no;
 };
 
-const advancedSearch = async (userNo, options = {}) => {
+const getAdvancedSearchResults = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort, subject, content, from, to, startDate, endDate } = queryOptions;
   let { page, perPageNum } = queryOptions;
@@ -128,7 +128,7 @@ const advancedSearch = async (userNo, options = {}) => {
   return pagingAndMails;
 };
 
-const generalSearch = async (userNo, options = {}) => {
+const getGeneralSearchResults = async (userNo, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort, searchWord } = queryOptions;
   let { page, perPageNum } = queryOptions;
@@ -157,6 +157,6 @@ const generalSearch = async (userNo, options = {}) => {
 };
 
 export default {
-  advancedSearch,
-  generalSearch,
+  getAdvancedSearchResults,
+  getGeneralSearchResults,
 };

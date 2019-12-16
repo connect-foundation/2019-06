@@ -1,14 +1,17 @@
 import service from './service';
-import { checkAdvancedSearchQuery } from '../../../libraries/validation/mail';
+import {
+  checkAdvancedSearchQuery,
+  checkGeneralSearchQuery,
+} from '../../../libraries/validation/mail';
 
-const advanced = async (req, res, next) => {
+const getAdvancedSearchResults = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
   let mails;
 
   try {
     checkAdvancedSearchQuery(query);
-    mails = await service.advancedSearch(userNo, query);
+    mails = await service.getAdvancedSearchResults(userNo, query);
   } catch (error) {
     return next(error);
   }
@@ -16,13 +19,14 @@ const advanced = async (req, res, next) => {
   return res.json(mails);
 };
 
-const general = async (req, res, next) => {
+const getGeneralSearchResults = async (req, res, next) => {
   const userNo = req.user.no;
   const { query } = req;
   let mails;
 
   try {
-    mails = await service.generalSearch(userNo, query);
+    checkGeneralSearchQuery(query);
+    mails = await service.getGeneralSearchResults(userNo, query);
   } catch (error) {
     return next(error);
   }
@@ -31,6 +35,6 @@ const general = async (req, res, next) => {
 };
 
 export default {
-  advanced,
-  general,
+  getAdvancedSearchResults,
+  getGeneralSearchResults,
 };
