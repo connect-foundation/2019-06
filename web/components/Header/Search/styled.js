@@ -66,6 +66,9 @@ const SearchDetailWrap = styled.div`
 
 const TextRight = styled.div`
   text-align: right;
+  & > button + button {
+    margin-left: 1rem;
+  }
 `;
 
 export default {

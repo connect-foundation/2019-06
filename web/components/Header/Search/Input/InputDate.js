@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import S from './styled';
-import { DATE_CHANGES } from '../context';
+import { CHANGE_EVENT } from '../context';
 
 const DATE_FORMAT = 'yyyyMMdd';
-const { START_DATE, END_DATE } = DATE_CHANGES;
+const { START_DATE, END_DATE } = CHANGE_EVENT.DATE;
 
 const DateInput = ({ label, dispatch, startDate, endDate }) => {
   const [today] = useState(new Date());

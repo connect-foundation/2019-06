@@ -103,15 +103,26 @@ const handleAction = {
   },
 };
 
+const getRequestPathByQuery = ({ view, searchLevel }) => {
+  const isSearch = view === 'search';
+
+  if (!isSearch) {
+    return '/mail';
+  }
+
+  const path = searchLevel === 'advanced' ? '/mail/search/advanced' : '/mail/search/general';
+  return path;
+};
+
 const MailArea = () => {
   const router = useRouter();
   const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { view } = urlQuery;
+
   const query = getQueryByOptions(urlQuery);
-  const isSearch = view === 'search';
-  const URL = isSearch ? `/mail/search?${query}` : `/mail?${query}`;
+  const requestPath = getRequestPathByQuery(urlQuery);
+  const URL = `${requestPath}?${query}`;
   const fetchingMailData = useFetch(URL);
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
