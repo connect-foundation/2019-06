@@ -158,18 +158,18 @@ const model = (sequelize, DataTypes) => {
     );
   };
 
-  Mail.findAllMessasgeIds = (userNo, category_name) => {
+  Mail.findAllMessasgeIds = (user_no, category_name) => {
     return Mail.findAll({
       attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
       where: {
-        owner: userNo,
+        owner: user_no,
       },
       include: [
         {
           attributes: [],
           model: sequelize.models.Category,
           where: {
-            user_no: userNo,
+            user_no,
             name: category_name,
           },
         },
