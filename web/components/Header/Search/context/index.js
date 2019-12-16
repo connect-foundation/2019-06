@@ -7,33 +7,38 @@ export const initialState = {
   endDate: null,
 };
 
-export const BLUR_EVENTS = {
-  SUBJECT: 'BLUR_SUBJECT',
-  CONTENT: 'BLUR_CONTENT',
-  FROM: 'BLUR_FROM',
-  TO: 'BLUR_TO',
+export const CHANGE_EVENT = {
+  DATE: {
+    START_DATE: 'START_DATE',
+    END_DATE: 'END_DATE',
+  },
+  INPUT: {
+    SUBJECT: 'SUBJECT',
+    CONTENT: 'CONTENT',
+    TO: 'TO',
+    FROM: 'FROM',
+  },
 };
 
-export const DATE_CHANGES = {
-  START_DATE: 'CHANGE_START_DATE',
-  END_DATE: 'CHANGE_END_DATE',
-};
+export const RESET_CLICK = 'RESET_CLICK';
 
 export const reducer = (state, action) => {
   const { type, payload } = action;
   switch (type) {
-    case BLUR_EVENTS.SUBJECT:
+    case CHANGE_EVENT.INPUT.SUBJECT:
       return { ...state, subject: payload };
-    case BLUR_EVENTS.CONTENT:
+    case CHANGE_EVENT.INPUT.CONTENT:
       return { ...state, content: payload };
-    case BLUR_EVENTS.FROM:
+    case CHANGE_EVENT.INPUT.FROM:
       return { ...state, from: payload };
-    case BLUR_EVENTS.TO:
+    case CHANGE_EVENT.INPUT.TO:
       return { ...state, to: payload };
-    case DATE_CHANGES.START_DATE:
+    case CHANGE_EVENT.DATE.START_DATE:
       return { ...state, startDate: payload };
-    case DATE_CHANGES.END_DATE:
+    case CHANGE_EVENT.DATE.END_DATE:
       return { ...state, endDate: payload };
+    case RESET_CLICK:
+      return { ...initialState };
     default:
       return { ...state };
   }

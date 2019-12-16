@@ -7,7 +7,7 @@ import moment from 'moment';
 import S from './styled';
 import SearchInputRow from './Input';
 import InputDate from './Input/InputDate';
-import { initialState, reducer } from './context';
+import { initialState, reducer, RESET_CLICK } from './context';
 import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const inputLabels = ['제목', '내용', '보낸사람', '받는사람'];
@@ -29,7 +29,9 @@ const Search = () => {
   }, []);
 
   const handleSearchClick = () => {
-    changeUrlWithoutRunning({ view: 'search', searchWord: searchText, searchLevel: 'general' });
+    if (searchText !== '' && searchText.trim() !== '') {
+      changeUrlWithoutRunning({ view: 'search', searchWord: searchText, searchLevel: 'general' });
+    }
   };
 
   const handleDetailSearchClick = () => {
@@ -39,6 +41,11 @@ const Search = () => {
     const searchQueries = {};
 
     for (let [key, value] of Object.entries(state)) {
+      if (!value) {
+        continue;
+      }
+
+      value = value.trim();
       if (!value) {
         continue;
       }
@@ -64,6 +71,11 @@ const Search = () => {
     }
   };
 
+  const handleResetClick = () => {
+    dispatch({ type: RESET_CLICK });
+    setSearchText('');
+  };
+
   return (
     <S.Wrap ref={searchWrapRef}>
       <S.SearchBar>
@@ -83,7 +95,12 @@ const Search = () => {
       </S.SearchBar>
       <S.SearchDetailWrap visible={detailToggleBtn}>
         {inputLabels.map((inputLabel, i) => (
-          <SearchInputRow key={`searchInput-${i}`} label={inputLabel} dispatch={dispatch} />
+          <SearchInputRow
+            key={`searchInput-${i}`}
+            label={inputLabel}
+            dispatch={dispatch}
+            state={state}
+          />
         ))}
         <InputDate
           label="기간"
@@ -92,6 +109,9 @@ const Search = () => {
           endDate={state.endDate}
         />
         <S.TextRight>
+          <Button variant="contained" color="default" onClick={handleResetClick}>
+            초기화
+          </Button>
           <Button variant="contained" color="primary" onClick={handleDetailSearchClick}>
             검색하기
           </Button>
