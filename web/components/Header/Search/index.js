@@ -29,7 +29,7 @@ const Search = () => {
   }, []);
 
   const handleSearchClick = () => {
-    if (searchText !== '') {
+    if (searchText !== '' && searchText.trim() !== '') {
       changeUrlWithoutRunning({ view: 'search', searchWord: searchText, searchLevel: 'general' });
     }
   };
@@ -41,6 +41,11 @@ const Search = () => {
     const searchQueries = {};
 
     for (let [key, value] of Object.entries(state)) {
+      if (!value) {
+        continue;
+      }
+
+      value = value.trim();
       if (!value) {
         continue;
       }

@@ -21,16 +21,13 @@ const SearchInputRow = ({ label, dispatch, state }) => {
   const stateValue = STATE_VALUE[label];
 
   const handleInputChange = ({ target: { value } }) => {
-    if (value && value !== '') {
-      value = value.trim();
-    }
     dispatch({ type: actionType, payload: value });
   };
 
   return (
     <S.FlexRowWrap>
       <S.Label>{label}</S.Label>
-      <S.Input onChange={handleInputChange} value={state[stateValue]} />
+      <S.Input onChange={handleInputChange} value={state[stateValue]} maxLength={100} />
     </S.FlexRowWrap>
   );
 };
