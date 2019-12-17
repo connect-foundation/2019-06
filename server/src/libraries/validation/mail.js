@@ -63,9 +63,14 @@ const validateProps = props => {
   return true;
 };
 
-const checkPageAndSort = ({ page, sort }, errorFields) => {
+const checkPageAndSortAndPerPageNum = ({ page, sort, perPageNum }, errorFields) => {
   if (page && !isInt(page, PAGE_NUMBER_RANGE)) {
     const errorField = new ErrorField('page', page, '유효하지 않은 값입니다.');
+    errorFields.push(errorField);
+  }
+
+  if (perPageNum && !isInt(perPageNum, PAGE_NUMBER_RANGE)) {
+    const errorField = new ErrorField('perPageNum', perPageNum, '유효하지 않은 값입니다.');
     errorFields.push(errorField);
   }
 
@@ -76,7 +81,7 @@ const checkPageAndSort = ({ page, sort }, errorFields) => {
   return errorFields;
 };
 
-const checkQuery = ({ category, page, sort }) => {
+const checkQuery = ({ category, page, perPageNum, sort }) => {
   const errorFields = [];
 
   if (category && !isInt(category, CATEGORY_NUMBER_RANGE)) {
@@ -84,7 +89,7 @@ const checkQuery = ({ category, page, sort }) => {
     errorFields.push(errorField);
   }
 
-  checkPageAndSort({ page, sort }, errorFields);
+  checkPageAndSortAndPerPageNum({ page, sort, perPageNum }, errorFields);
 
   if (errorFields.length > 0) {
     throw new ErrorResponse(ERROR_CODE.INVALID_INPUT_VALUE, errorFields);
@@ -125,9 +130,10 @@ const checkAdvancedSearchQuery = ({
   subject,
   startDate,
   endDate,
+  perPageNum,
 }) => {
   const errorFields = [];
-  checkPageAndSort({ page, sort }, errorFields);
+  checkPageAndSortAndPerPageNum({ page, sort, perPageNum }, errorFields);
 
   const lengthCheckTargets = {
     from,
@@ -161,10 +167,10 @@ const checkAdvancedSearchQuery = ({
   return true;
 };
 
-const checkGeneralSearchQuery = ({ page, sort, searchWord }) => {
+const checkGeneralSearchQuery = ({ page, sort, perPageNum, searchWord }) => {
   const errorFields = [];
 
-  checkPageAndSort({ page, sort }, errorFields);
+  checkPageAndSortAndPerPageNum({ page, sort, perPageNum }, errorFields);
 
   if (!searchWord || !searchWord.trim()) {
     const errorField = new ErrorField('searchWord', searchWord, 'searchWord를 입력해주세요.');

@@ -85,7 +85,6 @@ describe('checkQuery....', () => {
     try {
       checkQuery({ ...data, page: '-1' });
     } catch (err) {
-      const { fieldErrors } = err;
       err.should.be.an.instanceOf(ErrorResponse);
     }
   });
@@ -96,6 +95,36 @@ describe('checkQuery....', () => {
     } catch (err) {
       const { fieldErrors } = err;
       fieldErrors.should.have.length(2);
+    }
+  });
+
+  it('# perPagNum이 유효하지않으면 throw를 던진다', () => {
+    try {
+      checkQuery({ perPageNum: '-1' });
+    } catch (err) {
+      const { fieldErrors } = err;
+      fieldErrors[0].field.should.be.equals('perPageNum');
+      fieldErrors[0].value.should.be.equals('-1');
+    }
+  });
+
+  it('# perPagNum이 유효하지않으면 throw를 던진다2', () => {
+    try {
+      checkQuery({ perPageNum: '0' });
+    } catch (err) {
+      const { fieldErrors } = err;
+      fieldErrors[0].field.should.be.equals('perPageNum');
+      fieldErrors[0].value.should.be.equals('0');
+    }
+  });
+
+  it('# perPagNum이 유효하지않으면 throw를 던진다3', () => {
+    try {
+      checkQuery({ perPageNum: 'ㅁㄴㅇ' });
+    } catch (err) {
+      const { fieldErrors } = err;
+      fieldErrors[0].field.should.be.equals('perPageNum');
+      fieldErrors[0].value.should.be.equals('ㅁㄴㅇ');
     }
   });
 
