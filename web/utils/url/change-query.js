@@ -29,10 +29,11 @@ const getQueryByOptions = ({
   to,
   searchLevel,
   searchWord,
+  mailIndex,
 }) => {
   const queries = [];
   const setQueries = (key, value) => {
-    if (value) {
+    if (value !== undefined) {
       queries.push(`${key}=${value}`);
     }
   };
@@ -50,6 +51,7 @@ const getQueryByOptions = ({
   setQueries('startDate', startDate);
   setQueries('endDate', endDate);
   setQueries('sort', sort);
+  setQueries('mailIndex', mailIndex);
   return queries.join('&');
 };
 
