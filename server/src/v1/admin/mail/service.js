@@ -8,7 +8,7 @@ import { makeMimeMessage } from '../../../libraries/mimemessage';
 import { saveToMailbox } from '../../../libraries/imap';
 import { getStream } from '../../../libraries/storage/ncloud';
 
-const ALLOWED_TIME = 10;
+const AVAILABLE_TIME = 10;
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 
@@ -61,7 +61,7 @@ const sendReservationMailsOfOwner = async (owner, mails) => {
 
 const handleReservationMails = async () => {
   const date = new Date();
-  date.setMinutes(date.getMinutes() + ALLOWED_TIME);
+  date.setMinutes(date.getMinutes() + AVAILABLE_TIME);
 
   const mailsFromDB = await DB.Mail.findAllPastReservationMailByDate(date);
   const mailsPerUser = {};
