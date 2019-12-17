@@ -19,7 +19,7 @@ const SNACKBAR_MSG = {
   },
 };
 
-export const getDialogData = (
+export const getDialogData = ({
   type,
   handleSnackbarState,
   categories,
@@ -27,7 +27,7 @@ export const getDialogData = (
   setDialogOpen,
   setCategories,
   dispatch,
-) => {
+}) => {
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   switch (type) {
