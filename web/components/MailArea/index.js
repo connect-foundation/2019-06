@@ -47,8 +47,8 @@ const SNACKBAR_MSG = {
   },
 };
 
-const loadNewMails = async (query, dispatch) => {
-  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
+const loadNewMails = async (url, dispatch) => {
+  const { isError, data } = await mailRequest.get(url);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
@@ -71,32 +71,32 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.DELETE]: async ({ mail, dispatch, query, wastebasketNo, openSnackbar }) => {
+  [ACTION.DELETE]: async ({ mail, dispatch, url, wastebasketNo, openSnackbar }) => {
     try {
       const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE;
       }
-      await loadNewMails(query, dispatch);
+      await loadNewMails(url, dispatch);
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
     } catch (errorMessage) {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, query, openSnackbar }) => {
+  [ACTION.DELETE_FOREVER]: async ({ mail, dispatch, url, openSnackbar }) => {
     try {
       const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
       }
-      await loadNewMails(query, dispatch);
+      await loadNewMails(url, dispatch);
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
     } catch (errorMessage) {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.READ]: ({ mail, index, urlQuery }) => {
-    changeUrlWithoutRunning({ ...urlQuery, view: 'read', mailNo: mail.no, mailIndex: index });
+  [ACTION.READ]: ({ mail, index, query }) => {
+    changeUrlWithoutRunning({ ...query, view: 'read', mailNo: mail.no, mailIndex: index });
   },
 };
 
@@ -121,14 +121,13 @@ const getMailList = ({ mails, categoryNo }) => {
 };
 
 const MailArea = () => {
-  const router = useRouter();
-  const { query: urlQuery } = router;
+  const { query } = useRouter();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const query = getQueryByOptions(urlQuery);
-  const requestPath = getRequestPathByQuery(urlQuery);
-  const URL = `${requestPath}?${query}`;
-  const fetchingMailData = useFetch(URL);
+  const queryString = getQueryByOptions(query);
+  const requestPath = getRequestPathByQuery(query);
+  const url = `${requestPath}?${queryString}`;
+  const fetchingMailData = useFetch(url);
   const openSnackbar = (variant, message) => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   };
@@ -152,7 +151,7 @@ const MailArea = () => {
   }
 
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
-  const mailList = getMailList({ mails, categoryNo: urlQuery.category || 0 });
+  const mailList = getMailList({ mails, categoryNo: query.category || 0 });
 
   const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
@@ -167,11 +166,19 @@ const MailArea = () => {
     const [action, index] = id.split('-');
     const mail = mails[index];
     if (Object.values(ACTION).includes(action)) {
-      handleAction[action]({ mail, dispatch, query, wastebasketNo, openSnackbar, index, urlQuery });
+      handleAction[action]({
+        mail,
+        dispatch,
+        query,
+        wastebasketNo,
+        openSnackbar,
+        index,
+        url,
+      });
     }
   };
 
-  const categoryNo = +urlQuery.category || 0;
+  const categoryNo = +query.category || 0;
   const categoryName = categoryNo === 0 ? '전체메일함' : categoryNameByNo[categoryNo];
   const title = `${categoryName} (${paging.totalCount})`;
   return (

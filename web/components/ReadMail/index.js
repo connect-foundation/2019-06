@@ -64,8 +64,8 @@ const ReadMail = () => {
   const [attachments, setAttachments] = useState(null);
   const queryString = getQueryByOptions(query);
   const requestPath = getRequestPathByQuery(query);
-  const URL = `${requestPath}?${queryString}`;
-  const fetcher = useFetch(URL);
+  const url = `${requestPath}?${queryString}`;
+  const fetcher = useFetch(url);
 
   useEffect(() => {
     if (!fetcher.data) {

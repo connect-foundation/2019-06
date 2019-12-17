@@ -65,6 +65,7 @@ const [ADD, MODIFY, DELETE] = [0, 1, 2];
 
 const Aside = () => {
   const classes = useStyles();
+  const { query } = useRouter();
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -72,9 +73,7 @@ const Aside = () => {
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const router = useRouter();
-  const { query } = router;
-  const queryCategory = Number(router.query.category) || 0;
+  const queryCategory = Number(query.category) || 0;
 
   const fetchingCategories = useFetch(URL);
 

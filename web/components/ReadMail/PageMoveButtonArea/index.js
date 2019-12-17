@@ -55,7 +55,6 @@ const PageMoveButtonArea = ({ index }) => {
       newMails = await loadNewMails(url, dispatch);
       index = setIndex(newMails);
     }
-    console.log(newMails);
     const mail = newMails[move(index)];
     changeUrlWithoutRunning({
       ...query,

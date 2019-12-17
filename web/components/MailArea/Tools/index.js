@@ -35,6 +35,7 @@ import {
   changeUrlWithoutRunning,
   changeView,
   VIEW_STRING,
+  getRequestPathByQuery,
 } from '../../../utils/url/change-query';
 import mailRequest from '../../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
@@ -84,17 +85,15 @@ const getArrowIcon = sortValue =>
     <ArrowDownwardIcon fontSize={'small'} />
   );
 
-const loadNewMails = async (urlQuery, dispatch) => {
-  const query = getQueryByOptions(urlQuery);
-  const { isError, data } = await mailRequest.get(`/mail/?${query}`);
+const loadNewMails = async (url, dispatch) => {
+  const { isError, data } = await mailRequest.get(url);
   if (isError) {
     throw SNACKBAR_MSG.ERROR.LOAD;
   }
   dispatch(handleMailsChange({ ...data }));
   const { mails, paging } = data;
   if (mails.length === 0 && paging.page !== 1) {
-    const { category } = urlQuery;
-    changeUrlWithoutRunning({ category, page: paging.page });
+    changeUrlWithoutRunning({ page: paging.page });
   }
 };
 
@@ -132,14 +131,14 @@ const buttons = [
     name: '삭제',
     visible: true,
     icon: <DeleteIcon />,
-    handleClick: async ({ selectedMails, dispatch, wastebasketNo, openSnackbar, urlQuery }) => {
+    handleClick: async ({ selectedMails, dispatch, wastebasketNo, openSnackbar, url }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.update(nos, { category_no: wastebasketNo });
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE;
         }
-        await loadNewMails(urlQuery, dispatch);
+        await loadNewMails(url, dispatch);
         openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE(selectedMails.length));
       } catch (errorMessage) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
@@ -154,14 +153,14 @@ const buttons = [
     name: '영구삭제',
     visible: true,
     icon: <DeleteForeverIcon />,
-    handleClick: async ({ selectedMails, dispatch, openSnackbar, urlQuery }) => {
+    handleClick: async ({ selectedMails, dispatch, openSnackbar, url }) => {
       try {
         const nos = selectedMails.map(({ no }) => no);
         const { isError } = await mailRequest.remove(nos);
         if (isError) {
           throw SNACKBAR_MSG.ERROR.DELETE_FOREVER;
         }
-        await loadNewMails(urlQuery, dispatch);
+        await loadNewMails(url, dispatch);
         openSnackbar(
           SNACKBAR_VARIANT.SUCCESS,
           SNACKBAR_MSG.SUCCESS.DELETE_FOREVER(selectedMails.length),
@@ -191,9 +190,12 @@ const swapButtonSetView = (categoryNo, wastebasketNo) => {
 
 const Tools = () => {
   const classes = useStyles();
+  const { query } = useRouter();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { query: urlQuery } = useRouter();
+  const queryString = getQueryByOptions(query);
+  const requestPath = getRequestPathByQuery(query);
+  const url = `${requestPath}?${queryString}`;
   const [categoryMenu, setCategoryMenu] = useState(null);
   const {
     allMailCheckInTools,
@@ -212,16 +214,16 @@ const Tools = () => {
     dispatch,
     openSnackbar,
     wastebasketNo,
-    urlQuery,
+    url,
   };
 
   const handleSortChange = ({ target: { value } }) =>
-    changeUrlWithoutRunning({ ...urlQuery, sort: value });
+    changeUrlWithoutRunning({ ...query, sort: value });
   const handlePerPageNumChange = ({ target: { value } }) => {
     if (!Number.isInteger(value)) {
       value = '';
     }
-    changeUrlWithoutRunning({ ...urlQuery, perPageNum: value });
+    changeUrlWithoutRunning({ ...query, perPageNum: value });
   };
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
   const handleCategoryMenuItemClick = async e => {
@@ -232,7 +234,7 @@ const Tools = () => {
       if (isError) {
         throw SNACKBAR_MSG.ERROR.MOVE;
       }
-      await loadNewMails(urlQuery, dispatch);
+      await loadNewMails(url, dispatch);
       openSnackbar(
         SNACKBAR_VARIANT.SUCCESS,
         SNACKBAR_MSG.SUCCESS.MOVE(selectedMails.length, categoryNameByNo[categoryNoToMove]),
@@ -308,7 +310,7 @@ const Tools = () => {
       </S.FlexLeft>
       <S.FlexRight>
         <FormControl className={classes.formControl}>
-          <Select value={urlQuery.perPageNum || '메일수'} onChange={handlePerPageNumChange}>
+          <Select value={query.perPageNum || '메일수'} onChange={handlePerPageNumChange}>
             <MenuItem value={'메일수'}>
               <em>메일수</em>
             </MenuItem>
@@ -321,7 +323,7 @@ const Tools = () => {
           </Select>
         </FormControl>
         <FormControl className={classes.formControl}>
-          <Select value={urlQuery.sort || 'datedesc'} onChange={handleSortChange} displayEmpty>
+          <Select value={query.sort || 'datedesc'} onChange={handleSortChange} displayEmpty>
             {sortItems}
           </Select>
         </FormControl>

@@ -55,13 +55,13 @@ const getDateOrTime = createdAt => {
 };
 
 const MailTemplate = ({ mail, selected, index, categoryNo }) => {
+  const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { categoryNameByNo } = state;
   const { dispatch } = useContext(AppDispatchContext);
   const { is_important, is_read, reservation_time, category_no, MailTemplate: mailTemplate } = mail;
   const { from, to, subject, createdAt } = mailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
-  const classes = useStyles();
   const wastebasketNo = state.categoryNoByName[WASTEBASKET_MAILBOX];
   const sendMailboxNo = state.categoryNoByName[SEND_MAILBOX];
   let category = '';
