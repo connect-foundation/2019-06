@@ -79,11 +79,16 @@ const ReadMail = () => {
     dispatch(handleMailsChange({ ...fetcher.data }));
   }, [fetcher.data, dispatch, query.mailIndex, mail]);
 
-  if (fetcher.loading || !mail) {
+  if (fetcher.loading) {
     return <Loading />;
   }
+
   if (fetcher.error) {
     return errorHandler(fetcher.error);
+  }
+
+  if (!mail) {
+    return <Loading />;
   }
 
   const { is_important, MailTemplate, no, reservation_time, index } = mail;
