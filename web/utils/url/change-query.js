@@ -33,7 +33,7 @@ const getQueryByOptions = ({
 }) => {
   const queries = [];
   const setQueries = (key, value) => {
-    if (value !== undefined) {
+    if (value || value === 0) {
       queries.push(`${key}=${value}`);
     }
   };
