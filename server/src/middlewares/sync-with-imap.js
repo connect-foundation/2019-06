@@ -1,5 +1,7 @@
 import { getImapMessageIds } from '../libraries/imap';
 import DB from '../database';
+import ERROR_CODE from '../libraries/exception/error-code';
+import ErrorResponse from '../libraries/exception/error-response';
 
 const { NODE_ENV } = process.env;
 
@@ -101,7 +103,7 @@ const makeMailboxNonExistedInDB = async (imapMessageIds, userNo) => {
   await DB.Category.bulkCreate(mailboxesToInsertToDB);
 };
 
-const syncWithImap = async (req, res, next) => {
+const syncWithImapService = async (req, res, next) => {
   if (NODE_ENV === 'test') {
     return next();
   }
@@ -136,6 +138,15 @@ const syncWithImap = async (req, res, next) => {
   await DB.Category.destroy({ where: { no: Object.values(mailboxNumbersToDeleteOnDB) } });
 
   next();
+};
+
+const syncWithImap = async (req, res, next) => {
+  try {
+    await syncWithImapService(req, res, next);
+  } catch (err) {
+    res.locals.syncErr = new ErrorResponse(ERROR_CODE.FAIL_TO_SYNC_MAIL);
+    next();
+  }
 };
 
 export default syncWithImap;
