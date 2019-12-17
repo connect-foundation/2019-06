@@ -1,6 +1,5 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-import nodemailer from 'nodemailer';
 
 import DB from '../../../database/index';
 import { aesDecrypt } from '../../../libraries/crypto';
@@ -25,13 +24,10 @@ const getFileNameAndBufferFromAttachment = async ({ url, name }) => {
   return { buffer, originalname: name };
 };
 
-const sendResrvationMail = async mail => {
-  const { owner, MailTemplate, reservation_time } = mail;
+const sendResrvationMail = async (user, mail) => {
+  const { MailTemplate, reservation_time } = mail;
   const { from, to, subject, text, Attachments } = MailTemplate;
   const mailboxName = SENT_MAILBOX_NAME;
-
-  const user = await DB.User.findByPk(owner, { raw: true });
-  user.password = aesDecrypt(user.imap_password);
 
   const promises = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
   const attachments = await Promise.all(promises);
@@ -49,18 +45,41 @@ const sendResrvationMail = async mail => {
   return mail;
 };
 
+const sendReservationMailsOfOwner = async (owner, mails) => {
+  const user = await DB.User.findByPk(owner, { raw: true });
+  const successMails = [];
+
+  user.password = aesDecrypt(user.imap_password);
+
+  for (const mail of mails) {
+    const sentMail = await sendResrvationMail(user, mail);
+    successMails.push(sentMail);
+  }
+
+  return successMails;
+};
+
 const handleReservationMails = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
   const mails = await DB.Mail.findAllPastReservationMailByDate(date);
-  const successMails = [];
+  const mailsPerUser = {};
+  const sentMailsPromises = [];
 
   for (const mail of mails) {
-    const sentMail = await sendResrvationMail(mail);
-    successMails.push(sentMail);
+    if (!mailsPerUser[mail.owner]) {
+      mailsPerUser[mail.owner] = [];
+    }
+    mailsPerUser[mail.owner].push(mail);
   }
 
+  const owners = Object.keys(mailsPerUser);
+  for (const owner of owners) {
+    sentMailsPromises.push(sendReservationMailsOfOwner(owner, mailsPerUser[owner]));
+  }
+
+  const successMails = await Promise.all(sentMailsPromises);
   return successMails;
 };
 
