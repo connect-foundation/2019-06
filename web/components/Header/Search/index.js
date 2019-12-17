@@ -45,14 +45,16 @@ const Search = () => {
         continue;
       }
 
-      value = value.trim();
+      if (key === 'startDate' || key === 'endDate') {
+        value = moment(value).format('YYYY/MM/DD');
+      } else {
+        value = value.trim();
+      }
+
       if (!value) {
         continue;
       }
 
-      if (key === 'startDate' || key === 'endDate') {
-        value = moment(value).format('YYYY/MM/DD');
-      }
       searchTexts.push(`${key}:${value}`);
       searchQueries[key] = value;
     }
