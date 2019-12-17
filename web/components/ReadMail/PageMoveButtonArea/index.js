@@ -6,7 +6,11 @@ import * as S from './styled';
 import request from '../../../utils/request';
 import { AppStateContext, AppDispatchContext } from '../../../contexts';
 import { handleMailsChange } from '../../../contexts/reducer';
-import { getQueryByOptions, changeUrlWithoutRunning } from '../../../utils/url/change-query';
+import {
+  getQueryByOptions,
+  changeUrlWithoutRunning,
+  getRequestPathByQuery,
+} from '../../../utils/url/change-query';
 
 const actionToMove = {
   prev: {
@@ -21,8 +25,8 @@ const actionToMove = {
   },
 };
 
-const loadNewMails = async ({ query, dispatch }) => {
-  const { isError, data } = await request.get(`/mail/?${query}`);
+const loadNewMails = async (url, dispatch) => {
+  const { isError, data } = await request.get(url);
   if (!isError) {
     dispatch(handleMailsChange({ ...data }));
   }
@@ -34,10 +38,10 @@ const isDisabledNextBtn = (index, paging, mailCount) =>
   index === mailCount - 1 && paging.page === paging.totalPage;
 
 const PageMoveButtonArea = ({ index }) => {
-  const { query: urlQuery } = useRouter();
+  const { query } = useRouter();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-  const { mails, category, sort, paging } = state;
+  const { mails, paging } = state;
   const mailCount = mails.length;
 
   const handleMoveBtnClick = ({ move, isNeedNewMails, setIndex }) => async () => {
@@ -45,13 +49,16 @@ const PageMoveButtonArea = ({ index }) => {
     let movedPage = paging.page;
     if (isNeedNewMails(index, paging, mailCount)) {
       movedPage = move(paging.page);
-      const query = getQueryByOptions({ category, page: movedPage, sort });
-      newMails = await loadNewMails({ query, dispatch });
+      const queryString = getQueryByOptions({ ...query, page: movedPage });
+      const requestPath = getRequestPathByQuery(query);
+      const url = `${requestPath}?${queryString}`;
+      newMails = await loadNewMails(url, dispatch);
       index = setIndex(newMails);
     }
+    console.log(newMails);
     const mail = newMails[move(index)];
     changeUrlWithoutRunning({
-      ...urlQuery,
+      ...query,
       page: movedPage,
       mailNo: mail.no,
       mailIndex: mail.index,
