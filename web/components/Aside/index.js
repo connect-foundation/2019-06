@@ -106,6 +106,7 @@ const Aside = () => {
 
   const handleDialogOpen = (action, idx) => {
     const dialogData = getDialogData(
+      handleSnackbarState,
       action,
       state.categories,
       idx + 4,
@@ -226,11 +227,7 @@ const Aside = () => {
           <Button
             disabled={dialogOkButtonDisableState}
             onClick={() =>
-              dialogState.okBtnHandler(
-                dialogTextFieldState.trim(),
-                handleSnackbarState,
-                setDialogOkButtonDisableState,
-              )
+              dialogState.okBtnHandler(dialogTextFieldState.trim(), setDialogOkButtonDisableState)
             }
             color="primary">
             확인
