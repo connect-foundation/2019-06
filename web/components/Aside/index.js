@@ -77,6 +77,7 @@ const Aside = () => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const router = useRouter();
+  const { query } = router;
   const queryCategory = Number(router.query.category) || 0;
 
   const fetchingCategories = useFetch(URL);
@@ -144,7 +145,7 @@ const Aside = () => {
         button={!selected}
         key={idx}
         onClick={() => {
-          changeCategory(category.no);
+          changeCategory({ categoryNo: category.no, ...query });
           dispatch(handleCategoryClick(category.no));
         }}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
@@ -162,7 +163,7 @@ const Aside = () => {
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         onClick={() => {
-          changeCategory(category.no);
+          changeCategory({ categoryNo: category.no, ...query });
           dispatch(handleCategoryClick(category.no));
         }}>
         <ListItemIcon>

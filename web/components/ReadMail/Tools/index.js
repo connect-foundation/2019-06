@@ -123,12 +123,12 @@ const swapButtonSetView = (categoryNo, wastebasketNo) => {
   }
 };
 
-const Tools = () => {
+const Tools = ({ mail }) => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const [categoryMenu, setCategoryMenu] = useState(null);
-  const { mail, categoryNoByName, categoryNameByNo, categories } = state;
+  const { categoryNoByName, categoryNameByNo, categories } = state;
   const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>

@@ -9,12 +9,7 @@ import S from './styled';
 import Paging from './Paging';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
 import Loading from '../Loading';
-import {
-  handleMailClick,
-  handleMailsChange,
-  initCheckerInTools,
-  handleSnackbarState,
-} from '../../contexts/reducer';
+import { handleMailsChange, initCheckerInTools, handleSnackbarState } from '../../contexts/reducer';
 import useFetch from '../../utils/use-fetch';
 import Tools from './Tools';
 import mailRequest from '../../utils/mail-request';
@@ -96,10 +91,8 @@ const handleAction = {
       openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
     }
   },
-  [ACTION.READ]: ({ mail, dispatch, index, urlQuery }) => {
-    mail.index = index;
-    dispatch(handleMailClick(mail));
-    changeUrlWithoutRunning({ ...urlQuery, view: 'read', mailNo: mail.no });
+  [ACTION.READ]: ({ mail, index, urlQuery }) => {
+    changeUrlWithoutRunning({ ...urlQuery, view: 'read', mailNo: mail.no, mailIndex: index });
   },
 };
 

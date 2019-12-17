@@ -11,8 +11,8 @@ const changeView = view => {
   changeUrlWithoutRunning({ view });
 };
 
-const changeCategory = categoryNo => {
-  changeUrlWithoutRunning({ category: categoryNo });
+const changeCategory = ({ categoryNo, perPageNum }) => {
+  changeUrlWithoutRunning({ category: categoryNo, perPageNum });
 };
 
 const getQueryByOptions = ({
@@ -29,10 +29,12 @@ const getQueryByOptions = ({
   to,
   searchLevel,
   searchWord,
+  mailIndex,
+  perPageNum,
 }) => {
   const queries = [];
   const setQueries = (key, value) => {
-    if (value) {
+    if (value || value === 0) {
       queries.push(`${key}=${value}`);
     }
   };
@@ -50,6 +52,8 @@ const getQueryByOptions = ({
   setQueries('startDate', startDate);
   setQueries('endDate', endDate);
   setQueries('sort', sort);
+  setQueries('mailIndex', mailIndex);
+  setQueries('perPageNum', perPageNum);
   return queries.join('&');
 };
 
@@ -67,6 +71,7 @@ const getQueryByOptions = ({
  * @param {String} options.startDate
  * @param {String} options.endDate
  * @param {String} options.searchLevel
+ * @param {Number} options.perPageNum
  * @param {String} path
  */
 const changeUrlWithoutRunning = (options, path = '/') => {

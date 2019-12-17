@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+
 import {
   Menu,
   MenuItem,
@@ -58,8 +59,9 @@ const SNACKBAR_MSG = {
 
 const useStyles = makeStyles(theme => ({
   formControl: {
-    minWidth: 120,
+    width: 120,
     color: 'white',
+    marginLeft: 20,
   },
   button: {
     margin: theme.spacing(1),
@@ -191,6 +193,7 @@ const Tools = () => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
+  const { query: urlQuery } = useRouter();
   const [categoryMenu, setCategoryMenu] = useState(null);
   const {
     allMailCheckInTools,
@@ -200,7 +203,6 @@ const Tools = () => {
     categories,
     categoryNameByNo,
   } = state;
-  const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
@@ -215,6 +217,12 @@ const Tools = () => {
 
   const handleSortChange = ({ target: { value } }) =>
     changeUrlWithoutRunning({ ...urlQuery, sort: value });
+  const handlePerPageNumChange = ({ target: { value } }) => {
+    if (!Number.isInteger(value)) {
+      value = '';
+    }
+    changeUrlWithoutRunning({ ...urlQuery, perPageNum: value });
+  };
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
   const handleCategoryMenuItemClick = async e => {
     try {
@@ -264,7 +272,7 @@ const Tools = () => {
   ));
 
   return (
-    <S.Container>
+    <S.FlexWrap>
       <S.FlexLeft>
         <S.CheckBox>
           <FormControlLabel
@@ -298,14 +306,27 @@ const Tools = () => {
           </Menu>
         </S.ButtonGroup>
       </S.FlexLeft>
-      <S.SortSelector>
+      <S.FlexRight>
+        <FormControl className={classes.formControl}>
+          <Select value={urlQuery.perPageNum || '메일수'} onChange={handlePerPageNumChange}>
+            <MenuItem value={'메일수'}>
+              <em>메일수</em>
+            </MenuItem>
+            <MenuItem value={10}>10</MenuItem>
+            <MenuItem value={20}>20</MenuItem>
+            <MenuItem value={40}>40</MenuItem>
+            <MenuItem value={60}>60</MenuItem>
+            <MenuItem value={80}>80</MenuItem>
+            <MenuItem value={100}>100</MenuItem>
+          </Select>
+        </FormControl>
         <FormControl className={classes.formControl}>
           <Select value={urlQuery.sort || 'datedesc'} onChange={handleSortChange} displayEmpty>
             {sortItems}
           </Select>
         </FormControl>
-      </S.SortSelector>
-    </S.Container>
+      </S.FlexRight>
+    </S.FlexWrap>
   );
 };
 
