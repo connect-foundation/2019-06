@@ -16,7 +16,11 @@ import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import noMailImage from '../../assets/imgs/no-mail.png';
 import errorHandler from '../../utils/error-handler';
-import { changeUrlWithoutRunning, getQueryByOptions } from '../../utils/url/change-query';
+import {
+  changeUrlWithoutRunning,
+  getQueryByOptions,
+  getRequestPathByQuery,
+} from '../../utils/url/change-query';
 import HeadTitle from '../HeadTitle';
 
 const WASTEBASKET_MAILBOX = '휴지통';
@@ -96,17 +100,6 @@ const handleAction = {
   },
 };
 
-const getRequestPathByQuery = ({ view, searchLevel }) => {
-  const isSearch = view === 'search';
-
-  if (!isSearch) {
-    return '/mail';
-  }
-
-  const path = searchLevel === 'advanced' ? '/mail/search/advanced' : '/mail/search/general';
-  return path;
-};
-
 const getMailList = mails => {
   if (mails.length === 0) {
     return (
@@ -126,7 +119,6 @@ const MailArea = () => {
   const { query: urlQuery } = router;
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
-
   const query = getQueryByOptions(urlQuery);
   const requestPath = getRequestPathByQuery(urlQuery);
   const URL = `${requestPath}?${query}`;

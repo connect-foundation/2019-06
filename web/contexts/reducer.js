@@ -1,4 +1,3 @@
-const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
@@ -13,7 +12,6 @@ const INIT_STATE = 'INIT_STATE';
 
 export const initialState = {
   categories: null,
-  category: 0,
   mails: null,
   mailToReply: null,
   paging: null,
@@ -59,17 +57,6 @@ export const handleCheckAllMails = (allMailCheckInTools, mails) => {
   return {
     type: SELECT_ALL_CHANGE,
     payload: { mails, allMailCheckInTools: !allMailCheckInTools },
-  };
-};
-
-export const handleCategoryClick = no => {
-  return {
-    type: CATEGORY_CLICK,
-    payload: {
-      category: no,
-      page: 1,
-      sort: 'datedesc',
-    },
   };
 };
 
@@ -160,8 +147,6 @@ export const reducer = (state = initialState, action) => {
     case SET_SNACKBAR_STATE:
       return { ...state, ...payload };
     case INIT_CHECKER_IN_TOOLS:
-      return { ...state, ...payload };
-    case CATEGORY_CLICK:
       return { ...state, ...payload };
     case SELECT_ALL_CHANGE:
       return { ...state, ...payload };
