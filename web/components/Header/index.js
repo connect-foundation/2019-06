@@ -7,7 +7,7 @@ import Search from './Search';
 import { changeUrlWithoutRunning } from '../../utils/url/change-query';
 
 const Header = () => {
-  const handleLogoClick = () => changeUrlWithoutRunning({});
+  const handleLogoClick = () => changeUrlWithoutRunning();
   return (
     <S.Header>
       <S.Brand>

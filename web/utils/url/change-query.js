@@ -84,7 +84,7 @@ const getQueryByOptions = ({
  * @param {Number} options.perPageNum
  * @param {String} path
  */
-const changeUrlWithoutRunning = (options, path = '/') => {
+const changeUrlWithoutRunning = (options = {}, path = '/') => {
   const queries = getQueryByOptions(options);
   if (queries.length === 0) {
     return Router.push(path, path, { shallow: true });
