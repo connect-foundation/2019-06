@@ -163,6 +163,9 @@ const model = (sequelize, DataTypes) => {
       attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
       where: {
         owner: user_no,
+        reservation_time: {
+          [Op.is]: null,
+        },
       },
       include: [
         {
