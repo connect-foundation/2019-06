@@ -2,7 +2,6 @@ const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
-const SET_VIEW = 'SET_VIEW';
 const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
 const MAIL_CHECK = 'MAIL_CHECK';
@@ -19,7 +18,6 @@ export const initialState = {
   mails: null,
   mailToReply: null,
   paging: null,
-  view: null,
   sort: 'datedesc',
   message: '',
   allMailCheckInTools: false,
@@ -58,7 +56,7 @@ export const initCheckerInTools = () => {
 };
 
 export const handleCheckAllMails = (allMailCheckInTools, mails) => {
-  mails.map(mail => (mail.selected = !allMailCheckInTools));
+  mails.forEach(mail => (mail.selected = !allMailCheckInTools));
   return {
     type: SELECT_ALL_CHANGE,
     payload: { mails, allMailCheckInTools: !allMailCheckInTools },
@@ -99,10 +97,9 @@ export const handleCategoriesChange = ({ categories }) => {
 
 export const handleMailsChange = ({ mails, paging }) => {
   if (mails) {
-    mails.map((mail, i) => {
+    mails.forEach((mail, i) => {
       mail.selected = false;
       mail.index = i;
-      return mail;
     });
   }
   return {
@@ -139,15 +136,6 @@ export const handlePageNumberClick = page => {
     type: PAGE_NUMBER_CLICK,
     payload: {
       page,
-    },
-  };
-};
-
-export const setView = view => {
-  return {
-    type: SET_VIEW,
-    payload: {
-      view,
     },
   };
 };
@@ -195,8 +183,6 @@ export const reducer = (state = initialState, action) => {
     case MAIL_CHECK:
       return { ...state, ...payload };
     case CHANGE_MAILS_DATA:
-      return { ...state, ...payload };
-    case SET_VIEW:
       return { ...state, ...payload };
     case SORT_SELECT:
       return { ...state, ...payload };
