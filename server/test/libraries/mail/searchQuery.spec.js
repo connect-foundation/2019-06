@@ -3,6 +3,7 @@ import should from 'should';
 import {
   checkAdvancedSearchQuery,
   isValidYYYYMMDDFormat,
+  checkGeneralSearchQuery,
 } from '../../../src/libraries/validation/mail';
 
 describe('checkAdvancedSearchQuery...', () => {
@@ -133,5 +134,56 @@ describe('checkAdvancedSearchQuery...', () => {
     checkAdvancedSearchQuery({ from }).should.be.true();
     from = '*'.repeat(0);
     checkAdvancedSearchQuery({ from }).should.be.true();
+  });
+
+  describe('checkGeneralSearchQuery...', () => {
+    const query = {
+      page: '1',
+      sort: 'datedesc',
+      searchWord: '흐헤',
+    };
+
+    it('page의 자연수여야 한다.', () => {
+      const page = '-1';
+      try {
+        checkGeneralSearchQuery({ ...query, page });
+      } catch (err) {
+        const { errorCode, fieldErrors } = err;
+        errorCode.status.should.be.equals(400);
+        fieldErrors.length.should.be.equals(1);
+        fieldErrors[0].field.should.be.equals('page');
+        fieldErrors[0].reason.should.be.equals('유효하지 않은 값입니다.');
+      }
+    });
+
+    it('searchWord가 공백이면 400을 반환한다.', () => {
+      const searchWord = '';
+      try {
+        checkGeneralSearchQuery({ ...query, searchWord });
+      } catch (err) {
+        const { errorCode, fieldErrors } = err;
+        errorCode.status.should.be.equals(400);
+        fieldErrors.length.should.be.equals(1);
+        fieldErrors[0].field.should.be.equals('searchWord');
+        fieldErrors[0].reason.should.be.equals('searchWord를 입력해주세요.');
+      }
+    });
+
+    it('searchWord가 공백이면 400을 반환한다2.', () => {
+      const searchWord = ' ';
+      try {
+        checkGeneralSearchQuery({ ...query, searchWord });
+      } catch (err) {
+        const { errorCode, fieldErrors } = err;
+        errorCode.status.should.be.equals(400);
+        fieldErrors.length.should.be.equals(1);
+        fieldErrors[0].field.should.be.equals('searchWord');
+        fieldErrors[0].reason.should.be.equals('searchWord를 입력해주세요.');
+      }
+    });
+
+    it('올바른 입력값을 입력하면, true를 반환한다.', () => {
+      checkGeneralSearchQuery({ ...query }).should.be.true();
+    });
   });
 });

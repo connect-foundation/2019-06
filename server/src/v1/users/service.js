@@ -35,13 +35,13 @@ const throwUniqueFieldsError = (users, id, sub_email) => {
   throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorFields);
 };
 
-const createDefaultCategories = async (no, transaction) => {
+const createDefaultCategories = (no, transaction) => {
   const categories = DEFAULT_CATEGORIES.map(name => ({
     user_no: no,
     is_default: true,
     name,
   }));
-  await DB.Category.bulkCreate(categories, { transaction });
+  return DB.Category.bulkCreate(categories, { transaction, returning: true });
 };
 
 // eslint-disable-next-line camelcase
@@ -56,14 +56,17 @@ const register = async ({ id, password, name, sub_email }) => {
         throwUniqueFieldsError(users, id, sub_email);
       }
       newUser = await DB.User.create(userData, { transaction });
-      newUser = newUser.get({ plain: true });
-      await createDefaultCategories(newUser.no, transaction);
+      const newUserNo = newUser.get({ plain: true }).no;
+      const result = await createDefaultCategories(newUserNo, transaction);
+      const wasteBasketNo = result[3].get({ plain: true }).no;
+      newUser.waste_basket_no = wasteBasketNo;
+      await newUser.save({ transaction });
     });
   } catch (error) {
     checkSubEmailUniqueConstraintError(error);
   }
 
-  return newUser;
+  return newUser.get({ plain: true });
 };
 
 const updatePassword = async (no, salt, password) => {
