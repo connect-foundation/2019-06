@@ -33,11 +33,7 @@ import { useRouter } from 'next/router';
 import S from './styled';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
-import {
-  handleCategoriesChange,
-  handleSnackbarState,
-  handleCategoryClick,
-} from '../../contexts/reducer';
+import { handleCategoriesChange, handleSnackbarState } from '../../contexts/reducer';
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
@@ -144,10 +140,7 @@ const Aside = () => {
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
         key={idx}
-        onClick={() => {
-          changeCategory({ categoryNo: category.no, ...query });
-          dispatch(handleCategoryClick(category.no));
-        }}>
+        onClick={() => changeCategory({ categoryNo: category.no, ...query })}>
         <ListItemIcon>{iconOfDefaultCategories[idx](selected)}</ListItemIcon>
         <ListItemText primary={category.name} style={selected ? { color: 'white' } : {}} />
       </ListItem>
@@ -162,10 +155,7 @@ const Aside = () => {
         className={classes.nested}
         style={selected ? { backgroundColor: '#0066FF' } : {}}
         button={!selected}
-        onClick={() => {
-          changeCategory({ categoryNo: category.no, ...query });
-          dispatch(handleCategoryClick(category.no));
-        }}>
+        onClick={() => changeCategory({ categoryNo: category.no, ...query })}>
         <ListItemIcon>
           <StarBorder className={selected ? classes.whiteIcon : ''} />
         </ListItemIcon>
