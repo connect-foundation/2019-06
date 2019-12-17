@@ -1,20 +1,13 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useContext } from 'react';
+import React from 'react';
 import * as S from './styled';
-
 import ProfileLink from '../ProfileLink';
-import { AppDispatchContext } from '../../contexts';
-import { handleCategoryClick } from '../../contexts/reducer';
 import logo from '../../public/logo.png';
 import Search from './Search';
 import { changeUrlWithoutRunning } from '../../utils/url/change-query';
 
 const Header = () => {
-  const { dispatch } = useContext(AppDispatchContext);
-  const handleLogoClick = () => {
-    dispatch(handleCategoryClick(0));
-    changeUrlWithoutRunning('');
-  };
+  const handleLogoClick = () => changeUrlWithoutRunning({});
   return (
     <S.Header>
       <S.Brand>
