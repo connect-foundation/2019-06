@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const FlexWrap = styled.div`
   flex: 0 0 50px;
   height: 50px;
   border-bottom: 2px solid #e9ecef;
@@ -24,25 +24,25 @@ const ButtonGroup = styled.div`
 `;
 
 const FlexLeft = styled.div`
+  flex: 1 1;
   height: inherit;
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  justify-content: center;
   align-items: center;
 `;
 
-const SortSelector = styled.div`
-  flex: 0 0 150px;
+const FlexRight = styled.div`
+  flex: 0 0 400px;
   height: inherit;
   overflow: hidden;
 `;
 
 export default {
-  Container,
+  FlexWrap,
   CheckBox,
-  SortSelector,
   SortItemView,
+  FlexRight,
   ButtonGroup,
   FlexLeft,
 };
