@@ -107,7 +107,7 @@ const getRequestPathByQuery = ({ view, searchLevel }) => {
   return path;
 };
 
-const getMailList = ({ mails }) => {
+const getMailList = mails => {
   if (mails.length === 0) {
     return (
       <S.NothingMailView>
@@ -154,7 +154,7 @@ const MailArea = () => {
   }
 
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
-  const mailList = getMailList({ mails });
+  const mailList = getMailList(mails);
 
   const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
