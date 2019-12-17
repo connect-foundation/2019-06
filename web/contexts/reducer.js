@@ -2,7 +2,6 @@ const CATEGORY_CLICK = 'CATEGORY_CLICK';
 const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
-const MAIL_CLICK = 'MAIL_CLICK';
 const SET_VIEW = 'SET_VIEW';
 const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
@@ -10,7 +9,6 @@ const MAIL_CHECK = 'MAIL_CHECK';
 const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
-const SET_MAIL = 'SET_MAIL';
 const SET_MAIL_TO_REPLY = 'SET_MAIL_TO_REPLY';
 const INIT_STATE = 'INIT_STATE';
 
@@ -19,7 +17,6 @@ export const initialState = {
   category: 0,
   page: 1,
   mails: null,
-  mail: null,
   mailToReply: null,
   paging: null,
   view: null,
@@ -102,7 +99,11 @@ export const handleCategoriesChange = ({ categories }) => {
 
 export const handleMailsChange = ({ mails, paging }) => {
   if (mails) {
-    mails.map(mail => (mail.selected = false));
+    mails.map((mail, i) => {
+      mail.selected = false;
+      mail.index = i;
+      return mail;
+    });
   }
   return {
     type: CHANGE_MAILS_DATA,
@@ -142,15 +143,6 @@ export const handlePageNumberClick = page => {
   };
 };
 
-export const handleMailClick = mail => {
-  return {
-    type: MAIL_CLICK,
-    payload: {
-      mail,
-    },
-  };
-};
-
 export const setView = view => {
   return {
     type: SET_VIEW,
@@ -165,15 +157,6 @@ export const setMessage = message => {
     type: SET_MESSAGE,
     payload: {
       message,
-    },
-  };
-};
-
-export const setMail = mail => {
-  return {
-    type: SET_MAIL,
-    payload: {
-      mail,
     },
   };
 };
@@ -211,8 +194,6 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case MAIL_CHECK:
       return { ...state, ...payload };
-    case MAIL_CLICK:
-      return { ...state, ...payload };
     case CHANGE_MAILS_DATA:
       return { ...state, ...payload };
     case SET_VIEW:
@@ -222,8 +203,6 @@ export const reducer = (state = initialState, action) => {
     case SET_MESSAGE:
       return { ...state, ...payload };
     case CHANGE_CATEGORIES_DATA:
-      return { ...state, ...payload };
-    case SET_MAIL:
       return { ...state, ...payload };
     case SET_MAIL_TO_REPLY:
       return { ...state, ...payload };
