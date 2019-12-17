@@ -43,20 +43,14 @@ const initialErrorState = {
   register: '',
 };
 
-const registerErrorMessageParser = errorMsg => {
-  const errorMsgs = {};
+const registerErrorMessageParser = (errorMsg, fieldErrors) => {
+  let errorMsgs = {};
 
-  if (errorMsg === ERROR_ID_AND_SUB_EMAIL_DUPLICATION) {
-    errorMsgs.id = ERROR_ID_DUPLICATION;
-    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
-  } else if (errorMsg === ERROR_ID_DUPLICATION) {
-    errorMsgs.id = ERROR_ID_DUPLICATION;
-  } else if (errorMsg === ERROR_SUB_EMAIL_DUPLICATION) {
-    errorMsgs.email = ERROR_SUB_EMAIL_DUPLICATION;
+  if (fieldErrors) {
+    errorMsgs = fieldErrors;
   } else {
     errorMsgs.register = errorMsg;
   }
-
   return errorMsgs;
 };
 
@@ -104,8 +98,8 @@ const RegisterForm = () => {
     const body = { id, password, sub_email: email, name: name.trim() };
     const { isError, data } = await request.post('/users', body);
     if (isError) {
-      const { message } = data;
-      const errMsgs = registerErrorMessageParser(message);
+      const { message, fieldErrors } = data;
+      const errMsgs = registerErrorMessageParser(message, fieldErrors);
       setErrorMsg({ ...errors, ...errMsgs });
       return;
     }
