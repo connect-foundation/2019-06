@@ -14,7 +14,7 @@ import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import Tools from './Tools';
 import HeadTitle from '../HeadTitle';
-import { getQueryByOptions } from '../../utils/url/change-query';
+import { getQueryByOptions, getRequestPathByQuery } from '../../utils/url/change-query';
 import useFetch from '../../utils/use-fetch';
 import Loading from '../Loading';
 import errorHandler from '../../utils/error-handler';
@@ -57,13 +57,15 @@ const loadAttachments = async (mailTemplateNo, setAttachments) => {
 };
 
 const ReadMail = () => {
-  const { query } = useRouter();
   const classes = useStyles();
+  const { query } = useRouter();
   const { dispatch } = useContext(AppDispatchContext);
   const [mail, setMail] = useState(null);
   const [attachments, setAttachments] = useState(null);
   const queryString = getQueryByOptions(query);
-  const fetcher = useFetch(`mail/?${queryString}`);
+  const requestPath = getRequestPathByQuery(query);
+  const URL = `${requestPath}?${queryString}`;
+  const fetcher = useFetch(URL);
 
   useEffect(() => {
     if (!fetcher.data) {

@@ -15,6 +15,16 @@ const changeCategory = ({ categoryNo, perPageNum }) => {
   changeUrlWithoutRunning({ category: categoryNo, perPageNum });
 };
 
+const getRequestPathByQuery = ({ searchLevel }) => {
+  let path = '/mail';
+  if (!searchLevel) {
+    return path;
+  }
+  path += '/search';
+  path += searchLevel === 'advanced' ? '/advanced' : '/general';
+  return path;
+};
+
 const getQueryByOptions = ({
   category,
   page,
@@ -85,4 +95,11 @@ const changeUrlWithoutRunning = (options, path = '/') => {
   return Router.push(href, as, { shallow: true });
 };
 
-export { changeUrlWithoutRunning, getQueryByOptions, changeView, VIEW_STRING, changeCategory };
+export {
+  changeUrlWithoutRunning,
+  getRequestPathByQuery,
+  getQueryByOptions,
+  changeView,
+  VIEW_STRING,
+  changeCategory,
+};
