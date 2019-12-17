@@ -32,18 +32,15 @@ const options = {
   partSize: FILE_MAX_SIZE,
 };
 
-const rename = originalname => {
-  const splitedFileName = originalname.split('.');
-  const now = Date.now();
-  const fileName = now + uuidv4().replace(/-/g, '');
-  const extension = splitedFileName[splitedFileName.length - 1];
-  const newFileName = `${fileName}.${extension}`;
-  return newFileName;
+const renameFile = filename => {
+  const newFilename = Date.now() + uuidv4().replace(/-/g, '');
+  const extension = filename.split('.').pop();
+  return `${newFilename}.${extension}`;
 };
 
 const multipartUpload = ({ buffer, originalname }) => {
-  const newName = rename(originalname);
-  const promise = S3.upload(
+  const newName = renameFile(originalname);
+  return S3.upload(
     {
       Bucket: STORAGE_BUCKET,
       Key: BASE_PATH + newName,
@@ -51,24 +48,18 @@ const multipartUpload = ({ buffer, originalname }) => {
     },
     options,
   ).promise();
-  return promise;
 };
 
-const download = path => {
-  const file = S3.getObject({
+const downloadFile = path =>
+  S3.getObject({
     Bucket: STORAGE_BUCKET,
     Key: path,
   }).promise();
 
-  return file;
-};
-
-const getStream = path => {
-  const stream = S3.getObject({
+const getStream = path =>
+  S3.getObject({
     Bucket: STORAGE_BUCKET,
     Key: path,
   }).createReadStream();
-  return stream;
-};
 
-export { download, multipartUpload, getStream };
+export { downloadFile, multipartUpload, getStream };
