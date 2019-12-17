@@ -128,6 +128,20 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
+  Mail.updateByMessageId = (owner, message_id, props) => {
+    return Mail.update(
+      {
+        ...props,
+      },
+      {
+        where: {
+          message_id,
+          owner,
+        },
+      },
+    );
+  };
+
   Mail.updateAllByNosAndProps = (nos, props) => {
     return Mail.update(
       {
@@ -146,6 +160,35 @@ const model = (sequelize, DataTypes) => {
         ],
       },
     );
+  };
+
+  Mail.findAllMessasgeIds = (user_no, category_name) => {
+    return Mail.findAll({
+      attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
+      where: {
+        owner: user_no,
+      },
+      include: [
+        {
+          attributes: [],
+          model: sequelize.models.Category,
+          where: {
+            user_no,
+            name: category_name,
+          },
+        },
+      ],
+      raw: true,
+    });
+  };
+
+  Mail.deleteByMesssasgeId = (owner, message_id) => {
+    return Mail.destroy({
+      where: {
+        message_id,
+        owner,
+      },
+    });
   };
 
   Mail.deleteByNoAndUserNo = (no, userNo) => {

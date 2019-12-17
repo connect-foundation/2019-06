@@ -2,6 +2,7 @@ import generator from 'generate-password';
 
 import DB from '../../database';
 import ErrorResponse from '../../libraries/exception/error-response';
+import ErrorField from '../../libraries/exception/error-field';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import mailUtil from '../../libraries/mail-util';
 import { encrypt, aesEncrypt } from '../../libraries/crypto';
@@ -13,22 +14,25 @@ const checkSubEmailUniqueConstraintError = error => {
   if (error.errors) {
     const [{ type, path }] = error.errors;
     if (type === 'unique violation' && path === 'sub_email') {
-      throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
+      const errorField = new ErrorField('email', sub_email, '이미 가입에 사용한 이메일 입니다.');
+      throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorField);
     }
   }
   throw error;
 };
 
 const throwUniqueFieldsError = (users, id, sub_email) => {
-  if (users.length >= 2) {
-    throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
-  } else if (users[0].id === id && users[0].sub_email === sub_email) {
-    throw new ErrorResponse(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
-  } else if (users[0].id === id) {
-    throw new ErrorResponse(ERROR_CODE.ID_DUPLICATION);
-  } else if (users[0].sub_email === sub_email) {
-    throw new ErrorResponse(ERROR_CODE.SUB_EMAIL_DUPLICATION);
-  }
+  const errorFields = users.reduce((errorFields, user) => {
+    if (user.id === id) {
+      errorFields.push(new ErrorField('id', id, '이미 사용중인 아이디 입니다.'));
+    }
+    if (user.sub_email === sub_email) {
+      errorFields.push(new ErrorField('email', sub_email, '이미 가입에 사용한 이메일 입니다.'));
+    }
+    return errorFields;
+  }, []);
+
+  throw new ErrorResponse(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION, errorFields);
 };
 
 const createDefaultCategories = (no, transaction) => {
