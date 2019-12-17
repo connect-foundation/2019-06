@@ -1,6 +1,5 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-import nodemailer from 'nodemailer';
 
 import DB from '../../../database/index';
 import { aesDecrypt } from '../../../libraries/crypto';
@@ -9,7 +8,7 @@ import { makeMimeMessage } from '../../../libraries/mimemessage';
 import { saveToMailbox } from '../../../libraries/imap';
 import { getStream } from '../../../libraries/storage/ncloud';
 
-const ALLOWED_TIME = 10;
+const AVAILABLE_TIME = 10;
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 
@@ -25,13 +24,10 @@ const getFileNameAndBufferFromAttachment = async ({ url, name }) => {
   return { buffer, originalname: name };
 };
 
-const sendResrvationMail = async mail => {
-  const { owner, MailTemplate, reservation_time } = mail;
+const sendReservationMail = async (user, mail) => {
+  const { MailTemplate, reservation_time } = mail;
   const { from, to, subject, text, Attachments } = MailTemplate;
   const mailboxName = SENT_MAILBOX_NAME;
-
-  const user = await DB.User.findByPk(owner, { raw: true });
-  user.password = aesDecrypt(user.imap_password);
 
   const promises = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
   const attachments = await Promise.all(promises);
@@ -49,18 +45,40 @@ const sendResrvationMail = async mail => {
   return mail;
 };
 
-const handleReservationMails = async () => {
-  const date = new Date();
-  date.setMinutes(date.getMinutes() + ALLOWED_TIME);
+const sendReservationMailsOfOwner = async (owner, mails) => {
+  const user = await DB.User.findByPk(owner, { raw: true });
+  const successMails = [];
 
-  const mails = await DB.Mail.findAllPastReservationMailByDate(date);
-  const promises = [];
+  user.password = aesDecrypt(user.imap_password);
+
   for (const mail of mails) {
-    promises.push(sendResrvationMail(mail));
+    const sentMail = await sendReservationMail(user, mail);
+    successMails.push(sentMail);
   }
 
-  const successMails = await Promise.all(promises);
+  return successMails;
+};
 
+const handleReservationMails = async () => {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() + AVAILABLE_TIME);
+
+  const mailsFromDB = await DB.Mail.findAllPastReservationMailByDate(date);
+  const mailsPerUser = {};
+  const sentMailsPromises = [];
+
+  for (const mail of mailsFromDB) {
+    if (!mailsPerUser[mail.owner]) {
+      mailsPerUser[mail.owner] = [];
+    }
+    mailsPerUser[mail.owner].push(mail);
+  }
+
+  for (const [owner, mails] of Object.entries(mailsPerUser)) {
+    sentMailsPromises.push(sendReservationMailsOfOwner(owner, mails));
+  }
+
+  const successMails = await Promise.all(sentMailsPromises);
   return successMails;
 };
 

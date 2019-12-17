@@ -162,11 +162,14 @@ const model = (sequelize, DataTypes) => {
     );
   };
 
-  Mail.findAllMessasgeIds = (user_no, category_name) => {
+  Mail.findAllNonResultvation = (user_no, category_name) => {
     return Mail.findAll({
       attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
       where: {
         owner: user_no,
+        reservation_time: {
+          [Op.is]: null,
+        },
       },
       include: [
         {
