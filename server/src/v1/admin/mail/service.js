@@ -33,14 +33,13 @@ const sendResrvationMail = async mail => {
   const user = await DB.User.findByPk(owner, { raw: true });
   user.password = aesDecrypt(user.imap_password);
 
-  const transporter = nodemailer.createTransport(U.getTransport(user));
   const promises = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
   const attachments = await Promise.all(promises);
 
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
   mailContents.date = reservation_time;
 
-  const { messageId } = await transporter.sendMail(mailContents);
+  const { messageId } = await U.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents, date: reservation_time });
   saveToMailbox({ user, msg, mailboxName });
 

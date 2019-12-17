@@ -121,8 +121,7 @@ const wroteToMe = async (mailContents, user) => {
 
 const sendMail = async (mailContents, user) => {
   const mailboxName = SENT_MAILBOX_NAME;
-  const transporter = nodemailer.createTransport(U.getTransport(user));
-  const { messageId } = await transporter.sendMail(mailContents);
+  const { messageId } = await U.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveToMailbox({ user, msg, mailboxName });
 };
