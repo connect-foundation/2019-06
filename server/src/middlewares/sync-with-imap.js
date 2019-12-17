@@ -1,6 +1,8 @@
 import { getImapMessageIds } from '../libraries/imap';
 import DB from '../database';
 
+const { NODE_ENV } = process.env;
+
 const getDBMails = async (imapMessageIds, userNo) => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
@@ -100,6 +102,10 @@ const makeMailboxNonExistedInDB = async (imapMessageIds, userNo) => {
 };
 
 const syncWithImap = async (req, res, next) => {
+  if (NODE_ENV === 'test') {
+    return next();
+  }
+
   const { user } = req;
   const { no: userNo } = user;
   const imapMessageIds = await getImapMessageIds({ user });
