@@ -46,7 +46,7 @@ const splitMoment = value =>
 
 const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
-  const [nowYear, nowMonth, nowDay] = splitMoment();
+  const [nowYear, nowDay] = splitMoment();
   const time = moment(createdAt).format('HH:mm');
   let date;
   if (day !== nowDay) date = `${month}-${day}`;
@@ -54,11 +54,12 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail, selected, index, categories }) => {
+const MailTemplate = ({ mail, selected, index }) => {
   const { state } = useContext(AppStateContext);
+  const { categoryNameByNo } = state;
   const { dispatch } = useContext(AppDispatchContext);
-  const { is_important, is_read, MailTemplate, reservation_time, category_no } = mail;
-  const { from, to, subject, createdAt } = MailTemplate;
+  const { is_important, is_read, reservation_time, category_no, MailTemplate: mailTemplate } = mail;
+  const { from, to, subject, createdAt } = mailTemplate;
   const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
   const classes = useStyles();
   const wastebasketNo = state.categoryNoByName[WASTEBASKET_MAILBOX];
@@ -66,7 +67,7 @@ const MailTemplate = ({ mail, selected, index, categories }) => {
 
   let category = '';
   if (state.category === 0) {
-    category = <S.CategoryName>{`[${categories[category_no]}]`}</S.CategoryName>;
+    category = <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>;
   }
 
   return (
