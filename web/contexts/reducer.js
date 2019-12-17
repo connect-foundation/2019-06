@@ -75,15 +75,12 @@ export const handleCategoryClick = no => {
 };
 
 export const handleCategoriesChange = ({ categories }) => {
-  const categoryNoByName = categories.reduce((total, category) => {
-    total[category.name] = category.no;
-    return total;
-  }, {});
-
-  const categoryNameByNo = categories.reduce((total, category) => {
-    total[category.no] = category.name;
-    return total;
-  }, {});
+  const categoryNoByName = {};
+  const categoryNameByNo = {};
+  for (const category of categories) {
+    categoryNoByName[category.name] = category.no;
+    categoryNameByNo[category.no] = category.name;
+  }
 
   return {
     type: CHANGE_CATEGORIES_DATA,
