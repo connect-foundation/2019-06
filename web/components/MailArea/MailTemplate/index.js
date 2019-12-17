@@ -54,7 +54,7 @@ const getDateOrTime = createdAt => {
   return date ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail, selected, index }) => {
+const MailTemplate = ({ mail, selected, index, categoryNo }) => {
   const { state } = useContext(AppStateContext);
   const { categoryNameByNo } = state;
   const { dispatch } = useContext(AppDispatchContext);
@@ -64,9 +64,8 @@ const MailTemplate = ({ mail, selected, index }) => {
   const classes = useStyles();
   const wastebasketNo = state.categoryNoByName[WASTEBASKET_MAILBOX];
   const sendMailboxNo = state.categoryNoByName[SEND_MAILBOX];
-
   let category = '';
-  if (state.category === 0) {
+  if (+categoryNo === 0) {
     category = <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>;
   }
 
