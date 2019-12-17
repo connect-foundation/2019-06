@@ -19,14 +19,24 @@ const SNACKBAR_MSG = {
   },
 };
 
-export const getDialogData = (type, categories, idx, setDialogOpen, setCategories, dispatch) => {
+export const getDialogData = (
+  handleSnackbarState,
+  type,
+  categories,
+  idx,
+  setDialogOpen,
+  setCategories,
+  dispatch,
+) => {
+  const openSnackbar = (variant, message) =>
+    dispatch(handleSnackbarState(getSnackbarState(variant, message)));
   switch (type) {
     case ADD:
       return {
         title: '메일함 추가',
         textContents: '추가할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (name, handleSnackbarState, setDialogOkButtonDisableState) => {
+        okBtnHandler: async (name, setDialogOkButtonDisableState) => {
           let errorMessage = '';
           if (!errorMessage && categories.find(category => category.name === name)) {
             errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
@@ -38,14 +48,14 @@ export const getDialogData = (type, categories, idx, setDialogOpen, setCategorie
             errorMessage = SNACKBAR_MSG.ERROR.REGEX;
           }
           if (errorMessage) {
-            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+            openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
             return;
           }
           setDialogOkButtonDisableState(true);
           const { isError, data } = await request.post(url, { name });
           if (isError) {
             const { message } = errorParser(data);
-            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+            openSnackbar(SNACKBAR_VARIANT.ERROR, message);
             setDialogOkButtonDisableState(false);
             return;
           }
@@ -67,7 +77,7 @@ export const getDialogData = (type, categories, idx, setDialogOpen, setCategorie
         title: `메일함(${categories[idx].name}) 변경`,
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
-        okBtnHandler: async (name, handleSnackbarState, setDialogOkButtonDisableState) => {
+        okBtnHandler: async (name, setDialogOkButtonDisableState) => {
           let errorMessage = '';
           if (!errorMessage && categories.find(category => category.name === name)) {
             errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
@@ -79,7 +89,7 @@ export const getDialogData = (type, categories, idx, setDialogOpen, setCategorie
             errorMessage = SNACKBAR_MSG.ERROR.REGEX;
           }
           if (errorMessage) {
-            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, errorMessage)));
+            openSnackbar(SNACKBAR_VARIANT.ERROR, errorMessage);
             return;
           }
           setDialogOkButtonDisableState(true);
@@ -89,7 +99,7 @@ export const getDialogData = (type, categories, idx, setDialogOpen, setCategorie
           });
           if (isError) {
             const { message } = errorParser(data);
-            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+            openSnackbar(SNACKBAR_VARIANT.ERROR, message);
             setDialogOkButtonDisableState(false);
             return;
           }
@@ -108,14 +118,14 @@ export const getDialogData = (type, categories, idx, setDialogOpen, setCategorie
         title: `메일함(${categories[idx].name}) 삭제`,
         textContents: '정말로 삭제하시겠습니까?',
         needTextField: false,
-        okBtnHandler: async (_, handleSnackbarState, setDialogOkButtonDisableState) => {
+        okBtnHandler: async (_, setDialogOkButtonDisableState) => {
           setDialogOkButtonDisableState(true);
           const { no, name } = categories[idx];
           const query = `?name=${name}`;
           const { isError, data } = await request.delete(url + no + query);
           if (isError) {
             const { message } = errorParser(data);
-            dispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+            openSnackbar(SNACKBAR_VARIANT.ERROR, message);
             setDialogOkButtonDisableState(false);
             return;
           }
