@@ -12,13 +12,11 @@ import { checkAttachment } from '../../libraries/validation/attachment';
 import { multipartUpload } from '../../libraries/storage/ncloud';
 
 const list = async (req, res, next) => {
-  const userNo = req.user.no;
   const { query } = req;
   let mails;
-
   try {
     checkQuery(query);
-    mails = await service.getMailsByOptions(userNo, query);
+    mails = await service.getMailsByOptions(req.user, query);
   } catch (error) {
     return next(error);
   }

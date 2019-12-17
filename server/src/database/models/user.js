@@ -1,9 +1,8 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable camelcase */
 /* eslint-disable no-await-in-loop */
-import { createSalt, encrypt, aesEncrypt, aesDecrypt } from '../../libraries/crypto';
-
 import { Op } from 'sequelize';
+import { createSalt, encrypt, aesEncrypt, aesDecrypt } from '../../libraries/crypto';
 
 const { DEFAULT_DOMAIN_NAME } = process.env;
 
@@ -87,6 +86,10 @@ const model = (sequelize, DataTypes) => {
             msg: '이메일 형식이 올바르지 않습니다.',
           },
         },
+      },
+      waste_basket_no: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
       },
       sub_email: {
         type: DataTypes.STRING(255),
