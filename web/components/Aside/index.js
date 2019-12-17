@@ -106,8 +106,8 @@ const Aside = () => {
 
   const handleDialogOpen = (action, idx) => {
     const dialogData = getDialogData(
-      handleSnackbarState,
       action,
+      handleSnackbarState,
       state.categories,
       idx + 4,
       setDialogOpen,

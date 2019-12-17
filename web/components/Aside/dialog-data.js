@@ -20,8 +20,8 @@ const SNACKBAR_MSG = {
 };
 
 export const getDialogData = (
-  handleSnackbarState,
   type,
+  handleSnackbarState,
   categories,
   idx,
   setDialogOpen,
