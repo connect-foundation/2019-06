@@ -100,7 +100,7 @@ const handleAction = {
   },
 };
 
-const getMailList = mails => {
+const getMailList = ({ mails, categoryNo }) => {
   if (mails.length === 0) {
     return (
       <S.NothingMailView>
@@ -110,7 +110,13 @@ const getMailList = mails => {
   }
 
   return mails.map((mail, index) => (
-    <MailTemplate key={mail.no} mail={mail} index={index} selected={mail.selected} />
+    <MailTemplate
+      key={mail.no}
+      mail={mail}
+      index={index}
+      selected={mail.selected}
+      categoryNo={categoryNo}
+    />
   ));
 };
 
@@ -146,7 +152,7 @@ const MailArea = () => {
   }
 
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
-  const mailList = getMailList(mails);
+  const mailList = getMailList({ mails, categoryNo: urlQuery.category || 0 });
 
   const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
