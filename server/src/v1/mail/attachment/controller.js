@@ -9,11 +9,10 @@ const downloadAttachment = async (req, res, next) => {
   try {
     validateNo(no);
     attachment = await service.getAttachment({ attachmentNo: no, email });
+    return res.end(attachment.Body);
   } catch (error) {
     return next(error);
   }
-
-  return res.end(attachment.Body);
 };
 
 const previewAttachment = async (req, res, next) => {
@@ -24,13 +23,12 @@ const previewAttachment = async (req, res, next) => {
   try {
     validateNo(no);
     streamAndMimetype = await service.getAttachmentStream({ attachmentNo: no, email });
+    const { mimetype } = streamAndMimetype;
+    res.setHeader('Content-type', mimetype);
+    return streamAndMimetype.pipe(res);
   } catch (error) {
     return next(error);
   }
-
-  const { mimetype } = streamAndMimetype;
-  res.setHeader('Content-type', mimetype);
-  return streamAndMimetype.pipe(res);
 };
 
 export default {
