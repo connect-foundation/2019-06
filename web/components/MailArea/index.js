@@ -146,7 +146,7 @@ const MailArea = () => {
     return errorHandler(fetchingMailData.error);
   }
 
-  const { mails, paging, categoryNoByName, category, categoryNameByNo } = state;
+  const { mails, paging, categoryNoByName, categoryNameByNo } = state;
   if (!categoryNoByName || !mails) {
     return <Loading />;
   }
@@ -171,8 +171,9 @@ const MailArea = () => {
     }
   };
 
-  const categoryName = category === 0 ? '전체메일함' : categoryNameByNo[category];
-  const title = `${categoryName} (${paging.page})`;
+  const categoryNo = +urlQuery.category || 0;
+  const categoryName = categoryNo === 0 ? '전체메일함' : categoryNameByNo[categoryNo];
+  const title = `${categoryName} (${paging.totalCount})`;
   return (
     <S.MailArea>
       <HeadTitle title={title} />
