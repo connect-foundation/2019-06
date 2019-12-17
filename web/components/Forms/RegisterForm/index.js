@@ -5,12 +5,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import validator from '../../../utils/validator';
-import {
-  ERROR_DIFFERENT_PASSWORD,
-  ERROR_ID_AND_SUB_EMAIL_DUPLICATION,
-  ERROR_ID_DUPLICATION,
-  ERROR_SUB_EMAIL_DUPLICATION,
-} from '../../../utils/error-message';
+import { ERROR_DIFFERENT_PASSWORD } from '../../../utils/error-message';
 import { SUCCESS_REGISTER } from '../../../utils/success-message';
 import S from './styled';
 import request from '../../../utils/request';
