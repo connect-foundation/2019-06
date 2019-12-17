@@ -63,20 +63,19 @@ const handleReservationMails = async () => {
   const date = new Date();
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
-  const mails = await DB.Mail.findAllPastReservationMailByDate(date);
+  const mailsFromDB = await DB.Mail.findAllPastReservationMailByDate(date);
   const mailsPerUser = {};
   const sentMailsPromises = [];
 
-  for (const mail of mails) {
+  for (const mail of mailsFromDB) {
     if (!mailsPerUser[mail.owner]) {
       mailsPerUser[mail.owner] = [];
     }
     mailsPerUser[mail.owner].push(mail);
   }
 
-  const owners = Object.keys(mailsPerUser);
-  for (const owner of owners) {
-    sentMailsPromises.push(sendReservationMailsOfOwner(owner, mailsPerUser[owner]));
+  for (const [owner, mails] of Object.entries(mailsPerUser)) {
+    sentMailsPromises.push(sendReservationMailsOfOwner(owner, mails));
   }
 
   const successMails = await Promise.all(sentMailsPromises);
