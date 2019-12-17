@@ -32,11 +32,11 @@ const ListOfReceivers = ({ defaultReceiver }) => {
     }
   }, [defaultReceiver]);
 
-  const deleteSC = specialCharacter => val => val.split(specialCharacter);
-  const replaceAndSetReceiver = (f, target) => {
-    const replaced = f(target.value);
-    const filteredReceivers = replaced.filter(re => re !== '' && !receivers.includes(re));
-    if (replaced && replaced !== SC.BLANK) {
+  const splitBySpecialCharacter = specialCharacter => val => val.split(specialCharacter);
+  const replaceAndSetReceiver = (split, target) => {
+    const splitedEmails = split(target.value);
+    const filteredReceivers = splitedEmails.filter(re => re !== '' && !receivers.includes(re));
+    if (splitedEmails && splitedEmails !== SC.BLANK) {
       dispatch({
         type: UPDATE_RECEIVERS,
         payload: { receivers: [...receivers, ...filteredReceivers] },
@@ -55,16 +55,16 @@ const ListOfReceivers = ({ defaultReceiver }) => {
       dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: receivers.slice(0, -1) } });
       resizeInput(target);
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
-      replaceAndSetReceiver(deleteSC(SC.COMMA), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
     if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteSC(SC.COMMA), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.COMMA), target);
     } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
-      replaceAndSetReceiver(deleteSC(SC.SPACE), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.SPACE), target);
     } else if (target.value === SC.SPACE || target.value === SC.COMMA) {
       target.value = SC.BLANK;
     }
@@ -74,7 +74,7 @@ const ListOfReceivers = ({ defaultReceiver }) => {
   const blurHandler = e => {
     const { target } = e;
     if (target.value !== SC.SPACE && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteSC(SC.SPACE), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.SPACE), target);
     }
   };
 
