@@ -3,6 +3,16 @@ const isContainedErrorCode = error => {
   return response && response.data && response.data.errorCode;
 };
 
+const fieldErrorsParser = fieldErrors => {
+  const errorMsgs = {};
+
+  fieldErrors.forEach(error => {
+    errorMsgs[error.field] = error.reason;
+  });
+
+  return errorMsgs;
+};
+
 const errorParser = error => {
   if (!isContainedErrorCode(error)) {
     return { status: 500, message: error.message };
@@ -11,6 +21,10 @@ const errorParser = error => {
   const { errorCode, fieldErrors } = error.response.data;
 
   const { status, message } = errorCode;
+  if (status === 409) {
+    return { status, message, fieldErrors: fieldErrorsParser(fieldErrors) };
+  }
+
   if (status !== 400) {
     return { status, message };
   }
