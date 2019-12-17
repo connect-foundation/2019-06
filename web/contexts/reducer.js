@@ -1,4 +1,3 @@
-const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
 const SET_MESSAGE = 'SET_MESSAGE';
@@ -137,8 +136,6 @@ export const reducer = (state = initialState, action) => {
     case INIT_CHECKER_IN_TOOLS:
       return { ...state, ...payload };
     case SELECT_ALL_CHANGE:
-      return { ...state, ...payload };
-    case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
     case MAIL_CHECK:
       return { ...state, ...payload };
