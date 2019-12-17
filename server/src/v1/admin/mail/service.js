@@ -54,12 +54,12 @@ const handleReservationMails = async () => {
   date.setMinutes(date.getMinutes() + ALLOWED_TIME);
 
   const mails = await DB.Mail.findAllPastReservationMailByDate(date);
-  const promises = [];
-  for (const mail of mails) {
-    promises.push(sendResrvationMail(mail));
-  }
+  const successMails = [];
 
-  const successMails = await Promise.all(promises);
+  for (const mail of mails) {
+    const sentMail = await sendResrvationMail(mail);
+    successMails.push(sentMail);
+  }
 
   return successMails;
 };
