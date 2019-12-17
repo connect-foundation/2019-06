@@ -107,6 +107,34 @@ const getRequestPathByQuery = ({ view, searchLevel }) => {
   return path;
 };
 
+const getProcessedMails = ({ mails, categories }) => {
+  if (mails.length === 0) {
+    return (
+      <S.NothingMailView>
+        <img src={noMailImage} alt="no-mail" />
+      </S.NothingMailView>
+    );
+  }
+
+  return mails.map((mail, index) => (
+    <MailTemplate
+      key={mail.no}
+      mail={mail}
+      index={index}
+      selected={mail.selected}
+      categories={categories}
+    />
+  ));
+};
+
+const getCategoriesByCategoryNoByName = categoryNoByName => {
+  const categories = {};
+  for (const [key, value] of Object.entries(categoryNoByName)) {
+    categories[value] = key;
+  }
+  return categories;
+};
+
 const MailArea = () => {
   const router = useRouter();
   const { query: urlQuery } = router;
@@ -117,8 +145,9 @@ const MailArea = () => {
   const requestPath = getRequestPathByQuery(urlQuery);
   const URL = `${requestPath}?${query}`;
   const fetchingMailData = useFetch(URL);
-  const openSnackbar = (variant, message) =>
+  const openSnackbar = (variant, message) => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
+  };
 
   useEffect(() => {
     dispatch(initCheckerInTools());
@@ -139,25 +168,8 @@ const MailArea = () => {
   }
 
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
-  const categories = {};
-  Object.entries(categoryNoByName).map(([k, v]) => (categories[v] = k));
-
-  const mailList =
-    mails.length > 0 ? (
-      mails.map((mail, index) => (
-        <MailTemplate
-          key={mail.no}
-          mail={mail}
-          index={index}
-          selected={mail.selected}
-          categories={categories}
-        />
-      ))
-    ) : (
-      <S.NothingMailView>
-        <img src={noMailImage} alt="no-mail" />
-      </S.NothingMailView>
-    );
+  const categories = getCategoriesByCategoryNoByName(categoryNoByName);
+  const mailList = getProcessedMails({ mails, categories });
 
   const handleMailListAreaClick = ({ target }) => {
     if (typeof target.className === 'object') {
