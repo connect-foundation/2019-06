@@ -32,15 +32,15 @@ const ListOfReceivers = ({ defaultReceiver }) => {
     }
   }, [defaultReceiver]);
 
-  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
+  const deleteSC = regex => val => val.split(regex);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
-    if (receivers.includes(replaced)) {
-      target.value = SC.BLANK;
-      return;
-    }
-    if (replaced !== SC.BLANK) {
-      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: [...receivers, replaced] } });
+    const filteredReceivers = replaced.filter(re => re !== '' && !receivers.includes(re));
+    if (replaced && replaced !== SC.BLANK) {
+      dispatch({
+        type: UPDATE_RECEIVERS,
+        payload: { receivers: [...receivers, ...filteredReceivers] },
+      });
     }
     target.value = SC.BLANK;
     resizeInput(target);
@@ -55,16 +55,16 @@ const ListOfReceivers = ({ defaultReceiver }) => {
       dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: receivers.slice(0, -1) } });
       resizeInput(target);
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
-      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+      replaceAndSetReceiver(deleteSC(SC.COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
     if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+      replaceAndSetReceiver(deleteSC(SC.COMMA), target);
     } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
-      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+      replaceAndSetReceiver(deleteSC(SC.SPACE), target);
     } else if (target.value === SC.SPACE || target.value === SC.COMMA) {
       target.value = SC.BLANK;
     }
@@ -74,7 +74,7 @@ const ListOfReceivers = ({ defaultReceiver }) => {
   const blurHandler = e => {
     const { target } = e;
     if (target.value !== SC.SPACE && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+      replaceAndSetReceiver(deleteSC(SC.SPACE), target);
     }
   };
 
