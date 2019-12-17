@@ -19,14 +19,7 @@ const SNACKBAR_MSG = {
   },
 };
 
-export const getDialogData = (
-  type,
-  customCategory,
-  idx,
-  setDialogOpen,
-  setCustomCategory,
-  dispatch,
-) => {
+export const getDialogData = (type, categories, idx, setDialogOpen, setCategories, dispatch) => {
   switch (type) {
     case ADD:
       return {
@@ -35,7 +28,7 @@ export const getDialogData = (
         needTextField: true,
         okBtnHandler: async (name, handleSnackbarState, setDialogOkButtonDisableState) => {
           let errorMessage = '';
-          if (!errorMessage && customCategory.find(category => category.name === name)) {
+          if (!errorMessage && categories.find(category => category.name === name)) {
             errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
           }
           if (!errorMessage && name.length > 20) {
@@ -57,7 +50,7 @@ export const getDialogData = (
             return;
           }
           const { name: createdName, no } = data.createdBox;
-          customCategory.push({
+          categories.push({
             name: createdName,
             no,
           });
@@ -71,12 +64,12 @@ export const getDialogData = (
       };
     case MODIFY:
       return {
-        title: `메일함(${customCategory[idx].name}) 변경`,
+        title: `메일함(${categories[idx].name}) 변경`,
         textContents: '변경할 메일함 이름을 적어주세요',
         needTextField: true,
         okBtnHandler: async (name, handleSnackbarState, setDialogOkButtonDisableState) => {
           let errorMessage = '';
-          if (!errorMessage && customCategory.find(category => category.name === name)) {
+          if (!errorMessage && categories.find(category => category.name === name)) {
             errorMessage = SNACKBAR_MSG.ERROR.DUPLICATE;
           }
           if (!errorMessage && name.length > 20) {
@@ -90,8 +83,8 @@ export const getDialogData = (
             return;
           }
           setDialogOkButtonDisableState(true);
-          const { isError, data } = await request.patch(url + customCategory[idx].no, {
-            oldName: customCategory[idx].name,
+          const { isError, data } = await request.patch(url + categories[idx].no, {
+            oldName: categories[idx].name,
             newName: name,
           });
           if (isError) {
@@ -100,8 +93,8 @@ export const getDialogData = (
             setDialogOkButtonDisableState(false);
             return;
           }
-          customCategory[idx].name = name;
-          dispatch(setCustomCategory({ categories: customCategory }));
+          categories[idx].name = name;
+          dispatch(setCategories({ categories }));
           dispatch(
             handleSnackbarState(
               getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY),
@@ -112,12 +105,12 @@ export const getDialogData = (
       };
     case DELETE:
       return {
-        title: `메일함(${customCategory[idx].name}) 삭제`,
+        title: `메일함(${categories[idx].name}) 삭제`,
         textContents: '정말로 삭제하시겠습니까?',
         needTextField: false,
         okBtnHandler: async (_, handleSnackbarState, setDialogOkButtonDisableState) => {
           setDialogOkButtonDisableState(true);
-          const { no, name } = customCategory[idx];
+          const { no, name } = categories[idx];
           const query = `?name=${name}`;
           const { isError, data } = await request.delete(url + no + query);
           if (isError) {
@@ -126,9 +119,7 @@ export const getDialogData = (
             setDialogOkButtonDisableState(false);
             return;
           }
-          dispatch(
-            setCustomCategory({ categories: customCategory.filter((_, index) => idx !== index) }),
-          );
+          dispatch(setCategories({ categories: categories.filter((_, index) => idx !== index) }));
           dispatch(
             handleSnackbarState(
               getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
