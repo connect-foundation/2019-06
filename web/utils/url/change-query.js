@@ -29,11 +29,12 @@ const getQueryByOptions = ({
   to,
   searchLevel,
   searchWord,
+  mailIndex,
   perPageNum,
 }) => {
   const queries = [];
   const setQueries = (key, value) => {
-    if (value) {
+    if (value || value === 0) {
       queries.push(`${key}=${value}`);
     }
   };
@@ -51,6 +52,7 @@ const getQueryByOptions = ({
   setQueries('startDate', startDate);
   setQueries('endDate', endDate);
   setQueries('sort', sort);
+  setQueries('mailIndex', mailIndex);
   setQueries('perPageNum', perPageNum);
   return queries.join('&');
 };
