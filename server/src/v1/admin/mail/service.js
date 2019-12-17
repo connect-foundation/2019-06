@@ -24,7 +24,7 @@ const getFileNameAndBufferFromAttachment = async ({ url, name }) => {
   return { buffer, originalname: name };
 };
 
-const sendResrvationMail = async (user, mail) => {
+const sendReservationMail = async (user, mail) => {
   const { MailTemplate, reservation_time } = mail;
   const { from, to, subject, text, Attachments } = MailTemplate;
   const mailboxName = SENT_MAILBOX_NAME;
@@ -52,7 +52,7 @@ const sendReservationMailsOfOwner = async (owner, mails) => {
   user.password = aesDecrypt(user.imap_password);
 
   for (const mail of mails) {
-    const sentMail = await sendResrvationMail(user, mail);
+    const sentMail = await sendReservationMail(user, mail);
     successMails.push(sentMail);
   }
 
