@@ -32,7 +32,7 @@ const ListOfReceivers = ({ defaultReceiver }) => {
     }
   }, [defaultReceiver]);
 
-  const deleteSC = regex => val => val.split(regex);
+  const deleteSC = specialCharacter => val => val.split(specialCharacter);
   const replaceAndSetReceiver = (f, target) => {
     const replaced = f(target.value);
     const filteredReceivers = replaced.filter(re => re !== '' && !receivers.includes(re));
