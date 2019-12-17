@@ -92,9 +92,7 @@ const createMailTemplateToFindPassword = password => {
     </p><span style="font-style: italic;">Copyright ⓒ Daitnu Corp. All Rights Reserved.</span>`;
 };
 
-const sendMail = data => {
-  return transporter.sendMail(data);
-};
+const sendMail = data => transporter.sendMail(data);
 
 const sendMailToFindId = ({ id, email }) => {
   const hideStartIndex = 1;
