@@ -85,14 +85,14 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
-    receivers.forEach(r => {
-      formData.append('to', r);
+    receivers.forEach(receiver => {
+      formData.append('to', receiver);
     });
     formData.append('subject', subject);
     formData.append('text', text);
     formData.append('html', html);
-    files.forEach(f => {
-      formData.append('attachments', f);
+    files.forEach(file => {
+      formData.append('attachments', file);
     });
 
     setSendBtnDisabledState(true);
