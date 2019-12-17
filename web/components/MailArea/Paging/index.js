@@ -10,7 +10,6 @@ import { useRouter } from 'next/router';
 import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
 import { AppDispatchContext } from '../../../contexts';
-import { handlePageNumberClick } from '../../../contexts/reducer';
 import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const useStyles = makeStyles(theme => ({
@@ -48,7 +47,6 @@ const Paging = ({ paging }) => {
   const handleMoveBtnClick = value => {
     const newIndex = currentIndex + value;
     const newPageNumber = getPageStartNumber(newIndex);
-    dispatch(handlePageNumberClick(newPageNumber));
 
     changeUrlWithoutRunning({ ...query, page: newPageNumber });
   };
@@ -66,7 +64,6 @@ const Paging = ({ paging }) => {
       return;
     }
 
-    dispatch(handlePageNumberClick(id));
     changeUrlWithoutRunning({ ...query, page: id });
   };
 

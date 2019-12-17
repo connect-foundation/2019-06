@@ -14,7 +14,6 @@ const INIT_STATE = 'INIT_STATE';
 export const initialState = {
   categories: null,
   category: 0,
-  page: 1,
   mails: null,
   mailToReply: null,
   paging: null,
@@ -124,15 +123,6 @@ export const handleMailChecked = ({ mails, index }) => {
     payload: {
       mails,
       allMailCheckInTools: false,
-    },
-  };
-};
-
-export const handlePageNumberClick = page => {
-  return {
-    type: PAGE_NUMBER_CLICK,
-    payload: {
-      page,
     },
   };
 };
