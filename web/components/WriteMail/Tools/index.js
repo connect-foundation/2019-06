@@ -46,6 +46,7 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { dispatch: pageDispatch } = useContext(AppDispatchContext);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sendBtnDisabledState, setSendBtnDisabledState] = useState(false);
   const anchorRef = React.useRef(null);
 
   const handleClick = async () => {
@@ -70,16 +71,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
     pageDispatch(
       handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING)),
     );
+
     const formData = new FormData();
-    receivers.forEach(r => {
-      formData.append('to', r);
-    });
-    formData.append('subject', subject);
-    formData.append('text', text);
-    formData.append('html', html);
-    files.forEach(f => {
-      formData.append('attachments', f);
-    });
 
     if (date) {
       if (!validator.isAfterDate(date)) {
@@ -92,6 +85,17 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
+    receivers.forEach(receiver => {
+      formData.append('to', receiver);
+    });
+    formData.append('subject', subject);
+    formData.append('text', text);
+    formData.append('html', html);
+    files.forEach(file => {
+      formData.append('attachments', file);
+    });
+
+    setSendBtnDisabledState(true);
 
     const { isError, data } = await request.post('/mail', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -100,10 +104,12 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
     if (isError) {
       const { message } = errorParser(data);
       pageDispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+      setSendBtnDisabledState(false);
     } else {
       pageDispatch(
         handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
       );
+      setSendBtnDisabledState(false);
       changeView(VIEW_STRING.LIST);
     }
   };
@@ -134,7 +140,9 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
         <div></div>
         <S.RowContainer>
           <ButtonGroup variant="outlined" color="default" ref={anchorRef}>
-            <Button onClick={handleClick}>보내기</Button>
+            <Button disabled={sendBtnDisabledState} onClick={handleClick}>
+              보내기
+            </Button>
             {!writeToMe && (
               <Button color="default" size="small" onClick={handleToggle}>
                 <ArrowDropDownIcon />
