@@ -93,7 +93,7 @@ const createMailTemplateToFindPassword = password => {
 };
 
 const sendMail = data => {
-  transporter.sendMail(data);
+  return transporter.sendMail(data);
 };
 
 const sendMailToFindId = ({ id, email }) => {
@@ -158,6 +158,7 @@ const makeSearchArgs = array => {
 export default {
   getSingleMailData,
   getTransport,
+  sendMail,
   sendMailToFindId,
   sendMailToFindPassword,
   makeSearchArgs,
