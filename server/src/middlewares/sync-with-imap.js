@@ -10,7 +10,7 @@ const getDBMails = async (imapMessageIds, userNo) => {
   const mailBoxNames = Object.keys(imapMessageIds);
   for (const mailBoxName of mailBoxNames) {
     // eslint-disable-next-line no-await-in-loop
-    const userMails = await DB.Mail.findAllMessasgeIds(userNo, mailBoxName);
+    const userMails = await DB.Mail.findAllNonResultvation(userNo, mailBoxName);
     userMails.forEach(userMail => {
       dbMails[userMail.message_id] = userMail;
     });
