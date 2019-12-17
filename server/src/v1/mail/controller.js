@@ -76,12 +76,11 @@ const write = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   const { nos, props } = req.body;
-  const userNo = req.user.no;
 
   try {
     validateNos(nos);
     validateProps(props);
-    const result = await service.updateMails(nos, props, userNo);
+    const result = await service.updateMails(nos, props, req.user);
     return res.json(result);
   } catch (err) {
     return next(err);

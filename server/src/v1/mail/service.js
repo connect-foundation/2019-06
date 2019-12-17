@@ -7,7 +7,7 @@ import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveToMailbox } from '../../libraries/imap';
+import { saveToMailbox, moveMail } from '../../libraries/imap';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
@@ -135,7 +135,7 @@ const checkCategoryOfMail = async (mail, props) => {
   if (!props.hasOwnProperty('category_no')) {
     return;
   }
-  props.prev_category_no = mail.category_no; // 카테고리 변경 시 이전 카테고리 저장
+  props.prev_category_no = mail.category_no;
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
@@ -144,9 +144,9 @@ const checkCategoryOfMail = async (mail, props) => {
 };
 
 const checkOwnerHasMails = async (nos, userNo) => {
-  const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
-  const promisedMails = await Promise.all(mails);
-  const validMails = promisedMails.filter(mail => mail);
+  const promisedMails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
+  const mails = await Promise.all(promisedMails);
+  const validMails = mails.filter(mail => mail);
   if (validMails.length !== nos.length) {
     const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
@@ -156,10 +156,43 @@ const checkOwnerHasMails = async (nos, userNo) => {
 
 const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
 
-const updateMails = async (nos, props, userNo) => {
+const createMessageIdsOfMailbox = async mails => {
+  const result = {};
+  const promisedMails = mails.map(async mail => {
+    const { name } = await DB.Category.findByPk(mail.category_no);
+    if (!result.hasOwnProperty(name)) {
+      result[name] = [];
+    }
+    return result[name].push(mail.message_id);
+  });
+
+  await Promise.all(promisedMails);
+  return result;
+};
+
+const moveMailInInfra = async (mails, props, user) => {
+  if (!props.hasOwnProperty('category_no')) {
+    return;
+  }
+
+  const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
+  const messageIdsOfMailbox = await createMessageIdsOfMailbox(mails);
+
+  Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
+    await moveMail({
+      user,
+      originBoxName,
+      targetBoxName,
+      searchArgs: messageIdsOfMailbox[originBoxName],
+    });
+  });
+};
+
+const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
-  const mails = await checkOwnerHasMails(nos, userNo);
-  checkCategoryOfMail(mails[0], props);
+  const mails = await checkOwnerHasMails(nos, user.no);
+  await checkCategoryOfMail(mails[0], props);
+  await moveMailInInfra(mails, props, user);
   const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updatedCount === nos.length;
 };

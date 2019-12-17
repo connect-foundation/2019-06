@@ -125,6 +125,7 @@ const model = (sequelize, DataTypes) => {
           model: sequelize.models.MailTemplate,
         },
       ],
+      raw: true,
     });
   };
 
