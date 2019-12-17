@@ -19,12 +19,12 @@ describe('Mail Service Test', () => {
 
   describe('getMailsByOptions...', () => {
     it('# 페이징 정보를 포함한다.', async () => {
-      const data = await service.getMailsByOptions(1, {});
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, {});
       data.paging.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
     });
 
     it('# 메일리스트 정보를 배열로 포함한다.', async () => {
-      const data = await service.getMailsByOptions(1, {});
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, {});
       data.mails.should.an.instanceof(Array);
     });
 
@@ -32,7 +32,7 @@ describe('Mail Service Test', () => {
       const options = {
         perPageNum: 2,
       };
-      const data = await service.getMailsByOptions(1, options);
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, options);
       data.mails.should.have.length(2);
     });
 
@@ -41,7 +41,7 @@ describe('Mail Service Test', () => {
       const options = {
         category,
       };
-      const { mails } = await service.getMailsByOptions(1, options);
+      const { mails } = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, options);
       const length = mails.filter(mail => mail.category_no === category);
       length.should.have.length(0);
     });
