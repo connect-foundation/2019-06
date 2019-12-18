@@ -34,7 +34,7 @@ import {
   getQueryByOptions,
   changeUrlWithoutRunning,
   changeView,
-  VIEW_STRING,
+  VIEW,
   getRequestPathByQuery,
 } from '../../../utils/url/change-query';
 import mailRequest from '../../../utils/mail-request';
@@ -122,7 +122,7 @@ const buttons = [
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
         return;
       }
-      changeView(VIEW_STRING.WRITE);
+      changeView(VIEW.WRITE);
       dispatch(setMailToReply(mail));
     },
   },

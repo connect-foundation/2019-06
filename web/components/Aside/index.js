@@ -37,7 +37,7 @@ import { handleCategoriesChange, handleSnackbarState } from '../../contexts/redu
 import { getDialogData } from './dialog-data';
 import errorHandler from '../../utils/error-handler';
 import { AppDispatchContext, AppStateContext } from '../../contexts';
-import { changeView, VIEW_STRING, changeCategory } from '../../utils/url/change-query';
+import { changeView, VIEW, changeCategory } from '../../utils/url/change-query';
 import HeadTitle from '../HeadTitle';
 
 const URL = '/mail/categories';
@@ -182,10 +182,8 @@ const Aside = () => {
 
       <List component="nav">
         <ListItem className={classes.alignHorizontalCenter}>
-          <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE)}>메일쓰기</S.WrtieButton>
-          <S.WrtieButton onClick={() => changeView(VIEW_STRING.WRITE_TO_ME)}>
-            내게쓰기
-          </S.WrtieButton>
+          <S.WrtieButton onClick={() => changeView(VIEW.WRITE)}>메일쓰기</S.WrtieButton>
+          <S.WrtieButton onClick={() => changeView(VIEW.WRITE_TO_ME)}>내게쓰기</S.WrtieButton>
         </ListItem>
         {defaultCards}
         <ListItem button onClick={handleClick}>
