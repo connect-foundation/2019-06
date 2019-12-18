@@ -178,7 +178,7 @@ const createMessageIdsOfMailbox = async mails => {
 };
 
 const moveMailInInfra = async (mails, props, user) => {
-  if (!props.hasOwnProperty('category_no') || NODE_ENV === 'test') {
+  if (!props.hasOwnProperty('category_no')) {
     return;
   }
 
@@ -208,8 +208,10 @@ const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
   const mails = await checkOwnerHasMails(nos, user.no);
   await checkCategoryOfMail(mails[0], props);
-  hasMessageIdAllMails(mails);
-  moveMailInInfra(mails, props, user);
+  if (NODE_ENV !== 'test') {
+    hasMessageIdAllMails(mails);
+    moveMailInInfra(mails, props, user);
+  }
   const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updatedCount === nos.length;
 };
