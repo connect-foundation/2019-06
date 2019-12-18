@@ -163,7 +163,7 @@ describe('Mail Service Test', () => {
     it('# 1,4,7,10번 메일의 category_no를 4로 변경', async () => {
       const nos = [1, 4, 7, 10];
       const props = { category_no: 4 };
-      const result = await service.updateMails(nos, props, 1);
+      const result = await service.updateMails(nos, props, { no: 1 });
       result.should.be.eql(true);
     });
 
@@ -171,7 +171,7 @@ describe('Mail Service Test', () => {
       const nos = [1, 4, -1, 10];
       const props = { category_no: 3 };
       try {
-        await service.updateMails(nos, props, 1);
+        await service.updateMails(nos, props, { no: 1 });
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
@@ -181,7 +181,7 @@ describe('Mail Service Test', () => {
     it('# 1,1,1,1번 메일의 category_no를 4로 변경하면 1개만 변경', async () => {
       const nos = [1, 1, 1, 1];
       const props = { category_no: 4 };
-      const result = await service.updateMails(nos, props, 1);
+      const result = await service.updateMails(nos, props, { no: 1 });
       result.should.be.eql(true);
     });
 
@@ -189,7 +189,7 @@ describe('Mail Service Test', () => {
       const nos = [99999, 100001];
       const props = { category_no: 3 };
       try {
-        await service.updateMails(nos, props, 1);
+        await service.updateMails(nos, props, { no: 1 });
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
