@@ -47,10 +47,6 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: true,
       },
-      has_attachment: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
     },
     {
       freezeTableName: true,
