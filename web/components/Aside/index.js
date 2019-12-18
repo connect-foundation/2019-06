@@ -68,7 +68,7 @@ const Aside = () => {
   const [mailboxFolderOpen, setMailboxFolderOpen] = useState(true);
   const [dialogOkButtonDisableState, setDialogOkButtonDisableState] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [dialogState, setDialogState] = useState(getDialogData(0));
+  const [dialogState, setDialogState] = useState(getDialogData({ type: 0 }));
   const [dialogTextFieldState, setDialogTextFieldState] = useState('');
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
@@ -104,16 +104,16 @@ const Aside = () => {
     selected => <DeleteIcon className={selected ? classes.whiteIcon : ''} />,
   ];
 
-  const handleDialogOpen = (action, idx) => {
-    const dialogData = getDialogData(
-      action,
+  const handleDialogOpen = (type, idx) => {
+    const dialogData = getDialogData({
+      type,
       handleSnackbarState,
-      state.categories,
-      idx + 4,
+      categories: state.categories,
+      idx: idx + 4,
       setDialogOpen,
-      handleCategoriesChange,
+      setCategories: handleCategoriesChange,
       dispatch,
-    );
+    });
     if (!dialogData) return;
     setDialogOkButtonDisableState(false);
     setDialogState(dialogData);
