@@ -228,7 +228,7 @@ const Tools = () => {
       if (isError) {
         throw SNACKBAR_MSG.ERROR.MOVE;
       }
-      await loadNewMails(url, dispatch);
+      await loadNewMails(query, dispatch, url);
       openSnackbar(
         SNACKBAR_VARIANT.SUCCESS,
         SNACKBAR_MSG.SUCCESS.MOVE(selectedMails.length, categoryNameByNo[categoryNoToMove]),
