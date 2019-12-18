@@ -48,41 +48,34 @@ const getDateOrTime = createdAt => {
   const [year, month, day] = splitMoment(createdAt);
   const [nowYear, _, nowDay] = splitMoment();
   const time = moment(createdAt).format('HH:mm');
-  let date;
-  if (day !== nowDay) date = `${month}-${day}`;
-  if (year !== nowYear) date = `${year}-${month}-${day}`;
-  return date ? `${date} ${time}` : time;
+  let date = day !== nowDay ? `${month}-${day}` : '';
+  date = year !== nowYear ? `${year}-${month}-${day}` : date;
+  return date.length > 0 ? `${date} ${time}` : time;
 };
 
-const MailTemplate = ({ mail, selected, index, categoryNo }) => {
+const MailTemplate = ({ mail, selected, index }) => {
   const classes = useStyles();
   const { state } = useContext(AppStateContext);
-  const { categoryNameByNo } = state;
   const { dispatch } = useContext(AppDispatchContext);
+  const { categoryNoByName, categoryNameByNo, mails } = state;
   const { is_important, is_read, reservation_time, category_no, MailTemplate: mailTemplate } = mail;
   const { from, to, subject, createdAt } = mailTemplate;
-  const handleCheckedChange = () => dispatch(handleMailChecked({ mails: state.mails, index }));
-  const wastebasketNo = state.categoryNoByName[WASTEBASKET_MAILBOX];
-  const sendMailboxNo = state.categoryNoByName[SEND_MAILBOX];
-  let category = '';
-  if (+categoryNo === 0) {
-    category = <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>;
-  }
+  const handleCheckedChange = () => dispatch(handleMailChecked({ mails, index }));
+  const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
+  const sendMailboxNo = categoryNoByName[SEND_MAILBOX];
 
   return (
     <S.Container>
-      <div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={selected}
-              onChange={handleCheckedChange}
-              color="primary"
-              size="small"
-            />
-          }
-        />
-      </div>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={selected}
+            onChange={handleCheckedChange}
+            color="primary"
+            size="small"
+          />
+        }
+      />
       <S.ImportantButton id={`star-${index}`}>
         {is_important ? (
           <StarIcon className={classes.star} id={`star-${index}`} />
@@ -91,7 +84,7 @@ const MailTemplate = ({ mail, selected, index, categoryNo }) => {
         )}
       </S.ImportantButton>
       <S.ReadSign>{is_read ? <DraftsIcon /> : <MailIcon />}</S.ReadSign>
-      {state.category === wastebasketNo ? (
+      {category_no === wastebasketNo ? (
         <S.DeleteForeverButton id={`deleteForever-${index}`}>
           <DeleteForeverIcon className={classes.delete} id={`deleteForever-${index}`} />
         </S.DeleteForeverButton>
@@ -100,8 +93,8 @@ const MailTemplate = ({ mail, selected, index, categoryNo }) => {
           <DeleteIcon className={classes.delete} id={`delete-${index}`} />
         </S.DeleteButton>
       )}
-      <S.AddressText isRead={is_read}>{state.category === sendMailboxNo ? to : from}</S.AddressText>
-      {category}
+      <S.AddressText isRead={is_read}>{category_no === sendMailboxNo ? to : from}</S.AddressText>
+      {category_no ? <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName> : ''}
       <S.Selectable id={`read-${index}`}>
         <S.SubjectText isRead={is_read} id={`read-${index}`}>
           {subject || '제목없음'}
