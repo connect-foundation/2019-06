@@ -8,13 +8,10 @@ const { NODE_ENV } = process.env;
 const getDBMails = async (imapMessageIds, userNo) => {
   const dbMails = {};
   const mailBoxNames = Object.keys(imapMessageIds);
-  for (const mailBoxName of mailBoxNames) {
-    // eslint-disable-next-line no-await-in-loop
-    const userMails = await DB.Mail.findAllNonResultvation(userNo, mailBoxName);
-    userMails.forEach(userMail => {
-      dbMails[userMail.message_id] = userMail;
-    });
-  }
+  const userMails = await DB.Mail.findAllNonReservation(userNo, mailBoxNames);
+  userMails.forEach(userMail => {
+    dbMails[userMail.message_id] = userMail;
+  });
   return dbMails;
 };
 
