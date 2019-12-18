@@ -65,14 +65,14 @@ const buttons = [
     name: '삭제',
     visible: true,
     icon: <DeleteIcon />,
-    handleClick: async ({ mail, openSnackbar, wastebasketNo, urlQuery }) => {
+    handleClick: async ({ mail, openSnackbar, wastebasketNo, query }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: wastebasketNo });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
-      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: 'list' });
     },
   },
   {
@@ -80,14 +80,14 @@ const buttons = [
     name: '복구',
     visible: true,
     icon: <LoopIcon />,
-    handleClick: async ({ mail, openSnackbar, urlQuery }) => {
+    handleClick: async ({ mail, openSnackbar, query }) => {
       const { isError } = await mailRequest.update(mail.no, { category_no: mail.prev_category_no });
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.RECYLCE);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.RECYLCE);
-      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: 'list' });
     },
   },
   {
@@ -95,14 +95,14 @@ const buttons = [
     name: '영구삭제',
     icon: <DeleteForeverIcon />,
     visible: true,
-    handleClick: async ({ mail, openSnackbar, urlQuery }) => {
+    handleClick: async ({ mail, openSnackbar, query }) => {
       const { isError } = await mailRequest.remove(mail.no);
       if (isError) {
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.DELETE_FOREVER);
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
-      changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: 'list' });
     },
   },
 ];
@@ -125,15 +125,15 @@ const swapButtonSetView = (categoryNo, wastebasketNo) => {
 
 const Tools = ({ mail }) => {
   const classes = useStyles();
+  const { query } = useRouter();
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const [categoryMenu, setCategoryMenu] = useState(null);
   const { categoryNoByName, categoryNameByNo, categories } = state;
-  const { query: urlQuery } = useRouter();
   const wastebasketNo = categoryNoByName[WASTEBASKET_MAILBOX];
   const openSnackbar = (variant, message) =>
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
-  const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch, urlQuery };
+  const paramsToClick = { mail, openSnackbar, wastebasketNo, dispatch, query };
 
   const handleCategoryMenuItemClick = async e => {
     const categoryNoToMove = e.currentTarget.value;
@@ -146,7 +146,7 @@ const Tools = ({ mail }) => {
       SNACKBAR_VARIANT.SUCCESS,
       SNACKBAR_MSG.SUCCESS.MOVE(categoryNameByNo[categoryNoToMove]),
     );
-    changeUrlWithoutRunning({ ...urlQuery, view: 'list' });
+    changeUrlWithoutRunning({ ...query, view: 'list' });
   };
 
   swapButtonSetView(mail.category_no, wastebasketNo);
