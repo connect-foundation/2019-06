@@ -163,7 +163,7 @@ const model = (sequelize, DataTypes) => {
     );
   };
 
-  Mail.findAllNonResultvation = (user_no, category_name) => {
+  Mail.findAllNonReservation = (user_no, category_names) => {
     return Mail.findAll({
       attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
       where: {
@@ -178,7 +178,9 @@ const model = (sequelize, DataTypes) => {
           model: sequelize.models.Category,
           where: {
             user_no,
-            name: category_name,
+            name: {
+              [Op.in]: category_names,
+            },
           },
         },
       ],
