@@ -104,10 +104,6 @@ const makeMailboxNonExistedInDB = async (imapMessageIds, userNo) => {
 };
 
 const syncWithImapService = async (req, res, next) => {
-  if (NODE_ENV === 'test') {
-    return next();
-  }
-
   const { user } = req;
   const { no: userNo } = user;
   const imapMessageIds = await getImapMessageIds({ user });
@@ -141,6 +137,10 @@ const syncWithImapService = async (req, res, next) => {
 };
 
 const syncWithImap = async (req, res, next) => {
+  if (NODE_ENV === 'test') {
+    return next();
+  }
+
   try {
     await syncWithImapService(req, res, next);
   } catch (err) {
