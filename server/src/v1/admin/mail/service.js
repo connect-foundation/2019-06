@@ -41,22 +41,16 @@ const sendReservationMail = async (user, mail) => {
 
   mail.reservation_time = null;
   await mail.save();
-
-  return mail;
 };
 
 const sendReservationMailsOfOwner = async (owner, mails) => {
   const user = await DB.User.findByPk(owner, { raw: true });
-  const successMails = [];
 
   user.password = aesDecrypt(user.imap_password);
 
   for (const mail of mails) {
-    const sentMail = await sendReservationMail(user, mail);
-    successMails.push(sentMail);
+    await sendReservationMail(user, mail);
   }
-
-  return successMails;
 };
 
 const handleReservationMails = async () => {
@@ -65,7 +59,6 @@ const handleReservationMails = async () => {
 
   const mailsFromDB = await DB.Mail.findAllPastReservationMailByDate(date);
   const mailsPerUser = {};
-  const sentMailsPromises = [];
 
   for (const mail of mailsFromDB) {
     if (!mailsPerUser[mail.owner]) {
@@ -75,11 +68,8 @@ const handleReservationMails = async () => {
   }
 
   for (const [owner, mails] of Object.entries(mailsPerUser)) {
-    sentMailsPromises.push(sendReservationMailsOfOwner(owner, mails));
+    sendReservationMailsOfOwner(owner, mails);
   }
-
-  const successMails = await Promise.all(sentMailsPromises);
-  return successMails;
 };
 
 export default {
