@@ -1,6 +1,5 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-import nodemailer from 'nodemailer';
 import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
 import DB from '../../database/index';
@@ -17,6 +16,8 @@ import {
   DEFAULT_MAIL_QUERY_OPTIONS,
   SORT_TYPE,
 } from '../../constant/mail';
+
+const { NODE_ENV } = process.env;
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {
@@ -171,15 +172,14 @@ const createMessageIdsOfMailbox = async mails => {
 };
 
 const moveMailInInfra = async (mails, props, user) => {
-  if (!props.hasOwnProperty('category_no')) {
+  if (!props.hasOwnProperty('category_no') || NODE_ENV === 'test') {
     return;
   }
 
   const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
   const messageIdsOfMailbox = await createMessageIdsOfMailbox(mails);
-
   Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
-    await moveMail({
+    moveMail({
       user,
       originBoxName,
       targetBoxName,
@@ -188,11 +188,22 @@ const moveMailInInfra = async (mails, props, user) => {
   });
 };
 
+const hasMessageIdAllMails = mails => {
+  for (const { message_id } of mails) {
+    if (!message_id) {
+      const errorField = new ErrorField('mails', mails, 'message-id값이 없는 메일이 있습니다.');
+      throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+    }
+  }
+  return true;
+};
+
 const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
   const mails = await checkOwnerHasMails(nos, user.no);
   await checkCategoryOfMail(mails[0], props);
-  await moveMailInInfra(mails, props, user);
+  hasMessageIdAllMails(mails);
+  moveMailInInfra(mails, props, user);
   const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updatedCount === nos.length;
 };
