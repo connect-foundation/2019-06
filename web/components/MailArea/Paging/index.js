@@ -1,15 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
 
 import * as GS from '../../GlobalStyle';
 import { PageNumber } from './PageNumber';
-import { AppDispatchContext } from '../../../contexts';
 import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const useStyles = makeStyles(theme => ({
@@ -22,8 +20,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PAGE_LIST_NUM = 10;
-
-const getPageStartNumber = index => index * PAGE_LIST_NUM + 1;
 
 const getPagingNumbers = (start, end, page) => {
   const array = [];
@@ -39,17 +35,9 @@ const Paging = ({ paging }) => {
   const { query } = router;
   const { page, startPage, totalPage, endPage } = paging;
   const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
-  const { dispatch } = useContext(AppDispatchContext);
   const classes = useStyles();
 
   const pagingNumber = getPagingNumbers(startPage, endPage, page);
-
-  const handleMoveBtnClick = value => {
-    const newIndex = currentIndex + value;
-    const newPageNumber = getPageStartNumber(newIndex);
-
-    changeUrlWithoutRunning({ ...query, page: newPageNumber });
-  };
 
   const handleNumberClick = e => {
     e.preventDefault();
@@ -74,11 +62,11 @@ const Paging = ({ paging }) => {
         color="primary"
         aria-label="add"
         className={classes.margin}
-        onClick={() => handleMoveBtnClick(-1)}
+        onClick={() => changeUrlWithoutRunning({ ...query, page: startPage - 1 })}
         style={{
           width: '35px',
           height: '10px ',
-          display: currentIndex === 0 ? 'none' : '',
+          display: currentIndex === 0 ? 'none' : 'block',
         }}>
         <ArrowBackIcon />
       </Fab>
@@ -90,26 +78,16 @@ const Paging = ({ paging }) => {
         color="primary"
         aria-label="add"
         className={classes.margin}
-        onClick={() => handleMoveBtnClick(1)}
+        onClick={() => changeUrlWithoutRunning({ ...query, page: endPage + 1 })}
         style={{
           width: '35px',
           height: '10px ',
-          display: totalPage === endPage ? 'none' : '',
+          display: totalPage === endPage ? 'none' : 'block',
         }}>
         <ArrowForwardIcon />
       </Fab>
     </GS.FlexRowWrap>
   );
-};
-
-const pagingShape = {
-  page: PropTypes.number,
-  startPage: PropTypes.number,
-  totalPage: PropTypes.number,
-};
-
-Paging.propTypes = {
-  paging: PropTypes.shape(pagingShape),
 };
 
 export default Paging;
