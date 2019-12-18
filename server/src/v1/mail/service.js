@@ -82,8 +82,14 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
 };
 
 const saveMail = async (mailboxName, mailContents, transaction, userNo, reservationTime = null) => {
+  const hasAttachments = mailContents.attachments.length !== 0;
   const mailTemplateResult = await DB.MailTemplate.create(
-    { ...mailContents, to: mailContents.to.join(','), createdAt: reservationTime },
+    {
+      ...mailContents,
+      to: mailContents.to.join(','),
+      createdAt: reservationTime,
+      has_attachments: hasAttachments,
+    },
     { transaction },
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
