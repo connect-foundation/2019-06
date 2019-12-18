@@ -7,82 +7,68 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import { useRouter } from 'next/router';
 
 import * as GS from '../../GlobalStyle';
-import { PageNumber } from './PageNumber';
 import { changeUrlWithoutRunning } from '../../../utils/url/change-query';
+import S from './styled';
 
 const useStyles = makeStyles(theme => ({
-  margin: {
+  moveButton: {
     margin: theme.spacing(1),
-  },
-  extendedIcon: {
-    marginRight: theme.spacing(1),
+    width: 35,
+    height: 10,
+    boxShadow: 'none',
   },
 }));
 
-const PAGE_LIST_NUM = 10;
-
-const getPagingNumbers = (start, end, page) => {
-  const array = [];
-
+const getNumericRangeArray = (start, end) => {
+  const numbers = [];
   for (let i = start; i <= end; i += 1) {
-    array.push(<PageNumber key={i} value={i} onActive={page === i} />);
+    numbers.push(i);
   }
-  return array;
+  return numbers;
 };
 
 const Paging = ({ paging }) => {
   const router = useRouter();
   const { query } = router;
-  const { page, startPage, totalPage, endPage } = paging;
-  const currentIndex = Math.floor(startPage / PAGE_LIST_NUM);
+  const { page: queryPage = 1 } = query;
+  const { startPage, totalPage, endPage } = paging;
   const classes = useStyles();
+  const pageNumbers = getNumericRangeArray(startPage, endPage);
 
-  const pagingNumber = getPagingNumbers(startPage, endPage, page);
-
-  const handleNumberClick = e => {
-    e.preventDefault();
-
-    let { id } = e.target;
-    if (!id || id === '') {
-      return;
-    }
-
-    id = Number(id);
-    if (!Number.isInteger(id)) {
-      return;
-    }
-
-    changeUrlWithoutRunning({ ...query, page: id });
-  };
+  const pageComponents = pageNumbers.map(number => (
+    <S.NumberSpan
+      key={`page-${number}`}
+      value={number}
+      active={+queryPage === number}
+      onClick={() => changeUrlWithoutRunning({ ...query, page: number })}>
+      {number}
+    </S.NumberSpan>
+  ));
 
   return (
-    <GS.FlexRowWrap onClick={handleNumberClick}>
+    <GS.FlexRowWrap>
       <Fab
         size="small"
         color="primary"
         aria-label="add"
-        className={classes.margin}
+        className={classes.moveButton}
         onClick={() => changeUrlWithoutRunning({ ...query, page: startPage - 1 })}
         style={{
-          width: '35px',
-          height: '10px ',
-          display: currentIndex === 0 ? 'none' : 'block',
+          display: startPage === 1 ? 'none' : 'flex',
         }}>
         <ArrowBackIcon />
       </Fab>
 
-      {[...pagingNumber]}
+      {[...pageComponents]}
 
       <Fab
         size="small"
         color="primary"
         aria-label="add"
-        className={classes.margin}
+        className={classes.moveButton}
         onClick={() => changeUrlWithoutRunning({ ...query, page: endPage + 1 })}
         style={{
-          width: '35px',
-          height: '10px ',
-          display: totalPage === endPage ? 'none' : 'block',
+          display: totalPage === endPage ? 'none' : 'flex',
         }}>
         <ArrowForwardIcon />
       </Fab>
