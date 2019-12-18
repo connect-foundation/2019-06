@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 const model = (sequelize, DataTypes) => {
   const Category = sequelize.define(
     'Category',
@@ -31,6 +33,17 @@ const model = (sequelize, DataTypes) => {
       collate: 'utf8_general_ci',
     },
   );
+
+  Category.findAllByPk = nos => {
+    return Category.findAll({
+      where: {
+        no: {
+          [Op.in]: nos,
+        },
+      },
+      raw: true,
+    });
+  };
 
   Category.findOneByUserNoAndName = (user_no, name) => {
     return Category.findOne({
