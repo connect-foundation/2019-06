@@ -110,11 +110,13 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Mail.findOneByNoAndUserNo = (no, userNo) => {
-    return Mail.findOne({
+  Mail.findAllByNosAndUserNo = (nos, userNo) => {
+    return Mail.findAll({
       where: {
         owner: userNo,
-        no,
+        no: {
+          [Op.in]: nos,
+        },
       },
       include: [
         {
