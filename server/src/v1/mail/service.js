@@ -151,8 +151,7 @@ const checkCategoryOfMail = async (mail, props) => {
 };
 
 const checkOwnerHasMails = async (nos, userNo) => {
-  const promisedMails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
-  const mails = await Promise.all(promisedMails);
+  const mails = await DB.Mail.findAllByNosAndUserNo(nos, userNo);
   const validMails = mails.filter(mail => mail);
   if (validMails.length !== nos.length) {
     const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
@@ -163,18 +162,24 @@ const checkOwnerHasMails = async (nos, userNo) => {
 
 const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
 
-const createMessageIdsOfMailbox = async mails => {
-  const result = {};
-  const promisedMails = mails.map(async mail => {
-    const { name } = await DB.Category.findByPk(mail.category_no);
-    if (!result.hasOwnProperty(name)) {
-      result[name] = [];
-    }
-    return result[name].push(mail.message_id);
-  });
+const createMessageIdsByMailboxName = async mails => {
+  const messageIdsByMailboxName = {};
+  const categoryNos = mails.map(mail => mail.category_no);
+  const categories = await DB.Category.findAllByPk(categoryNos);
+  const categoryNameByNo = {};
 
-  await Promise.all(promisedMails);
-  return result;
+  for (const category of categories) {
+    categoryNameByNo[category.no] = category.name;
+  }
+
+  for (const mail of mails) {
+    const name = categoryNameByNo[mail.category_no];
+    if (!messageIdsByMailboxName.hasOwnProperty(name)) {
+      messageIdsByMailboxName[name] = [];
+    }
+    messageIdsByMailboxName[name].push(mail.message_id);
+  }
+  return messageIdsByMailboxName;
 };
 
 const moveMailInInfra = async (mails, props, user) => {
@@ -183,7 +188,7 @@ const moveMailInInfra = async (mails, props, user) => {
   }
 
   const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
-  const messageIdsOfMailbox = await createMessageIdsOfMailbox(mails);
+  const messageIdsOfMailbox = await createMessageIdsByMailboxName(mails);
   Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
     moveMail({
       user,
@@ -203,6 +208,10 @@ const hasMessageIdAllMails = mails => {
   }
   return true;
 };
+
+/**
+ * @param {category_no, is_read, is_important, prev_category_no} props
+ */
 
 const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
