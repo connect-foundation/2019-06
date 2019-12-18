@@ -59,7 +59,7 @@ const Paging = ({ paging }) => {
         <ArrowBackIcon />
       </Fab>
 
-      {[...pageComponents]}
+      {pageComponents}
 
       <Fab
         size="small"
