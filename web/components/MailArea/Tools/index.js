@@ -245,19 +245,19 @@ const Tools = () => {
   swapButtonSetView(+query.category, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    return btn.visible ? (
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={btn.icon}
-        disabled={!selectedMails.length}
-        onClick={() => btn.handleClick(paramsToClick)}
-        key={btn.key}>
-        {btn.name}
-      </Button>
-    ) : (
-      ''
+    return (
+      btn.visible && (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={btn.icon}
+          disabled={!selectedMails.length}
+          onClick={() => btn.handleClick(paramsToClick)}
+          key={btn.key}>
+          {btn.name}
+        </Button>
+      )
     );
   });
 

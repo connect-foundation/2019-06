@@ -98,10 +98,8 @@ const MailTemplate = ({ mail }) => {
         url={url}
       />
       <S.AddressText isRead={is_read}>{category_no === sendMailboxNo ? to : from}</S.AddressText>
-      {+query.category === 0 ? (
+      {(+query.category === 0 || !query.category) && (
         <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>
-      ) : (
-        ''
       )}
       <S.Selectable onClick={handleSelectableClick}>
         <S.SubjectText isRead={is_read}>{subject || '제목없음'}</S.SubjectText>
