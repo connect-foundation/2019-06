@@ -169,7 +169,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
                     <MenuList id="split-button-menu">
                       <MenuItem onClick={handleReservationClick}>
                         <S.VerticalAlign>
-                          {<SendIcon fontSize="small" />} <span>보내기 예약</span>
+                          <SendIcon fontSize="small" />
+                          <span>보내기 예약</span>
                         </S.VerticalAlign>
                       </MenuItem>
                     </MenuList>
