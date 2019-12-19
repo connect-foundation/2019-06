@@ -33,7 +33,7 @@ const FlexLeft = styled.div`
 `;
 
 const FlexRight = styled.div`
-  flex: 0 0 400px;
+  flex: 0 0 300px;
   height: inherit;
   overflow: hidden;
 `;

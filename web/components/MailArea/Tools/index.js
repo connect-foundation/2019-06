@@ -34,7 +34,7 @@ import {
   getQueryByOptions,
   changeUrlWithoutRunning,
   changeView,
-  VIEW_STRING,
+  VIEW,
   getRequestPathByQuery,
 } from '../../../utils/url/change-query';
 import mailRequest from '../../../utils/mail-request';
@@ -122,7 +122,7 @@ const buttons = [
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
         return;
       }
-      changeView(VIEW_STRING.WRITE);
+      changeView(VIEW.WRITE);
       dispatch(setMailToReply(mail));
     },
   },
@@ -228,7 +228,7 @@ const Tools = () => {
       if (isError) {
         throw SNACKBAR_MSG.ERROR.MOVE;
       }
-      await loadNewMails(url, dispatch);
+      await loadNewMails(query, dispatch, url);
       openSnackbar(
         SNACKBAR_VARIANT.SUCCESS,
         SNACKBAR_MSG.SUCCESS.MOVE(selectedMails.length, categoryNameByNo[categoryNoToMove]),
@@ -245,19 +245,19 @@ const Tools = () => {
   swapButtonSetView(+query.category, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    return btn.visible ? (
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={btn.icon}
-        disabled={!selectedMails.length}
-        onClick={() => btn.handleClick(paramsToClick)}
-        key={btn.key}>
-        {btn.name}
-      </Button>
-    ) : (
-      ''
+    return (
+      btn.visible && (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={btn.icon}
+          disabled={!selectedMails.length}
+          onClick={() => btn.handleClick(paramsToClick)}
+          key={btn.key}>
+          {btn.name}
+        </Button>
+      )
     );
   });
 

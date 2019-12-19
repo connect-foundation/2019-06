@@ -13,26 +13,8 @@ const Container = styled.div`
   }
 `;
 
-const ImportantButton = styled.div`
-  cursor: pointer;
-  flex: 0 0 40px;
-  margin-left: 10px;
-`;
-
 const ReadSign = styled.div`
   flex: 0 0 40px;
-`;
-
-const DeleteButton = styled.div`
-  cursor: pointer;
-  flex: 0 0 40px;
-  margin-right: 10px;
-`;
-
-const DeleteForeverButton = styled.div`
-  cursor: pointer;
-  flex: 0 0 40px;
-  margin-right: 10px;
 `;
 
 const AddressText = styled.div`
@@ -84,10 +66,7 @@ const CategoryName = styled.div`
 
 export {
   Container,
-  ImportantButton,
   ReadSign,
-  DeleteForeverButton,
-  DeleteButton,
   AddressText,
   Selectable,
   SubjectText,

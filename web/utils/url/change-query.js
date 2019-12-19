@@ -1,10 +1,11 @@
 import Router from 'next/router';
 
-const VIEW_STRING = {
+const VIEW = {
   WRITE: 'write',
   WRITE_TO_ME: 'write-to-me',
   READ: 'read',
   SEARCH: 'search',
+  LIST: 'list',
 };
 
 const changeView = view => {
@@ -96,10 +97,10 @@ const changeUrlWithoutRunning = (options = {}, path = '/') => {
 };
 
 export {
+  VIEW,
   changeUrlWithoutRunning,
   getRequestPathByQuery,
   getQueryByOptions,
   changeView,
-  VIEW_STRING,
   changeCategory,
 };

@@ -15,7 +15,7 @@ import { getSnackbarState, SNACKBAR_VARIANT } from '../../Snackbar';
 import S from './styled';
 import mailRequest from '../../../utils/mail-request';
 import sessionStorage from '../../../utils/storage';
-import { changeView, VIEW_STRING, changeUrlWithoutRunning } from '../../../utils/url/change-query';
+import { changeView, VIEW, changeUrlWithoutRunning } from '../../../utils/url/change-query';
 
 const WASTEBASKET_MAILBOX = '휴지통';
 
@@ -56,7 +56,7 @@ const buttons = [
         openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.REPLY_SELF);
         return;
       }
-      changeView(VIEW_STRING.WRITE);
+      changeView(VIEW.WRITE);
       dispatch(setMailToReply(mail));
     },
   },
@@ -72,7 +72,7 @@ const buttons = [
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
-      changeUrlWithoutRunning({ ...query, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: VIEW.LIST });
     },
   },
   {
@@ -87,7 +87,7 @@ const buttons = [
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.RECYLCE);
-      changeUrlWithoutRunning({ ...query, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: VIEW.LIST });
     },
   },
   {
@@ -102,7 +102,7 @@ const buttons = [
         return;
       }
       openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE_FOREVER);
-      changeUrlWithoutRunning({ ...query, view: 'list' });
+      changeUrlWithoutRunning({ ...query, view: VIEW.LIST });
     },
   },
 ];
@@ -146,24 +146,24 @@ const Tools = ({ mail }) => {
       SNACKBAR_VARIANT.SUCCESS,
       SNACKBAR_MSG.SUCCESS.MOVE(categoryNameByNo[categoryNoToMove]),
     );
-    changeUrlWithoutRunning({ ...query, view: 'list' });
+    changeUrlWithoutRunning({ ...query, view: VIEW.LIST });
   };
 
   swapButtonSetView(mail.category_no, wastebasketNo);
 
   const buttonSet = buttons.map(btn => {
-    return btn.visible ? (
-      <Button
-        variant="contained"
-        color="primary"
-        className={classes.button}
-        startIcon={btn.icon}
-        onClick={() => btn.handleClick(paramsToClick)}
-        key={btn.key}>
-        {btn.name}
-      </Button>
-    ) : (
-      ''
+    return (
+      btn.visible && (
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          startIcon={btn.icon}
+          onClick={() => btn.handleClick(paramsToClick)}
+          key={btn.key}>
+          {btn.name}
+        </Button>
+      )
     );
   });
 

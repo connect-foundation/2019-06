@@ -25,7 +25,7 @@ import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
 import { SNACKBAR_VARIANT, getSnackbarState } from '../../Snackbar';
-import { changeView, VIEW_STRING } from '../../../utils/url/change-query';
+import { changeView, VIEW } from '../../../utils/url/change-query';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -110,7 +110,7 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
         handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
       );
       setSendBtnDisabledState(false);
-      changeView(VIEW_STRING.LIST);
+      changeView(VIEW.LIST);
     }
   };
 
