@@ -41,6 +41,18 @@ const SNACKBAR_MSG = {
   },
 };
 
+const setFormData = ({ formData, receivers, subject, text, html, files }) => {
+  receivers.forEach(receiver => {
+    formData.append('to', receiver);
+  });
+  formData.append('subject', subject);
+  formData.append('text', text);
+  formData.append('html', html);
+  files.forEach(file => {
+    formData.append('attachments', file);
+  });
+};
+
 const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDispatchContext);
@@ -48,53 +60,33 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [sendBtnDisabledState, setSendBtnDisabledState] = useState(false);
   const anchorRef = React.useRef(null);
+  const openSnackbar = (variant, message) =>
+    pageDispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   const handleClick = async () => {
     if (receivers.length === 0) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS);
       return;
     }
 
     if (!receivers.every(receiver => validator.validate('email', receiver))) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION);
       return;
     }
 
-    pageDispatch(
-      handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING)),
-    );
+    openSnackbar(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING);
 
     const formData = new FormData();
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        pageDispatch(
-          handleSnackbarState(
-            getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE),
-          ),
-        );
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE);
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
-    receivers.forEach(receiver => {
-      formData.append('to', receiver);
-    });
-    formData.append('subject', subject);
-    formData.append('text', text);
-    formData.append('html', html);
-    files.forEach(file => {
-      formData.append('attachments', file);
-    });
 
+    setFormData({ formData, receivers, subject, text, html, files });
     setSendBtnDisabledState(true);
 
     const { isError, data } = await request.post('/mail', formData, {
@@ -103,12 +95,10 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
 
     if (isError) {
       const { message } = errorParser(data);
-      pageDispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+      openSnackbar(SNACKBAR_VARIANT.ERROR, message);
       setSendBtnDisabledState(false);
     } else {
-      pageDispatch(
-        handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
-      );
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND);
       setSendBtnDisabledState(false);
       changeView(VIEW.LIST);
     }
@@ -169,7 +159,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
                     <MenuList id="split-button-menu">
                       <MenuItem onClick={handleReservationClick}>
                         <S.VerticalAlign>
-                          {<SendIcon fontSize="small" />} <span>보내기 예약</span>
+                          <SendIcon fontSize="small" />
+                          <span>보내기 예약</span>
                         </S.VerticalAlign>
                       </MenuItem>
                     </MenuList>

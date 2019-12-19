@@ -64,11 +64,7 @@ export const getDialogData = ({
             name: createdName,
             no,
           });
-          dispatch(
-            handleSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD),
-            ),
-          );
+          openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD);
           setDialogOpen(false);
         },
       };
@@ -105,11 +101,7 @@ export const getDialogData = ({
           }
           categories[idx].name = name;
           dispatch(setCategories({ categories }));
-          dispatch(
-            handleSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY),
-            ),
-          );
+          openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.MODIFY);
           setDialogOpen(false);
         },
       };
@@ -130,11 +122,7 @@ export const getDialogData = ({
             return;
           }
           dispatch(setCategories({ categories: categories.filter((_, index) => idx !== index) }));
-          dispatch(
-            handleSnackbarState(
-              getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE),
-            ),
-          );
+          openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
           setDialogOpen(false);
         },
       };
