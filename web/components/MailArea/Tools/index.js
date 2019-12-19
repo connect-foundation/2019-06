@@ -59,10 +59,16 @@ const SNACKBAR_MSG = {
 };
 
 const useStyles = makeStyles(theme => ({
-  formControl: {
-    width: 120,
+  sortType: {
     color: 'white',
-    marginLeft: 20,
+    padding: 0,
+    minWidth: 80,
+  },
+  perPageNum: {
+    color: 'white',
+    padding: 0,
+    minWidth: 60,
+    marginRight: 30,
   },
   button: {
     margin: theme.spacing(1),
@@ -80,9 +86,9 @@ const SORTING_CRITERIA = [
 
 const getArrowIcon = sortValue =>
   sortValue.includes('asc') ? (
-    <ArrowUpwardIcon fontSize={'small'} />
+    <ArrowUpwardIcon fontSize={'small'} style={{ height: '19.2px' }} />
   ) : (
-    <ArrowDownwardIcon fontSize={'small'} />
+    <ArrowDownwardIcon fontSize={'small'} style={{ height: '19.2px' }} />
   );
 
 const loadNewMails = async (query, dispatch, url) => {
@@ -100,8 +106,8 @@ const loadNewMails = async (query, dispatch, url) => {
 const sortItems = SORTING_CRITERIA.map(type => (
   <MenuItem key={type.value} value={type.value}>
     <S.SortItemView>
-      <ListItemText>{type.name}</ListItemText>
-      <ListItemIcon>{getArrowIcon(type.value)}</ListItemIcon>
+      <ListItemText style={{ padding: 0, margin: 0 }}>{type.name}</ListItemText>
+      <ListItemIcon style={{ minWidth: 0 }}>{getArrowIcon(type.value)}</ListItemIcon>
     </S.SortItemView>
   </MenuItem>
 ));
@@ -303,10 +309,10 @@ const Tools = () => {
         </S.ButtonGroup>
       </S.FlexLeft>
       <S.FlexRight>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.perPageNum}>
           <Select value={query.perPageNum || '메일수'} onChange={handlePerPageNumChange}>
             <MenuItem value={'메일수'}>
-              <em>메일수</em>
+              <span>메일수</span>
             </MenuItem>
             <MenuItem value={10}>10</MenuItem>
             <MenuItem value={20}>20</MenuItem>
@@ -316,7 +322,7 @@ const Tools = () => {
             <MenuItem value={100}>100</MenuItem>
           </Select>
         </FormControl>
-        <FormControl className={classes.formControl}>
+        <FormControl className={classes.sortType}>
           <Select value={query.sort || 'datedesc'} onChange={handleSortChange} displayEmpty>
             {sortItems}
           </Select>
