@@ -12,12 +12,12 @@ const setUser = user => {
   window.sessionStorage.setItem('user', JSON.stringify(user));
 };
 
-const clearStorage = () => {
+const clearAll = () => {
   window.sessionStorage.clear();
 };
 
 export default {
   getUser,
   setUser,
-  clearStorage,
+  clearAll,
 };

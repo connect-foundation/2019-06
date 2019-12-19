@@ -11,7 +11,7 @@ export default () => {
   const { dispatch } = useContext(AppDispatchContext);
 
   const handleSignOutBtnClick = () => {
-    storage.clearStorage();
+    storage.clearAll();
 
     request.post('/auth/logout', {});
     dispatch(initState());
