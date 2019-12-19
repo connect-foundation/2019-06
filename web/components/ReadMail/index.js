@@ -76,14 +76,15 @@ const ReadMail = () => {
       return;
     }
 
-    const { has_attachment, is_read, MailTemplate, no } = fetchedMail;
+    const { is_read, MailTemplate, no: mailNo } = fetchedMail;
+    const { has_attachment, no: mailTemplateNo } = MailTemplate;
     setMail(fetchedMail);
 
     if (has_attachment) {
-      loadAttachments(MailTemplate.no, setAttachments);
+      loadAttachments(mailTemplateNo, setAttachments);
     }
     if (!is_read) {
-      mailRequest.update(no, { is_read: true });
+      mailRequest.update(mailNo, { is_read: true });
     }
     dispatch(handleMailsChange({ ...fetcher.data }));
   }, [fetcher.data, dispatch, query.mailIndex, mail]);

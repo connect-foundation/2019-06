@@ -45,7 +45,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const buttons = [
+const BUTTONS = [
   {
     key: 'reply',
     name: '답장',
@@ -107,9 +107,10 @@ const buttons = [
   },
 ];
 
-const deleteButton = buttons.find(button => button.key === 'delete');
-const deleteForeverButton = buttons.find(button => button.key === 'delete_forever');
-const recylceButton = buttons.find(button => button.key === 'recycle');
+const getButton = key => BUTTONS.find(button => button.key === key);
+const deleteButton = getButton('delete');
+const deleteForeverButton = getButton('delete_forever');
+const recylceButton = getButton('recycle');
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {
   if (categoryNo === wastebasketNo) {
@@ -151,7 +152,7 @@ const Tools = ({ mail }) => {
 
   swapButtonSetView(mail.category_no, wastebasketNo);
 
-  const buttonSet = buttons.map(btn => {
+  const buttonSet = BUTTONS.map(btn => {
     return (
       btn.visible && (
         <Button
