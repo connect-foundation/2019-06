@@ -12,16 +12,14 @@ const AVAILABLE_TIME = 10;
 
 const SENT_MAILBOX_NAME = '보낸메일함';
 
-const getFileNameAndBufferFromAttachment = async ({ url, name }) => {
+const getFileNameAndBufferFromAttachment = ({ url, name }) => {
   const stream = getStream(url);
 
-  const buffer = await new Promise(resolve => {
-    stream.on('data', data => {
-      resolve(data);
+  return new Promise(resolve => {
+    stream.on('data', buffer => {
+      resolve({ buffer, originalname: name });
     });
   });
-
-  return { buffer, originalname: name };
 };
 
 const sendReservationMail = async (user, mail) => {
@@ -29,8 +27,8 @@ const sendReservationMail = async (user, mail) => {
   const { from, to, subject, text, Attachments } = MailTemplate;
   const mailboxName = SENT_MAILBOX_NAME;
 
-  const loadTasks = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
-  const attachments = await Promise.all(loadTasks);
+  const tasks = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
+  const attachments = await Promise.all(tasks);
 
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
   mailContents.date = reservation_time;
