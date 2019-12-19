@@ -59,6 +59,7 @@ const MailTemplate = ({ mail }) => {
   const queryString = getQueryByOptions(query);
   const requestPath = getRequestPathByQuery(query);
   const url = `${requestPath}?${queryString}`;
+  const isEntireMailbox = +query.category === 0 || !query.category;
 
   const openSnackbar = (variant, message) => {
     dispatch(handleSnackbarState(getSnackbarState(variant, message)));
@@ -98,9 +99,7 @@ const MailTemplate = ({ mail }) => {
         url={url}
       />
       <S.AddressText isRead={is_read}>{category_no === sendMailboxNo ? to : from}</S.AddressText>
-      {(+query.category === 0 || !query.category) && (
-        <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>
-      )}
+      {isEntireMailbox && <S.CategoryName>{`[${categoryNameByNo[category_no]}]`}</S.CategoryName>}
       <S.Selectable onClick={handleSelectableClick}>
         <S.SubjectText isRead={is_read}>{subject || '제목없음'}</S.SubjectText>
         <S.DateText>
