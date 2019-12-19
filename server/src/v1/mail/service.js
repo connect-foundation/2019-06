@@ -1,13 +1,12 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-import nodemailer from 'nodemailer';
 import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveToMailbox } from '../../libraries/imap';
+import { saveToMailbox, moveMail } from '../../libraries/imap';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
@@ -17,6 +16,8 @@ import {
   DEFAULT_MAIL_QUERY_OPTIONS,
   SORT_TYPE,
 } from '../../constant/mail';
+
+const { NODE_ENV } = process.env;
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {
@@ -141,7 +142,7 @@ const checkCategoryOfMail = async (mail, props) => {
   if (!props.hasOwnProperty('category_no')) {
     return;
   }
-  props.prev_category_no = mail.category_no; // 카테고리 변경 시 이전 카테고리 저장
+  props.prev_category_no = mail.category_no;
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
@@ -150,9 +151,8 @@ const checkCategoryOfMail = async (mail, props) => {
 };
 
 const checkOwnerHasMails = async (nos, userNo) => {
-  const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
-  const promisedMails = await Promise.all(mails);
-  const validMails = promisedMails.filter(mail => mail);
+  const mails = await DB.Mail.findAllByNosAndUserNo(nos, userNo);
+  const validMails = mails.filter(mail => mail);
   if (validMails.length !== nos.length) {
     const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
@@ -162,10 +162,65 @@ const checkOwnerHasMails = async (nos, userNo) => {
 
 const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
 
-const updateMails = async (nos, props, userNo) => {
+const createMessageIdsByMailboxName = async mails => {
+  const messageIdsByMailboxName = {};
+  const categoryNos = mails.map(mail => mail.category_no);
+  const categories = await DB.Category.findAllByPk(categoryNos);
+  const categoryNameByNo = {};
+
+  for (const category of categories) {
+    categoryNameByNo[category.no] = category.name;
+  }
+
+  for (const mail of mails) {
+    const name = categoryNameByNo[mail.category_no];
+    if (!messageIdsByMailboxName.hasOwnProperty(name)) {
+      messageIdsByMailboxName[name] = [];
+    }
+    messageIdsByMailboxName[name].push(mail.message_id);
+  }
+  return messageIdsByMailboxName;
+};
+
+const moveMailInInfra = async (mails, props, user) => {
+  if (!props.hasOwnProperty('category_no')) {
+    return;
+  }
+
+  const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
+  const messageIdsOfMailbox = await createMessageIdsByMailboxName(mails);
+  Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
+    moveMail({
+      user,
+      originBoxName,
+      targetBoxName,
+      searchArgs: messageIdsOfMailbox[originBoxName],
+    });
+  });
+};
+
+const hasMessageIdAllMails = mails => {
+  for (const { message_id } of mails) {
+    if (!message_id) {
+      const errorField = new ErrorField('mails', mails, 'message-id값이 없는 메일이 있습니다.');
+      throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+    }
+  }
+  return true;
+};
+
+/**
+ * @param {category_no, is_read, is_important, prev_category_no} props
+ */
+
+const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
-  const mails = await checkOwnerHasMails(nos, userNo);
-  checkCategoryOfMail(mails[0], props);
+  const mails = await checkOwnerHasMails(nos, user.no);
+  await checkCategoryOfMail(mails[0], props);
+  if (NODE_ENV !== 'test') {
+    hasMessageIdAllMails(mails);
+    moveMailInInfra(mails, props, user);
+  }
   const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updatedCount === nos.length;
 };
