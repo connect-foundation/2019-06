@@ -41,6 +41,18 @@ const SNACKBAR_MSG = {
   },
 };
 
+const setFormData = ({ formData, receivers, subject, text, html, files }) => {
+  receivers.forEach(receiver => {
+    formData.append('to', receiver);
+  });
+  formData.append('subject', subject);
+  formData.append('text', text);
+  formData.append('html', html);
+  files.forEach(file => {
+    formData.append('attachments', file);
+  });
+};
+
 const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDispatchContext);
@@ -73,16 +85,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
-    receivers.forEach(receiver => {
-      formData.append('to', receiver);
-    });
-    formData.append('subject', subject);
-    formData.append('text', text);
-    formData.append('html', html);
-    files.forEach(file => {
-      formData.append('attachments', file);
-    });
 
+    setFormData({ formData, receivers, subject, text, html, files });
     setSendBtnDisabledState(true);
 
     const { isError, data } = await request.post('/mail', formData, {
