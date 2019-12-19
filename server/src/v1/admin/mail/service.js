@@ -38,8 +38,7 @@ const sendReservationMail = async (user, mail) => {
   const msg = makeMimeMessage({ messageId, mailContents, date: reservation_time });
   saveToMailbox({ user, msg, mailboxName });
 
-  mail.reservation_time = null;
-  await mail.save();
+  mail.destroy();
 };
 
 const sendReservationMailsOfOwner = async (owner, mails) => {
