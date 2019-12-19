@@ -28,7 +28,14 @@ const VALUE = {
   SENT_MAILBOX: "보낸메일함"
 };
 
-const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
+const getQueryToAddMailTemplate = ({
+  from,
+  to,
+  subject,
+  text,
+  html,
+  attachments
+}) => {
   const valueOfMailTemplate = {
     from,
     to,
@@ -36,7 +43,8 @@ const getQueryToAddMailTemplate = ({ from, to, subject, text, html }) => {
     text,
     html,
     created_at: VALUE.NOW,
-    updated_at: VALUE.NOW
+    updated_at: VALUE.NOW,
+    has_attachment: attachments.length !== 0
   };
 
   return mysql.format(QUERY.INSERT, [TABLE.MAIL_TEMPLATE, valueOfMailTemplate]);
