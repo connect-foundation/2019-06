@@ -48,39 +48,27 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [sendBtnDisabledState, setSendBtnDisabledState] = useState(false);
   const anchorRef = React.useRef(null);
+  const openSnackbar = (variant, message) =>
+    pageDispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   const handleClick = async () => {
     if (receivers.length === 0) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS);
       return;
     }
 
     if (!receivers.every(receiver => validator.validate('email', receiver))) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION);
       return;
     }
 
-    pageDispatch(
-      handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING)),
-    );
+    openSnackbar(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING);
 
     const formData = new FormData();
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        pageDispatch(
-          handleSnackbarState(
-            getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE),
-          ),
-        );
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE);
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
@@ -103,12 +91,10 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
 
     if (isError) {
       const { message } = errorParser(data);
-      pageDispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+      openSnackbar(SNACKBAR_VARIANT.ERROR, message);
       setSendBtnDisabledState(false);
     } else {
-      pageDispatch(
-        handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
-      );
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND);
       setSendBtnDisabledState(false);
       changeView(VIEW_STRING.LIST);
     }
