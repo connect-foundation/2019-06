@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import moment from 'moment';
 import dynamic from 'next/dynamic';
 import { StarBorder as StarBorderIcon, Star as StarIcon } from '@material-ui/icons';
@@ -6,12 +7,17 @@ import { yellow } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 import * as S from './styled';
 import PageMoveButtonArea from './PageMoveButtonArea';
-import { handleSnackbarState, setMail } from '../../contexts/reducer';
-import { AppStateContext, AppDispatchContext } from '../../contexts';
+import { handleSnackbarState, handleMailsChange } from '../../contexts/reducer';
+import { AppDispatchContext } from '../../contexts';
 import FileList from './FileList';
 import mailRequest from '../../utils/mail-request';
 import { getSnackbarState, SNACKBAR_VARIANT } from '../Snackbar';
 import Tools from './Tools';
+import HeadTitle from '../HeadTitle';
+import { getQueryByOptions, getRequestPathByQuery } from '../../utils/url/change-query';
+import useFetch from '../../utils/use-fetch';
+import Loading from '../Loading';
+import errorHandler from '../../utils/error-handler';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -51,21 +57,56 @@ const loadAttachments = async (mailTemplateNo, setAttachments) => {
 };
 
 const ReadMail = () => {
-  const { state } = useContext(AppStateContext);
-  const { dispatch } = useContext(AppDispatchContext);
-  const [attachments, setAttachments] = useState(null);
-  const { is_important, MailTemplate, no, reservation_time, index } = state.mail;
-  const { from, to, subject, text, html, createdAt, no: mailTemplateNo } = MailTemplate;
-  const receivers = to.replace(',', ', ');
-  const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
   const classes = useStyles();
-  const openSnackbar = (variant, message) =>
-    dispatch(handleSnackbarState(getSnackbarState(variant, message)));
+  const { query } = useRouter();
+  const { dispatch } = useContext(AppDispatchContext);
+  const [mail, setMail] = useState(null);
+  const [attachments, setAttachments] = useState(null);
+  const queryString = getQueryByOptions(query);
+  const requestPath = getRequestPathByQuery(query);
+  const url = `${requestPath}?${queryString}`;
+  const fetcher = useFetch(url);
 
   useEffect(() => {
-    loadAttachments(mailTemplateNo, setAttachments);
-    mailRequest.update(no, { is_read: true });
-  }, [no, mailTemplateNo]);
+    if (!fetcher.data) {
+      return;
+    }
+    const fetchedMail = fetcher.data.mails[+query.mailIndex];
+    if (!fetchedMail) {
+      return;
+    }
+
+    const { is_read, MailTemplate, no: mailNo } = fetchedMail;
+    const { has_attachment, no: mailTemplateNo } = MailTemplate;
+    setMail(fetchedMail);
+
+    if (has_attachment) {
+      loadAttachments(mailTemplateNo, setAttachments);
+    }
+    if (!is_read) {
+      mailRequest.update(mailNo, { is_read: true });
+    }
+    dispatch(handleMailsChange({ ...fetcher.data }));
+  }, [fetcher.data, dispatch, query.mailIndex, mail]);
+
+  if (fetcher.loading) {
+    return <Loading />;
+  }
+
+  if (fetcher.error) {
+    return errorHandler(fetcher.error);
+  }
+
+  if (!mail) {
+    return <Loading />;
+  }
+
+  const { is_important, MailTemplate, no, reservation_time, index } = mail;
+  const { from, to, subject, text, html, createdAt } = MailTemplate;
+  const receivers = to.replace(',', ', ');
+  const date = moment(createdAt).format('YYYY-MM-DD HH:mm');
+  const openSnackbar = (variant, message) =>
+    dispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   const handleStarClick = async () => {
     const { isError } = await mailRequest.update(no, { is_important: !is_important });
@@ -76,14 +117,15 @@ const ReadMail = () => {
       return;
     }
     message = !is_important ? SNACKBAR_MSG.SUCCESS.STAR : SNACKBAR_MSG.SUCCESS.UNSTAR;
-    state.mail.is_important = !is_important;
-    dispatch(setMail(state.mail));
     openSnackbar(SNACKBAR_VARIANT.SUCCESS, message);
+    mail.is_important = !is_important;
+    setMail({ ...mail });
   };
 
   return (
     <S.Container>
-      <Tools />
+      <HeadTitle title={subject || '제목없음'} />
+      <Tools mail={mail} />
       <S.ReadArea>
         <S.TitleView>
           <S.Subject>

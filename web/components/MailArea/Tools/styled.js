@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+const FlexWrap = styled.div`
+  flex: 0 0 50px;
+  height: 50px;
+  border-bottom: 2px solid #e9ecef;
+  display: flex;
+  align-items: center;
+`;
+
 const CheckBox = styled.div`
   flex: 0 0 40px;
   padding: 10px;
@@ -15,18 +23,30 @@ const ButtonGroup = styled.div`
 `;
 
 const FlexLeft = styled.div`
+  flex: 1 1;
   height: inherit;
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  justify-content: center;
   align-items: center;
 `;
 
-const Sort = styled.div`
-  flex: 0 0 150px;
+const FlexRight = styled.div`
   height: inherit;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0;
+  margin-right: 75px;
 `;
 
-export default { CheckBox, Sort, SortItemView, ButtonGroup, FlexLeft };
+export default {
+  FlexWrap,
+  CheckBox,
+  SortItemView,
+  FlexRight,
+  ButtonGroup,
+  FlexLeft,
+};

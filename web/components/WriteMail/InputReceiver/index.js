@@ -6,9 +6,9 @@ import * as SC from '../../../utils/special-characters';
 import { useDispatchForWM, useStateForWM } from '../ContextProvider';
 import { UPDATE_RECEIVERS } from '../ContextProvider/reducer/action-type';
 
-const extractAddress = data => {
-  const address = /<.{3,40}@.{3,40}>/.exec(data);
-  return address ? address[0].slice(1, -1) : data;
+const extractAddress = receiver => {
+  const address = /<.{3,40}@.{3,40}>/.exec(receiver);
+  return address ? address[0].slice(1, -1) : receiver;
 };
 
 const ListOfReceivers = ({ defaultReceiver }) => {
@@ -32,15 +32,15 @@ const ListOfReceivers = ({ defaultReceiver }) => {
     }
   }, [defaultReceiver]);
 
-  const deleteByRegExp = regex => val => val.replace(new RegExp(regex, 'gi'), SC.BLANK);
-  const replaceAndSetReceiver = (f, target) => {
-    const replaced = f(target.value);
-    if (receivers.includes(replaced)) {
-      target.value = SC.BLANK;
-      return;
-    }
-    if (replaced !== SC.BLANK) {
-      dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: [...receivers, replaced] } });
+  const splitBySpecialCharacter = specialCharacter => val => val.split(specialCharacter);
+  const replaceAndSetReceiver = (split, target) => {
+    const splitedEmails = split(target.value);
+    const filteredReceivers = splitedEmails.filter(re => re !== '' && !receivers.includes(re));
+    if (splitedEmails && splitedEmails !== SC.BLANK) {
+      dispatch({
+        type: UPDATE_RECEIVERS,
+        payload: { receivers: [...receivers, ...filteredReceivers] },
+      });
     }
     target.value = SC.BLANK;
     resizeInput(target);
@@ -55,16 +55,16 @@ const ListOfReceivers = ({ defaultReceiver }) => {
       dispatch({ type: UPDATE_RECEIVERS, payload: { receivers: receivers.slice(0, -1) } });
       resizeInput(target);
     } else if (key === SC.ENTER && target.value !== SC.BLANK) {
-      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.COMMA), target);
     }
   };
 
   const changeHandler = e => {
     const { target } = e;
     if (target.value.includes(SC.COMMA) && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(SC.COMMA), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.COMMA), target);
     } else if (target.value.includes(SC.SPACE) && target.value !== SC.SPACE) {
-      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.SPACE), target);
     } else if (target.value === SC.SPACE || target.value === SC.COMMA) {
       target.value = SC.BLANK;
     }
@@ -74,7 +74,7 @@ const ListOfReceivers = ({ defaultReceiver }) => {
   const blurHandler = e => {
     const { target } = e;
     if (target.value !== SC.SPACE && target.value !== SC.COMMA) {
-      replaceAndSetReceiver(deleteByRegExp(SC.SPACE), target);
+      replaceAndSetReceiver(splitBySpecialCharacter(SC.SPACE), target);
     }
   };
 

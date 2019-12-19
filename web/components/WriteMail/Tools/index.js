@@ -16,8 +16,7 @@ import { transformDateToReserve } from '../../../utils/transform-date';
 import { ERROR_CANNOT_RESERVATION } from '../../../utils/error-message';
 import { useStateForWM } from '../ContextProvider';
 import { AppDispatchContext } from '../../../contexts';
-import { handleCategoryClick, handleSnackbarState } from '../../../contexts/reducer';
-import MailArea from '../../MailArea';
+import { handleSnackbarState } from '../../../contexts/reducer';
 import ChangeWriteAreaButton from './ChangeWriteAreaButton';
 import SwitchDropzone from './SwitchDropzone';
 import validator from '../../../utils/validator';
@@ -26,6 +25,7 @@ import request from '../../../utils/request';
 import ReservationTimePicker from '../ReservationTimePicker';
 import ReservationDateText from '../ReservationDateText';
 import { SNACKBAR_VARIANT, getSnackbarState } from '../../Snackbar';
+import { changeView, VIEW } from '../../../utils/url/change-query';
 
 const SNACKBAR_MSG = {
   ERROR: {
@@ -41,57 +41,53 @@ const SNACKBAR_MSG = {
   },
 };
 
+const setFormData = ({ formData, receivers, subject, text, html, files }) => {
+  receivers.forEach(receiver => {
+    formData.append('to', receiver);
+  });
+  formData.append('subject', subject);
+  formData.append('text', text);
+  formData.append('html', html);
+  files.forEach(file => {
+    formData.append('attachments', file);
+  });
+};
+
 const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
   const { receivers, files, subject, html, text, date } = useStateForWM();
   const { dispatch: pageDispatch } = useContext(AppDispatchContext);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [sendBtnDisabledState, setSendBtnDisabledState] = useState(false);
   const anchorRef = React.useRef(null);
+  const openSnackbar = (variant, message) =>
+    pageDispatch(handleSnackbarState(getSnackbarState(variant, message)));
 
   const handleClick = async () => {
     if (receivers.length === 0) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.INPUT_RECEIVERS);
       return;
     }
 
     if (!receivers.every(receiver => validator.validate('email', receiver))) {
-      pageDispatch(
-        handleSnackbarState(
-          getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION),
-        ),
-      );
+      openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.EMAIL_VALIDATION);
       return;
     }
 
-    pageDispatch(
-      handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING)),
-    );
+    openSnackbar(SNACKBAR_VARIANT.INFO, SNACKBAR_MSG.WAITING.SENDING);
+
     const formData = new FormData();
-    receivers.forEach(r => {
-      formData.append('to', r);
-    });
-    formData.append('subject', subject);
-    formData.append('text', text);
-    formData.append('html', html);
-    files.forEach(f => {
-      formData.append('attachments', f);
-    });
 
     if (date) {
       if (!validator.isAfterDate(date)) {
-        pageDispatch(
-          handleSnackbarState(
-            getSnackbarState(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE),
-          ),
-        );
+        openSnackbar(SNACKBAR_VARIANT.ERROR, SNACKBAR_MSG.ERROR.AFTER_DATE);
         return;
       }
       formData.append('reservationTime', transformDateToReserve(date));
     }
+
+    setFormData({ formData, receivers, subject, text, html, files });
+    setSendBtnDisabledState(true);
 
     const { isError, data } = await request.post('/mail', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
@@ -99,12 +95,12 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
 
     if (isError) {
       const { message } = errorParser(data);
-      pageDispatch(handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.ERROR, message)));
+      openSnackbar(SNACKBAR_VARIANT.ERROR, message);
+      setSendBtnDisabledState(false);
     } else {
-      pageDispatch(
-        handleSnackbarState(getSnackbarState(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND)),
-      );
-      pageDispatch(handleCategoryClick(0, <MailArea />));
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND);
+      setSendBtnDisabledState(false);
+      changeView(VIEW.LIST);
     }
   };
 
@@ -134,7 +130,9 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
         <div></div>
         <S.RowContainer>
           <ButtonGroup variant="outlined" color="default" ref={anchorRef}>
-            <Button onClick={handleClick}>보내기</Button>
+            <Button disabled={sendBtnDisabledState} onClick={handleClick}>
+              보내기
+            </Button>
             {!writeToMe && (
               <Button color="default" size="small" onClick={handleToggle}>
                 <ArrowDropDownIcon />
@@ -161,7 +159,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
                     <MenuList id="split-button-menu">
                       <MenuItem onClick={handleReservationClick}>
                         <S.VerticalAlign>
-                          {<SendIcon fontSize="small" />} <span>보내기 예약</span>
+                          <SendIcon fontSize="small" />
+                          <span>보내기 예약</span>
                         </S.VerticalAlign>
                       </MenuItem>
                     </MenuList>

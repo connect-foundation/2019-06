@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import S from './styled';
+import { CHANGE_EVENT } from '../context';
 
-const DateInput = ({ label }) => {
+const DATE_FORMAT = 'yyyyMMdd';
+const { START_DATE, END_DATE } = CHANGE_EVENT.DATE;
+
+const DateInput = ({ label, dispatch, startDate, endDate }) => {
   const [today] = useState(new Date());
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(today);
+
+  const handleDataChange = (date, isStart = true) => {
+    if (isStart) {
+      return dispatch({ type: START_DATE, payload: date });
+    }
+    return dispatch({ type: END_DATE, payload: date });
+  };
 
   return (
     <S.FlexRowWrap>
@@ -14,8 +23,8 @@ const DateInput = ({ label }) => {
         <S.DatePickerItem>
           <DatePicker
             selected={startDate}
-            dateFormat="yyyyMMdd"
-            onChange={date => setStartDate(date)}
+            dateFormat={DATE_FORMAT}
+            onChange={date => handleDataChange(date)}
             selectsStart
             startDate={startDate}
             endDate={endDate}
@@ -27,8 +36,8 @@ const DateInput = ({ label }) => {
         <S.DatePickerItem>
           <DatePicker
             selected={endDate}
-            dateFormat="yyyyMMdd"
-            onChange={date => setEndDate(date)}
+            dateFormat={DATE_FORMAT}
+            onChange={date => handleDataChange(date, false)}
             selectsEnd
             startDate={startDate}
             endDate={endDate}

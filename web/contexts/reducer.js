@@ -1,30 +1,22 @@
-const CATEGORY_CLICK = 'CATEGORY_CLICK';
-const PAGE_NUMBER_CLICK = 'PAGE_NUMBER_CLICK';
 const CHANGE_MAILS_DATA = 'CHANGE_MAILS_DATA';
 const CHANGE_CATEGORIES_DATA = 'CHANGE_CATEGORIES_DATA';
-const MAIL_CLICK = 'MAIL_CLICK';
-const SET_VIEW = 'SET_VIEW';
-const SORT_SELECT = 'SORT_SELECT';
 const SET_MESSAGE = 'SET_MESSAGE';
 const MAIL_CHECK = 'MAIL_CHECK';
 const SELECT_ALL_CHANGE = 'SELECT_ALL_CHANGE';
 const INIT_CHECKER_IN_TOOLS = 'INIT_CHECKER_IN_TOOLS';
 const SET_SNACKBAR_STATE = 'SET_SNACKBAR_STATE';
-const SET_MAIL = 'SET_MAIL';
+const SET_MAIL_TO_REPLY = 'SET_MAIL_TO_REPLY';
 const INIT_STATE = 'INIT_STATE';
 
 export const initialState = {
   categories: null,
-  category: 0,
-  page: 1,
   mails: null,
-  mail: null,
+  mailToReply: null,
   paging: null,
-  view: null,
-  sort: 'datedesc',
   message: '',
   allMailCheckInTools: false,
   categoryNoByName: null,
+  categoryNameByNo: null,
   snackbarOpen: false,
   snackbarVariant: 'error',
   snackbarContent: '',
@@ -38,16 +30,6 @@ export const handleSnackbarState = payload => {
   };
 };
 
-export const handleSortSelect = sortType => {
-  return {
-    type: SORT_SELECT,
-    payload: {
-      page: 1,
-      sort: sortType,
-    },
-  };
-};
-
 export const initCheckerInTools = () => {
   return {
     type: INIT_CHECKER_IN_TOOLS,
@@ -58,42 +40,37 @@ export const initCheckerInTools = () => {
 };
 
 export const handleCheckAllMails = (allMailCheckInTools, mails) => {
-  mails.map(mail => (mail.selected = !allMailCheckInTools));
+  mails.forEach(mail => (mail.selected = !allMailCheckInTools));
   return {
     type: SELECT_ALL_CHANGE,
     payload: { mails, allMailCheckInTools: !allMailCheckInTools },
   };
 };
 
-export const handleCategoryClick = (no, view) => {
-  return {
-    type: CATEGORY_CLICK,
-    payload: {
-      category: no,
-      page: 1,
-      sort: 'datedesc',
-      view,
-    },
-  };
-};
-
 export const handleCategoriesChange = ({ categories }) => {
-  const categoryNoByName = categories.reduce((total, category) => {
-    total[category.name] = category.no;
-    return total;
-  }, {});
+  const categoryNoByName = {};
+  const categoryNameByNo = {};
+  for (const category of categories) {
+    categoryNoByName[category.name] = category.no;
+    categoryNameByNo[category.no] = category.name;
+  }
+
   return {
     type: CHANGE_CATEGORIES_DATA,
     payload: {
       categories,
       categoryNoByName,
+      categoryNameByNo,
     },
   };
 };
 
 export const handleMailsChange = ({ mails, paging }) => {
   if (mails) {
-    mails.map(mail => (mail.selected = false));
+    mails.forEach((mail, i) => {
+      mail.selected = false;
+      mail.index = i;
+    });
   }
   return {
     type: CHANGE_MAILS_DATA,
@@ -124,34 +101,6 @@ export const handleMailChecked = ({ mails, index }) => {
   };
 };
 
-export const handlePageNumberClick = page => {
-  return {
-    type: PAGE_NUMBER_CLICK,
-    payload: {
-      page,
-    },
-  };
-};
-
-export const handleMailClick = (mail, view) => {
-  return {
-    type: MAIL_CLICK,
-    payload: {
-      mail,
-      view,
-    },
-  };
-};
-
-export const setView = view => {
-  return {
-    type: SET_VIEW,
-    payload: {
-      view,
-    },
-  };
-};
-
 export const setMessage = message => {
   return {
     type: SET_MESSAGE,
@@ -161,11 +110,11 @@ export const setMessage = message => {
   };
 };
 
-export const setMail = mail => {
+export const setMailToReply = mailToReply => {
   return {
-    type: SET_MAIL,
+    type: SET_MAIL_TO_REPLY,
     payload: {
-      mail,
+      mailToReply,
     },
   };
 };
@@ -186,27 +135,17 @@ export const reducer = (state = initialState, action) => {
       return { ...state, ...payload };
     case INIT_CHECKER_IN_TOOLS:
       return { ...state, ...payload };
-    case CATEGORY_CLICK:
-      return { ...state, ...payload };
     case SELECT_ALL_CHANGE:
-      return { ...state, ...payload };
-    case PAGE_NUMBER_CLICK:
       return { ...state, ...payload };
     case MAIL_CHECK:
       return { ...state, ...payload };
-    case MAIL_CLICK:
-      return { ...state, ...payload };
     case CHANGE_MAILS_DATA:
-      return { ...state, ...payload };
-    case SET_VIEW:
-      return { ...state, ...payload };
-    case SORT_SELECT:
       return { ...state, ...payload };
     case SET_MESSAGE:
       return { ...state, ...payload };
     case CHANGE_CATEGORIES_DATA:
       return { ...state, ...payload };
-    case SET_MAIL:
+    case SET_MAIL_TO_REPLY:
       return { ...state, ...payload };
     default:
       return { ...state };

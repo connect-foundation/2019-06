@@ -20,7 +20,6 @@ axios.defaults.withCredentials = true;
 
 const server = axios.create({
   baseURL: API_SERVER,
-  timeout: 5000,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json; charset=utf-8',
