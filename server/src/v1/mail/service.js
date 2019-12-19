@@ -84,7 +84,6 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
 
 const saveMail = async (mailboxName, mailContents, transaction, userNo, reservationTime = null) => {
   const hasAttachment = mailContents.attachments.length !== 0;
-  console.log(hasAttachment, mailContents.attachments.length);
   const mailTemplateResult = await DB.MailTemplate.create(
     {
       ...mailContents,
