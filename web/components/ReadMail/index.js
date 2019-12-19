@@ -75,11 +75,12 @@ const ReadMail = () => {
     if (!fetchedMail) {
       return;
     }
-    const { has_attachment, is_read } = fetchedMail;
+    const { MailTemplate, is_read } = fetchedMail;
+    const { has_attachment, no } = MailTemplate;
     setMail(fetchedMail);
 
     if (has_attachment) {
-      loadAttachments(fetchedMail.MailTemplate.no, setAttachments);
+      loadAttachments(no, setAttachments);
     }
     if (!is_read) {
       mailRequest.update(fetchedMail.no, { is_read: true });
