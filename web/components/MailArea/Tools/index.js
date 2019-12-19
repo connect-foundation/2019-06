@@ -106,7 +106,7 @@ const sortItems = SORTING_CRITERIA.map(type => (
   </MenuItem>
 ));
 
-const buttons = [
+const BUTTONS = [
   {
     key: 'reply',
     name: '답장',
@@ -175,8 +175,9 @@ const buttons = [
   },
 ];
 
-const deleteButton = buttons.find(button => button.key === 'delete');
-const deleteForeverButton = buttons.find(button => button.key === 'delete_forever');
+const getButton = key => BUTTONS.find(button => button.key === key);
+const deleteButton = getButton('delete');
+const deleteForeverButton = getButton('delete_forever');
 
 const swapButtonSetView = (categoryNo, wastebasketNo) => {
   if (categoryNo === wastebasketNo) {
@@ -244,7 +245,7 @@ const Tools = () => {
 
   swapButtonSetView(+query.category, wastebasketNo);
 
-  const buttonSet = buttons.map(btn => {
+  const buttonSet = BUTTONS.map(btn => {
     return (
       btn.visible && (
         <Button
