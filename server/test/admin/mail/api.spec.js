@@ -20,10 +20,10 @@ describe('예약 메일 보내기 API는...', () => {
       .expect(404, done);
   });
 
-  it('# 올바른 key 값을 넘겨줄 경우 상태코드는 200이다.', done => {
+  it('# 올바른 key 값을 넘겨줄 경우 상태코드는 204이다.', done => {
     request(app)
       .post('/admin/mail')
       .send({ key: ADMIN_KEY })
-      .expect(200, done);
+      .expect(204, done);
   });
 });

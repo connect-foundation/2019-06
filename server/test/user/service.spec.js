@@ -13,13 +13,6 @@ const user = {
   sub_email: 'daitnu@daitnu.com',
 };
 
-const user2 = {
-  id: 'userid2',
-  name: '이름이뭐니',
-  password: 'pasword12',
-  sub_email: 'daitnu2@daitnu.com',
-};
-
 const rooot = {
   no: 1,
   id: 'rooot',
@@ -61,21 +54,30 @@ describe('user service는...', () => {
       }
     });
 
-    it('# 중복된 아이디인 경우 ERROR_CODE는 ID_DUPLICATION 이다', async () => {
+    it('# 중복된 아이디인 경우 ERROR_CODE는 ID_OR_SUB_EMAIL_DUPLICATION 이다', async () => {
       try {
         newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
       } catch (error) {
         const { errorCode } = error;
-        errorCode.should.be.eql(ERROR_CODE.ID_DUPLICATION);
+        errorCode.should.be.eql(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION);
       }
     });
 
-    it('# 중복된 아이디인 경우 ErrorFields의 length는 0이다.', async () => {
+    it('# 중복된 아이디인 경우 fieldError의 reason은 "이미 사용중인 아이디 입니다." 이다', async () => {
       try {
         newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
       } catch (error) {
         const { fieldErrors } = error;
-        fieldErrors.should.have.length(0);
+        fieldErrors[0].reason.should.be.equals('이미 사용중인 아이디 입니다.');
+      }
+    });
+
+    it('# 중복된 아이디인 경우 ErrorFields의 length는 1이다.', async () => {
+      try {
+        newUser = await service.register({ ...user, sub_email: 'abcd@zzzz.zzz' });
+      } catch (error) {
+        const { fieldErrors } = error;
+        fieldErrors.should.have.length(1);
       }
     });
 
@@ -87,21 +89,30 @@ describe('user service는...', () => {
       }
     });
 
-    it('# 중복된 서브 이메일인 경우 ERROR_CODE는 ID_DUPLICATION 이다', async () => {
+    it('# 중복된 서브 이메일인 경우 ERROR_CODE는 ID_OR_SUB_EMAIL_DUPLICATION 이다', async () => {
       try {
         newUser = await service.register({ ...user, id: 'nanana' });
       } catch (error) {
         const { errorCode } = error;
-        errorCode.should.be.eql(ERROR_CODE.SUB_EMAIL_DUPLICATION);
+        errorCode.should.be.eql(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION);
       }
     });
 
-    it('# 중복된 서브 이메일인 경우 ErrorFields의 length는 0이다.', async () => {
+    it('# 중복된 서브 이메일인 경우 fieldError의 reason은 "이미 가입에 사용한 이메일 입니다." 이다', async () => {
       try {
         newUser = await service.register({ ...user, id: 'nanana' });
       } catch (error) {
         const { fieldErrors } = error;
-        fieldErrors.should.have.length(0);
+        fieldErrors[0].reason.should.be.equals('이미 가입에 사용한 이메일 입니다.');
+      }
+    });
+
+    it('# 중복된 서브 이메일인 경우 ErrorFields의 length는 1이다.', async () => {
+      try {
+        newUser = await service.register({ ...user, id: 'nanana' });
+      } catch (error) {
+        const { fieldErrors } = error;
+        fieldErrors.should.have.length(1);
       }
     });
 
@@ -113,21 +124,31 @@ describe('user service는...', () => {
       }
     });
 
-    it('# 아이디와 서브 이메일 모두 중복될 경우  ERROR_CODE는 ID_AND_SUB_EMAIL_DUPLICATION 이다', async () => {
+    it('# 아이디와 서브 이메일 모두 중복될 경우 ERROR_CODE는 ID_OR_SUB_EMAIL_DUPLICATION 이다', async () => {
       try {
         newUser = await service.register(user);
       } catch (error) {
         const { errorCode } = error;
-        errorCode.should.be.eql(ERROR_CODE.ID_AND_SUB_EMAIL_DUPLICATION);
+        errorCode.should.be.eql(ERROR_CODE.ID_OR_SUB_EMAIL_DUPLICATION);
       }
     });
 
-    it('# 아이디와 서브 이메일 모두 중복될 경우 ErrorFields의 length는 0이다.', async () => {
+    it('# 아이디와 서브 이메일 모두 중복될 경우 fieldError의 reason은 "이미 사용중인 아이디 입니다.", "이미 가입에 사용한 이메일 입니다." 이다', async () => {
       try {
         newUser = await service.register(user);
       } catch (error) {
         const { fieldErrors } = error;
-        fieldErrors.should.have.length(0);
+        fieldErrors[0].reason.should.be.equals('이미 사용중인 아이디 입니다.');
+        fieldErrors[1].reason.should.be.equals('이미 가입에 사용한 이메일 입니다.');
+      }
+    });
+
+    it('# 아이디와 서브 이메일 모두 중복될 경우 ErrorFields의 length는 2이다.', async () => {
+      try {
+        newUser = await service.register(user);
+      } catch (error) {
+        const { fieldErrors } = error;
+        fieldErrors.should.have.length(2);
       }
     });
   });

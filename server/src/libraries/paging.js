@@ -23,7 +23,7 @@ const paging = (totalCount, options = {}) => {
   const startPage = Math.floor((page - 1) / DEFAULT_PAGE_LIST_NUM) * DEFAULT_PAGE_LIST_NUM + 1;
   let endPage = startPage + DEFAULT_PAGE_LIST_NUM - 1;
   endPage = endPage > totalPage ? totalPage : endPage;
-  return { startPage, endPage, page, perPageNum, totalPage };
+  return { startPage, endPage, page, perPageNum, totalPage, totalCount };
 };
 
 export default paging;

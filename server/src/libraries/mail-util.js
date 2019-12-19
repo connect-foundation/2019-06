@@ -3,6 +3,19 @@ import uuidv4 from 'uuid/v4';
 import replace from './replace';
 
 const { DEFAULT_DOMAIN_NAME, SMTP_PORT, MAIL_AUTH_USER, MAIL_AUTH_PASS } = process.env;
+const MAX_CONNECTIONS = 1000;
+
+const transporter = nodemailer.createTransport({
+  pool: true,
+  maxConnections: MAX_CONNECTIONS,
+  host: `mail.${DEFAULT_DOMAIN_NAME}`,
+  port: SMTP_PORT,
+  secure: true,
+  auth: {
+    user: MAIL_AUTH_USER,
+    pass: MAIL_AUTH_PASS,
+  },
+});
 
 const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) => {
   // filename, buffer -> content, mimetype -> contentType
@@ -29,7 +42,7 @@ const getSingleMailData = ({ from, to, subject, text, html, attachments = [] }) 
     text,
     html,
     attachments,
-    messageId: `${uuidv4()}@${DEFAULT_DOMAIN_NAME}`,
+    messageId: `<${uuidv4()}@${DEFAULT_DOMAIN_NAME}>`,
     dsn,
   };
 };
@@ -79,12 +92,7 @@ const createMailTemplateToFindPassword = password => {
     </p><span style="font-style: italic;">Copyright ⓒ Daitnu Corp. All Rights Reserved.</span>`;
 };
 
-const sendMail = data => {
-  const transport = getTransport();
-  const transporter = nodemailer.createTransport(transport);
-
-  transporter.sendMail(data);
-};
+const sendMail = data => transporter.sendMail(data);
 
 const sendMailToFindId = ({ id, email }) => {
   const hideStartIndex = 1;
@@ -148,6 +156,7 @@ const makeSearchArgs = array => {
 export default {
   getSingleMailData,
   getTransport,
+  sendMail,
   sendMailToFindId,
   sendMailToFindPassword,
   makeSearchArgs,

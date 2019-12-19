@@ -1,15 +1,13 @@
+import status from 'http-status';
 import service from './service';
 
 const sendReservationMails = async (req, res, next) => {
-  let mails;
-
   try {
-    mails = await service.handleReservationMails();
+    await service.handleReservationMails();
+    return res.status(status.NO_CONTENT).end();
   } catch (error) {
     return next(error);
   }
-
-  return res.json({ mails });
 };
 
 export default {

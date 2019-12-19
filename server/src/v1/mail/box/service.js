@@ -1,5 +1,5 @@
 import DB from '../../../database';
-import { addMailBox, renameMailBox, deleteMailBox } from '../../../libraries/save-to-infra';
+import { addMailBox, renameMailBox, deleteMailBox } from '../../../libraries/imap';
 import ERROR_CODE from '../../../libraries/exception/error-code';
 import ErrorResponse from '../../../libraries/exception/error-response';
 import ErrorField from '../../../libraries/exception/error-field';

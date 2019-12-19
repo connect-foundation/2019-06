@@ -1,36 +1,23 @@
 /* eslint-disable no-return-await */
 /* eslint-disable import/prefer-default-export */
-import nodemailer from 'nodemailer';
 import uuidv4 from 'uuid/v4';
 import { Op } from 'sequelize';
 import DB from '../../database/index';
 import U from '../../libraries/mail-util';
 import getPaging from '../../libraries/paging';
 import { makeMimeMessage } from '../../libraries/mimemessage';
-import { saveToMailbox } from '../../libraries/save-to-infra';
+import { saveToMailbox, moveMail } from '../../libraries/imap';
 import ERROR_CODE from '../../libraries/exception/error-code';
 import ErrorResponse from '../../libraries/exception/error-response';
 import ErrorField from '../../libraries/exception/error-field';
+import {
+  SENT_MAILBOX_NAME,
+  WROTE_TO_ME_MAILBOX_NAME,
+  DEFAULT_MAIL_QUERY_OPTIONS,
+  SORT_TYPE,
+} from '../../constant/mail';
 
-const SENT_MAILBOX_NAME = '보낸메일함';
-const WASTEBASKET_NAME = '휴지통';
-const WROTE_TO_ME_MAILBOX_NAME = '내게쓴메일함';
-
-const DEFAULT_MAIL_QUERY_OPTIONS = {
-  category: 0,
-  page: 1,
-  perPageNum: 100,
-  sort: 'datedesc',
-};
-
-const SORT_TYPE = {
-  datedesc: [[DB.MailTemplate, 'createdAt', 'DESC']],
-  dateasc: [[DB.MailTemplate, 'createdAt', 'ASC']],
-  subjectdesc: [[DB.MailTemplate, 'subject', 'DESC']],
-  subjectasc: [[DB.MailTemplate, 'subject', 'ASC']],
-  fromdesc: [[DB.MailTemplate, 'from', 'DESC']],
-  fromasc: [[DB.MailTemplate, 'from', 'ASC']],
-};
+const { NODE_ENV } = process.env;
 
 const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebasketNo }) => {
   const query = {
@@ -60,19 +47,13 @@ const getQueryByOptions = ({ userNo, category, perPageNum, page, sort, wastebask
   return query;
 };
 
-const getWastebasketCategoryNo = async userNo => {
-  const { no } = await DB.Category.findOneByUserNoAndName(userNo, WASTEBASKET_NAME);
-  return no;
-};
-
-const getMailsByOptions = async (userNo, options = {}) => {
+const getMailsByOptions = async ({ no: userNo, waste_basket_no: wastebasketNo }, options = {}) => {
   const queryOptions = { ...DEFAULT_MAIL_QUERY_OPTIONS, ...options };
   const { sort } = queryOptions;
   let { category, page, perPageNum } = queryOptions;
   category = +category;
   page = +page;
   perPageNum = +perPageNum;
-  const wastebasketNo = await getWastebasketCategoryNo(userNo);
   const query = getQueryByOptions({ userNo, category, perPageNum, page, sort, wastebasketNo });
   const { count: totalCount, rows: mails } = await DB.Mail.findAndCountAllFilteredMail(query);
 
@@ -102,8 +83,14 @@ const saveAttachments = async (attachments, mailTemplateNo, transaction) => {
 };
 
 const saveMail = async (mailboxName, mailContents, transaction, userNo, reservationTime = null) => {
+  const hasAttachment = mailContents.attachments.length !== 0;
   const mailTemplateResult = await DB.MailTemplate.create(
-    { ...mailContents, to: mailContents.to.join(','), createdAt: reservationTime },
+    {
+      ...mailContents,
+      to: mailContents.to.join(','),
+      createdAt: reservationTime,
+      has_attachment: hasAttachment,
+    },
     { transaction },
   );
   const mailTemplate = mailTemplateResult.get({ plain: true });
@@ -116,7 +103,7 @@ const saveMail = async (mailboxName, mailContents, transaction, userNo, reservat
       mail_template_id: mailTemplate.no,
       category_no: userCategory.no,
       reservation_time: reservationTime,
-      message_id: mailContents.messageId,
+      message_id: mailContents.messageId.slice(1, -1),
     },
     { transaction },
   );
@@ -124,8 +111,7 @@ const saveMail = async (mailboxName, mailContents, transaction, userNo, reservat
 
 const wroteToMe = async (mailContents, user) => {
   const mailboxName = WROTE_TO_ME_MAILBOX_NAME;
-  const messageId = `${uuidv4()}@daitnu.com`;
-  const msg = makeMimeMessage({ messageId, mailContents });
+  const msg = makeMimeMessage({ messageId: mailContents.messageId, mailContents });
   await DB.sequelize.transaction(
     async transaction => await saveMail(mailboxName, mailContents, transaction, user.no),
   );
@@ -134,8 +120,7 @@ const wroteToMe = async (mailContents, user) => {
 
 const sendMail = async (mailContents, user) => {
   const mailboxName = SENT_MAILBOX_NAME;
-  const transporter = nodemailer.createTransport(U.getTransport(user));
-  const { messageId } = await transporter.sendMail(mailContents);
+  const { messageId } = await U.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents });
   saveToMailbox({ user, msg, mailboxName });
 };
@@ -156,7 +141,7 @@ const checkCategoryOfMail = async (mail, props) => {
   if (!props.hasOwnProperty('category_no')) {
     return;
   }
-  props.prev_category_no = mail.category_no; // 카테고리 변경 시 이전 카테고리 저장
+  props.prev_category_no = mail.category_no;
   const category = await DB.Category.findOneByNoAndUserNo(mail.category_no, mail.owner);
   if (!category) {
     const errorField = new ErrorField('category', category, '존재하지 않은 카테고리입니다');
@@ -165,9 +150,8 @@ const checkCategoryOfMail = async (mail, props) => {
 };
 
 const checkOwnerHasMails = async (nos, userNo) => {
-  const mails = nos.map(no => DB.Mail.findOneByNoAndUserNo(no, userNo));
-  const promisedMails = await Promise.all(mails);
-  const validMails = promisedMails.filter(mail => mail);
+  const mails = await DB.Mail.findAllByNosAndUserNo(nos, userNo);
+  const validMails = mails.filter(mail => mail);
   if (validMails.length !== nos.length) {
     const errorField = new ErrorField('mails', mails, '존재하지 않는 메일이 포함되어 있습니다.');
     throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
@@ -177,10 +161,65 @@ const checkOwnerHasMails = async (nos, userNo) => {
 
 const removeDuplicatedNo = nos => nos.filter((no, index) => nos.indexOf(no) === index);
 
-const updateMails = async (nos, props, userNo) => {
+const createMessageIdsByMailboxName = async mails => {
+  const messageIdsByMailboxName = {};
+  const categoryNos = mails.map(mail => mail.category_no);
+  const categories = await DB.Category.findAllByPk(categoryNos);
+  const categoryNameByNo = {};
+
+  for (const category of categories) {
+    categoryNameByNo[category.no] = category.name;
+  }
+
+  for (const mail of mails) {
+    const name = categoryNameByNo[mail.category_no];
+    if (!messageIdsByMailboxName.hasOwnProperty(name)) {
+      messageIdsByMailboxName[name] = [];
+    }
+    messageIdsByMailboxName[name].push(mail.message_id);
+  }
+  return messageIdsByMailboxName;
+};
+
+const moveMailInInfra = async (mails, props, user) => {
+  if (!props.hasOwnProperty('category_no')) {
+    return;
+  }
+
+  const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
+  const messageIdsOfMailbox = await createMessageIdsByMailboxName(mails);
+  Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
+    moveMail({
+      user,
+      originBoxName,
+      targetBoxName,
+      searchArgs: messageIdsOfMailbox[originBoxName],
+    });
+  });
+};
+
+const hasMessageIdAllMails = mails => {
+  for (const { message_id } of mails) {
+    if (!message_id) {
+      const errorField = new ErrorField('mails', mails, 'message-id값이 없는 메일이 있습니다.');
+      throw new ErrorResponse(ERROR_CODE.MAIL_NOT_FOUND, errorField);
+    }
+  }
+  return true;
+};
+
+/**
+ * @param {category_no, is_read, is_important, prev_category_no} props
+ */
+
+const updateMails = async (nos, props, user) => {
   nos = removeDuplicatedNo(nos);
-  const mails = await checkOwnerHasMails(nos, userNo);
-  checkCategoryOfMail(mails[0], props);
+  const mails = await checkOwnerHasMails(nos, user.no);
+  await checkCategoryOfMail(mails[0], props);
+  if (NODE_ENV !== 'test') {
+    hasMessageIdAllMails(mails);
+    moveMailInInfra(mails, props, user);
+  }
   const [updatedCount] = await DB.Mail.updateAllByNosAndProps(nos, props);
   return updatedCount === nos.length;
 };

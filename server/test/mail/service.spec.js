@@ -19,12 +19,12 @@ describe('Mail Service Test', () => {
 
   describe('getMailsByOptions...', () => {
     it('# 페이징 정보를 포함한다.', async () => {
-      const data = await service.getMailsByOptions(1, {});
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, {});
       data.paging.should.be.properties('startPage', 'endPage', 'page', 'perPageNum', 'totalPage');
     });
 
     it('# 메일리스트 정보를 배열로 포함한다.', async () => {
-      const data = await service.getMailsByOptions(1, {});
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, {});
       data.mails.should.an.instanceof(Array);
     });
 
@@ -32,7 +32,7 @@ describe('Mail Service Test', () => {
       const options = {
         perPageNum: 2,
       };
-      const data = await service.getMailsByOptions(1, options);
+      const data = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, options);
       data.mails.should.have.length(2);
     });
 
@@ -41,7 +41,7 @@ describe('Mail Service Test', () => {
       const options = {
         category,
       };
-      const { mails } = await service.getMailsByOptions(1, options);
+      const { mails } = await service.getMailsByOptions({ no: 1, waste_basket_no: 3 }, options);
       const length = mails.filter(mail => mail.category_no === category);
       length.should.have.length(0);
     });
@@ -163,7 +163,7 @@ describe('Mail Service Test', () => {
     it('# 1,4,7,10번 메일의 category_no를 4로 변경', async () => {
       const nos = [1, 4, 7, 10];
       const props = { category_no: 4 };
-      const result = await service.updateMails(nos, props, 1);
+      const result = await service.updateMails(nos, props, { no: 1 });
       result.should.be.eql(true);
     });
 
@@ -171,7 +171,7 @@ describe('Mail Service Test', () => {
       const nos = [1, 4, -1, 10];
       const props = { category_no: 3 };
       try {
-        await service.updateMails(nos, props, 1);
+        await service.updateMails(nos, props, { no: 1 });
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);
@@ -181,7 +181,7 @@ describe('Mail Service Test', () => {
     it('# 1,1,1,1번 메일의 category_no를 4로 변경하면 1개만 변경', async () => {
       const nos = [1, 1, 1, 1];
       const props = { category_no: 4 };
-      const result = await service.updateMails(nos, props, 1);
+      const result = await service.updateMails(nos, props, { no: 1 });
       result.should.be.eql(true);
     });
 
@@ -189,7 +189,7 @@ describe('Mail Service Test', () => {
       const nos = [99999, 100001];
       const props = { category_no: 3 };
       try {
-        await service.updateMails(nos, props, 1);
+        await service.updateMails(nos, props, { no: 1 });
       } catch (error) {
         const { errorCode } = error;
         errorCode.should.be.eql(ERROR_CODE.MAIL_NOT_FOUND);

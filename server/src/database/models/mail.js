@@ -110,18 +110,35 @@ const model = (sequelize, DataTypes) => {
     });
   };
 
-  Mail.findOneByNoAndUserNo = (no, userNo) => {
-    return Mail.findOne({
+  Mail.findAllByNosAndUserNo = (nos, userNo) => {
+    return Mail.findAll({
       where: {
         owner: userNo,
-        no,
+        no: {
+          [Op.in]: nos,
+        },
       },
       include: [
         {
           model: sequelize.models.MailTemplate,
         },
       ],
+      raw: true,
     });
+  };
+
+  Mail.updateByMessageId = (owner, message_id, props) => {
+    return Mail.update(
+      {
+        ...props,
+      },
+      {
+        where: {
+          message_id,
+          owner,
+        },
+      },
+    );
   };
 
   Mail.updateAllByNosAndProps = (nos, props) => {
@@ -142,6 +159,40 @@ const model = (sequelize, DataTypes) => {
         ],
       },
     );
+  };
+
+  Mail.findAllNonReservation = (user_no, category_names) => {
+    return Mail.findAll({
+      attributes: ['no', 'owner', 'category_no', 'prev_category_no', 'message_id', 'Category.name'],
+      where: {
+        owner: user_no,
+        reservation_time: {
+          [Op.is]: null,
+        },
+      },
+      include: [
+        {
+          attributes: [],
+          model: sequelize.models.Category,
+          where: {
+            user_no,
+            name: {
+              [Op.in]: category_names,
+            },
+          },
+        },
+      ],
+      raw: true,
+    });
+  };
+
+  Mail.deleteByMesssasgeId = (owner, message_id) => {
+    return Mail.destroy({
+      where: {
+        message_id,
+        owner,
+      },
+    });
   };
 
   Mail.deleteByNoAndUserNo = (no, userNo) => {
