@@ -29,8 +29,8 @@ const sendReservationMail = async (user, mail) => {
   const { from, to, subject, text, Attachments } = MailTemplate;
   const mailboxName = SENT_MAILBOX_NAME;
 
-  const promises = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
-  const attachments = await Promise.all(promises);
+  const loadTasks = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
+  const attachments = await Promise.all(loadTasks);
 
   const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
   mailContents.date = reservation_time;
