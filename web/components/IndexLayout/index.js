@@ -14,6 +14,7 @@ const IndexPageLayout = props => {
   const { state } = useContext(AppStateContext);
   const { dispatch } = useContext(AppDispatchContext);
   const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { snackbarOpen, snackbarVariant, snackbarContent } = state;
   const snackbarState = { snackbarOpen, snackbarVariant, snackbarContent };
 
@@ -23,6 +24,7 @@ const IndexPageLayout = props => {
       Router.push('/login');
     } else {
       setUser(userData);
+      setIsLoading(false);
     }
   }, [dispatch]);
 
@@ -42,7 +44,7 @@ const IndexPageLayout = props => {
       <Footer />
     </GS.FlexWrap>
   );
-  return user ? indexPage : <Loading full={true} />;
+  return user && !isLoading ? indexPage : <Loading full={true} />;
 };
 
 export default IndexPageLayout;

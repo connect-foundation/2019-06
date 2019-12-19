@@ -6,7 +6,6 @@ const FlexWrap = styled.div`
   border-bottom: 2px solid #e9ecef;
   display: flex;
   align-items: center;
-  justify-content: space-between;
 `;
 
 const CheckBox = styled.div`
@@ -33,9 +32,14 @@ const FlexLeft = styled.div`
 `;
 
 const FlexRight = styled.div`
-  flex: 0 0 300px;
   height: inherit;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 0;
+  margin-right: 75px;
 `;
 
 export default {
