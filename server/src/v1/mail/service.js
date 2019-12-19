@@ -103,7 +103,7 @@ const saveMail = async (mailboxName, mailContents, transaction, userNo, reservat
       mail_template_id: mailTemplate.no,
       category_no: userCategory.no,
       reservation_time: reservationTime,
-      message_id: mailContents.messageId,
+      message_id: mailContents.messageId.slice(1, -1),
     },
     { transaction },
   );
@@ -111,8 +111,7 @@ const saveMail = async (mailboxName, mailContents, transaction, userNo, reservat
 
 const wroteToMe = async (mailContents, user) => {
   const mailboxName = WROTE_TO_ME_MAILBOX_NAME;
-  const messageId = `${uuidv4()}@daitnu.com`;
-  const msg = makeMimeMessage({ messageId, mailContents });
+  const msg = makeMimeMessage({ messageId: mailContents.messageId, mailContents });
   await DB.sequelize.transaction(
     async transaction => await saveMail(mailboxName, mailContents, transaction, user.no),
   );

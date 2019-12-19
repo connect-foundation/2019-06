@@ -117,6 +117,9 @@ export const moveMail = async ({ user, originBoxName, targetBoxName, searchArgs 
   if (originBoxName === '받은메일함') {
     originBoxName = 'INBOX';
   }
+  if (targetBoxName === '받은메일함') {
+    targetBoxName = 'INBOX';
+  }
   await connectImap(user, imap => {
     imap.openBox(originBoxName, true, openErr => {
       if (openErr) {
