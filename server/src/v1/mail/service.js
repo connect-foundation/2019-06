@@ -187,7 +187,8 @@ const moveMailInInfra = async (mails, props, user) => {
   }
 
   const { name: targetBoxName } = await DB.Category.findByPk(props.category_no);
-  const messageIdsOfMailbox = await createMessageIdsByMailboxName(mails);
+  const unreservedMails = mails.filter(mail => !mail.reservation_time);
+  const messageIdsOfMailbox = await createMessageIdsByMailboxName(unreservedMails);
   Object.keys(messageIdsOfMailbox).forEach(async originBoxName => {
     moveMail({
       user,
