@@ -24,21 +24,21 @@ const getFileNameAndBufferFromAttachment = ({ url, name }) => {
 
 const sendReservationMail = async (user, mail) => {
   const { MailTemplate, reservation_time } = mail;
-  const { from, to, subject, text, Attachments } = MailTemplate;
+  const { from, to, subject, text, html, Attachments } = MailTemplate;
+
   const mailboxName = SENT_MAILBOX_NAME;
 
   const tasks = Attachments.map(attachment => getFileNameAndBufferFromAttachment(attachment));
   const attachments = await Promise.all(tasks);
 
-  const mailContents = U.getSingleMailData({ from, to, subject, text, attachments });
+  const mailContents = U.getSingleMailData({ from, to, subject, html, text, attachments });
   mailContents.date = reservation_time;
 
   const { messageId } = await U.sendMail(mailContents);
   const msg = makeMimeMessage({ messageId, mailContents, date: reservation_time });
   saveToMailbox({ user, msg, mailboxName });
 
-  mail.reservation_time = null;
-  await mail.save();
+  mail.destroy();
 };
 
 const sendReservationMailsOfOwner = async (owner, mails) => {
