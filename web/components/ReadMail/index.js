@@ -82,7 +82,10 @@ const ReadMail = () => {
 
     if (has_attachment) {
       loadAttachments(mailTemplateNo, setAttachments);
+    } else {
+      setAttachments(null);
     }
+
     if (!is_read) {
       mailRequest.update(mailNo, { is_read: true });
     }
