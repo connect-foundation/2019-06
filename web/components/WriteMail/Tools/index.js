@@ -35,6 +35,7 @@ const SNACKBAR_MSG = {
   },
   SUCCESS: {
     SEND: '메일이 성공적으로 전송되었습니다.',
+    RESERVATION: '메일이 성공적으로 예약되었습니다.',
   },
   WAITING: {
     SENDING: '전송중입니다.',
@@ -98,7 +99,8 @@ const Tools = ({ writeToMe, dropZoneVisible, setDropZoneVisible }) => {
       openSnackbar(SNACKBAR_VARIANT.ERROR, message);
       setSendBtnDisabledState(false);
     } else {
-      openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.SEND);
+      const successMessage = date ? SNACKBAR_MSG.SUCCESS.RESERVATION : SNACKBAR_MSG.SUCCESS.SEND;
+      openSnackbar(SNACKBAR_VARIANT.SUCCESS, successMessage);
       setSendBtnDisabledState(false);
       changeView(VIEW.LIST);
     }
