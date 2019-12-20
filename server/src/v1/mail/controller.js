@@ -54,18 +54,17 @@ const write = async (req, res, next) => {
   const mailContents = U.getSingleMailData({ from, to, subject, html, text, attachments });
 
   try {
-    if (from === to[0] && to.length === 1) {
-      // 내게쓰기
-      await service.wroteToMe(mailContents, req.user);
-    } else {
-      // eslint-disable-next-line no-lonely-if
-      if (!reservationTime) {
-        await service.sendMail(mailContents, req.user);
+    if (!reservationTime) {
+      if (from === to[0] && to.length === 1) {
+        // 내게쓰기
+        await service.wroteToMe(mailContents, req.user);
       } else {
-        dateValidator.validateDate(reservationTime);
-        const date = strToDate(reservationTime);
-        await service.saveReservationMail(mailContents, req.user, date);
+        await service.sendMail(mailContents, req.user);
       }
+    } else {
+      dateValidator.validateDate(reservationTime);
+      const date = strToDate(reservationTime);
+      await service.saveReservationMail(mailContents, req.user, date);
     }
   } catch (error) {
     return next(error);
