@@ -15,8 +15,8 @@ const MAIL_CONTENT = process.argv[2];
 const MY_DOMAIN = "daitnu.com";
 const RECEIVED_KEY = "received";
 const MESSAGE_ID_KEY = "message-id";
-const NOTITLE = "제목없음";
-const NOTEXT = "";
+const NO_TITLE = "제목없음";
+const NO_CONTENT = "";
 const EXP_EXTRACT_RECEIVER = /<.{3,40}@.{3,40}>/;
 const EXP_EXTRACT_SENDER = /.{3,40}@.{3,40}/;
 
@@ -41,9 +41,9 @@ const parseMailContent = async content => {
     return {
       from: from.text,
       to: to.text,
-      subject: subject || NOTITLE,
-      html,
-      text: text || NOTEXT,
+      subject: subject || NO_TITLE,
+      html: html || NO_CONTENT,
+      text: text || NO_CONTENT,
       attachments,
       headers
     };
