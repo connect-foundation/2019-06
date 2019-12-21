@@ -44,12 +44,11 @@ MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 
 
 ### 메일쓰기
 
-![메일쓰기](https://user-images.githubusercontent.com/33617083/70243577-304c1280-17b6-11ea-9a0f-73207ebff50f.PNG)
+![메일쓰기](https://user-images.githubusercontent.com/26241585/71304809-d2066d00-240e-11ea-97c8-05079887b045.PNG)
 
 ### 메일읽기
 
-![메일읽기](https://user-images.githubusercontent.com/33617083/70243581-30e4a900-17b6-11ea-9c23-d0461c65598e.PNG)
-
+![메일읽기](https://user-images.githubusercontent.com/26241585/71304810-d2066d00-240e-11ea-9ff9-ad9105105bf5.PNG)
 
 ## Prerequisites
 
