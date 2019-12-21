@@ -64,6 +64,7 @@ export const getDialogData = ({
             name: createdName,
             no,
           });
+          dispatch(setCategories({ categories }));
           openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD);
           setDialogOpen(false);
         },
