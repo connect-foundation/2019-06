@@ -100,7 +100,7 @@ MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 
 
 ### 비밀번호 변경
 
-![비밀번호변경](https://user-images.githubusercontent.com/26241585/71305160-eea4a400-2412-11ea-8247-80f285e89682.PNG)
+![비밀번호변경](https://user-images.githubusercontent.com/26241585/71305199-6377de00-2413-11ea-99ef-779da994acde.PNG)
 
 ## Prerequisites
 
