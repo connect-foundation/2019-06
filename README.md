@@ -66,6 +66,10 @@ MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 
 
 ![상세검색결과](https://user-images.githubusercontent.com/26241585/71305073-de3ff980-2411-11ea-9719-cc2cc296c19f.PNG)
 
+### 메일읽기
+
+![메일읽기](https://user-images.githubusercontent.com/26241585/71304810-d2066d00-240e-11ea-9ff9-ad9105105bf5.PNG)
+
 ### 메일쓰기
 
 ![메일쓰기](https://user-images.githubusercontent.com/26241585/71305040-a33dc600-2411-11ea-92cd-f798adeeda8b.PNG)
@@ -73,10 +77,6 @@ MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 
 ### 내게쓰기
 
 ![내게쓰기](https://user-images.githubusercontent.com/26241585/71305042-a3d65c80-2411-11ea-8575-353fb9fdb2fc.PNG)
-
-### 메일읽기
-
-![메일읽기](https://user-images.githubusercontent.com/26241585/71304810-d2066d00-240e-11ea-9ff9-ad9105105bf5.PNG)
 
 ### 답장
 
@@ -100,7 +100,7 @@ MDA(Mail Delivery Agent): POP3, IMAP을 통해 서버에 저장된 이메일을 
 
 ### 비밀번호 변경
 
-![비밀번호변경](https://user-images.githubusercontent.com/26241585/71305070-dda76300-2411-11ea-8e52-22d24132c194.PNG)
+![비밀번호변경](https://user-images.githubusercontent.com/26241585/71305160-eea4a400-2412-11ea-8247-80f285e89682.PNG)
 
 ## Prerequisites
 
