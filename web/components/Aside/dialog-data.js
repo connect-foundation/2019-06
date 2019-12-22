@@ -1,6 +1,7 @@
 import request from '../../utils/request';
 import { errorParser } from '../../utils/error-parser';
 import { SNACKBAR_VARIANT, getSnackbarState } from '../Snackbar';
+import { changeUrlWithoutRunning } from '../../utils/url/change-query';
 
 const [ADD, MODIFY, DELETE] = [0, 1, 2];
 const url = '/mail/box/';
@@ -64,6 +65,7 @@ export const getDialogData = ({
             name: createdName,
             no,
           });
+          dispatch(setCategories({ categories }));
           openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.ADD);
           setDialogOpen(false);
         },
@@ -123,6 +125,7 @@ export const getDialogData = ({
           }
           dispatch(setCategories({ categories: categories.filter((_, index) => idx !== index) }));
           openSnackbar(SNACKBAR_VARIANT.SUCCESS, SNACKBAR_MSG.SUCCESS.DELETE);
+          changeUrlWithoutRunning();
           setDialogOpen(false);
         },
       };

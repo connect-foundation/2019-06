@@ -90,7 +90,7 @@ const ReadMail = () => {
       mailRequest.update(mailNo, { is_read: true });
     }
     dispatch(handleMailsChange({ ...fetcher.data }));
-  }, [fetcher.data, dispatch, query.mailIndex, mail]);
+  }, [fetcher.data, dispatch, query.mailIndex]);
 
   if (fetcher.loading) {
     return <Loading />;

@@ -98,7 +98,7 @@ const loadNewMails = async (query, dispatch, url) => {
   }
   dispatch(handleMailsChange({ ...data }));
   const { mails, paging } = data;
-  if (mails.length === 0 && paging.page !== 1) {
+  if (mails.length === 0) {
     changeUrlWithoutRunning({ ...query, page: paging.page });
   }
 };
@@ -224,7 +224,7 @@ const Tools = () => {
     if (!Number.isInteger(value)) {
       value = '';
     }
-    changeUrlWithoutRunning({ ...query, perPageNum: value });
+    changeUrlWithoutRunning({ ...query, page: 1, perPageNum: value });
   };
   const handleCheckAllChange = () => dispatch(handleCheckAllMails(allMailCheckInTools, mails));
   const handleCategoryMenuItemClick = async e => {
