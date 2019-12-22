@@ -29,7 +29,7 @@
 **MDA** (**M**ail **D**elivery **A**gent): POP3, IMAP을 통해 서버에 저장된 이메일을 사용자에게 전달하는 프로그램<br>
 
 **SMTP** (**S**imple **M**ail **T**ransfer **P**rotocol): 인터넷에서 이메일을 보내기 위해 이용되는 프로토콜<br>
-**SMTPS**: **SMTP** 프로토콜 이용시 **TLS** (**T**ransport **L**ayer **S**ecurity)를 이용하여 암호화<br>
+**SMTPS**: **SMTP** 프로토콜 이용시 **SSL** (**S**ecure **S**ocket **L**ayer)를 이용하여 암호화<br>
 **IMAP**/**POP3** (**I**nternet **M**essage **A**ccess **P**rotocol): 응용 계층 인터넷 프로토콜 중 하나로, 원격 서버로부터 **TCP**/**IP** 연결을 통해 이메일을 가져오는데 사용<br>
 **IMAPS**/**POP3S**: **IMAP**/**POP3** 프로토콜 사용시 **SSL** (**S**ecure **S**ocket **L**ayer)을 이용하여 암호화<br>
 
