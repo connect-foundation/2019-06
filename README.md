@@ -16,6 +16,14 @@
 > 우리들의 이메일 서비스, 다잇누!  
 > Linux 환경에서 SMTP, POP3, IMAP 프로토콜을 이용하여 이메일 서버 구축
 
+# Daitnu Season2 
+다잇누 시즌2는 [다른 레포](https://github.com/Daitnu/Daitnu-S2)에서 진행됩니다.
+
+server : Spring 기반  
+client : Type Script로 전환
+
+# Daitnu Season1
+
 ### 🏠 [Homepage](https://www.daitnu.com)
 
 ### :postbox: [Daitnu Blog](https://velog.io/@daitnu)
