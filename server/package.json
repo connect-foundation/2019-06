@@ -109,7 +109,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "redis": "^2.8.0",
-    "sequelize": "^5.19.6",
+    "sequelize": "^6.28.2",
     "uuid": "^3.3.3",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^4.3.0"
